@@ -9,7 +9,7 @@ class Config implements ArrayAccess
 {
     private $converter;
 
-    public function __construct(Filesystem $fs, Converter $converter)
+    function __construct(Filesystem $fs, Converter $converter)
     {
         $this->converter = $converter;
 
@@ -34,12 +34,12 @@ class Config implements ArrayAccess
         }
     }
 
-    public function offsetExists($offset)
+    function offsetExists($offset)
     {
         return $this->getNode($offset) != null;
     }
 
-    public function offsetGet($offset)
+    function offsetGet($offset)
     {
         $value = $this->getNode($offset);
         if(!is_object($value)) {
@@ -49,7 +49,7 @@ class Config implements ArrayAccess
         return $this->converter->toArray($value);
     }
 
-    public function offsetSet($offset, $value)
+    function offsetSet($offset, $value)
     {
         $path = explode('.', $offset);
         $key = array_pop($path);
@@ -61,7 +61,7 @@ class Config implements ArrayAccess
         return $parent->$key = $value;
     }
 
-    public function offsetUnset($offset)
+    function offsetUnset($offset)
     {
         $path = explode('.', $offset);
         $key = array_pop($path);
@@ -69,7 +69,7 @@ class Config implements ArrayAccess
         unset($parent->$key);
     }
 
-    public function shouldHave($offset)
+    function shouldHave($offset)
     {
         if(!isset($this[$offset])) {
             throw new Exception("No offset $offset");

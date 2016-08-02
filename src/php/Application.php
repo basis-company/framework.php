@@ -9,12 +9,16 @@ class Application
 {
     function __construct($root)
     {
-        $this->container = new Container;
-        $this->container->share(Application::class, $this);
-        $this->container->share(Container::class, $this->container);
-        $this->container->delegate(new ReflectionContainer());
+        $container = $this->container = new Container;
 
-        $this->container->share(Filesystem::class, new Filesystem($root));
+        $container->share(Container::class, $container);
+        $container->share(Application::class, $this);
+        $container->share(Filesystem::class, new Filesystem($root));
+
+        $container->addServiceProvider(Providers\Core::class);
+        $container->addServiceProvider(Providers\Logging::class);
+
+        $container->delegate(new ReflectionContainer());
     }
 
     function get($class)

@@ -2,13 +2,14 @@
 
 use Basis\Config;
 
-class ConfigurationTest extends TestSuite
+class ConfigTest extends TestSuite
 {
     function testConfiguration()
     {
         $config = $this->app->get(Config::class);
         $this->assertInstanceOf(Config::class, $config);
 
+        $this->assertSame($config['app.name'], 'example');
         $this->assertSame($config['administrator.name'], 'nekufa');
         $this->assertSame($config['administrator'], ['name' => 'nekufa']);
 
