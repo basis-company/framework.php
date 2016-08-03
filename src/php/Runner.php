@@ -3,6 +3,7 @@
 namespace Basis;
 
 use LogicException;
+use League\Container\Container;
 
 class Runner
 {
@@ -61,6 +62,7 @@ class Runner
             $instance->$k = $v;
         }
 
-        return $instance->run();
+        $container = $this->app->get(Container::class);
+        return $container->call([$instance, 'run']);
     }
 }

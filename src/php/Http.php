@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use League\Container\Container;
 use LogicException;
 
 class Http
@@ -26,7 +27,8 @@ class Http
             return "$controller/$method not found";
         }
 
-        $result = $this->app->get($class)->$method();
+        $container = $this->app->get(Container::class);
+        $result = $container->call([$container->get($class), $method]);
 
         if(is_array($result) || is_object($result)) {
             return json_encode($result);
