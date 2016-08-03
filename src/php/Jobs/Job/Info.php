@@ -32,6 +32,9 @@ class Info
                 }
             }
             $comment = implode(PHP_EOL, $comments);
+            if(!$comment) {
+                $comment = '-';
+            }
             $info[] = compact('nick', 'class', 'comment');
         }
 
