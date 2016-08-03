@@ -4,11 +4,12 @@ namespace Basis;
 
 class Filesystem
 {
+    private $app;
     private $root;
-    private $framework;
 
-    function __construct($root)
+    function __construct(Application $app, $root)
     {
+        $this->app = $app;
         $this->root = $root;
     }
 
@@ -32,6 +33,34 @@ class Filesystem
         }
 
         return $this->root;
+    }
+
+    function listClasses($namespace = '')
+    {
+        $location = "src/php";
+
+        if($namespace) {
+            $location .= '/'.str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
+        }
+
+        $files = $this->listFiles($location);
+        $classes = [];
+
+        $config = $this->app->get(Config::class);
+        if($config['app.namespace']) {
+            $namespace = $config['app.namespace'].($namespace ? '\\'.$namespace:'');
+        }
+
+        foreach($files as $file) {
+            $class = str_replace(DIRECTORY_SEPARATOR, '\\', $file);
+            $class = substr($class, 0, -4);
+            if($namespace) {
+                $class = $namespace.'\\'.$class;
+            }
+            $classes[] = $class;
+        }
+
+        return $classes;
     }
 
     function listFiles($location)

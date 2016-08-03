@@ -2,4 +2,5 @@
 
 return [
   'name' => 'example',
+  'namespace' => 'Example',
 ];

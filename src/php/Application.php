@@ -13,7 +13,7 @@ class Application
 
         $container->share(Container::class, $container);
         $container->share(Application::class, $this);
-        $container->share(Filesystem::class, new Filesystem($root));
+        $container->share(Filesystem::class, new Filesystem($this, $root));
 
         $container->addServiceProvider(Providers\Core::class);
         $container->addServiceProvider(Providers\Logging::class);
@@ -24,5 +24,10 @@ class Application
     function get($class)
     {
         return $this->container->get($class);
+    }
+
+    function dispatch($command, $params = [])
+    {
+        return $this->get(Runner::class)->dispatch($command, $params);
     }
 }
