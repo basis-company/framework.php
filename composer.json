@@ -7,12 +7,10 @@
         "fluent/logger": "dev-master",
         "vlucas/phpdotenv": "dev-master"
     },
-    "authors": [
-        {
-            "name": "Dmitry Krokhin",
-            "email": "nekufa@gmail.com"
-        }
-    ],
+    "authors": [{
+        "name": "Dmitry Krokhin",
+        "email": "nekufa@gmail.com"
+    }],
     "autoload": {
         "psr-4": {
             "Basis\\": "src/php"
