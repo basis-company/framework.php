@@ -4,7 +4,7 @@ namespace Basis;
 
 class Framework extends Filesystem
 {
-    private $root;
+    protected $root;
 
     function __construct()
     {

@@ -5,7 +5,7 @@ namespace Basis;
 class Filesystem
 {
     private $app;
-    private $root;
+    protected $root;
 
     function __construct(Application $app, $root)
     {
