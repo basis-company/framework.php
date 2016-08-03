@@ -46,13 +46,10 @@ class Filesystem
         $files = $this->listFiles($location);
         $classes = [];
 
-        $config = $this->app->get(Config::class);
-        if($config['app.namespace']) {
-            $namespace = $config['app.namespace'].($namespace ? '\\'.$namespace:'');
-        }
+        $namespace = $this->completeNamespace($namespace);
 
         foreach($files as $file) {
-            $class = str_replace(DIRECTORY_SEPARATOR, '\\', $file);
+            $class = str_replace(['\\', '/'], '\\', $file);
             $class = substr($class, 0, -4);
             if($namespace) {
                 $class = $namespace.'\\'.$class;
@@ -85,6 +82,15 @@ class Filesystem
         }
 
         return $result;
+    }
+
+    protected function completeNamespace($namespace)
+    {
+        $config = $this->app->get(Config::class);
+        if($config['app.namespace']) {
+            $namespace = $config['app.namespace'].($namespace ? '\\'.$namespace:'');
+        }
+        return $namespace;
     }
 
 }

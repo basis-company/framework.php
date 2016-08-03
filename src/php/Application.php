@@ -14,6 +14,7 @@ class Application
         $container->share(Container::class, $container);
         $container->share(Application::class, $this);
         $container->share(Filesystem::class, new Filesystem($this, $root));
+        $container->share(Framework::class, new Framework($this));
 
         $container->addServiceProvider(Providers\Core::class);
         $container->addServiceProvider(Providers\Logging::class);

@@ -9,9 +9,28 @@ class Runner
     private $app;
     private $jobs = [];
 
-    function __construct(Application $app, Filesystem $fs)
+    function __construct(Application $app)
     {
         $this->app = $app;
+    }
+
+    function listJobs()
+    {
+        $classes = array_merge(
+            $this->app->get(Filesystem::class)->listClasses('Jobs'),
+            $this->app->get(Framework::class)->listClasses('Jobs')
+        );
+
+        $jobs = [];
+        foreach($classes as $class) {
+            list($name, $group) = array_map('strtolower', array_reverse(explode("\\", $class)));
+            $nick = "$group.$name";
+            if(!array_key_exists($nick, $jobs)) {
+                $jobs[$nick] = $class;
+            }
+        }
+
+        return $jobs;
     }
 
     function dispatch($nick, $arguments = [])
@@ -25,6 +44,13 @@ class Runner
         }
 
         $class .= "Jobs\\$group\\$name";
+
+        if(!class_exists($class)) {
+            $frameworkClass = "Basis\\Jobs\\$group\\$name";
+            if(class_exists($frameworkClass)) {
+                $class = $frameworkClass;
+            }
+        }
 
         if(!class_exists($class)) {
             throw new LogicException("No job $nick");

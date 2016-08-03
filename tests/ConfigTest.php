@@ -4,7 +4,7 @@ use Basis\Config;
 
 class ConfigTest extends TestSuite
 {
-    function testConfiguration()
+    function test()
     {
         $config = $this->app->get(Config::class);
         $this->assertInstanceOf(Config::class, $config);

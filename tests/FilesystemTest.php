@@ -4,7 +4,7 @@ use Basis\Filesystem;
 
 class FilesystemTest extends TestSuite
 {
-    function testBasics()
+    function test()
     {
         $filesystem = $this->app->get(Filesystem::class);
 

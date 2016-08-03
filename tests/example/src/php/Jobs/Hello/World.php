@@ -2,6 +2,9 @@
 
 namespace Example\Jobs\Hello;
 
+/**
+ * Example job for greeting
+ */
 class World
 {
     public $name = 'world';

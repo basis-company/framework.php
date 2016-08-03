@@ -6,7 +6,7 @@ use League\Container\Container;
 
 class LoggerTest extends TestSuite
 {
-    public function testLogging()
+    function test()
     {
         $mock = $this->getMockBuilder(FluentLogger::class)
             ->setMethods(['post'])
