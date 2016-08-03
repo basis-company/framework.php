@@ -7,7 +7,6 @@ use LogicException;
 class Runner
 {
     private $app;
-    private $jobs = [];
 
     function __construct(Application $app)
     {
@@ -41,17 +40,13 @@ class Runner
         }
 
         list($group, $name) = array_map('ucfirst', explode('.', $nick));
-        $config = $this->app->get(Config::class);
 
-        $class = $config['app.namespace'];
-        if($class) {
-            $class .= '\\';
-        }
+        $className = "Jobs\\$group\\$name";
 
-        $class .= "Jobs\\$group\\$name";
+        $class = $this->app->get(Filesystem::class)->completeClassName($className);
 
         if(!class_exists($class)) {
-            $frameworkClass = "Basis\\Jobs\\$group\\$name";
+            $frameworkClass = $this->app->get(Framework::class)->completeClassName($className);
             if(class_exists($frameworkClass)) {
                 $class = $frameworkClass;
             }

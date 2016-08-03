@@ -10,7 +10,8 @@ class Framework extends Filesystem
     {
         $this->root = dirname(dirname(__DIR__));
     }
-    protected function completeNamespace($namespace)
+
+    function completeClassName($namespace)
     {
         return "Basis\\$namespace";
     }
