@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1ccb365f23f09931442162948fd89083",
+    "hash": "f72280fc1f23b481e1fedbdcb5f420eb",
     "content-hash": "b81839a20b67f01e887df36311da23db",
     "packages": [
         {
@@ -254,12 +254,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantool-php/mapper.git",
-                "reference": "762e93b430c6a5a9461dfe30ea2e5f799cf1f97e"
+                "reference": "2d44aaffb8bb9f09824d6b24c4032ab4f741a5e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/762e93b430c6a5a9461dfe30ea2e5f799cf1f97e",
-                "reference": "762e93b430c6a5a9461dfe30ea2e5f799cf1f97e",
+                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/2d44aaffb8bb9f09824d6b24c4032ab4f741a5e5",
+                "reference": "2d44aaffb8bb9f09824d6b24c4032ab4f741a5e5",
                 "shasum": ""
             },
             "require": {
@@ -291,7 +291,7 @@
                 "pure",
                 "tarantool"
             ],
-            "time": "2016-06-21 20:54:39"
+            "time": "2016-08-01 17:03:15"
         },
         {
             "name": "vlucas/phpdotenv",

@@ -25,6 +25,7 @@ class Runner
         foreach($classes as $class) {
             list($name, $group) = array_map('strtolower', array_reverse(explode("\\", $class)));
             $nick = "$group.$name";
+
             if(!array_key_exists($nick, $jobs)) {
                 $jobs[$nick] = $class;
             }
@@ -35,6 +36,10 @@ class Runner
 
     function dispatch($nick, $arguments = [])
     {
+        if(!strstr($nick, '.')) {
+            throw new LogicException("Incorrect nick - $nick");
+        }
+
         list($group, $name) = array_map('ucfirst', explode('.', $nick));
         $config = $this->app->get(Config::class);
 
