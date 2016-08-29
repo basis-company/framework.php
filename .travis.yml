@@ -7,11 +7,7 @@ php:
   - 5.6
   - 7.0
 
-services:
-  - docker
-
 before_script:
-  - docker run -d --restart=always -p 3301:3301 --name tarantool tarantool/tarantool
   - composer self-update
   - composer dump-autoload
   - composer install --no-interaction --prefer-source --dev
