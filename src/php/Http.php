@@ -9,7 +9,7 @@ class Http
 {
     private $app;
 
-public     function __construct(Application $app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
     }
