@@ -20,7 +20,14 @@ class Http
         $className = "Controllers\\$controller";
         $class = $this->app->get(Filesystem::class)->completeClassName($className);
         if(!class_exists($class)) {
-            $class = $this->app->get(Framework::class)->completeClassName($className);
+            $frameworkClass = $this->app->get(Framework::class)->completeClassName($className);
+        }
+
+        if(!class_exists($class)) {
+            if(!class_exists($frameworkClass)) {
+                throw new Exception("No class for $controller $controller, [$class, $frameworkClass]");
+            }
+            $class = $frameworkClass;
         }
 
         if(!method_exists($class, $method)) {
