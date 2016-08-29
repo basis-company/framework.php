@@ -2,10 +2,10 @@
     "name": "nekufa/basis",
     "license": "MIT",
     "require": {
-        "tarantool/mapper": "dev-master",
-        "league/container": "dev-master",
-        "fluent/logger": "dev-master",
-        "vlucas/phpdotenv": "dev-master"
+        "tarantool/mapper": "*",
+        "league/container": "*",
+        "fluent/logger": "*",
+        "vlucas/phpdotenv": "*"
     },
     "authors": [{
         "name": "Dmitry Krokhin",

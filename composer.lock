@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f72280fc1f23b481e1fedbdcb5f420eb",
-    "content-hash": "b81839a20b67f01e887df36311da23db",
+    "hash": "55531acb3eb6bbc75189c94795aa1086",
+    "content-hash": "e83fdc8bc7a5816d93883eccc7ba73ff",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -36,16 +36,16 @@
         },
         {
             "name": "fluent/logger",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fluent/fluent-logger-php.git",
-                "reference": "9a9e10f57430e60cd4e08c25f36026d66bbba978"
+                "reference": "360ad86483847f81ba25a79aa183520d790f6fca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fluent/fluent-logger-php/zipball/9a9e10f57430e60cd4e08c25f36026d66bbba978",
-                "reference": "9a9e10f57430e60cd4e08c25f36026d66bbba978",
+                "url": "https://api.github.com/repos/fluent/fluent-logger-php/zipball/360ad86483847f81ba25a79aa183520d790f6fca",
+                "reference": "360ad86483847f81ba25a79aa183520d790f6fca",
                 "shasum": ""
             },
             "require": {
@@ -85,20 +85,20 @@
                 "log",
                 "logging"
             ],
-            "time": "2016-04-14 08:00:55"
+            "time": "2015-10-16 05:38:10"
         },
         {
             "name": "league/container",
-            "version": "dev-master",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/container.git",
-                "reference": "93b3f4f72c5871121e4702b7da265e1147ddc8e6"
+                "reference": "c0e7d947b690891f700dc4967ead7bdb3d6708c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/container/zipball/93b3f4f72c5871121e4702b7da265e1147ddc8e6",
-                "reference": "93b3f4f72c5871121e4702b7da265e1147ddc8e6",
+                "url": "https://api.github.com/repos/thephpleague/container/zipball/c0e7d947b690891f700dc4967ead7bdb3d6708c1",
+                "reference": "c0e7d947b690891f700dc4967ead7bdb3d6708c1",
                 "shasum": ""
             },
             "require": {
@@ -149,7 +149,7 @@
                 "provider",
                 "service"
             ],
-            "time": "2016-04-14 09:45:18"
+            "time": "2016-03-17 11:07:59"
         },
         {
             "name": "rybakit/msgpack",
@@ -250,16 +250,16 @@
         },
         {
             "name": "tarantool/mapper",
-            "version": "dev-master",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tarantool-php/mapper.git",
-                "reference": "2d44aaffb8bb9f09824d6b24c4032ab4f741a5e5"
+                "reference": "36049feffdcfb0634bd4c9ed038fcab43a93c96f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/2d44aaffb8bb9f09824d6b24c4032ab4f741a5e5",
-                "reference": "2d44aaffb8bb9f09824d6b24c4032ab4f741a5e5",
+                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/36049feffdcfb0634bd4c9ed038fcab43a93c96f",
+                "reference": "36049feffdcfb0634bd4c9ed038fcab43a93c96f",
                 "shasum": ""
             },
             "require": {
@@ -291,20 +291,20 @@
                 "pure",
                 "tarantool"
             ],
-            "time": "2016-08-01 17:03:15"
+            "time": "2016-06-16 10:43:53"
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "dev-master",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "8c9a0b50a1dbd69dc7c73a492d8825cccc147c7f"
+                "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/8c9a0b50a1dbd69dc7c73a492d8825cccc147c7f",
-                "reference": "8c9a0b50a1dbd69dc7c73a492d8825cccc147c7f",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/9ca5644c536654e9509b9d257f53c58630eb2a6a",
+                "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a",
                 "shasum": ""
             },
             "require": {
@@ -316,7 +316,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -341,18 +341,13 @@
                 "env",
                 "environment"
             ],
-            "time": "2016-06-14 16:39:40"
+            "time": "2016-06-14 14:14:52"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "tarantool/mapper": 20,
-        "league/container": 20,
-        "fluent/logger": 20,
-        "vlucas/phpdotenv": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
