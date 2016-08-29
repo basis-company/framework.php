@@ -25,7 +25,7 @@ class Http
 
         if(!class_exists($class)) {
             if(!class_exists($frameworkClass)) {
-                throw new Exception("No class for $controller $controller, [$class, $frameworkClass]");
+                throw new LogicException("No class for $controller $controller, [$class, $frameworkClass]");
             }
             $class = $frameworkClass;
         }
