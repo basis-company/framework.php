@@ -31,4 +31,13 @@ class RunnerTest extends TestSuite
         $this->assertSame($hash['job.info']['comment'], 'Get Jobs information');
         $this->assertSame($hash['hello.world']['comment'], 'Example job for greeting');
     }
+
+    function testArgumentCasting()
+    {
+        $result = $this->app->dispatch('hello.world', ['nekufa']);
+        $this->assertSame($result, ['message' => 'hello nekufa!']);
+
+        $result = $this->app->dispatch('hello.world', ['dmitry', 'krokhin']);
+        $this->assertSame($result, ['message' => 'hello dmitry krokhin!']);
+    }
 }

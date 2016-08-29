@@ -4,6 +4,8 @@ namespace Basis;
 
 use LogicException;
 use League\Container\Container;
+use ReflectionClass;
+use ReflectionProperty;
 
 class Runner
 {
@@ -58,11 +60,29 @@ class Runner
         }
 
         $instance = $this->app->get($class);
+        if(array_key_exists(0, $arguments)) {
+            $arguments = $this->castArguments($class, $arguments);
+        }
+
         foreach($arguments as $k => $v) {
             $instance->$k = $v;
         }
 
         $container = $this->app->get(Container::class);
         return $container->call([$instance, 'run']);
+    }
+
+    private function castArguments($class, $arguments)
+    {
+        $reflection = new ReflectionClass($class);
+        $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
+        if(count($properties) == 1) {
+            return [
+                $properties[0]->getName() => count($arguments) == 1
+                    ? $arguments[0]
+                    : implode(' ', $arguments)
+            ];
+        }
+        return $arguments;
     }
 }

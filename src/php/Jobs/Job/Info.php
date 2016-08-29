@@ -10,16 +10,9 @@ use ReflectionClass;
  */
 class Info
 {
-    private $runner;
-
-    function __construct(Runner $runner)
+    function run(Runner $runner)
     {
-        $this->runner = $runner;
-    }
-
-    function run()
-    {
-        $jobs = $this->runner->listJobs();
+        $jobs = $runner->listJobs();
 
         $info = [];
         foreach($jobs as $nick => $class) {

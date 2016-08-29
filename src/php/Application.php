@@ -18,6 +18,7 @@ class Application
 
         $container->addServiceProvider(Providers\Core::class);
         $container->addServiceProvider(Providers\Logging::class);
+        $container->addServiceProvider(Providers\Tarantool::class);
 
         $container->delegate(new ReflectionContainer());
     }
