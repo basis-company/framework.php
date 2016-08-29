@@ -6,17 +6,21 @@ class Converter
 {
     function toObject($data)
     {
+        if(is_array($data)) {
+            if(array_keys($data) === range(0, count($data) -1)) {
+                foreach($data as $k => $v) {
+                    $data[$k] = $this->toObject($v);
+                }
+                return $data;
+            }
+        }
+
         $data = (object) $data;
 
         foreach ($data as $k => $v) {
             if (is_array($v) || is_object($v)) {
                 $data->$k = $this->toObject($v);
             }
-        }
-
-        $array = get_object_vars($data);
-        if(array_values($array) == $array) {
-            return $array;
         }
 
         return $data;
