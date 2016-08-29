@@ -17,7 +17,7 @@ public     function __construct(Application $app)
     public function process($uri)
     {
         list($controller, $method) = $this->getChain($uri);
-        $className = "Controllers\\$controller";
+        $className = "Controllers\\".ucfirst($controller);
         $class = $this->app->get(Filesystem::class)->completeClassName($className);
         if(!class_exists($class)) {
             $frameworkClass = $this->app->get(Framework::class)->completeClassName($className);
