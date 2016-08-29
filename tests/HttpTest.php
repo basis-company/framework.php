@@ -2,6 +2,8 @@
 
 use Basis\Http;
 
+use Example\Controllers\Index;
+
 class HttpTest extends TestSuite
 {
     function test()
@@ -14,15 +16,13 @@ class HttpTest extends TestSuite
         $this->assertSame(['hello', 'index'], $http->getChain('/hello/////'));
         $this->assertSame(['hello', 'nekufa'], $http->getChain('/hello/nekufa'));
 
-        // index routing
-        $result = [
-            $http->process("/"),
-            $http->process("/index"),
-            $http->process("/index/index"),
-        ];
+        // class exists
+        $this->assertTrue(class_exists(Index::class));
+        $this->assertTrue(method_exists(Index::class, 'index'));
 
-        $this->assertSame($result[0], 'index page');
-        $this->assertSame($result[1], 'index page');
-        $this->assertSame($result[2], 'index page');
+        // index routing
+        $this->assertSame('index page', $http->process("/"));
+        $this->assertSame('index page', $http->process("/index"));
+        $this->assertSame('index page', $http->process("/index/index"));
     }
 }

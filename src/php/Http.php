@@ -20,7 +20,7 @@ class Http
         $className = "Controllers\\$controller";
         $class = $this->app->get(Filesystem::class)->completeClassName($className);
         if(!class_exists($class)) {
-            $this->app->get(Framework::class)->completeClassName($className);
+            $class = $this->app->get(Framework::class)->completeClassName($className);
         }
 
         if(!method_exists($class, $method)) {
