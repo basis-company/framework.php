@@ -12,7 +12,7 @@ class Migration
 {
     public $name;
 
-    function run(Filesystem $filesystem, Framework $framework)
+    public function run(Filesystem $filesystem, Framework $framework)
     {
         $time = time();
         $namespace = date('FY', $time);

@@ -7,19 +7,19 @@ class Filesystem
     private $app;
     protected $root;
 
-    function __construct(Application $app, $root)
+    public function __construct(Application $app, $root)
     {
         $this->app = $app;
         $this->root = $root;
     }
 
-    function exists()
+    public function exists()
     {
         $path = call_user_func_array([$this, 'getPath'], func_get_args());
         return is_dir($path) || file_exists($path);
     }
 
-    function getPath()
+    public function getPath()
     {
         if (func_get_args()) {
             $chain = func_get_args();
@@ -35,7 +35,7 @@ class Filesystem
         return $this->root;
     }
 
-    function listClasses($namespace = '')
+    public function listClasses($namespace = '')
     {
         $location = "src/php";
 
@@ -60,7 +60,7 @@ class Filesystem
         return $classes;
     }
 
-    function listFiles($location)
+    public function listFiles($location)
     {
         $absolute = $this->getPath($location);
         if (!is_dir($absolute)) {
@@ -84,7 +84,7 @@ class Filesystem
         return $result;
     }
 
-    function completeClassName($namespace)
+    public function completeClassName($namespace)
     {
         $config = $this->app->get(Config::class);
         if($config['app.namespace']) {

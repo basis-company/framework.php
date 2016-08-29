@@ -7,28 +7,28 @@ use League\Container\ReflectionContainer;
 
 class Application
 {
-    function __construct($root)
+    public function __construct($root)
     {
-        $container = $this->container = new Container;
+        $this->container = new Container;
 
-        $container->share(Container::class, $container);
-        $container->share(Application::class, $this);
-        $container->share(Filesystem::class, new Filesystem($this, $root));
-        $container->share(Framework::class, new Framework($this));
+        $this->container->share(Container::class, $this->container);
+        $this->container->share(Application::class, $this);
+        $this->container->share(Filesystem::class, new Filesystem($this, $root));
+        $this->container->share(Framework::class, new Framework($this));
 
-        $container->addServiceProvider(Providers\Core::class);
-        $container->addServiceProvider(Providers\Logging::class);
-        $container->addServiceProvider(Providers\Tarantool::class);
+        $this->container->addServiceProvider(Providers\Core::class);
+        $this->container->addServiceProvider(Providers\Logging::class);
+        $this->container->addServiceProvider(Providers\Tarantool::class);
 
-        $container->delegate(new ReflectionContainer());
+        $this->container->delegate(new ReflectionContainer());
     }
 
-    function get($class)
+    public function get($class)
     {
         return $this->container->get($class);
     }
 
-    function dispatch($command, $params = [])
+    public function dispatch($command, $params = [])
     {
         return $this->get(Runner::class)->dispatch($command, $params);
     }

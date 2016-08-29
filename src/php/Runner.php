@@ -11,12 +11,12 @@ class Runner
 {
     private $app;
 
-    function __construct(Application $app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
     }
 
-    function listJobs()
+    public function listJobs()
     {
         $classes = array_merge(
             $this->app->get(Filesystem::class)->listClasses('Jobs'),
@@ -36,7 +36,7 @@ class Runner
         return $jobs;
     }
 
-    function dispatch($nick, $arguments = [])
+    public function dispatch($nick, $arguments = [])
     {
         if(!strstr($nick, '.')) {
             throw new LogicException("Incorrect nick - $nick");

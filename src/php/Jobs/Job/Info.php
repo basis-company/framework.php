@@ -10,7 +10,7 @@ use ReflectionClass;
  */
 class Info
 {
-    function run(Runner $runner)
+    public function run(Runner $runner)
     {
         $jobs = $runner->listJobs();
 

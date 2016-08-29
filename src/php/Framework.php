@@ -6,12 +6,12 @@ class Framework extends Filesystem
 {
     protected $root;
 
-    function __construct()
+    public function __construct()
     {
         $this->root = dirname(dirname(__DIR__));
     }
 
-    function completeClassName($namespace)
+    public function completeClassName($namespace)
     {
         return "Basis\\$namespace";
     }

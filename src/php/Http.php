@@ -9,12 +9,12 @@ class Http
 {
     private $app;
 
-    function __construct(Application $app)
+public     function __construct(Application $app)
     {
         $this->app = $app;
     }
 
-    function process($uri)
+    public function process($uri)
     {
         list($controller, $method) = $this->getChain($uri);
         $className = "Controllers\\$controller";
@@ -44,7 +44,7 @@ class Http
         }
     }
 
-    function getChain($uri)
+    public function getChain($uri)
     {
         $chain = explode('/', $uri);
         foreach($chain as $k => $v) {
