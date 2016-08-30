@@ -46,7 +46,8 @@ class Http
 
     public function getChain($uri)
     {
-        $chain = explode('/', $uri);
+        list($clean) = explode('?', $uri);
+        $chain = explode('/', $clean);
         foreach($chain as $k => $v) {
             if(!$v) {
                 unset($chain[$k]);

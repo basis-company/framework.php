@@ -15,6 +15,7 @@ class HttpTest extends TestSuite
         $this->assertSame(['hello', 'index'], $http->getChain('/hello/'));
         $this->assertSame(['hello', 'index'], $http->getChain('/hello/////'));
         $this->assertSame(['hello', 'nekufa'], $http->getChain('/hello/nekufa'));
+        $this->assertSame(['hello', 'nekufa'], $http->getChain('/hello/nekufa?querystring'));
 
         // class exists
         $this->assertTrue(class_exists(Index::class));
