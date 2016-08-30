@@ -14,7 +14,7 @@ class Config implements ArrayAccess
         $this->converter = $converter;
 
         if($fs->exists('.env')) {
-            $dotenv = new Dotenv($fs->path());
+            $dotenv = new Dotenv($fs->getPath());
             $dotenv->load();
         }
 
