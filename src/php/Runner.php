@@ -36,7 +36,7 @@ class Runner
         return $jobs;
     }
 
-    public function dispatch($nick, $arguments = [])
+    public function getJobClass($nick)
     {
         if(!strstr($nick, '.')) {
             throw new LogicException("Incorrect nick - $nick");
@@ -58,6 +58,13 @@ class Runner
         if(!class_exists($class)) {
             throw new LogicException("No job $nick");
         }
+
+        return $class;
+    }
+
+    public function dispatch($nick, $arguments = [])
+    {
+        $class = $this->getJobClass($nick);
 
         $instance = $this->app->get($class);
         if(array_key_exists(0, $arguments)) {
