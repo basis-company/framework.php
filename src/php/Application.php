@@ -11,14 +11,20 @@ class Application
     {
         $this->container = new Container;
 
+        $fs = new Filesystem($this, $root);
+
         $this->container->share(Container::class, $this->container);
         $this->container->share(Application::class, $this);
-        $this->container->share(Filesystem::class, new Filesystem($this, $root));
+        $this->container->share(Filesystem::class, $fs);
         $this->container->share(Framework::class, new Framework($this));
 
         $this->container->addServiceProvider(Providers\Core::class);
         $this->container->addServiceProvider(Providers\Logging::class);
         $this->container->addServiceProvider(Providers\Tarantool::class);
+
+        foreach($fs->listClasses('Providers') as $provider) {
+            $this->container->addServiceProvider($provider);
+        }
 
         $this->container->delegate(new ReflectionContainer());
     }
