@@ -15,5 +15,6 @@
         "psr-4": {
             "Basis\\": "src/php"
         }
-    }
+    },
+    "bin": ["bin/console"]
 }
