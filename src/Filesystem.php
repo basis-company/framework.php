@@ -37,7 +37,7 @@ class Filesystem
 
     public function listClasses($namespace = '')
     {
-        $location = "src/php";
+        $location = "src";
 
         if($namespace) {
             $location .= '/'.str_replace('\\', DIRECTORY_SEPARATOR, $namespace);

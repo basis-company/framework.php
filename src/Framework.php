@@ -8,7 +8,7 @@ class Framework extends Filesystem
 
     public function __construct()
     {
-        $this->root = dirname(dirname(__DIR__));
+        $this->root = dirname(__DIR__);
     }
 
     public function completeClassName($namespace)
