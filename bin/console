@@ -3,10 +3,11 @@
 use Basis\Application;
 
 date_default_timezone_set('Europe/Moscow');
+$root = getcwd();
 
-include __DIR__.'/vendor/autoload.php';
+include $root.'/vendor/autoload.php';
 
-$app = new Application(__DIR__);
+$app = new Application($root);
 try {
     array_shift($argv);
     $job = $argv ? array_shift($argv) : 'job.info';
