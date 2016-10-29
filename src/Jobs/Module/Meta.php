@@ -28,11 +28,6 @@ class Meta
             $jobs[] = str_replace('\\', '.', substr(strtolower($class), 5));
         }
 
-        $js = [];
-        foreach($fs->listFiles('src/js') as $file) {
-            $js[] = str_replace('/', '.', substr($file, 0, -3));
-        }
-
-        return compact('routes', 'jobs', 'js');
+        return compact('routes', 'jobs');
     }
 }
