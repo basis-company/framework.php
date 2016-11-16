@@ -25,5 +25,11 @@ class HttpTest extends TestSuite
         $this->assertSame('index page', $http->process("/"));
         $this->assertSame('index page', $http->process("/index"));
         $this->assertSame('index page', $http->process("/index/index"));
+
+        //
+        $this->assertSame('url: ', $http->process("/dynamic"));
+        $this->assertSame('url: ', $http->process("/dynamic/"));
+        $this->assertSame('url: slug', $http->process("/dynamic/slug"));
+        $this->assertSame('url: slug/sub', $http->process("/dynamic/slug/sub"));
     }
 }

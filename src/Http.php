@@ -30,12 +30,17 @@ class Http
             $class = $frameworkClass;
         }
 
+        $url = '';
         if(!method_exists($class, $method)) {
-            return "$controller/$method not found";
+            if(!method_exists($class, '__process')) {
+                return "$controller/$method not found";
+            }
+            $url = substr($uri, strlen($controller)+2);
+            $method = '__process';
         }
 
         $container = $this->app->get(Container::class);
-        $result = $container->call([$container->get($class), $method]);
+        $result = $container->call([$container->get($class), $method], ['url' => $url]);
 
         if(is_array($result) || is_object($result)) {
             return json_encode($result);
