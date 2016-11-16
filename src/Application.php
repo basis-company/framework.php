@@ -7,8 +7,11 @@ use League\Container\ReflectionContainer;
 
 class Application
 {
+    private $startTime;
+
     public function __construct($root)
     {
+        $this->startTime = microtime(1);
         $this->container = new Container;
 
         $fs = new Filesystem($this, $root);
@@ -37,5 +40,10 @@ class Application
     public function dispatch($command, $params = [])
     {
         return $this->get(Runner::class)->dispatch($command, $params);
+    }
+
+    public function getRunningTime()
+    {
+        return microtime(1) - $this->startTime;
     }
 }

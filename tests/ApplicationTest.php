@@ -15,6 +15,8 @@ class ApplicationTest extends TestSuite
         $container = $this->app->get(Container::class);
         $this->assertInstanceOf(Container::class, $container);
         $this->assertSame($this->app, $container->get(Application::class));
+
+        $this->assertNotNull($this->app->getRunningTime());
     }
 
     function testConverter()
