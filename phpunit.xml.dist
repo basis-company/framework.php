@@ -17,8 +17,8 @@
         <ini name="display_errors" value="On" />
         <ini name="display_startup_errors" value="On" />
         <ini name="error_reporting" value="E_ALL" />
-        <env name="TARANTOOL_SERVICE_HOST" value="10.100.60.14" />
-        <env name="TARANTOOL_SERVICE_PORT" value="3302" />
+        <env name="TARANTOOL_SERVICE_HOST" value="127.0.0.1" />
+        <env name="TARANTOOL_SERVICE_PORT" value="3301" />
         <env name="BASIS_ENVIRONMENT" value="testing" />
         <env name="TNT_MIGRATION" value="migrate" />
     </php>

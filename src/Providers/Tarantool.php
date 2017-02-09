@@ -5,16 +5,16 @@ namespace Basis\Providers;
 use Basis\Config;
 use Basis\Filesystem;
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use Tarantool\Client as TarantoolClient;
-use Tarantool\Connection\Connection;
-use Tarantool\Connection\SocketConnection;
+use Tarantool\Client\Client as OriginalClient;
+use Tarantool\Client\Connection\Connection;
+use Tarantool\Client\Connection\StreamConnection;
+use Tarantool\Client\Packer\Packer;
+use Tarantool\Client\Packer\PurePacker;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Manager;
 use Tarantool\Mapper\Migrations\Migrator;
 use Tarantool\Mapper\Schema\Meta;
 use Tarantool\Mapper\Schema\Schema;
-use Tarantool\Packer\Packer;
-use Tarantool\Packer\PurePacker;
 
 
 class Tarantool extends AbstractServiceProvider
@@ -27,7 +27,7 @@ class Tarantool extends AbstractServiceProvider
         Meta::class,
         Packer::class,
         Schema::class,
-        TarantoolClient::class,
+        OriginalClient::class,
     ];
 
     public function register()
@@ -41,10 +41,7 @@ class Tarantool extends AbstractServiceProvider
 
         $this->getContainer()->share(Connection::class, function () {
             $config = $this->getContainer()->get(Config::class);
-            return new SocketConnection(
-                $config['tarantool.host'],
-                $config['tarantool.port']
-            );
+            return new StreamConnection('tcp://'.$config['tarantool.host'].':'.$config['tarantool.port']);
         });
 
         $this->getContainer()->share(Meta::class, function () {
@@ -80,7 +77,7 @@ class Tarantool extends AbstractServiceProvider
             return $this->getContainer()->get(Manager::class)->getSchema();
         });
 
-        $this->getContainer()->share(TarantoolClient::class, function() {
+        $this->getContainer()->share(OriginalClient::class, function() {
             return $this->getContainer()->get(Client::class);
         });
 

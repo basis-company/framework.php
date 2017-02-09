@@ -1,8 +1,9 @@
 <?php
 
 use Basis\Application;
+use PHPUnit\Framework\TestCase;
 
-class TestSuite extends PHPUnit_Framework_TestCase
+class TestSuite extends TestCase
 {
     function setup()
     {

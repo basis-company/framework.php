@@ -1,11 +1,15 @@
 {
     "name": "nekufa/basis",
     "license": "MIT",
+    "minimum-stability": "dev",
     "require": {
-        "tarantool/mapper": "*",
-        "league/container": "*",
-        "fluent/logger": "*",
-        "vlucas/phpdotenv": "*"
+        "tarantool/mapper": "dev-master",
+        "league/container": "dev-master",
+        "fluent/logger": "dev-master",
+        "vlucas/phpdotenv": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
     },
     "authors": [{
         "name": "Dmitry Krokhin",
