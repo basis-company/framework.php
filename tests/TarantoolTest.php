@@ -30,8 +30,20 @@ class TarantoolTest extends TestSuite
         $this->assertNotNull($task);
         $this->assertEquals($task[2], $data);
 
+        $queue->release('testing', $task[0], [
+            'delay' => 2,
+        ]);
+
+        $task = $queue->take('testing');
+        $this->assertNull($task);
+
+        sleep(1);
+
+        $task = $queue->take('testing');
+        $this->assertNotNull($task);
         $queue->ack('testing', $task[0]);
-        $task = $queue->take('testing', 1);
+
+        $task = $queue->take('testing');
         $this->assertNull($task);
     }
 }
