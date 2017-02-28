@@ -23,6 +23,7 @@ class Application
 
         $this->container->addServiceProvider(Providers\Core::class);
         $this->container->addServiceProvider(Providers\Logging::class);
+        $this->container->addServiceProvider(Providers\Service::class);
         $this->container->addServiceProvider(Providers\Tarantool::class);
 
         foreach($fs->listClasses('Providers') as $provider) {

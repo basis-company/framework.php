@@ -58,7 +58,6 @@ class Runner
         if(!class_exists($class)) {
             throw new LogicException("No job $nick");
         }
-
         return $class;
     }
 
