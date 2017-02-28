@@ -5,7 +5,7 @@ namespace Basis\Providers;
 use Basis\Config;
 use Basis\Filesystem;
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use Tarantool\Client\Client as OriginalClient;
+use Tarantool\Client\Client as TarantoolClient;
 use Tarantool\Client\Connection\Connection;
 use Tarantool\Client\Connection\StreamConnection;
 use Tarantool\Client\Packer\Packer;
@@ -27,7 +27,7 @@ class Tarantool extends AbstractServiceProvider
         Meta::class,
         Packer::class,
         Schema::class,
-        OriginalClient::class,
+        TarantoolClient::class,
     ];
 
     public function register()
@@ -77,7 +77,7 @@ class Tarantool extends AbstractServiceProvider
             return $this->getContainer()->get(Manager::class)->getSchema();
         });
 
-        $this->getContainer()->share(OriginalClient::class, function() {
+        $this->getContainer()->share(TarantoolClient::class, function() {
             return $this->getContainer()->get(Client::class);
         });
 
