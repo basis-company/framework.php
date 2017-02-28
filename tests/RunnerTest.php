@@ -22,6 +22,11 @@ class RunnerTest extends TestSuite
         $this->assertSame($jobs['job.info'], Info::class);
         $this->assertSame($jobs['hello.world'], World::class);
 
+        $jobs = $this->app->dispatch('service.getJobs')['jobs'];
+        $this->assertNotNull($jobs);
+        $this->assertCount(1, $jobs);
+        $this->assertContains('hello.world', $jobs);
+
         $result = $this->app->dispatch('job.info');
         $hash = [];
         foreach($result['info'] as $row) {

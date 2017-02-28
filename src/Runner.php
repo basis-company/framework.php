@@ -16,12 +16,16 @@ class Runner
         $this->app = $app;
     }
 
-    public function listJobs()
+    public function listJobs($withFramework = true)
     {
-        $classes = array_merge(
-            $this->app->get(Filesystem::class)->listClasses('Jobs'),
-            $this->app->get(Framework::class)->listClasses('Jobs')
-        );
+        $classes = $this->app->get(Filesystem::class)->listClasses('Jobs');
+
+        if($withFramework) {
+            $classes = array_merge(
+                $classes,
+                $this->app->get(Framework::class)->listClasses('Jobs')
+            );
+        }
 
         $jobs = [];
         foreach($classes as $class) {
