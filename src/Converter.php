@@ -4,7 +4,7 @@ namespace Basis;
 
 class Converter
 {
-public     function toObject($data)
+    public function toObject($data)
     {
         if(is_array($data)) {
             if(array_keys($data) === range(0, count($data) -1)) {
