@@ -23,8 +23,8 @@ class Service extends AbstractServiceProvider
         $this->container->share(Queue::class, function() {
             $config = $this->container->get(Config::class);
             $connection = new StreamConnection('tcp://'.$config['queue.host'].':'.$config['queue.port'], [
-                'socket_timeout' => $config['queue.socket_timeout'] ?: 5,
-                'connect_timeout' => $config['queue.connect_timeout'] ?: 5,
+                'socket_timeout' => $config['queue.socket_timeout'] ?: 60,
+                'connect_timeout' => $config['queue.connect_timeout'] ?: 60,
             ]);
             return new Queue($connection, new PurePacker());
         });
@@ -32,10 +32,9 @@ class Service extends AbstractServiceProvider
         $this->container->share(BasisService::class, function() {
             $app = $this->container->get(Application::class);
             $config = $this->container->get(Config::class);
-            $fiber = $this->container->get(Fiber::class);
             $queue = $this->container->get(Queue::class);
             $tube = $config['service.tube'];
-            return new BasisService($app, $queue, $fiber, $tube);
+            return new BasisService($app, $queue, $tube);
         });
     }
 }

@@ -8,15 +8,13 @@ use Ramsey\Uuid\Uuid;
 class Service
 {
     private $app;
-    private $fiber;
     private $queue;
     private $running = false;
     private $tube;
 
-    public function __construct(Application $app, Queue $queue, Fiber $fiber, $tube)
+    public function __construct(Application $app, Queue $queue, $tube)
     {
         $this->app = $app;
-        $this->fiber = $fiber;
         $this->queue = $queue;
         $this->tube = $tube;
 
@@ -47,9 +45,9 @@ class Service
         ]);
     }
 
-    public function process()
+    public function process($timeout = 30)
     {
-        $task = $this->queue->take($this->tube);
+        $task = $this->queue->take($this->tube, $timeout);
 
         if(!$task) {
             return;

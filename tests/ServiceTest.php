@@ -89,30 +89,30 @@ class ServiceTest extends TestSuite
             'job' => 'hello.world',
         ]);
 
-        $service->process();
-        $service->process();
-        $service->process();
-        $service->process();
-        $service->process();
+        $service->process(0);
+        $service->process(0);
+        $service->process(0);
+        $service->process(0);
+        $service->process(0);
 
-        $task = $queue->take('some_service');
+        $task = $queue->take('some_service', 0);
         $this->assertNotNull($task);
         $this->assertSame($task['data']['message'], 'hello nekufa!');
         $task->ack();
 
         
-        $task = $queue->take('some_service');
+        $task = $queue->take('some_service', 0);
         $this->assertNotNull($task);
         $this->assertSame($task['data']['message'], 'hello world!');
         $task->ack();
 
-        $task = $queue->take('some_service');
+        $task = $queue->take('some_service', 0);
         $this->assertNotNull($task);
         $this->assertTrue($task['error']);
         $this->assertSame($task['data'], 'No job hello.nobody');
         $task->ack();
 
-        $task = $queue->take('some_service');
+        $task = $queue->take('some_service', 0);
         $this->assertNull($task);
     }
 }

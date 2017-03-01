@@ -24,7 +24,7 @@ class Queue extends Client
         $this->evaluate("require('queue').tube.$tube:truncate()");
     }
 
-    public function take($tube, $timeout = 1)
+    public function take($tube, $timeout = 10)
     {
         $tasks = $this->evaluate("return require('queue').tube.$tube:take($timeout)")->getData();
         if(count($tasks)) {
