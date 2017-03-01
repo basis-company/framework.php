@@ -55,7 +55,6 @@ class Service
             return;
         }
 
-        $task->ack();
 
         $params = $task->offsetExists('data') ? $task['data'] : [];
 
@@ -67,6 +66,7 @@ class Service
                     'data' => $data
                 ]);
             }
+
         } catch(Exception $e) {
             if($task->offsetExists('tube')) {
                 $this->queue->put($task['tube'], [
@@ -76,6 +76,8 @@ class Service
                 ]);
             }
         }
+
+        $task->ack();
 
         return $task;
     }
