@@ -76,6 +76,8 @@ class Service
                 ]);
             }
         }
+
+        return $task;
     }
 
     public function getTube()
