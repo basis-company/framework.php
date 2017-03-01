@@ -21,6 +21,17 @@ class Service
         $this->tube = $tube;
 
         $this->queue->init($tube);
+
+        if($this->queue->has('router')) {
+            $this->queue->put('router', [
+                'uuid' => Uuid::uuid4()->toString(),
+                'job' => 'router.register',
+                'data' => [
+                    'tube' => $tube,
+                    'jobs' => $app->dispatch('service.getJobs')['jobs'],
+                ]
+            ]);
+        }
     }
 
     public function send($nick, $arguments)

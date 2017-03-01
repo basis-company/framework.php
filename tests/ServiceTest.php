@@ -7,6 +7,20 @@ use Tarantool\Client\Client;
 
 class ServiceTest extends TestSuite
 {
+    function setup()
+    {
+        parent::setup();
+        $queue = $this->app->get(Queue::class);
+        $queue->init('router');
+        $queue->truncate('router');
+
+        $this->app->get(Service::class);
+        $task = $queue->take('router');
+        $this->assertNotNull($task);
+        $this->assertSame($task['job'], 'router.register');
+        $task->ack();
+    }
+
     function testInstance()
     {
         $app = $this->app;

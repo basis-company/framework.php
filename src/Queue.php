@@ -36,4 +36,10 @@ class Queue extends Client
     {
         return $this->evaluate("require('queue').tube.$tube:put(...)", [$task, $options]);
     }
+
+    public function has($tube)
+    {
+        $query = "return #box.space._queue.index.tube:select('$tube') > 0";
+        return $this->evaluate($query)->getData()[0];
+    }
 }
