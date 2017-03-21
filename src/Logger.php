@@ -19,4 +19,9 @@ class Logger
     {
         return $this->logger->post($this->tag, $data);
     }
+
+    public function getLogger()
+    {
+        return $this->logger;
+    }
 }

@@ -16,6 +16,9 @@ class LoggerTest extends TestSuite
         $container = $this->app->get(Container::class);
         $container->share(FluentLogger::class, $mock);
 
+        $this->assertSame($mock, $container->get(FluentLogger::class));
+        $this->assertSame($mock, $container->get(Logger::class)->getLogger());
+
         $mock->expects($this->once())
             ->method('post')
             ->with('example', ['key' => 'value'])
