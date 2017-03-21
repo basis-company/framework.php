@@ -1,5 +1,6 @@
 <?php
 
+use Basis\Config;
 use Basis\Logger;
 use Fluent\Logger\FluentLogger;
 use League\Container\Container;
@@ -13,11 +14,8 @@ class LoggerTest extends TestSuite
             ->disableOriginalConstructor()
             ->getMock();
 
-        $container = $this->app->get(Container::class);
-        $container->share(FluentLogger::class, $mock);
-
-        $this->assertSame($mock, $container->get(FluentLogger::class));
-        $this->assertSame($mock, $container->get(Logger::class)->getLogger());
+        $logger = new Logger($mock, 'example');
+        $this->assertSame($mock, $logger->getLogger());
 
         $mock->expects($this->once())
             ->method('post')
@@ -25,7 +23,7 @@ class LoggerTest extends TestSuite
             ->will($this->returnValue('OK'));
 
         $this->assertSame(
-            $container->get(Logger::class)->log(['key' => 'value']),
+            $logger->log(['key' => 'value']),
             'OK'
         );
     }
