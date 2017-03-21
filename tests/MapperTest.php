@@ -2,7 +2,9 @@
 
 use Basis\Filesystem;
 use League\Container\Container;
+use Tarantool\Mapper\Manager;
 use Tarantool\Mapper\Migrations\Migrator;
+use Basis\Jobs\Tarantool\Migrate;
 
 class MapperTest extends TestSuite
 {
@@ -42,15 +44,11 @@ class MapperTest extends TestSuite
             ->setMethods(['migrate'])
             ->getMock();
 
-        $container = $this->app->get(Container::class);
-
         $migrator->expects($this->once())
             ->method('migrate')
             ->will($this->returnValue('OK'));
 
-        $container->share(Migrator::class, $migrator);
-        $container->share(Manager::class, $manager);
-
-        $this->app->dispatch('tarantool.migrate');
+        $job = new Migrate();
+        $job->run($manager, $migrator);
     }
 }
