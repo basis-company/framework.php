@@ -24,7 +24,7 @@ class RunnerTest extends TestSuite
 
         $jobs = $this->app->dispatch('service.getJobs')['jobs'];
         $this->assertNotNull($jobs);
-        $this->assertCount(1, $jobs);
+        $this->assertCount(2, $jobs);
         $this->assertContains('hello.world', $jobs);
 
         $result = $this->app->dispatch('job.info');

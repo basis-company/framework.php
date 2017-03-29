@@ -93,18 +93,37 @@ class ServiceTest extends TestSuite
             'job' => 'hello.world',
         ]);
 
-        $service->process(0);
-        $service->process(0);
-        $service->process(0);
+        // session test
+        $queue->put($service->getTube(), [
+            'uuid' => Uuid::uuid4()->toString(),
+            'tube' => 'some_service',
+            'job' => 'hello.session',
+            'session' => 'identifier'
+        ]);
 
-        $service->process(0);
-        $service->process(0);
+        // session keep
+        $queue->put($service->getTube(), [
+            'uuid' => Uuid::uuid4()->toString(),
+            'tube' => 'some_service',
+            'job' => 'hello.session',
+            'data' => [
+                'session' => 'original',
+            ],
+            'session' => 'identifier'
+        ]);
+
+        $tasks = $queue->getSpace($service->getTube())->select()->getData();
+
+        $this->assertCount(6, $tasks);
+
+        foreach($tasks as $task) {
+            $service->process(0);
+        }
 
         $task = $queue->take('some_service', 0);
         $this->assertNotNull($task);
         $this->assertSame($task['data']['message'], 'hello nekufa! [params]');
         $task->ack();
-
         
         $task = $queue->take('some_service', 0);
         $this->assertNotNull($task);
@@ -118,6 +137,17 @@ class ServiceTest extends TestSuite
         $task->ack();
 
         $task = $queue->take('some_service', 0);
+        $this->assertNotNull($task);
+        $this->assertSame($task['data']['message'], 'hello identifier');
+        $task->ack();
+
+        $task = $queue->take('some_service', 0);
+        $this->assertNotNull($task);
+        $this->assertSame($task['data']['message'], 'hello original');
+        $task->ack();
+
+        $task = $queue->take('some_service', 0);
         $this->assertNull($task);
+
     }
 }
