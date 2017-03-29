@@ -1,7 +1,6 @@
 {
     "name": "nekufa/basis",
     "license": "MIT",
-    "version": "0.2.8",
     "minimum-stability": "stable",
     "require": {
         "php": "^7.0",
