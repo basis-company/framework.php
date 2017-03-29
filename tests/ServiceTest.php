@@ -38,6 +38,8 @@ class ServiceTest extends TestSuite
         $service->send('event.trigger', [
             'name' => 'person.update',
             'id' => 1,
+        ], [
+            'session' => 'qwerty'
         ]);
 
         $task = $queue->take('router');
@@ -47,7 +49,7 @@ class ServiceTest extends TestSuite
         $this->assertSame($task['data']['job'], 'event.trigger');
         $this->assertSame($task['data']['data']['name'], 'person.update');
         $this->assertSame($task['data']['data']['id'], 1);
-        
+        $this->assertSame($task['session'], 'qwerty');
     }
 
     function testProcessing()
@@ -64,6 +66,7 @@ class ServiceTest extends TestSuite
             'uuid' => Uuid::uuid4()->toString(),
             'tube' => 'some_service',
             'job' => 'hello.world',
+            'session' => 'params',
             'data' => [
                 'name' => 'nekufa',
             ]
@@ -74,6 +77,7 @@ class ServiceTest extends TestSuite
             'uuid' => Uuid::uuid4()->toString(),
             'tube' => 'some_service',
             'job' => 'hello.world',
+            'session' => 'call',
         ]);
 
         // no job
@@ -92,18 +96,19 @@ class ServiceTest extends TestSuite
         $service->process(0);
         $service->process(0);
         $service->process(0);
+
         $service->process(0);
         $service->process(0);
 
         $task = $queue->take('some_service', 0);
         $this->assertNotNull($task);
-        $this->assertSame($task['data']['message'], 'hello nekufa!');
+        $this->assertSame($task['data']['message'], 'hello nekufa! [params]');
         $task->ack();
 
         
         $task = $queue->take('some_service', 0);
         $this->assertNotNull($task);
-        $this->assertSame($task['data']['message'], 'hello world!');
+        $this->assertSame($task['data']['message'], 'hello world! [call]');
         $task->ack();
 
         $task = $queue->take('some_service', 0);

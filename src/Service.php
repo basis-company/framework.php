@@ -12,6 +12,8 @@ class Service
     private $running = false;
     private $tube;
 
+    private $session;
+
     public function __construct(Application $app, Queue $queue, $tube)
     {
         $this->app = $app;
@@ -32,9 +34,9 @@ class Service
         }
     }
 
-    public function send($nick, $arguments)
+    public function send($nick, $arguments, $opts = [])
     {
-        $this->queue->put('router', [
+        $task = [
             'uuid' => Uuid::uuid4()->toString(),
             'tube' => $this->tube,
             'job' => 'router.process',
@@ -42,7 +44,15 @@ class Service
                 'job' => $nick,
                 'data' => $arguments,
             ]
-        ]);
+        ];
+
+        foreach($opts as $k => $v) {
+            if(!array_key_exists($k, $task)) {
+                $task[$k] = $v;
+            }
+        }
+
+        $this->queue->put('router', $task);
     }
 
     public function process($timeout = 30)
@@ -53,8 +63,13 @@ class Service
             return;
         }
 
-
         $params = $task->offsetExists('data') ? $task['data'] : [];
+        if($task->offsetExists('session')) {
+            $this->session = $task['session'];
+            if(!array_key_exists('session', $params)) {
+                $params['session'] = $task['session'];
+            }
+        }
 
         try {
             $data = $this->app->dispatch($task['job'], $params);
@@ -76,6 +91,7 @@ class Service
         }
 
         $task->ack();
+        $this->session = null;
 
         return $task;
     }
@@ -83,5 +99,10 @@ class Service
     public function getTube()
     {
         return $this->tube;
+    }
+
+    public function getSession()
+    {
+        return $this->session;
     }
 }
