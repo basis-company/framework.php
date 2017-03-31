@@ -6,9 +6,7 @@
         "php": "^7.0",
         "tarantool/mapper": "^2.1.0",
         "league/container": "2.4.0",
-        "fluent/logger": "v1.0.1",
         "rybakit/msgpack": "v0.2.2",
-        "vlucas/phpdotenv": "v2.4.0",
         "ramsey/uuid": "3.6.1"
     },
     "require-dev": {

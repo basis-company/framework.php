@@ -22,7 +22,6 @@ class Application
         $this->container->share(Framework::class, new Framework($this));
 
         $this->container->addServiceProvider(Providers\Core::class);
-        $this->container->addServiceProvider(Providers\Logging::class);
         $this->container->addServiceProvider(Providers\Service::class);
         $this->container->addServiceProvider(Providers\Tarantool::class);
 

@@ -3,7 +3,6 @@
 namespace Basis;
 
 use ArrayAccess;
-use Dotenv\Dotenv;
 
 class Config implements ArrayAccess
 {
@@ -12,11 +11,6 @@ class Config implements ArrayAccess
     public function __construct(Filesystem $fs, Converter $converter)
     {
         $this->converter = $converter;
-
-        if($fs->exists('.env')) {
-            $dotenv = new Dotenv($fs->getPath());
-            $dotenv->load();
-        }
 
         foreach ($fs->listFiles('resources/config') as $file) {
             $values = $this->converter->toObject(include $fs->getPath("resources/config/$file"));
