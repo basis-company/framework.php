@@ -12,7 +12,12 @@ class GetJobs
 {
     public function run(Runner $runner)
     {
-        $jobs = array_keys($runner->listJobs(false));
+        $jobs = [];
+        foreach($runner->getMapping() as $job => $class) {
+            if(strpos($class, 'Basis') !== 0) {
+                $jobs[] = $job;
+            }
+        }
 
         return compact('jobs');
     }

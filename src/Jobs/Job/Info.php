@@ -12,7 +12,7 @@ class Info
 {
     public function run(Runner $runner)
     {
-        $jobs = $runner->listJobs();
+        $jobs = $runner->getMapping();
 
         $info = [];
         foreach($jobs as $nick => $class) {

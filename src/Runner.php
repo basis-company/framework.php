@@ -10,34 +10,36 @@ use ReflectionProperty;
 class Runner
 {
     private $app;
+    private $mapping;
 
     public function __construct(Application $app)
     {
         $this->app = $app;
     }
 
-    public function listJobs($withFramework = true)
+    public function getMapping()
     {
-        $classes = $this->app->get(Filesystem::class)->listClasses('Jobs');
+        if(!$this->mapping) {
 
-        if($withFramework) {
             $classes = array_merge(
-                $classes,
+                $this->app->get(Filesystem::class)->listClasses('Jobs'),
                 $this->app->get(Framework::class)->listClasses('Jobs')
             );
-        }
 
-        $jobs = [];
-        foreach($classes as $class) {
-            list($name, $group) = array_map('strtolower', array_reverse(explode("\\", $class)));
-            $nick = "$group.$name";
+            $jobs = [];
+            foreach($classes as $class) {
+                list($name, $group) = array_map('lcfirst', array_reverse(explode("\\", $class)));
+                $nick = "$group.$name";
 
-            if(!array_key_exists($nick, $jobs)) {
-                $jobs[$nick] = $class;
+                if(!array_key_exists($nick, $jobs)) {
+                    $jobs[$nick] = $class;
+                }
             }
+
+            $this->mapping = $jobs;
         }
 
-        return $jobs;
+        return $this->mapping;
     }
 
     public function getJobClass($nick)
@@ -46,21 +48,15 @@ class Runner
             throw new LogicException("Incorrect nick - $nick");
         }
 
-        list($group, $name) = array_map('ucfirst', explode('.', $nick));
-
-        $className = "Jobs\\$group\\$name";
-
-        $class = $this->app->get(Filesystem::class)->completeClassName($className);
-
-        if(!class_exists($class)) {
-            $frameworkClass = $this->app->get(Framework::class)->completeClassName($className);
-            if(class_exists($frameworkClass)) {
-                $class = $frameworkClass;
-            }
+        $mapping = $this->getMapping();
+        if(!array_key_exists($nick, $mapping)) {
+            throw new LogicException("No job $nick");
         }
 
+        $class = $mapping[$nick];
+
         if(!class_exists($class)) {
-            throw new LogicException("No job $nick");
+            throw new LogicException("No class for job $nick");
         }
         return $class;
     }

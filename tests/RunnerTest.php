@@ -14,7 +14,7 @@ class RunnerTest extends TestSuite
         $result = $this->app->dispatch('hello.world', ['name' => 'nekufa']);
         $this->assertSame($result, ['message' => 'hello nekufa!']);
 
-        $jobs = $this->app->get(Runner::class)->listJobs();
+        $jobs = $this->app->get(Runner::class)->getMapping();
         $this->assertNotNull($jobs);
         $this->assertContains('job.info', array_keys($jobs));
         $this->assertContains('hello.world', array_keys($jobs));
