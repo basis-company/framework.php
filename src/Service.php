@@ -9,9 +9,9 @@ class Service
 {
     private $app;
     private $queue;
-    private $running = false;
     private $tube;
 
+    private $task;
     private $session;
 
     public function __construct(Application $app, Queue $queue, $tube)
@@ -63,12 +63,11 @@ class Service
             return;
         }
 
+        $this->task = $task;
+
         $params = $task->offsetExists('data') ? $task['data'] : [];
         if($task->offsetExists('session')) {
             $this->session = $task['session'];
-            if(!array_key_exists('session', $params)) {
-                $params['session'] = $task['session'];
-            }
         }
 
         try {
@@ -90,10 +89,17 @@ class Service
             }
         }
 
-        $task->ack();
+        $this->task = null;
         $this->session = null;
 
+        $task->ack();
+
         return $task;
+    }
+
+    public function getTask()
+    {
+        return $this->task;
     }
 
     public function getTube()

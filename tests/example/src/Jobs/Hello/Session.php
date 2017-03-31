@@ -11,9 +11,9 @@ class Session
 {
     public $session;
 
-    function run()
+    function run(Service $service)
     {
-        $message = "hello $this->session";
+        $message = "hello ".($this->session ?: $service->getSession());
         return compact('message');
     }
 }
