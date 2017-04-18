@@ -2,7 +2,7 @@
 
 namespace Basis\Jobs\Module;
 
-use Basis\Conig;
+use Basis\Config;
 use Basis\Runner;
 use LinkORB\Component\Etcd\Client;
 
