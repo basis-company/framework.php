@@ -13,8 +13,8 @@ class BusinessLogicProvider extends AbstractServiceProvider
 
     public function register()
     {
-    	$this->container->share(BusinessLogic::class, function() {
-    		return new BusinessLogic();
-    	});
+        $this->container->share(BusinessLogic::class, function() {
+            return new BusinessLogic();
+        });
     }
 }

@@ -7,7 +7,7 @@ use Tarantool\Mapper\Mapper;
 
 class <?php echo $class; ?> implements Migration
 {
-    public function migrate(Mapper $manager)
+    public function migrate(Mapper $mapper)
     {
     }
 }
