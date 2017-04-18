@@ -1,6 +1,6 @@
 <?php
 
-namespace Basis\Controllers
+namespace Basis\Controllers;
 
 use Basis\Filesystem;
 use Basis\Runner;
