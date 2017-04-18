@@ -2,6 +2,7 @@
 
 namespace Basis\Providers;
 
+use Basis\Config;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Tarantool\Client\Client as TarantoolClient;
 use Tarantool\Client\Connection\Connection;
@@ -59,7 +60,8 @@ class Tarantool extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(StreamConnection::class, function () {
-            return new StreamConnection('tcp://'.getenv('TARANTOOL_SERVICE_HOST').':'.getenv('TARANTOOL_SERVICE_PORT'));
+            $config = $this->getContainer()->get(Config::class);
+            return new StreamConnection($config['tarantool.uri']);
         });
 
         $this->getContainer()->share(TarantoolClient::class, function() {
