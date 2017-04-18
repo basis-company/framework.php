@@ -61,7 +61,7 @@ class Tarantool extends AbstractServiceProvider
 
         $this->getContainer()->share(StreamConnection::class, function () {
             $config = $this->getContainer()->get(Config::class);
-            return new StreamConnection($config['tarantool.uri']);
+            return new StreamConnection($config['tarantool']);
         });
 
         $this->getContainer()->share(TarantoolClient::class, function() {
