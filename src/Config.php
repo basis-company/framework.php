@@ -12,19 +12,12 @@ class Config implements ArrayAccess
     {
         $this->converter = $converter;
 
-        foreach ($fs->listFiles('resources/config') as $file) {
-            $values = $this->converter->toObject(include $fs->getPath("resources/config/$file"));
-            $current = $this;
-            $name = substr($file, 0, -4);
-            if (stristr($name, '/')) {
-                $namespace = explode('/', $name);
-                $name = array_pop($namespace);
-                foreach ($namespace as $key) {
-                    $current->$key = (object) [];
-                    $current = $current->$key;
-                }
+        $data = include $fs->getPath("resources/config.php");
+        foreach($data as $k => $v) {
+            $this->$k = $v;
+            if(is_array($v) || is_object($v)) {
+                $this->$k = $converter->toObject($v);
             }
-            $current->$name = $values;
         }
     }
 
