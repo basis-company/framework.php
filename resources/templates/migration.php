@@ -2,12 +2,12 @@
 
 namespace <?php echo $namespace; ?>;
 
-use Tarantool\Mapper\Contracts\Migration;
-use Tarantool\Mapper\Contracts\Manager;
+use Tarantool\Mapper\Migration;
+use Tarantool\Mapper\Mapper;
 
 class <?php echo $class; ?> implements Migration
 {
-    public function migrate(Manager $manager)
+    public function migrate(Mapper $manager)
     {
     }
 }

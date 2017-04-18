@@ -15,32 +15,5 @@ class ApplicationTest extends TestSuite
         $container = $this->app->get(Container::class);
         $this->assertInstanceOf(Container::class, $container);
         $this->assertSame($this->app, $container->get(Application::class));
-
-        $this->assertNotNull($this->app->getRunningTime());
-    }
-
-    function testConverter()
-    {
-        $source = [
-            'nick' => 'test',
-            'collection' => [
-                ['id' => 1],
-                ['id' => 2]
-            ]
-        ];
-
-        $converter = $this->app->get(Converter::class);
-
-        $object = $converter->toObject($source);
-
-        $this->assertInternalType('object', $object);
-        $this->assertSame($object->nick, 'test');
-        $this->assertInternalType('array', $object->collection);
-        $this->assertInternalType('object', $object->collection[0]);
-        $this->assertSame(1, $object->collection[0]->id);
-        $this->assertSame(2, $object->collection[1]->id);
-
-        $array = $converter->toArray($object);
-        $this->assertSame($source, $array);
     }
 }

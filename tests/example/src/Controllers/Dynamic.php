@@ -1,6 +1,6 @@
 <?php
 
-namespace Example\Controllers;
+namespace Controllers;
 
 class Dynamic
 {

@@ -6,6 +6,7 @@ class Filesystem
 {
     private $app;
     protected $root;
+    protected $namespace;
 
     public function __construct(Application $app, $root)
     {
@@ -84,13 +85,12 @@ class Filesystem
         return $result;
     }
 
-    public function completeClassName($namespace)
+    public function completeClassName($classname)
     {
-        $config = $this->app->get(Config::class);
-        if($config['app.namespace']) {
-            $namespace = $config['app.namespace'].($namespace ? '\\'.$namespace:'');
+        if($this->namespace && $classname) {
+            return $this->namespace.'\\'.$classname;
         }
-        return $namespace;
+        return $classname;
     }
 
 }

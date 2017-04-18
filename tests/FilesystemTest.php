@@ -23,8 +23,7 @@ class FilesystemTest extends TestSuite
             implode(DIRECTORY_SEPARATOR, [__DIR__, 'example', 'config', 'administrator.php'])
         );
 
-        $this->assertTrue($filesystem->exists('resources', 'config'));
-        $this->assertTrue($filesystem->exists('resources/config/administrator.php'));
-        $this->assertFalse($filesystem->exists('resources/config/not-exists.php'));
+        $this->assertTrue($filesystem->exists('src', 'BusinessLogic.php'));
+        $this->assertFalse($filesystem->exists('src', 'InvalidLogic.php'));
     }
 }

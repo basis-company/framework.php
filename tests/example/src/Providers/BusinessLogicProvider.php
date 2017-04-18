@@ -1,8 +1,8 @@
 <?php
 
-namespace Example\Providers;
+namespace Providers;
 
-use Example\BusinessLogic;
+use BusinessLogic;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 
 class BusinessLogicProvider extends AbstractServiceProvider
@@ -13,5 +13,8 @@ class BusinessLogicProvider extends AbstractServiceProvider
 
     public function register()
     {
+    	$this->container->share(BusinessLogic::class, function() {
+    		return new BusinessLogic();
+    	});
     }
 }

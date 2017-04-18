@@ -2,7 +2,7 @@
 
 use Basis\Http;
 
-use Example\Controllers\Index;
+use Controllers\Index;
 
 class HttpTest extends TestSuite
 {
