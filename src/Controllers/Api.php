@@ -33,7 +33,8 @@ class Api
 
             return [
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'trace' => explode(PHP_EOL, $e->getTraceAsString()),
             ];
         }
     }
