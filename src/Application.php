@@ -5,32 +5,28 @@ namespace Basis;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 
-class Application
+class Application extends Container
 {
     public function __construct($root)
     {
+        parent::__construct();
+
         $fs = new Filesystem($this, $root);
 
-        $this->container = new Container;
-        $this->container->share(Application::class, $this);
-        $this->container->share(Container::class, $this->container);
-        $this->container->share(Framework::class, new Framework($this));
-        $this->container->share(Filesystem::class, $fs);
-        $this->container->share(Http::class, new Http($this));
+        $this->share(Application::class, $this);
+        $this->share(Container::class, $this);
+        $this->share(Framework::class, new Framework($this));
+        $this->share(Filesystem::class, $fs);
+        $this->share(Http::class, new Http($this));
 
-        $this->container->addServiceProvider(Providers\Tarantool::class);
-        $this->container->addServiceProvider(Providers\Etcd::class);
+        $this->addServiceProvider(Providers\Tarantool::class);
+        $this->addServiceProvider(Providers\Etcd::class);
 
         foreach($fs->listClasses('Providers') as $provider) {
-            $this->container->addServiceProvider($provider);
+            $this->addServiceProvider($provider);
         }
 
-        $this->container->delegate(new ReflectionContainer());
-    }
-
-    public function get($class)
-    {
-        return $this->container->get($class);
+        $this->delegate(new ReflectionContainer());
     }
 
     public function dispatch($command, $params = [])
