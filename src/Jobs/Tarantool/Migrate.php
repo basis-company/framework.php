@@ -10,9 +10,13 @@ class Migrate
     public function run(Bootstrap $bootstrap, Filesystem $fs)
     {
         foreach($fs->listFiles('resources/migrations') as $path) {
+
             list($ym, $filename) = explode('/', $path);
             $namespace = date_create_from_format('Ym', $ym)->format('FY');
-            $class = $namespace.'\\'.substr($filename, 0, -4);
+
+            list($date, $time, $name) = explode('_', substr($filename, 0, -4));
+            $class = $namespace.'\\'.$name;
+
             if(!class_exists($class, false)) {
                 include $fs->getPath('resources/migrations/'.$path);
             }

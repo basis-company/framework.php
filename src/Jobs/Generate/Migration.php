@@ -16,6 +16,7 @@ class Migration
     {
         $time = time();
         $namespace = date('FY', $time);
+        $date = date('Ymd_His_', $time);
 
         if(!is_array($this->name)) {
             $this->name = explode(' ', $this->name);
@@ -42,7 +43,7 @@ class Migration
             mkdir($path);
         }
 
-        $filename = $path.'/'.$class.'.php';
+        $filename = $path.'/'.$date.$class.'.php';
         file_put_contents($filename, $contents);
 
         return compact('filename', 'namespace', 'class');
