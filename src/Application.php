@@ -15,12 +15,11 @@ class Application extends Container
 
         $this->share(Application::class, $this);
         $this->share(Container::class, $this);
-        $this->share(Framework::class, new Framework($this));
         $this->share(Filesystem::class, $fs);
-        $this->share(Http::class, new Http($this));
 
-        $this->addServiceProvider(Providers\Tarantool::class);
+        $this->addServiceProvider(Providers\Core::class);
         $this->addServiceProvider(Providers\Etcd::class);
+        $this->addServiceProvider(Providers\Tarantool::class);
 
         foreach($fs->listClasses('Providers') as $provider) {
             $this->addServiceProvider($provider);

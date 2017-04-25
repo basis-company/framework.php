@@ -12,10 +12,16 @@ class Bootstrap
     {
         $runner->dispatch('tarantool.migrate');
 
+        $client->setRoot('services');
+        if(!$client->get($config['name'])) {
+            $client->set($config['name'])
+        }
         $client->setRoot('jobs');
         $meta = $runner->dispatch('module.meta');
         foreach($meta['jobs'] as $job) {
-            $client->set($job, $config['name']);
+            if(!$client->get($job)) {
+                $client->set($job, $config['name']);
+            }
         }
     }
 }
