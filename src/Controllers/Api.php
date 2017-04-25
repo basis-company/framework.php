@@ -20,13 +20,15 @@ class Api
                 throw new Exception("Invalid rpc format");
             }
 
-            if(!$data->job || !$data->params) {
+            if(!property_exists($data, 'job') || !property_exists($data, 'params')) {
                 throw new Exception("Invalid rpc format");
             }
 
+            $params = is_object($data->params) ? get_object_vars($data->params) : [];
+
             return [
                 'success' => true,
-                'data' => $runner->dispatch($data->job, get_object_vars($data->params)),
+                'data' => $runner->dispatch($data->job, $params),
             ];
 
         } catch(Exception $e) {
