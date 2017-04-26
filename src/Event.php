@@ -18,4 +18,12 @@ class Event
             'context' => $context
         ]);
     }
+
+    public function subscribe($event, $listener)
+    {
+        $this->dispatcher->dispatch('event.subscribe', [
+            'event' => $event,
+            'listener' => $listener,
+        ]);
+    }
 }
