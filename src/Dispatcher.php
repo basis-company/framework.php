@@ -32,10 +32,15 @@ class Dispatcher
             ])
         ]);
 
+
         $context = stream_context_create([
             'http' => [
                 'method' => 'POST',
-                'header' => 'Content-Type: application/x-www-form-urlencoded',
+                'header' => implode([
+                    'content-type: application/x-www-form-urlencoded',
+                    'x-real-ip: '.$_SERVER['HTTP_X_REAL_IP'],
+                    'x-session: '.$_SERVER['HTTP_X_SESSION'],
+                ], "\r\n"),
                 'content' => $content,
             ],
         ]);
