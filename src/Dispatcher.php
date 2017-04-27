@@ -14,16 +14,20 @@ class Dispatcher
         $this->etcd = $etcd;
     }
 
-    public function dispatch($job, $params = [])
+    public function dispatch($job, $params = [], $host = null)
     {
-        $this->etcd->setRoot('jobs');
 
-        $service = $this->etcd->get($job);
-        if(!$service) {
-            throw new Exception("No service for job $job");
+        if(!$host) {
+
+            $this->etcd->setRoot('jobs');
+
+            $service = $this->etcd->get($job);
+            if(!$service) {
+                throw new Exception("No service for job $job");
+            }
+
+            $host = getenv(strtoupper($service).'_SERVICE_HOST') ?: $service;
         }
-
-        $host = getenv(strtoupper($service).'_SERVICE_HOST') ?: $service;
 
         $content = http_build_query([
             'rpc' => json_encode([
