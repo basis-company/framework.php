@@ -10,29 +10,58 @@ class Api
 {
     public function index(Runner $runner)
     {
+        if(!array_key_exists('rpc', $_REQUEST)) {
+            return [
+                'success' => false,
+                'message' => 'No rpc defined',
+            ];
+        }
+        $data = json_decode($_REQUEST['rpc']);
+
+        if(!$data) {
+            return [
+                'success' => false,
+                'message' => 'Invalid rpc format',
+            ];
+        }
+
+        $request = is_array($data) ? $data : [$data];
+
+        $response = [];
+        foreach($request as $rpc) {
+            $result = $this->process($runner, $rpc);
+            if(property_exists($rpc, 'tid')) {
+                $result['tid'] = $rpc->tid;
+            }
+            $response[] = $result;
+        }
+        return is_array($data) ? $response : $response[0];
+    }
+
+    private function process($runner, $rpc)
+    {
+        if(!property_exists($rpc, 'job')) {
+            return [
+                'success' => false,
+                'message' => 'Invalid rpc format: no job',
+            ];
+        }
+
+        if(!property_exists($rpc, 'params')) {
+            return [
+                'success' => false,
+                'message' => 'Invalid rpc format: no params',
+            ];
+        }
+
         try {
-
-            if(!array_key_exists('rpc', $_REQUEST)) {
-                throw new Exception("No rpc defined");
-            }
-            $data = json_decode($_REQUEST['rpc']);
-            if(!$data) {
-                throw new Exception("Invalid rpc format");
-            }
-
-            if(!property_exists($data, 'job') || !property_exists($data, 'params')) {
-                throw new Exception("Invalid rpc format");
-            }
-
-            $params = is_object($data->params) ? get_object_vars($data->params) : [];
-
+            $params = is_object($rpc->params) ? get_object_vars($rpc->params) : [];
             return [
                 'success' => true,
-                'data' => $runner->dispatch($data->job, $params),
+                'data' => $runner->dispatch($rpc->job, $params),
             ];
 
         } catch(Exception $e) {
-
             return [
                 'success' => false,
                 'message' => $e->getMessage(),
