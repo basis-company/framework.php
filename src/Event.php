@@ -29,6 +29,14 @@ class Event
         ]);
     }
 
+    public function unsubscribe($event, $listener)
+    {
+        $this->dispatcher->dispatch('event.unsubscribe', [
+            'event' => $event,
+            'listener' => $listener,
+        ]);
+    }
+
     public function fireChanges(Spy $spy)
     {
         if($spy->hasChanges()) {
