@@ -21,6 +21,13 @@ class Event
         ]);
     }
 
+    public function fireChanges(Spy $spy)
+    {
+        if($spy->hasChanges()) {
+            $this->dispatcher->dispatch('event.changes', $spy->getChanges());
+        }
+    }
+
     public function subscribe($event, $listener)
     {
         $this->dispatcher->dispatch('event.subscribe', [
@@ -35,12 +42,5 @@ class Event
             'event' => $event,
             'listener' => $listener,
         ]);
-    }
-
-    public function fireChanges(Spy $spy)
-    {
-        if($spy->hasChanges()) {
-            $this->dispatcher->dispatch('event.changes', $spy->getChanges());
-        }
     }
 }
