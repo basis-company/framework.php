@@ -12,6 +12,7 @@ use Tarantool\Client\Packer\PurePacker;
 use Tarantool\Mapper\Bootsrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Plugins\Spy;
 use Tarantool\Mapper\Schema;
 
 
@@ -24,6 +25,7 @@ class Tarantool extends AbstractServiceProvider
         Mapper::class,
         Packer::class,
         Schema::class,
+        Spy::class,
         StreamConnection::class,
         TarantoolClient::class,
     ];
@@ -46,9 +48,13 @@ class Tarantool extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Mapper::class, function () {
-            return new Mapper(
-                $this->getContainer()->get(Client::class)
-            );
+            $mapper = new Mapper($this->getContainer()->get(Client::class));
+            $mapper->addPlugin(Spy::class);
+            return $mapper;
+        });
+
+        $this->getContainer()->share(Spy::class, function () {
+            return $this->getContainer()->get(Mapper::class)->getPlugin(Spy::class);
         });
 
         $this->getContainer()->share(Packer::class, function () {
