@@ -29,7 +29,7 @@ class Event
         ]);
     }
 
-    public function fireDataChange(Spy $spy)
+    public function fireChanges(Spy $spy)
     {
         if($spy->hasChanges()) {
             $this->dispatcher->dispatch('event.changes', $spy->getChanges());

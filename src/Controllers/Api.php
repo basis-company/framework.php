@@ -38,7 +38,7 @@ class Api
             $response[] = $result;
         }
 
-        $event->fireDataChange($spy);
+        $event->fireChanges($spy);
 
         return is_array($data) ? $response : $response[0];
     }
