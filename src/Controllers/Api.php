@@ -2,13 +2,15 @@
 
 namespace Basis\Controllers;
 
+use Basis\Event;
 use Basis\Filesystem;
 use Basis\Runner;
 use Exception;
+use Tarantool\Mapper\Plugins\Spy;
 
 class Api
 {
-    public function index(Runner $runner)
+    public function index(Runner $runner, Event $event, Spy $spy)
     {
         if(!array_key_exists('rpc', $_REQUEST)) {
             return [
@@ -35,6 +37,9 @@ class Api
             }
             $response[] = $result;
         }
+
+        $event->fireDataChange($spy);
+
         return is_array($data) ? $response : $response[0];
     }
 

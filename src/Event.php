@@ -2,6 +2,8 @@
 
 namespace Basis;
 
+use Tarantool\Mapper\Plugins\Spy;
+
 class Event
 {
     private $dispatcher;
@@ -25,5 +27,12 @@ class Event
             'event' => $event,
             'listener' => $listener,
         ]);
+    }
+
+    public function fireDataChange(Spy $spy)
+    {
+        if($spy->hasChanges()) {
+            $this->dispatcher->dispatch('event.changes', $spy->getChanges());
+        }
     }
 }
