@@ -3,6 +3,7 @@
 namespace Basis\Providers;
 
 use Basis\Config;
+use Basis\Filesystem;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Tarantool\Client\Client as TarantoolClient;
 use Tarantool\Client\Connection\Connection;
@@ -12,6 +13,8 @@ use Tarantool\Client\Packer\PurePacker;
 use Tarantool\Mapper\Bootsrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Plugins\DocBlock;
+use Tarantool\Mapper\Plugins\Sequence;
 use Tarantool\Mapper\Plugins\Spy;
 use Tarantool\Mapper\Schema;
 
@@ -49,6 +52,18 @@ class Tarantool extends AbstractServiceProvider
 
         $this->getContainer()->share(Mapper::class, function () {
             $mapper = new Mapper($this->getContainer()->get(Client::class));
+
+            $docblock = $mapper->addPlugin(DocBlock::class);
+
+            $filesystem = $this->getContainer()->get(Filesystem::class);
+            foreach($filesystem->listClasses('Entities') as $class) {
+                $docblock->register($class);
+            }
+            foreach($filesystem->listClasses('Repositories') as $class) {
+                $docblock->register($class);
+            }
+
+            $mapper->addPlugin(Sequence::class);
             $mapper->addPlugin(Spy::class);
             return $mapper;
         });

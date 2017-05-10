@@ -2,6 +2,7 @@
 
 namespace Basis\Controllers;
 
+use Basis\Config;
 use Basis\Event;
 use Basis\Filesystem;
 use Basis\Runner;
@@ -10,7 +11,7 @@ use Tarantool\Mapper\Plugins\Spy;
 
 class Api
 {
-    public function index(Runner $runner, Event $event, Spy $spy)
+    public function index(Config $config, Runner $runner, Event $event, Spy $spy)
     {
         if(!array_key_exists('rpc', $_REQUEST)) {
             return [

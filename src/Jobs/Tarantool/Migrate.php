@@ -4,11 +4,15 @@ namespace Basis\Jobs\Tarantool;
 
 use Basis\Filesystem;
 use Tarantool\Mapper\Bootstrap;
+use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Plugins\DocBlock;
 
 class Migrate
 {
-    public function run(Bootstrap $bootstrap, Filesystem $fs)
+    public function run(Mapper $mapper, Bootstrap $bootstrap, Filesystem $fs)
     {
+        $mapper->getPlugin(DocBlock::class)->migrate();
+
         foreach($fs->listFiles('resources/migrations') as $path) {
 
             list($ym, $filename) = explode('/', $path);

@@ -5,5 +5,5 @@ return [
     'name' => 'nekufa'
   ],
   'name' => 'example',
-  'tarantool' => 'tcp://127.0.0.1:3301'
+  'tarantool' => 'tcp://'.getenv('TARANTOOL_SERVICE_HOST').':'.getenv('TARANTOOL_SERVICE_PORT')
 ];
