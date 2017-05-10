@@ -5,13 +5,13 @@ namespace Basis\Jobs\Tarantool;
 use Basis\Filesystem;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
-use Tarantool\Mapper\Plugins\DocBlock;
+use Tarantool\Mapper\Plugins\Reflection;
 
 class Migrate
 {
     public function run(Mapper $mapper, Bootstrap $bootstrap, Filesystem $fs)
     {
-        $mapper->getPlugin(DocBlock::class)->migrate();
+        $mapper->getPlugin(Reflection::class)->migrate();
 
         foreach($fs->listFiles('resources/migrations') as $path) {
 

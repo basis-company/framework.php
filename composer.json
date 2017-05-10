@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.0",
-        "tarantool/mapper": "^2.6.1",
+        "tarantool/mapper": "^2.7.0",
         "league/container": "2.4.0",
         "rybakit/msgpack": "v0.2.2",
         "linkorb/etcd-php": "^1.2"
