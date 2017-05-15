@@ -9,7 +9,7 @@ use Basis\Http;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use LinkORB\Component\Etcd\Client;
 
-class Core extends AbstractServiceProvider
+class CoreProvider extends AbstractServiceProvider
 {
     protected $provides = [
         Event::class,

@@ -2,50 +2,34 @@
 
 namespace Basis\Jobs\Module;
 
-use Basis\Config;
-use Basis\Event;
+use Basis\Filesystem;
+use Basis\Etcd;
 use Basis\Runner;
 use Exception;
-use LinkORB\Component\Etcd\Client;
+use ReflectionClass;
+use ReflectionProperty;
 
 class Bootstrap
 {
-    public function run(Runner $runner, Client $client, Config $config, Event $event)
+    public function run(Runner $runner, Etcd $etcd, Filesystem $fs)
     {
         $runner->dispatch('tarantool.migrate');
 
-        $this->store($client, 'services/'.$config['name']);
+        $etcd->registerService();
 
         $meta = $runner->dispatch('module.meta');
         foreach($meta['jobs'] as $job) {
-            $this->store($client, 'jobs/'.$job, $config['name']);
-        }
-
-        if($config->offsetExists('events') && is_array($config['events'])) {
-            foreach($config['events'] as $nick => $listeners) {
-                $listeners = (array) $listeners;
-                foreach($listeners as $listener) {
-                    $event->subscribe($nick, $listener);
-                }
+            $class = new ReflectionClass($runner->getJobClass($job));
+            $params = [];
+            foreach($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+                $params[] = $property->getName();
             }
-        }
-    }
-
-    private function store(Client $client, $path, $value = null)
-    {
-        list($folder, $key) = explode('/', $path);
-
-        $client->setRoot($folder);
-        try {
-            $client->ls('.');
-        } catch(Exception $e) {
-            $client->mkdir('.');
+            $etcd->registerJob($job, $params);
         }
 
-        try {
-            $client->get($key);
-        } catch(Exception $e) {
-            $client->set($key, $value);
+        foreach($fs->listClasses('Listeners') as $class) {
+            $event = str_replace('\\', '.', substr(strtolower($class), 10));
+            $etcd->subscribe($event);
         }
     }
 }

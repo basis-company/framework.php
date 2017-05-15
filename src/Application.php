@@ -17,9 +17,9 @@ class Application extends Container
         $this->share(Container::class, $this);
         $this->share(Filesystem::class, $fs);
 
-        $this->addServiceProvider(Providers\Core::class);
-        $this->addServiceProvider(Providers\Etcd::class);
-        $this->addServiceProvider(Providers\Tarantool::class);
+        $this->addServiceProvider(Providers\CoreProvider::class);
+        $this->addServiceProvider(Providers\EtcdProvider::class);
+        $this->addServiceProvider(Providers\TarantoolProvider::class);
 
         foreach($fs->listClasses('Providers') as $provider) {
             $this->addServiceProvider($provider);

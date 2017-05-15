@@ -19,7 +19,7 @@ use Tarantool\Mapper\Plugins\Spy;
 use Tarantool\Mapper\Schema;
 
 
-class Tarantool extends AbstractServiceProvider
+class TarantoolProvider extends AbstractServiceProvider
 {
     protected $provides = [
         Bootsrap::class,

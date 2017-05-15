@@ -6,12 +6,10 @@ use Tarantool\Mapper\Plugins\Spy;
 
 class Event
 {
-    private $config;
     private $dispatcher;
 
-    public function __construct(Config $config, Dispatcher $dispatcher)
+    public function __construct(Dispatcher $dispatcher)
     {
-        $this->config = $config;
         $this->dispatcher = $dispatcher;
     }
 
@@ -26,26 +24,7 @@ class Event
     public function fireChanges(Spy $spy)
     {
         if($spy->hasChanges()) {
-            $this->dispatcher->dispatch('event.changes', [
-                'changes' => $spy->getChanges(),
-                'service' => $this->config['name'],
-            ]);
+            $this->dispatcher->dispatch('event.changes', $spy->getChanges());
         }
-    }
-
-    public function subscribe($event, $listener)
-    {
-        $this->dispatcher->dispatch('event.subscribe', [
-            'event' => $event,
-            'listener' => $listener,
-        ]);
-    }
-
-    public function unsubscribe($event, $listener)
-    {
-        $this->dispatcher->dispatch('event.unsubscribe', [
-            'event' => $event,
-            'listener' => $listener,
-        ]);
     }
 }
