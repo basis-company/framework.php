@@ -13,7 +13,7 @@ use Tarantool\Client\Packer\PurePacker;
 use Tarantool\Mapper\Bootsrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Mapper;
-use Tarantool\Mapper\Plugins\Reflection;
+use Tarantool\Mapper\Plugins\Annotation;
 use Tarantool\Mapper\Plugins\Sequence;
 use Tarantool\Mapper\Plugins\Spy;
 use Tarantool\Mapper\Schema;
@@ -53,14 +53,14 @@ class Tarantool extends AbstractServiceProvider
         $this->getContainer()->share(Mapper::class, function () {
             $mapper = new Mapper($this->getContainer()->get(Client::class));
 
-            $docblock = $mapper->addPlugin(Reflection::class);
+            $annotation = $mapper->addPlugin(Annotation::class);
 
             $filesystem = $this->getContainer()->get(Filesystem::class);
             foreach($filesystem->listClasses('Entities') as $class) {
-                $docblock->register($class);
+                $annotation->register($class);
             }
             foreach($filesystem->listClasses('Repositories') as $class) {
-                $docblock->register($class);
+                $annotation->register($class);
             }
 
             $mapper->addPlugin(Sequence::class);
