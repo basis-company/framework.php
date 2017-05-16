@@ -32,7 +32,7 @@ class Runner
                 $nick = "$group.$name";
 
                 if(!array_key_exists($nick, $jobs)) {
-                    $jobs[$nick] = $class;
+                    $jobs[strtolower($nick)] = $class;
                 }
             }
 
