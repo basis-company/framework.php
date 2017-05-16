@@ -17,7 +17,9 @@ class EtcdProvider extends AbstractServiceProvider
     public function register()
     {
         $this->getContainer()->share(Client::class, function () {
-            return new Client('http://'.getenv('ETCD_SERVICE_HOST').':'.getenv('ETCD_SERVICE_PORT'));
+            $host = getenv('ETCD_SERVICE_HOST') ?: 'etcd';
+            $port = getenv('ETCD_SERVICE_PORT') ?: 2379;
+            return new Client("http://$host:$port");
         });
         $this->getContainer()->share(Etcd::class, function () {
             $client = $this->getContainer()->get(Client::class);
