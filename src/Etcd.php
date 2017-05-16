@@ -13,7 +13,10 @@ class Etcd
     public function __construct(Client $client, Config $config)
     {
         $this->client = $client;
-        $this->service = $config['name'];
+        $this->service = $config['service'];
+        if(!$this->service) {
+            throw new Exception("No service defined in config");
+        }
     }
 
     public function registerService()
