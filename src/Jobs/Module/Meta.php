@@ -25,7 +25,10 @@ class Meta
 
         $jobs = [];
         foreach($fs->listClasses('Jobs') as $class) {
-            $jobs[] = str_replace('\\', '.', substr(strtolower($class), 5));
+            $reflection = new ReflectionClass($class);
+            if(!$reflection->isAbstract()) {
+                $jobs[] = str_replace('\\', '.', substr(strtolower($class), 5));
+            }
         }
 
         return compact('routes', 'jobs');
