@@ -2,6 +2,7 @@
 
 namespace Basis\Providers;
 
+use Basis\Config;
 use Basis\Dispatcher;
 use Basis\Event;
 use Basis\Framework;
@@ -25,7 +26,7 @@ class CoreProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Event::class, function () {
-            return new Event($this->getContainer()->get(Dispatcher::class));
+            return new Event($this->getContainer()->get(Dispatcher::class), $this->getContainer()->get(Config::class));
         });
         $this->getContainer()->share(Framework::class, function () {
             return new Framework($this->getContainer());

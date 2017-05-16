@@ -19,14 +19,28 @@ class Dispatcher
 
         if(!$host) {
 
-            $this->etcd->setRoot('jobs');
+            $this->etcd->setRoot('jobs/'.$job);
 
-            $service = $this->etcd->get($job);
+            try {
+                $service = $this->etcd->get('service');
+            } catch(Exception $e) {
+                $service = null;
+            }
             if(!$service) {
                 throw new Exception("No service for job $job");
             }
 
-            $host = getenv(strtoupper($service).'_SERVICE_HOST') ?: $service;
+            $host = $service;
+
+            $this->etcd->setRoot('services/' . $service);
+            try {
+                $hostname = $this->etcd->get('host');
+                if($hostname && getenv($hostname)) {
+                    $host = getenv($hostname).':'.getenv($this->etcd->get('port'));
+                }
+            } catch(Exception $e) {
+                throw new Exception("No service $service");
+            }
         }
 
         $content = http_build_query([
