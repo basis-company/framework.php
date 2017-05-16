@@ -39,7 +39,11 @@ class Api
             $response[] = $result;
         }
 
-        $event->fireChanges($spy);
+        try {
+            $event->fireChanges($spy);
+        } catch(Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
 
         return is_array($data) ? $response : $response[0];
     }
