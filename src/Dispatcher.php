@@ -22,24 +22,12 @@ class Dispatcher
             $this->etcd->setRoot('jobs/'.$job);
 
             try {
-                $service = $this->etcd->get('service');
+                $host = $this->etcd->get('service');
             } catch(Exception $e) {
-                $service = null;
+                $host = null;
             }
-            if(!$service) {
+            if(!$host) {
                 throw new Exception("No service for job $job");
-            }
-
-            $host = $service;
-
-            $this->etcd->setRoot('services/' . $service);
-            try {
-                $hostname = $this->etcd->get('host');
-                if($hostname && getenv($hostname)) {
-                    $host = getenv($hostname).':'.getenv($this->etcd->get('port'));
-                }
-            } catch(Exception $e) {
-                throw new Exception("No service $service");
             }
         }
 
