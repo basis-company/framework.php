@@ -3,6 +3,7 @@
 namespace Basis\Providers;
 
 use Basis\Config;
+use Basis\Dispatcher;
 use Basis\Event;
 use Basis\Service;
 use League\Container\ServiceProvider\AbstractServiceProvider;
@@ -26,9 +27,9 @@ class ServiceProvider extends AbstractServiceProvider
         });
         $this->getContainer()->share(Event::class, function () {
             $dispatcher = $this->getContainer()->get(Dispatcher::class);
-            $config = $this->getContainer()->get(Config::class);
+            $service = $this->getContainer()->get(Service::class);
             $spy = $this->getContainer()->get(Spy::class);
-            return new Event($dispatcher, $config, $spy);
+            return new Event($dispatcher, $service, $spy);
         });
         $this->getContainer()->share(Service::class, function () {
             $client = $this->getContainer()->get(Client::class);

@@ -31,12 +31,12 @@ class Event
                     }
                 }
                 if (!count($collection)) {
-                    unset($changes[$action]);
+                    unset($changes->$action);
                 }
             }
 
             $this->dispatcher->dispatch('event.changes', [
-                'changes' => $spy->getChanges(),
+                'changes' => $changes,
                 'service' => $this->service,
             ]);
         }
