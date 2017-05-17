@@ -74,8 +74,7 @@ class Runner
             $instance->$k = $v;
         }
 
-        $container = $this->app->get(Container::class);
-        return $container->call([$instance, 'run']);
+        return $this->app->call([$instance, 'run']);
     }
 
     private function castArguments($class, $arguments)

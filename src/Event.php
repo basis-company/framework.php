@@ -37,7 +37,7 @@ class Event
 
             $this->dispatcher->dispatch('event.changes', [
                 'changes' => $changes,
-                'service' => $this->service,
+                'service' => $this->service->getName(),
             ]);
         }
     }
