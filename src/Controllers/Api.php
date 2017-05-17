@@ -11,7 +11,7 @@ use Tarantool\Mapper\Plugins\Spy;
 
 class Api
 {
-    public function index(Config $config, Runner $runner, Event $event, Spy $spy)
+    public function index(Config $config, Runner $runner, Event $event)
     {
         if(!array_key_exists('rpc', $_REQUEST)) {
             return [
@@ -40,7 +40,8 @@ class Api
         }
 
         try {
-            $event->fireChanges($spy);
+            $event->fireChanges();
+
         } catch(Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }

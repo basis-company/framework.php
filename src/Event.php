@@ -8,27 +8,34 @@ class Event
 {
     private $dispatcher;
     private $service;
+    private $spy;
 
-    public function __construct(Dispatcher $dispatcher, Config $config)
+    public function __construct(Dispatcher $dispatcher, Service $service, Spy $spy)
     {
         $this->dispatcher = $dispatcher;
-        $this->service = $config['service'];
-        if(!$this->service) {
-            throw new Exception("No service defined in config");
-        }
+        $this->service = $service;
+        $this->spy = $spy;
     }
 
-    public function fire($event, $context)
+    public function fireChanges()
     {
-        $this->dispatcher->dispatch('event.fire', [
-            'event' => $event,
-            'context' => $context
-        ]);
-    }
+        if($this->spy->hasChanges()) {
+            // reduce changes list
+            $changes = $this->spy->getChanges();
+            foreach($changes as $action => $collection) {
+                foreach($collection as $space => $entities) {
 
-    public function fireChanges(Spy $spy)
-    {
-        if($spy->hasChanges()) {
+                    $event = $this->service->getName().'.'.$space.'.'.$action;
+
+                    if(!$this->service->eventExists($event)) {
+                        unset($collection[$space]);
+                    }
+                }
+                if(!count($collection)) {
+                    unset($changes[$action]);
+                }
+            }
+
             $this->dispatcher->dispatch('event.changes', [
                 'changes' => $spy->getChanges(),
                 'service' => $this->service,

@@ -3,7 +3,7 @@
 namespace Basis\Jobs\Module;
 
 use Basis\Filesystem;
-use Basis\Etcd;
+use Basis\Service;
 use Basis\Runner;
 use Exception;
 use ReflectionClass;
@@ -11,11 +11,11 @@ use ReflectionProperty;
 
 class Bootstrap
 {
-    public function run(Runner $runner, Etcd $etcd, Filesystem $fs)
+    public function run(Runner $runner, Service $service, Filesystem $fs)
     {
         $runner->dispatch('tarantool.migrate');
 
-        $etcd->registerService();
+        $service->register();
 
         $meta = $runner->dispatch('module.meta');
         foreach($meta['jobs'] as $job) {
@@ -24,12 +24,12 @@ class Bootstrap
             foreach($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
                 $params[] = $property->getName();
             }
-            $etcd->registerJob($job, $params);
+            $service->registerJob($job, $params);
         }
 
         foreach($fs->listClasses('Listeners') as $class) {
             $event = str_replace('\\', '.', substr(strtolower($class), 10));
-            $etcd->subscribe($event);
+            $service->subscribe($event);
         }
     }
 }

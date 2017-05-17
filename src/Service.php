@@ -5,40 +5,61 @@ namespace Basis;
 use Exception;
 use LinkORB\Component\Etcd\Client;
 
-class Etcd
+class Service
 {
     private $client;
-    private $service;
+    private $name;
 
     public function __construct(Client $client, Config $config)
     {
         $this->client = $client;
-        $this->service = $config['service'];
-        if(!$this->service) {
+        $this->name = $config['service'];
+        if(!$this->name) {
             throw new Exception("No service defined in config");
         }
     }
 
-    public function registerService()
+    public function eventExists($event)
     {
-        $this->store("services/$this->service/host", strtoupper($this->service).'_SERVICE_HOST');
-        $this->store("services/$this->service/port", strtoupper($this->service).'_SERVICE_PORT');
+        return $this->exists("events/$event");
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function registerJob($job, $params)
     {
         $this->store("jobs/$job/params", json_encode($params));
-        $this->store("jobs/$job/service", $this->service);
+        $this->store("jobs/$job/service", $this->name);
     }
 
     public function subscribe($event)
     {
-        $this->store("events/$event/$this->service");
+        $this->store("events/$event/$this->name");
     }
 
     public function unsibscribe($event)
     {
-        $this->remove("events/$event/$this->service");
+        $this->remove("events/$event/$this->name");
+    }
+
+    private function exists($path)
+    {
+        $chain = explode('/', $path);
+        $key = array_pop($chain);
+        $folder = implode('/', $chain);
+
+        try {
+            $this->client->setRoot($folder);
+            $this->client->get($key);
+
+        } catch(Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
     private function store($path, $value = null)
