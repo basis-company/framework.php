@@ -14,7 +14,7 @@ class Service
     {
         $this->client = $client;
         $this->name = $config['service'];
-        if(!$this->name) {
+        if (!$this->name) {
             throw new Exception("No service defined in config");
         }
     }
@@ -54,8 +54,7 @@ class Service
         try {
             $this->client->setRoot($folder);
             $this->client->get($key);
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -72,13 +71,13 @@ class Service
         $this->client->setRoot($folder);
         try {
             $this->client->ls('.');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->client->mkdir('.');
         }
 
         try {
             $this->client->get($key);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->client->set($key, $value);
         }
     }
@@ -93,13 +92,13 @@ class Service
         $this->client->setRoot($folder);
         try {
             $this->client->ls('.');
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->client->mkdir('.');
         }
 
         try {
             $this->client->remove($key);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
         }
     }
 }

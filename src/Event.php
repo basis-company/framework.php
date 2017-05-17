@@ -19,19 +19,18 @@ class Event
 
     public function fireChanges()
     {
-        if($this->spy->hasChanges()) {
+        if ($this->spy->hasChanges()) {
             // reduce changes list
             $changes = $this->spy->getChanges();
-            foreach($changes as $action => $collection) {
-                foreach($collection as $space => $entities) {
-
+            foreach ($changes as $action => $collection) {
+                foreach ($collection as $space => $entities) {
                     $event = $this->service->getName().'.'.$space.'.'.$action;
 
-                    if(!$this->service->eventExists($event)) {
+                    if (!$this->service->eventExists($event)) {
                         unset($collection[$space]);
                     }
                 }
-                if(!count($collection)) {
+                if (!count($collection)) {
                     unset($changes[$action]);
                 }
             }

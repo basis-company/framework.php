@@ -11,11 +11,11 @@ class Meta
     public function run(Filesystem $fs)
     {
         $routes = [];
-        foreach($fs->listClasses('Controllers') as $class) {
+        foreach ($fs->listClasses('Controllers') as $class) {
             $nick = substr(strtolower($class), 12);
             $methods = (new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC);
-            foreach($methods as $method) {
-                if($method->getName() != 'index') {
+            foreach ($methods as $method) {
+                if ($method->getName() != 'index') {
                     $routes[] = $nick.'/'.$method->getName();
                 } else {
                     $routes[] = $nick;
@@ -24,9 +24,9 @@ class Meta
         }
 
         $jobs = [];
-        foreach($fs->listClasses('Jobs') as $class) {
+        foreach ($fs->listClasses('Jobs') as $class) {
             $reflection = new ReflectionClass($class);
-            if(!$reflection->isAbstract()) {
+            if (!$reflection->isAbstract()) {
                 $jobs[] = str_replace('\\', '.', substr(strtolower($class), 5));
             }
         }

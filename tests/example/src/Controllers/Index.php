@@ -4,7 +4,7 @@ namespace Controllers;
 
 class Index
 {
-    function index()
+    public function index()
     {
         return 'index page';
     }

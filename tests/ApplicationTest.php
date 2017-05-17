@@ -6,7 +6,7 @@ use League\Container\Container;
 
 class ApplicationTest extends TestSuite
 {
-    function testApplication()
+    public function testApplication()
     {
         $this->assertNotNull($this->app);
         $this->assertInstanceOf(Application::class, $this->app);

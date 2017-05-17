@@ -6,7 +6,7 @@ use LinkORB\Component\Etcd\Client;
 
 class ProviderTest extends TestSuite
 {
-    function test()
+    public function test()
     {
         $container = $this->app->get(Container::class);
         $this->assertTrue($container->has(BusinessLogic::class));

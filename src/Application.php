@@ -21,7 +21,7 @@ class Application extends Container
         $this->addServiceProvider(Providers\ServiceProvider::class);
         $this->addServiceProvider(Providers\TarantoolProvider::class);
 
-        foreach($fs->listClasses('Providers') as $provider) {
+        foreach ($fs->listClasses('Providers') as $provider) {
             $this->addServiceProvider($provider);
         }
 

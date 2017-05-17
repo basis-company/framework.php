@@ -40,7 +40,7 @@ class Filesystem
     {
         $location = "src";
 
-        if($namespace) {
+        if ($namespace) {
             $location .= '/'.str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
         }
 
@@ -49,10 +49,10 @@ class Filesystem
 
         $namespace = $this->completeClassName($namespace);
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $class = str_replace(['\\', '/'], '\\', $file);
             $class = substr($class, 0, -4);
-            if($namespace) {
+            if ($namespace) {
                 $class = $namespace.'\\'.$class;
             }
             $classes[] = $class;
@@ -87,10 +87,9 @@ class Filesystem
 
     public function completeClassName($classname)
     {
-        if($this->namespace && $classname) {
+        if ($this->namespace && $classname) {
             return $this->namespace.'\\'.$classname;
         }
         return $classname;
     }
-
 }

@@ -6,7 +6,7 @@ use Controllers\Index;
 
 class HttpTest extends TestSuite
 {
-    function test()
+    public function test()
     {
         $http = $this->app->get(Http::class);
 

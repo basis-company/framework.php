@@ -4,7 +4,7 @@ use Tarantool\Mapper\Mapper;
 
 class TarantoolTest extends TestSuite
 {
-    function test()
+    public function test()
     {
         $this->app->dispatch('tarantool.migrate');
 

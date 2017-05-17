@@ -13,9 +13,9 @@ class Config implements ArrayAccess
         $this->converter = $converter;
 
         $data = include $fs->getPath("resources/config.php");
-        foreach($data as $k => $v) {
+        foreach ($data as $k => $v) {
             $this->$k = $v;
-            if(is_array($v) || is_object($v)) {
+            if (is_array($v) || is_object($v)) {
                 $this->$k = $converter->toObject($v);
             }
         }
@@ -29,7 +29,7 @@ class Config implements ArrayAccess
     public function offsetGet($offset)
     {
         $value = $this->getNode($offset);
-        if(!is_object($value)) {
+        if (!is_object($value)) {
             return $value;
         }
 
@@ -58,7 +58,7 @@ class Config implements ArrayAccess
 
     public function shouldHave($offset)
     {
-        if(!isset($this[$offset])) {
+        if (!isset($this[$offset])) {
             throw new Exception("No offset $offset");
         }
     }

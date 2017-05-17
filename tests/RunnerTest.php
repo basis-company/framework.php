@@ -6,7 +6,7 @@ use Jobs\Hello\World;
 
 class RunnerTest extends TestSuite
 {
-    function test()
+    public function test()
     {
         $result = $this->app->dispatch('hello.world');
         $this->assertSame($result, ['message' => 'hello world!']);
@@ -23,10 +23,9 @@ class RunnerTest extends TestSuite
         $this->assertNotNull($jobs);
         $this->assertCount(1, $jobs);
         $this->assertContains('hello.world', $jobs);
-
     }
 
-    function testArgumentCasting()
+    public function testArgumentCasting()
     {
         $result = $this->app->dispatch('hello.world', ['nekufa']);
         $this->assertSame($result, ['message' => 'hello nekufa!']);

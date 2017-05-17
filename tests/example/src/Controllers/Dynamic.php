@@ -4,7 +4,7 @@ namespace Controllers;
 
 class Dynamic
 {
-    function __process($url)
+    public function __process($url)
     {
         return "url: $url";
     }

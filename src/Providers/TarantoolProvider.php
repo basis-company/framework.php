@@ -18,7 +18,6 @@ use Tarantool\Mapper\Plugins\Sequence;
 use Tarantool\Mapper\Plugins\Spy;
 use Tarantool\Mapper\Schema;
 
-
 class TarantoolProvider extends AbstractServiceProvider
 {
     protected $provides = [
@@ -35,7 +34,7 @@ class TarantoolProvider extends AbstractServiceProvider
 
     public function register()
     {
-        $this->container->share(Bootsrap::class, function() {
+        $this->container->share(Bootsrap::class, function () {
             return $this->container->get(Mapper::class)->getBootstrap();
         });
 
@@ -56,10 +55,10 @@ class TarantoolProvider extends AbstractServiceProvider
             $annotation = $mapper->addPlugin(Annotation::class);
 
             $filesystem = $this->getContainer()->get(Filesystem::class);
-            foreach($filesystem->listClasses('Entities') as $class) {
+            foreach ($filesystem->listClasses('Entities') as $class) {
                 $annotation->register($class);
             }
-            foreach($filesystem->listClasses('Repositories') as $class) {
+            foreach ($filesystem->listClasses('Repositories') as $class) {
                 $annotation->register($class);
             }
 
@@ -85,9 +84,8 @@ class TarantoolProvider extends AbstractServiceProvider
             return new StreamConnection($config['tarantool']);
         });
 
-        $this->getContainer()->share(TarantoolClient::class, function() {
+        $this->getContainer()->share(TarantoolClient::class, function () {
             return $this->getContainer()->get(Client::class);
         });
-
     }
 }

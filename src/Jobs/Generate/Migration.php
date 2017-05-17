@@ -18,12 +18,12 @@ class Migration
         $namespace = date('FY', $time);
         $date = date('Ymd_His_', $time);
 
-        if(!is_array($this->name)) {
+        if (!is_array($this->name)) {
             $this->name = explode(' ', $this->name);
         }
 
         $class = '';
-        foreach($this->name as $piece) {
+        foreach ($this->name as $piece) {
             $class .= ucfirst($piece);
         }
 
@@ -34,12 +34,12 @@ class Migration
         $contents = ob_get_clean();
 
         $path = $filesystem->getPath('resources/migrations');
-        if(!is_dir($path)) {
+        if (!is_dir($path)) {
             mkdir($path);
         }
 
         $path = $filesystem->getPath('resources/migrations/'.date('Ym', $time));
-        if(!is_dir($path)) {
+        if (!is_dir($path)) {
             mkdir($path);
         }
 

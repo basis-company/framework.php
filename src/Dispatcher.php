@@ -16,17 +16,15 @@ class Dispatcher
 
     public function dispatch($job, $params = [], $host = null)
     {
-
-        if(!$host) {
-
+        if (!$host) {
             $this->etcd->setRoot('jobs/'.$job);
 
             try {
                 $host = $this->etcd->get('service');
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 $host = null;
             }
-            if(!$host) {
+            if (!$host) {
                 throw new Exception("No service for job $job");
             }
         }
@@ -54,7 +52,7 @@ class Dispatcher
         $contents = file_get_contents("http://$host/api", false, $context);
 
         $result = json_decode($contents);
-        if(!$result || !$result->success) {
+        if (!$result || !$result->success) {
             throw new Exception($result->message ?: $contents);
         }
 

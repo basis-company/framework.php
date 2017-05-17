@@ -19,19 +19,18 @@ class Runner
 
     public function getMapping()
     {
-        if(!$this->mapping) {
-
+        if (!$this->mapping) {
             $classes = array_merge(
                 $this->app->get(Filesystem::class)->listClasses('Jobs'),
                 $this->app->get(Framework::class)->listClasses('Jobs')
             );
 
             $jobs = [];
-            foreach($classes as $class) {
+            foreach ($classes as $class) {
                 list($name, $group) = array_map('lcfirst', array_reverse(explode("\\", $class)));
                 $nick = "$group.$name";
 
-                if(!array_key_exists($nick, $jobs)) {
+                if (!array_key_exists($nick, $jobs)) {
                     $jobs[$nick] = $class;
                     $jobs[strtolower($nick)] = $class;
                 }
@@ -45,18 +44,18 @@ class Runner
 
     public function getJobClass($nick)
     {
-        if(!strstr($nick, '.')) {
+        if (!strstr($nick, '.')) {
             throw new LogicException("Incorrect nick - $nick");
         }
 
         $mapping = $this->getMapping();
-        if(!array_key_exists($nick, $mapping)) {
+        if (!array_key_exists($nick, $mapping)) {
             throw new LogicException("No job $nick");
         }
 
         $class = $mapping[$nick];
 
-        if(!class_exists($class)) {
+        if (!class_exists($class)) {
             throw new LogicException("No class for job $nick");
         }
         return $class;
@@ -67,11 +66,11 @@ class Runner
         $class = $this->getJobClass($nick);
 
         $instance = $this->app->get($class);
-        if(array_key_exists(0, $arguments)) {
+        if (array_key_exists(0, $arguments)) {
             $arguments = $this->castArguments($class, $arguments);
         }
 
-        foreach($arguments as $k => $v) {
+        foreach ($arguments as $k => $v) {
             $instance->$k = $v;
         }
 
@@ -83,7 +82,7 @@ class Runner
     {
         $reflection = new ReflectionClass($class);
         $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
-        if(count($properties) == 1) {
+        if (count($properties) == 1) {
             return [
                 $properties[0]->getName() => count($arguments) == 1
                     ? $arguments[0]

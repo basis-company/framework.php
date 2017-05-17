@@ -9,7 +9,7 @@ class World
 {
     public $name = 'world';
 
-    function run()
+    public function run()
     {
         $message = "hello $this->name!";
         return compact('message');
