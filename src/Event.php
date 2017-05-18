@@ -35,10 +35,14 @@ class Event
                 }
             }
 
-            $this->dispatcher->dispatch('event.changes', [
-                'changes' => $changes,
-                'service' => $this->service->getName(),
-            ]);
+            if (count($changes)) {
+                $this->dispatcher->dispatch('event.changes', [
+                    'changes' => $changes,
+                    'service' => $this->service->getName(),
+                ]);
+            }
+
+            $this->spy->reset();
         }
     }
 }
