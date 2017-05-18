@@ -2,6 +2,7 @@
 
 namespace Basis\Jobs\Module;
 
+use Basis\Converter;
 use Basis\Filesystem;
 use Basis\Service;
 use Basis\Runner;
@@ -11,7 +12,7 @@ use ReflectionProperty;
 
 class Bootstrap
 {
-    public function run(Runner $runner, Service $service, Filesystem $fs)
+    public function run(Runner $runner, Service $service, Filesystem $fs, Converter $converter)
     {
         $runner->dispatch('tarantool.migrate');
 
@@ -26,7 +27,13 @@ class Bootstrap
         }
 
         foreach ($fs->listClasses('Listeners') as $class) {
-            $event = str_replace('\\', '.', substr(strtolower($class), 10));
+            $chain = str_replace('\\', '.', substr($class, 10));
+
+            foreach ($chain as $k => $v) {
+                $chain[$k] = $converter->toCamelCase($v);
+            }
+            $event = implode('.', $event);
+
             $service->subscribe($event);
         }
     }
