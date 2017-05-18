@@ -4,10 +4,10 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.0",
-        "tarantool/mapper": "^2.7.6",
-        "league/container": "2.4.0",
+        "tarantool/mapper": "^2.7.8",
+        "league/container": "2.4.1",
         "rybakit/msgpack": "v0.2.2",
-        "linkorb/etcd-php": "^1.2",
+        "linkorb/etcd-php": "^1.2.1",
         "phpdocumentor/reflection-docblock": "^3.1"
     },
     "require-dev": {
