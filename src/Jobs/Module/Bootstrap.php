@@ -3,9 +3,10 @@
 namespace Basis\Jobs\Module;
 
 use Basis\Converter;
+use Basis\Event;
 use Basis\Filesystem;
-use Basis\Service;
 use Basis\Runner;
+use Basis\Service;
 use Exception;
 use ReflectionClass;
 use ReflectionProperty;
