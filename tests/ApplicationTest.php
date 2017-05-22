@@ -16,4 +16,12 @@ class ApplicationTest extends TestSuite
         $this->assertInstanceOf(Container::class, $container);
         $this->assertSame($this->app, $container->get(Application::class));
     }
+
+    public function testAssets()
+    {
+        $assets = $this->app->dispatch('module.assets');
+        $this->assertArrayHasKey('hash', $assets);
+        $this->assertArrayHasKey('js', $assets);
+        $this->assertArrayHasKey('test.js', $assets['js']);
+    }
 }

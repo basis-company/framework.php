@@ -12,7 +12,7 @@ use ReflectionProperty;
 
 class Bootstrap
 {
-    public function run(Runner $runner, Service $service, Filesystem $fs, Converter $converter)
+    public function run(Runner $runner, Service $service, Event $event)
     {
         $runner->dispatch('tarantool.migrate');
 
@@ -26,15 +26,11 @@ class Bootstrap
             $service->registerJob($job, $params);
         }
 
-        foreach ($fs->listClasses('Listeners') as $class) {
-            $chain = str_replace('\\', '.', substr($class, 10));
-
-            foreach ($chain as $k => $v) {
-                $chain[$k] = $converter->toCamelCase($v);
-            }
-            $event = implode('.', $event);
-
+        foreach ($event->getSubscription() as $event => $listeners) {
             $service->subscribe($event);
         }
+
+        $assets = $runner->dispatch('module.assets');
+        $service->updateAssetsVersion($assets['hash']);
     }
 }

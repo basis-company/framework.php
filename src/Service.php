@@ -45,6 +45,11 @@ class Service
         $this->remove("events/$event/$this->name");
     }
 
+    public function updateAssetsVersion($hash)
+    {
+        $this->store("assets/$this->name", $hash);
+    }
+
     private function exists($path)
     {
         $chain = explode('/', $path);
@@ -76,7 +81,9 @@ class Service
         }
 
         try {
-            $this->client->get($key);
+            if ($this->client->get($key) != $value) {
+                $this->client->set($key, $value);
+            }
         } catch (Exception $e) {
             $this->client->set($key, $value);
         }

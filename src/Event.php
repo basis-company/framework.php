@@ -3,18 +3,40 @@
 namespace Basis;
 
 use Tarantool\Mapper\Plugins\Spy;
+use ReflectionClass;
 
 class Event
 {
     private $dispatcher;
+    private $filesystem;
     private $service;
     private $spy;
 
-    public function __construct(Dispatcher $dispatcher, Service $service, Spy $spy)
+    public function __construct(Dispatcher $dispatcher, Service $service, Spy $spy, Filesystem $filesystem)
     {
         $this->dispatcher = $dispatcher;
+        $this->filesystem = $filesystem;
         $this->service = $service;
         $this->spy = $spy;
+    }
+
+    public function getSubscription()
+    {
+        $subscription = [];
+        foreach ($this->filesystem->listClasses('Listeners') as $class) {
+            $reflection = new ReflectionClass($class);
+            if ($reflection->isAbstract()) {
+                continue;
+            }
+            foreach ($reflection->getStaticPropertyValue('events') as $event) {
+                if (!array_key_exists($event, $subscription)) {
+                    $subscription[$event] = [];
+                }
+                $subscription[$event][] = substr($class, strlen('Listeners\\'));
+            }
+        }
+
+        return $subscription;
     }
 
     public function fireChanges()

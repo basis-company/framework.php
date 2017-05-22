@@ -5,6 +5,7 @@ namespace Basis\Providers;
 use Basis\Config;
 use Basis\Dispatcher;
 use Basis\Event;
+use Basis\Filesystem;
 use Basis\Service;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use LinkORB\Component\Etcd\Client;
@@ -29,7 +30,8 @@ class ServiceProvider extends AbstractServiceProvider
             $dispatcher = $this->getContainer()->get(Dispatcher::class);
             $service = $this->getContainer()->get(Service::class);
             $spy = $this->getContainer()->get(Spy::class);
-            return new Event($dispatcher, $service, $spy);
+            $filesystem = $this->getContainer()->get(Filesystem::class);
+            return new Event($dispatcher, $service, $spy, $filesystem);
         });
         $this->getContainer()->share(Service::class, function () {
             $client = $this->getContainer()->get(Client::class);
