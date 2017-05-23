@@ -35,6 +35,11 @@ class Service
         $this->store("jobs/$job/service", $this->name);
     }
 
+    public function registerRoute($route)
+    {
+        $this->store("routes/$route", $this->name);
+    }
+
     public function subscribe($event)
     {
         $this->store("events/$event/$this->name");

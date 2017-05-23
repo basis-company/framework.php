@@ -27,6 +27,10 @@ class Bootstrap
             $service->registerJob($job, $params);
         }
 
+        foreach ($meta['routes'] as $route) {
+            $service->registerRoute($route);
+        }
+
         foreach ($event->getSubscription() as $event => $listeners) {
             $service->subscribe($event);
         }

@@ -4,7 +4,7 @@ namespace Basis\Controllers;
 
 use Basis\Application;
 use Basis\Event as BasisEvent;
-use Basis\Service
+use Basis\Service;
 use Exception;
 
 class Event
@@ -46,7 +46,6 @@ class Event
 
                 $result[$listener] = $app->call([$instance, 'run']);
             }
-
 
             return [
                 'success' => true,

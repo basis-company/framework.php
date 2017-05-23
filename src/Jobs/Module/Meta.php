@@ -15,11 +15,7 @@ class Meta
             $nick = substr(strtolower($class), 12);
             $methods = (new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
-                if ($method->getName() != 'index') {
-                    $routes[] = $nick.'/'.$method->getName();
-                } else {
-                    $routes[] = $nick;
-                }
+                $routes[] = $nick.'/'.$method->getName();
             }
         }
 
