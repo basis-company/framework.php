@@ -2,7 +2,7 @@
 
 use Tarantool\Mapper\Mapper;
 
-use Repositories\NoteRepository;
+use Repository\NoteRepository;
 
 class TarantoolTest extends TestSuite
 {

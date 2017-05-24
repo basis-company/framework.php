@@ -2,7 +2,7 @@
 
 use Basis\Http;
 
-use Controllers\Index;
+use Controller\Index;
 
 class HttpTest extends TestSuite
 {
@@ -31,5 +31,8 @@ class HttpTest extends TestSuite
         $this->assertSame('url: ', $http->process("/dynamic/"));
         $this->assertSame('url: slug', $http->process("/dynamic/slug"));
         $this->assertSame('url: slug/sub', $http->process("/dynamic/slug/sub"));
+
+        $meta = $this->app->dispatch('module.meta');
+        $this->assertContains('index/index', $meta['routes']);
     }
 }

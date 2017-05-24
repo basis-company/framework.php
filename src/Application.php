@@ -5,7 +5,7 @@ namespace Basis;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 use Tarantool\Mapper\Mapper;
-use Tarantool\Mapper\Plugins\Annotation;
+use Tarantool\Mapper\Plugin\Annotation;
 use Tarantool\Mapper\Repository;
 
 class Application extends Container
@@ -20,11 +20,11 @@ class Application extends Container
         $this->share(Container::class, $this);
         $this->share(Filesystem::class, $fs);
 
-        $this->addServiceProvider(Providers\CoreProvider::class);
-        $this->addServiceProvider(Providers\ServiceProvider::class);
-        $this->addServiceProvider(Providers\TarantoolProvider::class);
+        $this->addServiceProvider(Provider\CoreProvider::class);
+        $this->addServiceProvider(Provider\ServiceProvider::class);
+        $this->addServiceProvider(Provider\TarantoolProvider::class);
 
-        foreach ($fs->listClasses('Providers') as $provider) {
+        foreach ($fs->listClasses('Provider') as $provider) {
             $this->addServiceProvider($provider);
         }
 

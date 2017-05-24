@@ -21,8 +21,8 @@ class Runner
     {
         if (!$this->mapping) {
             $classes = array_merge(
-                $this->app->get(Filesystem::class)->listClasses('Jobs'),
-                $this->app->get(Framework::class)->listClasses('Jobs')
+                $this->app->get(Filesystem::class)->listClasses('Job'),
+                $this->app->get(Framework::class)->listClasses('Job')
             );
 
             $jobs = [];

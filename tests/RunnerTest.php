@@ -1,8 +1,8 @@
 <?php
 
-use Basis\Jobs\Job\Info;
+use Basis\Job\Job\Info;
 use Basis\Runner;
-use Jobs\Hello\World;
+use Job\Hello\World;
 
 class RunnerTest extends TestSuite
 {

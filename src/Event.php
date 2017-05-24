@@ -2,7 +2,7 @@
 
 namespace Basis;
 
-use Tarantool\Mapper\Plugins\Spy;
+use Tarantool\Mapper\Plugin\Spy;
 use ReflectionClass;
 
 class Event
@@ -23,7 +23,7 @@ class Event
     public function getSubscription()
     {
         $subscription = [];
-        foreach ($this->filesystem->listClasses('Listeners') as $class) {
+        foreach ($this->filesystem->listClasses('Listener') as $class) {
             $reflection = new ReflectionClass($class);
             if ($reflection->isAbstract()) {
                 continue;
@@ -32,7 +32,7 @@ class Event
                 if (!array_key_exists($event, $subscription)) {
                     $subscription[$event] = [];
                 }
-                $subscription[$event][] = substr($class, strlen('Listeners\\'));
+                $subscription[$event][] = substr($class, strlen('Listener\\'));
             }
         }
 
