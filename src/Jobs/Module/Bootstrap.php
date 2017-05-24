@@ -5,6 +5,7 @@ namespace Basis\Jobs\Module;
 use Basis\Converter;
 use Basis\Event;
 use Basis\Filesystem;
+use Basis\Framework;
 use Basis\Runner;
 use Basis\Service;
 use Exception;
@@ -13,7 +14,7 @@ use ReflectionProperty;
 
 class Bootstrap
 {
-    public function run(Runner $runner, Service $service, Event $event)
+    public function run(Runner $runner, Service $service, Event $event, Framework $framework, Filesystem $fs)
     {
         $runner->dispatch('tarantool.migrate');
 
@@ -37,5 +38,13 @@ class Bootstrap
 
         $assets = $runner->dispatch('module.assets');
         $service->updateAssetsVersion($assets['hash']);
+
+        foreach ($framework->listFiles('resources/defaults') as $file) {
+            if (!$fs->exists($file)) {
+                $source = $framework->getPath("resources/defaults/$file");
+                $destination = $fs->getPath($file);
+                file_put_contents($destination, file_get_contents($source));
+            }
+        }
     }
 }
