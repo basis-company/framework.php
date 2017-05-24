@@ -37,6 +37,8 @@ class Http
             }
             $url = substr($uri, strlen($controller)+2);
             $method = '__process';
+        } else {
+            $url = substr($uri, (strlen($controller) + strlen($method) + 3));
         }
 
         $container = $this->app->get(Container::class);
