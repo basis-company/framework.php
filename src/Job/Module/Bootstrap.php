@@ -37,18 +37,20 @@ class Bootstrap
             $service->subscribe($event);
         }
 
-        $assets = $runner->dispatch('module.assets');
-        $dispatcher->dispatch('asset.register', [
-            'service' => $service->getName(),
-            'hash' => $assets['hash'],
-        ]);
-
         foreach ($framework->listFiles('resources/default') as $file) {
             if (!$fs->exists($file)) {
                 $source = $framework->getPath("resources/default/$file");
                 $destination = $fs->getPath($file);
                 file_put_contents($destination, file_get_contents($source));
             }
+        }
+
+        if($service->getName() != 'web') {
+            $assets = $runner->dispatch('module.assets');
+            $dispatcher->dispatch('asset.register', [
+                'service' => $service->getName(),
+                'hash' => $assets['hash'],
+            ]);
         }
     }
 }
