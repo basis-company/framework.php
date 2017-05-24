@@ -50,11 +50,6 @@ class Service
         $this->remove("events/$event/$this->name");
     }
 
-    public function updateAssetsVersion($hash)
-    {
-        $this->store("assets/$this->name", $hash);
-    }
-
     private function exists($path)
     {
         $chain = explode('/', $path);
