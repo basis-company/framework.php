@@ -39,9 +39,9 @@ class Bootstrap
         $assets = $runner->dispatch('module.assets');
         $service->updateAssetsVersion($assets['hash']);
 
-        foreach ($framework->listFiles('resources/defaults') as $file) {
+        foreach ($framework->listFiles('resources/default') as $file) {
             if (!$fs->exists($file)) {
-                $source = $framework->getPath("resources/defaults/$file");
+                $source = $framework->getPath("resources/default/$file");
                 $destination = $fs->getPath($file);
                 file_put_contents($destination, file_get_contents($source));
             }
