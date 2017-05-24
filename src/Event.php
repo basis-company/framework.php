@@ -39,6 +39,14 @@ class Event
         return $subscription;
     }
 
+    public function fire($event, $context)
+    {
+        $this->dispatcher->dispatch('event.fire', [
+            'event' => $this->service->getName().'.'.$event,
+            'context' => $context,
+        ]);
+    }
+
     public function fireChanges()
     {
         if ($this->spy->hasChanges()) {
