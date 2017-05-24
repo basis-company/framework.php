@@ -53,7 +53,6 @@ class TarantoolProvider extends AbstractServiceProvider
             $mapper = new Mapper($this->getContainer()->get(Client::class));
 
             $annotation = $mapper->addPlugin(Annotation::class);
-            $annotation->setRepositoryPostfix('Repository');
 
             $filesystem = $this->getContainer()->get(Filesystem::class);
             foreach ($filesystem->listClasses('Entity') as $class) {

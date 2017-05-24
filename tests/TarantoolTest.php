@@ -2,7 +2,7 @@
 
 use Tarantool\Mapper\Mapper;
 
-use Repository\NoteRepository;
+use Repository\Note;
 
 class TarantoolTest extends TestSuite
 {
@@ -24,7 +24,7 @@ class TarantoolTest extends TestSuite
 
     public function testRepositoryRegistration()
     {
-        $repository = $this->app->get(NoteRepository::class);
+        $repository = $this->app->get(Note::class);
         $this->assertSame($this->app->get(Mapper::class), $repository->getMapper());
     }
 }
