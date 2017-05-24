@@ -31,9 +31,9 @@ class Application extends Container
         $this->delegate(new ReflectionContainer());
     }
 
-    public function dispatch($command, $params = [])
+    public function dispatch($job, $params = [])
     {
-        return $this->get(Runner::class)->dispatch($command, $params);
+        return $this->get(Runner::class)->dispatch($job, $params);
     }
 
     public function get($alias, array $args = [])
