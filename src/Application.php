@@ -41,7 +41,7 @@ class Application extends Container
         if (!$this->hasShared($alias, true) && is_subclass_of($alias, Repository::class)) {
             $spaceName = $this->get(Mapper::class)
                 ->getPlugin(Annotation::class)
-                ->getSpaceName($alias);
+                ->getRepositorySpaceName($alias);
 
             if ($spaceName) {
                 $instance = $this->get(Mapper::class)->getRepository($spaceName);
