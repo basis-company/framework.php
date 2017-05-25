@@ -45,12 +45,12 @@ class Bootstrap
             }
         }
 
-        if($service->getName() != 'web') {
-            $assets = $runner->dispatch('module.assets');
-            $dispatcher->dispatch('asset.register', [
+        $assets = $runner->dispatch('module.assets');
+
+        ($service->getName() == 'web' ? $runner : $dispatcher)
+            ->dispatch('asset.register', [
                 'service' => $service->getName(),
                 'hash' => $assets['hash'],
             ]);
-        }
     }
 }
