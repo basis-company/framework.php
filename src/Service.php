@@ -29,6 +29,26 @@ class Service
         return $this->name;
     }
 
+    public function register()
+    {
+        $this->store("services/$this->name");
+    }
+
+    public function listServices()
+    {
+        $this->client->setRoot('services');
+
+        $services = [];
+        foreach ($this->client->ls() as $entry) {
+            $name = substr($entry, strlen('/services/'));
+            if ($name) {
+                $services[] = $name;
+            }
+        }
+
+        return $services;
+    }
+
     public function registerJob($job, $params)
     {
         $this->store("jobs/$job/params", json_encode($params));
