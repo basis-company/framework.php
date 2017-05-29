@@ -20,6 +20,8 @@ class TarantoolTest extends TestSuite
 
         $this->assertNotNull($note->id);
         $this->assertSame($note->message, 'test');
+
+        $this->assertSame($note->app, $this->app);
     }
 
     public function testRepositoryRegistration()

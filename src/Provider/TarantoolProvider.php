@@ -17,11 +17,13 @@ use Tarantool\Client\Request\ReplaceRequest;
 use Tarantool\Client\Request\UpdateRequest;
 use Tarantool\Mapper\Bootsrap;
 use Tarantool\Mapper\Client;
+use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Annotation;
 use Tarantool\Mapper\Plugin\NestedSet;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
+use Tarantool\Mapper\Plugin;
 use Tarantool\Mapper\Pool;
 use Tarantool\Mapper\Schema;
 
@@ -99,9 +101,19 @@ class TarantoolProvider extends AbstractServiceProvider
                 $annotation->register($class);
             }
 
+
             $mapper->addPlugin(NestedSet::class);
             $mapper->addPlugin(Sequence::class);
             $mapper->addPlugin(Spy::class);
+
+            $mapper->application = $this->getContainer();
+
+            $mapper->addPlugin(new class($mapper) extends Plugin {
+                public function afterInstantiate (Entity $entity) {
+                    $entity->app = $this->mapper->application;
+                }
+            });
+
             return $mapper;
         });
 
