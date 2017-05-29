@@ -14,6 +14,7 @@ use Tarantool\Mapper\Bootsrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Annotation;
+use Tarantool\Mapper\Plugin\NestedSet;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
 use Tarantool\Mapper\Schema;
@@ -62,6 +63,7 @@ class TarantoolProvider extends AbstractServiceProvider
                 $annotation->register($class);
             }
 
+            $mapper->addPlugin(NestedSet::class);
             $mapper->addPlugin(Sequence::class);
             $mapper->addPlugin(Spy::class);
             return $mapper;
