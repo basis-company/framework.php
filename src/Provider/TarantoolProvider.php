@@ -12,11 +12,9 @@ use Tarantool\Client\Connection\StreamConnection;
 use Tarantool\Client\Packer\Packer;
 use Tarantool\Client\Packer\PurePacker;
 use Tarantool\Client\Request\DeleteRequest;
-use Tarantool\Client\Request\EvaluateRequest;
 use Tarantool\Client\Request\InsertRequest;
 use Tarantool\Client\Request\ReplaceRequest;
 use Tarantool\Client\Request\UpdateRequest;
-use Tarantool\Client\Request\UpsertRequest;
 use Tarantool\Mapper\Bootsrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Mapper;
@@ -54,25 +52,27 @@ class TarantoolProvider extends AbstractServiceProvider
             $pool = new Pool();
             $pool->register('default', $mapper);
 
-            $name = $this->getContainer()->get(Service::class)->getName();
-            $pool->register($name, $mapper);
+            $service = $this->getContainer()->get(Service::class);
 
-            foreach ($service->listServices() as $service) {
-                if ($service != $name) {
-                    $pool->register($service, function () use ($service) {
-                        $connection = new StreamConnection('tcp://'.$service.'-db:3301');
+            $local = $service->getName();
+            $pool->register($local, $mapper);
+
+            foreach ($service->listServices() as $remote) {
+                if ($remote != $local) {
+                    $pool->register($remote, function () use ($remote) {
+                        $connection = new StreamConnection('tcp://'.$remote.'-db:3301');
                         $packer = new PurePacker();
                         $client = new Client($connection, $packer);
                         $client->disableRequest(DeleteRequest::class);
-                        $client->disableRequest(EvaluateRequest::class);
                         $client->disableRequest(InsertRequest::class);
                         $client->disableRequest(ReplaceRequest::class);
                         $client->disableRequest(UpdateRequest::class);
-                        $client->disableRequest(UpsertRequest::class);
                         return new Mapper($client);
                     });
                 }
             }
+
+            return $pool;
         });
 
         $this->getContainer()->share(Client::class, function () {
