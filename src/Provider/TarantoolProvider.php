@@ -4,12 +4,19 @@ namespace Basis\Provider;
 
 use Basis\Config;
 use Basis\Filesystem;
+use Basis\Service;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Tarantool\Client\Client as TarantoolClient;
 use Tarantool\Client\Connection\Connection;
 use Tarantool\Client\Connection\StreamConnection;
 use Tarantool\Client\Packer\Packer;
 use Tarantool\Client\Packer\PurePacker;
+use Tarantool\Client\Request\DeleteRequest;
+use Tarantool\Client\Request\EvaluateRequest;
+use Tarantool\Client\Request\InsertRequest;
+use Tarantool\Client\Request\ReplaceRequest;
+use Tarantool\Client\Request\UpdateRequest;
+use Tarantool\Client\Request\UpsertRequest;
 use Tarantool\Mapper\Bootsrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Mapper;
@@ -17,6 +24,7 @@ use Tarantool\Mapper\Plugin\Annotation;
 use Tarantool\Mapper\Plugin\NestedSet;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
+use Tarantool\Mapper\Pool;
 use Tarantool\Mapper\Schema;
 
 class TarantoolProvider extends AbstractServiceProvider
@@ -27,6 +35,7 @@ class TarantoolProvider extends AbstractServiceProvider
         Connection::class,
         Mapper::class,
         Packer::class,
+        Pool::class,
         Schema::class,
         Spy::class,
         StreamConnection::class,
@@ -37,6 +46,33 @@ class TarantoolProvider extends AbstractServiceProvider
     {
         $this->container->share(Bootsrap::class, function () {
             return $this->container->get(Mapper::class)->getBootstrap();
+        });
+
+        $this->getContainer()->share(Pool::class, function () {
+            $mapper = $this->getContainer()->get(Mapper::class);
+
+            $pool = new Pool();
+            $pool->register('default', $mapper);
+
+            $name = $this->getContainer()->get(Service::class)->getName();
+            $pool->register($name, $mapper);
+
+            foreach ($service->listServices() as $service) {
+                if ($service != $name) {
+                    $pool->register($service, function () use ($service) {
+                        $connection = new StreamConnection('tcp://'.$service.'-db:3301');
+                        $packer = new PurePacker();
+                        $client = new Client($connection, $packer);
+                        $client->disableRequest(DeleteRequest::class);
+                        $client->disableRequest(EvaluateRequest::class);
+                        $client->disableRequest(InsertRequest::class);
+                        $client->disableRequest(ReplaceRequest::class);
+                        $client->disableRequest(UpdateRequest::class);
+                        $client->disableRequest(UpsertRequest::class);
+                        return new Mapper($client);
+                    });
+                }
+            }
         });
 
         $this->getContainer()->share(Client::class, function () {
