@@ -2,6 +2,7 @@
 <?php
 
 use Basis\Application;
+use Basis\Event;
 
 date_default_timezone_set('Europe/Moscow');
 $root = getcwd();
@@ -15,6 +16,12 @@ $job = $argv ? array_shift($argv) : 'module.meta';
 $result = $app->dispatch($job, $argv ?: []);
 if($result) {
     var_dump($result);
+}
+
+try {
+    $app->get(Event::class)->fireChanges();
+} catch (Exception $e) {
+    return ['success' => false, 'message' => $e->getMessage()];
 }
 
 echo PHP_EOL;
