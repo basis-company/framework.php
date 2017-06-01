@@ -2,6 +2,7 @@
 
 namespace Basis\Controller;
 
+use Basis\Application;
 use Basis\Config;
 use Basis\Event;
 use Basis\Filesystem;
@@ -65,9 +66,12 @@ class Api
 
         try {
             $params = is_object($rpc->params) ? get_object_vars($rpc->params) : [];
+            $data = $runner->dispatch($rpc->job, $params);
+            $data = $this->removeSystemObjects($data);
+
             return [
                 'success' => true,
-                'data' => $runner->dispatch($rpc->job, $params),
+                'data' => $data,
             ];
         } catch (Exception $e) {
             return [
@@ -76,5 +80,28 @@ class Api
                 'trace' => explode(PHP_EOL, $e->getTraceAsString()),
             ];
         }
+    }
+
+    private function removeSystemObjects($data)
+    {
+        if (!$data) {
+            return [];
+        }
+
+        if (is_object($data)) {
+            $data = get_object_vars($data);
+        }
+
+        foreach ($data as $k => $v) {
+            if (is_array($v) || is_object($v)) {
+                if ($v instanceof Application) {
+                    unset($data[$k]);
+                } else {
+                    $data[$k] = $this->removeSystemObjects($v);
+                }
+            }
+        }
+
+        return $data;
     }
 }
