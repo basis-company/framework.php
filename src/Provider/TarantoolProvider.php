@@ -109,7 +109,8 @@ class TarantoolProvider extends AbstractServiceProvider
             $mapper->application = $this->getContainer();
 
             $mapper->addPlugin(new class($mapper) extends Plugin {
-                public function afterInstantiate (Entity $entity) {
+                public function afterInstantiate(Entity $entity)
+                {
                     $entity->app = $this->mapper->application;
                 }
             });
