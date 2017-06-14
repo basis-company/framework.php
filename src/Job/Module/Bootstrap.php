@@ -14,8 +14,7 @@ use ReflectionProperty;
 
 class Bootstrap
 {
-    public function run(Runner $runner, Dispatcher $dispatcher, Service $service,
-                        Event $event, Framework $framework, Filesystem $fs)
+    public function run(Runner $runner, Dispatcher $dispatcher, Service $service, Event $event, Framework $framework, Filesystem $fs)
     {
         $service->register();
 

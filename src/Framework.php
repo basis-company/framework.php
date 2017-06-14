@@ -11,4 +11,9 @@ class Framework extends Filesystem
     {
         $this->root = dirname(__DIR__);
     }
+
+    public function listClasses($namespace = '', $location = 'src')
+    {
+        return parent::listClasses($namespace, $location);
+    }
 }

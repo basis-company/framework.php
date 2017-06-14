@@ -11,6 +11,6 @@ class EventTest extends TestSuite
         $subscription = $event->getSubscription();
 
         $this->assertArrayHasKey('person.created', $subscription);
-        $this->assertSame($subscription['person.created'], ['Create\\Login']);
+        $this->assertSame($subscription['person.created'], ['CreateLogin']);
     }
 }

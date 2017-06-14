@@ -16,7 +16,7 @@ class Migration
     {
         $time = time();
         $namespace = date('FY', $time);
-        $date = date('Ymd_His_', $time);
+        $created_at = date('Y-m-d H:i:s', $time);
 
         if (!is_array($this->name)) {
             $this->name = explode(' ', $this->name);
@@ -33,17 +33,17 @@ class Migration
         include($template);
         $contents = ob_get_clean();
 
-        $path = $filesystem->getPath('resources/migrations');
+        $path = $filesystem->getPath('php/Migration');
         if (!is_dir($path)) {
             mkdir($path);
         }
 
-        $path = $filesystem->getPath('resources/migrations/'.date('Ym', $time));
+        $path = $filesystem->getPath('php/Migration/'.$namespace);
         if (!is_dir($path)) {
             mkdir($path);
         }
 
-        $filename = $path.'/'.$date.$class.'.php';
+        $filename = 'php/Migration/'.$namespace.'/'.$class.'.php';
         file_put_contents($filename, $contents);
 
         return compact('filename', 'namespace', 'class');

@@ -1,11 +1,11 @@
 <?php
 
-namespace Listener\Create;
+namespace Listener;
 
-class Login
+class CreateLogin
 {
     public static $events = [
-        'person.created'
+        'person.created',
     ];
 
     public $event;

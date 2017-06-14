@@ -8,6 +8,6 @@ class TestSuite extends TestCase
     public function setup()
     {
         $this->app = new Application(__DIR__.DIRECTORY_SEPARATOR.'example');
-        chdir(__DIR__.DIRECTORY_SEPARATOR.'example'.DIRECTORY_SEPARATOR.'public');
+        chdir(__DIR__.DIRECTORY_SEPARATOR.'example');
     }
 }

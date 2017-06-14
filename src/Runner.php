@@ -20,20 +20,21 @@ class Runner
     public function getMapping()
     {
         if (!$this->mapping) {
-            $classes = array_merge(
-                $this->app->get(Filesystem::class)->listClasses('Job'),
-                $this->app->get(Framework::class)->listClasses('Job')
-            );
-
             $jobs = [];
-            foreach ($classes as $class) {
-                list($name, $group) = array_map('lcfirst', array_reverse(explode("\\", $class)));
-                $nick = "$group.$name";
+            foreach ($this->app->get(Framework::class)->listClasses('Job') as $class) {
+                $jobs[substr($class, strlen('Basis\\Job\\'))] = $class;
+            }
+            $serviceName = ucfirst($this->app->get(Config::class)['service']);
+            foreach ($this->app->get(Filesystem::class)->listClasses('Job') as $class) {
+                $jobs[$serviceName.'\\'.substr($class, strlen('Job\\'))] = $class;
+                $jobs[substr($class, strlen('Job\\'))] = $class;
+            }
 
-                if (!array_key_exists($nick, $jobs)) {
-                    $jobs[$nick] = $class;
-                    $jobs[strtolower($nick)] = $class;
-                }
+
+            foreach ($jobs as $part => $class) {
+                $nick = str_replace('\\', '.', $part);
+                $jobs[$nick] = $class;
+                $jobs[strtolower($nick)] = $class;
             }
 
             $this->mapping = $jobs;
@@ -44,10 +45,6 @@ class Runner
 
     public function getJobClass($nick)
     {
-        if (!strstr($nick, '.')) {
-            throw new LogicException("Incorrect nick - $nick");
-        }
-
         $mapping = $this->getMapping();
         if (!array_key_exists($nick, $mapping)) {
             throw new LogicException("No job $nick");

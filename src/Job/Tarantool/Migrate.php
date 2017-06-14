@@ -3,6 +3,7 @@
 namespace Basis\Job\Tarantool;
 
 use Basis\Filesystem;
+use ReflectionClass;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Annotation;
@@ -13,17 +14,21 @@ class Migrate
     {
         $mapper->getPlugin(Annotation::class)->migrate();
 
-        foreach ($fs->listFiles('resources/migrations') as $path) {
-            list($ym, $filename) = explode('/', $path);
-            $namespace = date_create_from_format('Ym', $ym)->format('FY');
-
-            list($date, $time, $name) = explode('_', substr($filename, 0, -4));
-            $class = $namespace.'\\'.$name;
-
-            if (!class_exists($class, false)) {
-                include $fs->getPath('resources/migrations/'.$path);
+        $migrations = [];
+        foreach ($fs->listClasses('Migration') as $class) {
+            $reflection = new ReflectionClass($class);
+            $created_at = $reflection->getDefaultProperties()['created_at'];
+            if (!array_key_exists($created_at, $migrations)) {
+                $migrations[$created_at] = [];
             }
-            $bootstrap->register($class);
+            $migrations[$created_at][] = $class;
+        }
+        ksort($migrations);
+
+        foreach ($migrations as $collection) {
+            foreach ($collection as $class) {
+                $bootstrap->register($class);
+            }
         }
 
         $bootstrap->migrate();

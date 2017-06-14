@@ -15,7 +15,7 @@ class Service
         $this->client = $client;
         $this->name = $config['service'];
         if (!$this->name) {
-            throw new Exception("No service defined in config");
+            throw new Exception("No service name defined in config");
         }
     }
 

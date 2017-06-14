@@ -15,7 +15,7 @@ use Tarantool\Client\Request\DeleteRequest;
 use Tarantool\Client\Request\InsertRequest;
 use Tarantool\Client\Request\ReplaceRequest;
 use Tarantool\Client\Request\UpdateRequest;
-use Tarantool\Mapper\Bootsrap;
+use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
@@ -30,7 +30,7 @@ use Tarantool\Mapper\Schema;
 class TarantoolProvider extends AbstractServiceProvider
 {
     protected $provides = [
-        Bootsrap::class,
+        Bootstrap::class,
         Client::class,
         Connection::class,
         Mapper::class,
@@ -44,7 +44,7 @@ class TarantoolProvider extends AbstractServiceProvider
 
     public function register()
     {
-        $this->container->share(Bootsrap::class, function () {
+        $this->container->share(Bootstrap::class, function () {
             return $this->container->get(Mapper::class)->getBootstrap();
         });
 

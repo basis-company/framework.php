@@ -2,13 +2,14 @@
 
 namespace Basis\Job\Module;
 
+use Basis\Config;
 use Basis\Filesystem;
 use ReflectionClass;
 use ReflectionMethod;
 
 class Meta
 {
-    public function run(Filesystem $fs)
+    public function run(Filesystem $fs, Config $config)
     {
         $routes = [];
         foreach ($fs->listClasses('Controller') as $class) {

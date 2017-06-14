@@ -36,10 +36,8 @@ class Filesystem
         return $this->root;
     }
 
-    public function listClasses($namespace = '')
+    public function listClasses($namespace = '', $location = 'php')
     {
-        $location = "src";
-
         if ($namespace) {
             $location .= '/'.str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
         }

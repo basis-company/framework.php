@@ -1,11 +1,11 @@
 <?php
 
-namespace Job\Hello;
+namespace Job;
 
 /**
  * Example job for greeting
  */
-class World
+class Hello
 {
     public $name = 'world';
 
