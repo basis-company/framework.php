@@ -49,12 +49,6 @@ class Service
         return $services;
     }
 
-    public function registerJob($job, $params)
-    {
-        $this->store("jobs/$job/params", json_encode($params));
-        $this->store("jobs/$job/service", $this->name);
-    }
-
     public function registerRoute($route)
     {
         $this->store("routes/$route", $this->name);

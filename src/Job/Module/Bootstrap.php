@@ -21,15 +21,6 @@ class Bootstrap
         $runner->dispatch('tarantool.migrate');
 
         $meta = $runner->dispatch('module.meta');
-        foreach ($meta['jobs'] as $job) {
-            $class = new ReflectionClass($runner->getJobClass($job));
-            $params = [];
-            foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-                $params[] = $property->getName();
-            }
-            $service->registerJob($job, $params);
-        }
-
         foreach ($meta['routes'] as $route) {
             $service->registerRoute($route);
         }

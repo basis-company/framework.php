@@ -17,16 +17,7 @@ class Dispatcher
     public function dispatch($job, $params = [], $host = null)
     {
         if (!$host) {
-            $this->etcd->setRoot('jobs/'.$job);
-
-            try {
-                $host = $this->etcd->get('service');
-            } catch (Exception $e) {
-                $host = null;
-            }
-            if (!$host) {
-                throw new Exception("No service for job $job");
-            }
+            $host = explode('.', $job)[0];
         }
 
         $content = http_build_query([
