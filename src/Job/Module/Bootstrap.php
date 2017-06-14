@@ -14,35 +14,9 @@ use ReflectionProperty;
 
 class Bootstrap
 {
-    public function run(Runner $runner, Dispatcher $dispatcher, Service $service, Event $event, Framework $framework, Filesystem $fs)
+    public function run(Runner $runner)
     {
-        $service->register();
-
-        $runner->dispatch('tarantool.migrate');
-
-        $meta = $runner->dispatch('module.meta');
-        foreach ($meta['routes'] as $route) {
-            $service->registerRoute($route);
-        }
-
-        foreach ($event->getSubscription() as $event => $listeners) {
-            $service->subscribe($event);
-        }
-
-        foreach ($framework->listFiles('resources/default') as $file) {
-            if (!$fs->exists($file)) {
-                $source = $framework->getPath("resources/default/$file");
-                $destination = $fs->getPath($file);
-                file_put_contents($destination, file_get_contents($source));
-            }
-        }
-
-        $assets = $runner->dispatch('module.assets');
-
-        ($service->getName() == 'web' ? $runner : $dispatcher)
-            ->dispatch('asset.register', [
-                'service' => $service->getName(),
-                'hash' => $assets['hash'],
-            ]);
+        $runner->dispatch('module.defaults');
+        $runner->dispatch('module.register');
     }
 }
