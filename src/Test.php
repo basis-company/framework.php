@@ -21,6 +21,11 @@ class Test extends TestCase
         $this->dispatch('tarantool.migrate');
     }
 
+    public function tearDown()
+    {
+        $this->dispatch('tarantool.clear');
+    }
+
     public function dispatch($job, $params = [])
     {
         return $this->app->dispatch($job, $params);
