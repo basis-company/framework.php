@@ -12,7 +12,11 @@ class Config implements ArrayAccess
     {
         $this->converter = $converter;
 
-        $data = include $fs->getPath("config.php");
+        $filename = $fs->getPath("config.php");
+        if (!file_exists($filename)) {
+            return;
+        }
+        $data = include $filename;
         foreach ($data as $k => $v) {
             $this->$k = $v;
             if (is_array($v) || is_object($v)) {
