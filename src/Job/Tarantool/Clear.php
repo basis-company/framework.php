@@ -2,20 +2,27 @@
 
 namespace Basis\Job\Tarantool;
 
-use Tarantool\Client;
-use Tarantool\Schema\Index;
+use Tarantool\Client\Client;
+use Tarantool\Client\Schema\Index;
 
 class Clear
 {
     public function run(Client $client)
     {
-        $schema = $client->getSpace('_vspace');
-        $response = $schema->select([], Index::SPACE_NAME);
+        $space = $client->getSpace('_vspace');
+        $response = $space->select([], Index::SPACE_NAME);
         $data = $response->getData();
         foreach ($data as $row) {
             if ($row[1] == 0) {
                 // user space
                 $client->evaluate('box.space.'.$row[2].':drop{}');
+            }
+        }
+
+        $schema = $client->getSpace('_schema')->select([], 0)->getData();
+        foreach ($schema as $tuple) {
+            if (strpos($tuple[0], 'onceMigration\\') === 0) {
+                $client->getSpace('_schema')->delete([$tuple[0]]);
             }
         }
     }
