@@ -7,6 +7,7 @@ class ConverterTest extends TestSuite
     public function test()
     {
         $converter = $this->app->get(Converter::class);
+        $this->assertSame($converter, $this->app->get(Converter::class));
 
         $this->assertSame('a', $converter->toCamelCase('a'));
         $this->assertSame('A', $converter->toCamelCase('a', true));
