@@ -27,7 +27,7 @@ class Register
         $assets = $runner->dispatch('module.assets');
 
         ($service->getName() == 'web' ? $runner : $dispatcher)
-            ->dispatch('asset.register', [
+            ->dispatch('web.register', [
                 'service' => $service->getName(),
                 'hash' => $assets['hash'],
             ]);
