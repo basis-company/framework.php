@@ -5,7 +5,7 @@ namespace Basis;
 use PHPUnit\Framework\TestCase;
 use Tarantool\Mapper\Mapper;
 
-class Test extends TestCase
+abstract class Test extends TestCase
 {
     public function setup()
     {
