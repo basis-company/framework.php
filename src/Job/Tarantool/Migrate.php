@@ -2,6 +2,7 @@
 
 namespace Basis\Job\Tarantool;
 
+use Basis\Application;
 use Basis\Filesystem;
 use ReflectionClass;
 use Tarantool\Mapper\Bootstrap;
@@ -10,7 +11,7 @@ use Tarantool\Mapper\Plugin\Annotation;
 
 class Migrate
 {
-    public function run(Mapper $mapper, Bootstrap $bootstrap, Filesystem $fs)
+    public function run(Mapper $mapper, Bootstrap $bootstrap, Filesystem $fs, Application $app)
     {
         $mapper->getPlugin(Annotation::class)->migrate();
 
@@ -27,6 +28,9 @@ class Migrate
 
         foreach ($migrations as $collection) {
             foreach ($collection as $class) {
+                if (method_exists($class, '__construct')) {
+                    $class = $app->get($class);
+                }
                 $bootstrap->register($class);
             }
         }
