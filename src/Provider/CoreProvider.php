@@ -40,9 +40,10 @@ class CoreProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Config::class, function () {
+            $framework = $this->getContainer()->get(Framework::class);
             $fs = $this->getContainer()->get(Filesystem::class);
             $converter = $this->getContainer()->get(Converter::class);
-            return new Config($fs, $converter);
+            return new Config($framework, $fs, $converter);
         });
     }
 }

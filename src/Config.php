@@ -8,13 +8,13 @@ class Config implements ArrayAccess
 {
     private $converter;
 
-    public function __construct(Filesystem $fs, Converter $converter)
+    public function __construct(Framework $framework, Filesystem $fs, Converter $converter)
     {
         $this->converter = $converter;
 
         $filename = $fs->getPath("config.php");
         if (!file_exists($filename)) {
-            return;
+            $filename = $framework->getPath('resources/default/config.php');
         }
         $data = include $filename;
         foreach ($data as $k => $v) {
