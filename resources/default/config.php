@@ -3,7 +3,10 @@
 $service = getenv('SERVICE_NAME');
 
 if (!$service) {
-    throw new Exception("SERVICE_NAME environment not defined");
+    $service = dirname(getcwd());
+    if ($service === 'html') {
+        throw new Exception("SERVICE_NAME environment not defined");
+    }
 }
 
 return [
