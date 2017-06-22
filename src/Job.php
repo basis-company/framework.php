@@ -8,7 +8,7 @@ abstract class Job
 {
     private $app;
 
-    public function __constructor(Application $app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
     }
