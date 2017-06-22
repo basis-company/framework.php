@@ -45,7 +45,7 @@ class Runner
 
     public function hasJob($nick)
     {
-        return array_key_exists($nick, $mapping);
+        return array_key_exists($nick, $this->getMapping());
     }
 
     public function getJobClass($nick)
