@@ -33,7 +33,13 @@ class Application extends Container
 
     public function dispatch($job, $params = [])
     {
-        return $this->get(Runner::class)->dispatch($job, $params);
+        $runner = $this->get(Runner::class);
+        if ($runner->hasJob($job)) {
+            return $runner->dispatch($job, $params);
+        }
+
+        $dispatcher = $this->get(Dispatcher::class);
+        return $dispatcher->dispatch($job, $params);
     }
 
     public function get($alias, array $args = [])
