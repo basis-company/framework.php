@@ -31,10 +31,10 @@ class Application extends Container
         $this->delegate(new ReflectionContainer());
     }
 
-    public function dispatch($job, $params = [])
+    public function dispatch($job, $params = [], $service = null)
     {
         $runner = $this->get(Runner::class);
-        if ($runner->hasJob($job)) {
+        if (!$service && $runner->hasJob($job)) {
             return $runner->dispatch($job, $params);
         }
 
