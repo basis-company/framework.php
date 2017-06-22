@@ -3,6 +3,7 @@
 namespace Basis\Job\Module;
 
 use Basis\Runner;
+use Exception;
 
 class Bootstrap
 {
@@ -10,5 +11,14 @@ class Bootstrap
     {
         $runner->dispatch('module.defaults');
         $runner->dispatch('module.register');
+
+        try {
+            $runner->dispatch('tarantool.migrate');
+
+        } catch (Exception $e) {
+            return [
+                'migration' => $e->getMessage();
+            ];
+        }
     }
 }

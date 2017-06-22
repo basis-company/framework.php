@@ -13,8 +13,6 @@ class Register
     {
         $service->register();
 
-        $runner->dispatch('tarantool.migrate');
-
         $meta = $runner->dispatch('module.meta');
         foreach ($meta['routes'] as $route) {
             $service->registerRoute($route);
