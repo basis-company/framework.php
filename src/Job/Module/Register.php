@@ -2,18 +2,17 @@
 
 namespace Basis\Job\Module;
 
-use Basis\Dispatcher;
 use Basis\Event;
-use Basis\Runner;
+use Basis\Job;
 use Basis\Service;
 
-class Register
+class Register extends Job
 {
-    public function run(Runner $runner, Dispatcher $dispatcher, Service $service, Event $event)
+    public function run(Service $service, Event $event)
     {
         $service->register();
 
-        $meta = $runner->dispatch('module.meta');
+        $meta = $this->dispatch('module.meta');
         foreach ($meta['routes'] as $route) {
             $service->registerRoute($route);
         }
@@ -22,12 +21,14 @@ class Register
             $service->subscribe($event);
         }
 
-        $assets = $runner->dispatch('module.assets');
+        $assets = $this->dispatch('module.assets');
 
-        ($service->getName() == 'web' ? $runner : $dispatcher)
-            ->dispatch('web.register', [
-                'service' => $service->getName(),
-                'hash' => $assets['hash'],
-            ]);
+        $registration = [
+            'service' => $service->getName(),
+            'hash' => $assets['hash'],
+        ];
+
+        $target = $service->getName() == 'web' ? null : $service->getName();
+        $this->dispatch('web.register', $registration, $target);
     }
 }

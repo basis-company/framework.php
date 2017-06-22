@@ -2,22 +2,21 @@
 
 namespace Basis\Job\Module;
 
-use Basis\Runner;
+use Basis\Job;
 use Exception;
 
-class Bootstrap
+class Bootstrap extends Job
 {
-    public function run(Runner $runner)
+    public function run()
     {
-        $runner->dispatch('module.defaults');
-        $runner->dispatch('module.register');
+        $this->dispatch('module.defaults');
+        $this->dispatch('module.register');
 
         try {
-            $runner->dispatch('tarantool.migrate');
-
+            $this->dispatch('tarantool.migrate');
         } catch (Exception $e) {
             return [
-                'migration' => $e->getMessage();
+                'migration' => $e->getMessage(),
             ];
         }
     }
