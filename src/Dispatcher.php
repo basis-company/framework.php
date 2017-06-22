@@ -14,10 +14,10 @@ class Dispatcher
         $this->etcd = $etcd;
     }
 
-    public function dispatch($job, $params = [], $host = null)
+    public function dispatch($job, $params = [], $service = null)
     {
-        if (!$host) {
-            $host = explode('.', $job)[0];
+        if (!$service) {
+            $service = explode('.', $job)[0];
         }
 
         $content = http_build_query([
@@ -40,7 +40,7 @@ class Dispatcher
             ],
         ]);
 
-        $contents = file_get_contents("http://$host/api", false, $context);
+        $contents = file_get_contents("http://$service/api", false, $context);
 
         $result = json_decode($contents);
         if (!$result || !$result->success) {
