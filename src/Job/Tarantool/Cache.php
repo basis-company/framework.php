@@ -14,6 +14,6 @@ class Cache
             mkdir(dirname($filename));
         }
 
-        file_put_contents($filename, '<?php return '.var_export($mapper->getMeta()).';');
+        file_put_contents($filename, '<?php return '.var_export($mapper->getMeta(), true).';');
     }
 }
