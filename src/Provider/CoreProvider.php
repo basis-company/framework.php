@@ -5,8 +5,8 @@ namespace Basis\Provider;
 use Basis\Config;
 use Basis\Converter;
 use Basis\Dispatcher;
-use Basis\Framework;
 use Basis\Filesystem;
+use Basis\Framework;
 use Basis\Http;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use LinkORB\Component\Etcd\Client;
@@ -23,6 +23,17 @@ class CoreProvider extends AbstractServiceProvider
 
     public function register()
     {
+        $this->getContainer()->share(Config::class, function () {
+            $framework = $this->getContainer()->get(Framework::class);
+            $fs = $this->getContainer()->get(Filesystem::class);
+            $converter = $this->getContainer()->get(Converter::class);
+            return new Config($framework, $fs, $converter);
+        });
+
+        $this->getContainer()->share(Converter::class, function () {
+            return new Converter();
+        });
+
         $this->getContainer()->share(Dispatcher::class, function () {
             return new Dispatcher($this->getContainer()->get(Client::class));
         });
@@ -33,17 +44,6 @@ class CoreProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(Http::class, function () {
             return new Http($this->getContainer());
-        });
-
-        $this->getContainer()->share(Converter::class, function () {
-            return new Converter();
-        });
-
-        $this->getContainer()->share(Config::class, function () {
-            $framework = $this->getContainer()->get(Framework::class);
-            $fs = $this->getContainer()->get(Filesystem::class);
-            $converter = $this->getContainer()->get(Converter::class);
-            return new Config($framework, $fs, $converter);
         });
     }
 }
