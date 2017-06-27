@@ -90,10 +90,15 @@ class TarantoolProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(Mapper::class, function () {
             $mapper = new Mapper($this->getContainer()->get(Client::class));
+            $filesystem = $this->getContainer()->get(Filesystem::class);
+
+            $meta = $filesystem->getPath('.cache/mapper-meta.php');
+            if (file_exists($meta)) {
+                $mapper->setMeta($meta);
+            }
 
             $annotation = $mapper->addPlugin(Annotation::class);
 
-            $filesystem = $this->getContainer()->get(Filesystem::class);
             foreach ($filesystem->listClasses('Entity') as $class) {
                 $annotation->register($class);
             }

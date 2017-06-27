@@ -14,6 +14,7 @@ class Bootstrap extends Job
 
         try {
             $this->dispatch('tarantool.migrate');
+            $this->dispatch('tarantool.cache');
         } catch (Exception $e) {
             return [
                 'migration' => $e->getMessage(),
