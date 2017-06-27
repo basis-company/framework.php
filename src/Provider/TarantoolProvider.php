@@ -65,8 +65,9 @@ class TarantoolProvider extends AbstractServiceProvider
             $mapper = new Mapper($this->getContainer()->get(Client::class));
             $filesystem = $this->getContainer()->get(Filesystem::class);
 
-            $meta = $filesystem->getPath('.cache/mapper-meta.php');
-            if (file_exists($meta)) {
+            $mapperCache = $filesystem->getPath('.cache/mapper-meta.php');
+            if (file_exists($mapperCache)) {
+                $meta = include $mapperCache;
                 $mapper->setMeta($meta);
             }
 
