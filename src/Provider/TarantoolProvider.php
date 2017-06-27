@@ -23,6 +23,7 @@ use Tarantool\Mapper\Plugin\Annotation;
 use Tarantool\Mapper\Plugin\NestedSet;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
+use Tarantool\Mapper\Plugin\Temporal;
 use Tarantool\Mapper\Plugin;
 use Tarantool\Mapper\Pool;
 use Tarantool\Mapper\Schema;
@@ -106,10 +107,10 @@ class TarantoolProvider extends AbstractServiceProvider
                 $annotation->register($class);
             }
 
-
             $mapper->addPlugin(NestedSet::class);
             $mapper->addPlugin(Sequence::class);
             $mapper->addPlugin(Spy::class);
+            $mapper->addPlugin(Temporal::class);
 
             $mapper->application = $this->getContainer();
 
