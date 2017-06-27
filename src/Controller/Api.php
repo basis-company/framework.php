@@ -66,7 +66,7 @@ class Api
 
         try {
             $params = is_object($rpc->params) ? get_object_vars($rpc->params) : [];
-            $data = $runner->dispatch($rpc->job, $params);
+            $data = $runner->dispatch(strtolower($rpc->job), $params);
             $data = $this->removeSystemObjects($data);
 
             return [
