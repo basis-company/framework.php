@@ -19,12 +19,12 @@ use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Plugin;
 use Tarantool\Mapper\Plugin\Annotation;
 use Tarantool\Mapper\Plugin\NestedSet;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
 use Tarantool\Mapper\Plugin\Temporal;
-use Tarantool\Mapper\Plugin;
 use Tarantool\Mapper\Pool;
 use Tarantool\Mapper\Schema;
 
@@ -41,41 +41,13 @@ class TarantoolProvider extends AbstractServiceProvider
         Spy::class,
         StreamConnection::class,
         TarantoolClient::class,
+        Temporal::class,
     ];
 
     public function register()
     {
         $this->container->share(Bootstrap::class, function () {
             return $this->container->get(Mapper::class)->getBootstrap();
-        });
-
-        $this->getContainer()->share(Pool::class, function () {
-            $mapper = $this->getContainer()->get(Mapper::class);
-
-            $pool = new Pool();
-            $pool->register('default', $mapper);
-
-            $service = $this->getContainer()->get(Service::class);
-
-            $local = $service->getName();
-            $pool->register($local, $mapper);
-
-            foreach ($service->listServices() as $remote) {
-                if ($remote != $local) {
-                    $pool->register($remote, function () use ($remote) {
-                        $connection = new StreamConnection('tcp://'.$remote.'-db:3301');
-                        $packer = new PurePacker();
-                        $client = new Client($connection, $packer);
-                        $client->disableRequest(DeleteRequest::class);
-                        $client->disableRequest(InsertRequest::class);
-                        $client->disableRequest(ReplaceRequest::class);
-                        $client->disableRequest(UpdateRequest::class);
-                        return new Mapper($client);
-                    });
-                }
-            }
-
-            return $pool;
         });
 
         $this->getContainer()->share(Client::class, function () {
@@ -124,16 +96,45 @@ class TarantoolProvider extends AbstractServiceProvider
             return $mapper;
         });
 
-        $this->getContainer()->share(Spy::class, function () {
-            return $this->getContainer()->get(Mapper::class)->getPlugin(Spy::class);
-        });
-
         $this->getContainer()->share(Packer::class, function () {
             return new PurePacker();
         });
 
+        $this->getContainer()->share(Pool::class, function () {
+            $mapper = $this->getContainer()->get(Mapper::class);
+
+            $pool = new Pool();
+            $pool->register('default', $mapper);
+
+            $service = $this->getContainer()->get(Service::class);
+
+            $local = $service->getName();
+            $pool->register($local, $mapper);
+
+            foreach ($service->listServices() as $remote) {
+                if ($remote != $local) {
+                    $pool->register($remote, function () use ($remote) {
+                        $connection = new StreamConnection('tcp://'.$remote.'-db:3301');
+                        $packer = new PurePacker();
+                        $client = new Client($connection, $packer);
+                        $client->disableRequest(DeleteRequest::class);
+                        $client->disableRequest(InsertRequest::class);
+                        $client->disableRequest(ReplaceRequest::class);
+                        $client->disableRequest(UpdateRequest::class);
+                        return new Mapper($client);
+                    });
+                }
+            }
+
+            return $pool;
+        });
+
         $this->getContainer()->share(Schema::class, function () {
             return $this->getContainer()->get(Mapper::class)->getSchema();
+        });
+
+        $this->getContainer()->share(Spy::class, function () {
+            return $this->getContainer()->get(Mapper::class)->getPlugin(Spy::class);
         });
 
         $this->getContainer()->share(StreamConnection::class, function () {
@@ -143,6 +144,10 @@ class TarantoolProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(TarantoolClient::class, function () {
             return $this->getContainer()->get(Client::class);
+        });
+
+        $this->getContainer()->share(Temporal::class, function () {
+            return $this->getContainer()->get(Mapper::class)->getPlugin(Temporal::class);
         });
     }
 }
