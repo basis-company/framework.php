@@ -22,7 +22,7 @@ class Dispatcher
 
         $content = http_build_query([
             'rpc' => json_encode([
-                'job' => $job,
+                'job'    => $job,
                 'params' => $params,
             ])
         ]);
@@ -30,17 +30,22 @@ class Dispatcher
 
         $context = stream_context_create([
             'http' => [
-                'method' => 'POST',
-                'header' => implode([
+                'method'  => 'POST',
+                'content' => $content,
+                'header'  => implode([
                     'content-type: application/x-www-form-urlencoded',
                     'x-real-ip: '.$_SERVER['HTTP_X_REAL_IP'],
                     'x-session: '.$_SERVER['HTTP_X_SESSION'],
                 ], "\r\n"),
-                'content' => $content,
+                'ignore_errors' => '1'
             ],
         ]);
 
         $contents = file_get_contents("http://$service/api", false, $context);
+
+        if (!$contents) {
+            throw new Exception("Host $service unreachable");
+        }
 
         $result = json_decode($contents);
         if (!$result || !$result->success) {
