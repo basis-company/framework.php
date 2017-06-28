@@ -10,6 +10,7 @@ class Bootstrap extends Job
 {
     public function run(Filesystem $fs)
     {
+        $result = [];
         $cache = $fs->getPath('.cache');
         if (is_dir($cache)) {
             foreach ($fs->listFiles('.cache') as $file) {
@@ -17,16 +18,16 @@ class Bootstrap extends Job
             }
             rmdir($cache);
         }
-        try {
-            $this->dispatch('tarantool.migrate');
-            $this->dispatch('tarantool.cache');
-        } catch (Exception $e) {
-            return [
-                'migration' => $e->getMessage(),
-            ];
+
+        $jobs = ['tarantool.migrate', 'tarantool.cache', 'module.defaults', 'module.register'];
+        foreach ($jobs as $job) {
+            try {
+                $result[$job] = $this->dispatch($job);
+            } catch (Exception $e) {
+                $result[$job] = $e->getMessage();
+            }
         }
 
-        $this->dispatch('module.defaults');
-        $this->dispatch('module.register');
+        return $result;
     }
 }
