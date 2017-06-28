@@ -39,7 +39,7 @@ class Application extends Container
         }
 
         $dispatcher = $this->get(Dispatcher::class);
-        return $dispatcher->dispatch($job, $params);
+        return $dispatcher->dispatch($job, $params, $service);
     }
 
     public function get($alias, array $args = [])
