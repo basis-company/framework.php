@@ -38,8 +38,18 @@ abstract class Job
         return $this->get(Mapper::class)->find($space, $params);
     }
 
+    public function findOrCreate($space, $params = [])
+    {
+        return $this->get(Mapper::class)->findOrCreate($space, $params);
+    }
+
     public function findOne($space, $params = [])
     {
         return $this->get(Mapper::class)->findOne($space, $params);
+    }
+
+    public function remove($space, $params = [])
+    {
+        return $this->get(Mapper::class)->remove($space, $params);
     }
 }
