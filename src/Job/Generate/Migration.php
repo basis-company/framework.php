@@ -22,6 +22,10 @@ class Migration
             $this->name = explode(' ', $this->name);
         }
 
+        if (!$this->name) {
+            throw new Exception("No migration name defined!");
+        }
+
         $class = '';
         foreach ($this->name as $piece) {
             $class .= ucfirst($piece);
