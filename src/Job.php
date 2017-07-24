@@ -48,6 +48,11 @@ abstract class Job
         return $this->get(Mapper::class)->findOne($space, $params);
     }
 
+    public function findOrFail($space, $params = [])
+    {
+        return $this->get(Mapper::class)->findOrFail($space, $params);
+    }
+
     public function remove($space, $params = [])
     {
         return $this->get(Mapper::class)->remove($space, $params);
