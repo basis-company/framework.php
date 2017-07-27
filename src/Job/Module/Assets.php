@@ -3,8 +3,9 @@
 namespace Basis\Job\Module;
 
 use Basis\Filesystem;
+use Basis\Job;
 
-class Assets
+class Assets extends Job
 {
     private $fs;
     public function __construct(Filesystem $fs)

@@ -4,12 +4,13 @@ namespace Basis\Job\Tarantool;
 
 use Basis\Application;
 use Basis\Filesystem;
+use Basis\Job;
 use ReflectionClass;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Annotation;
 
-class Migrate
+class Migrate extends Job
 {
     public function run(Mapper $mapper, Bootstrap $bootstrap, Filesystem $fs, Application $app)
     {

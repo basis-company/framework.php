@@ -2,10 +2,11 @@
 
 namespace Basis\Job\Tarantool;
 
+use Basis\Job;
 use Tarantool\Client\Client;
 use Tarantool\Client\Schema\Index;
 
-class Clear
+class Clear extends Job
 {
     public function run(Client $client)
     {

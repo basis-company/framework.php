@@ -4,10 +4,11 @@ namespace Basis\Job\Module;
 
 use Basis\Config;
 use Basis\Filesystem;
+use Basis\Job;
 use ReflectionClass;
 use ReflectionMethod;
 
-class Meta
+class Meta extends Job
 {
     public function run(Filesystem $fs, Config $config)
     {

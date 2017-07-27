@@ -2,13 +2,14 @@
 
 namespace Basis\Job\Generate;
 
-use Basis\Framework;
 use Basis\Filesystem;
+use Basis\Framework;
+use Basis\Job;
 
 /**
  * Generate tarantool migration
  */
-class Migration
+class Migration extends Job
 {
     public $name;
 

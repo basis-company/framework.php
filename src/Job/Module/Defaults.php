@@ -4,8 +4,9 @@ namespace Basis\Job\Module;
 
 use Basis\Filesystem;
 use Basis\Framework;
+use Basis\Job;
 
-class Defaults
+class Defaults extends Job
 {
     public function run(Framework $framework, Filesystem $fs)
     {

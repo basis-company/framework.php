@@ -3,9 +3,10 @@
 namespace Basis\Job\Tarantool;
 
 use Basis\Filesystem;
+use Basis\Job;
 use Tarantool\Mapper\Mapper;
 
-class Cache
+class Cache extends Job
 {
     public function run(Mapper $mapper, Filesystem $fs)
     {

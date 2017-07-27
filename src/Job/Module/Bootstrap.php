@@ -2,9 +2,9 @@
 
 namespace Basis\Job\Module;
 
+use Basis\Filesystem;
 use Basis\Job;
 use Exception;
-use Basis\Filesystem;
 
 class Bootstrap extends Job
 {
