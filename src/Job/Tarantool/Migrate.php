@@ -9,12 +9,14 @@ use ReflectionClass;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Annotation;
+use Tarantool\Mapper\Plugin\Sequence;
 
 class Migrate extends Job
 {
     public function run(Mapper $mapper, Bootstrap $bootstrap, Filesystem $fs, Application $app)
     {
         $mapper->getPlugin(Annotation::class)->migrate();
+        $mapper->getPlugin(Sequence::class)->initSchema();
 
         $migrations = [];
         foreach ($fs->listClasses('Migration') as $class) {
