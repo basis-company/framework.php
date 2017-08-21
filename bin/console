@@ -19,7 +19,7 @@ if($result) {
 }
 
 try {
-    $app->get(Event::class)->fireChanges();
+    $app->get(Event::class)->fireChanges($job);
 } catch (Exception $e) {
     return ['success' => false, 'message' => $e->getMessage()];
 }

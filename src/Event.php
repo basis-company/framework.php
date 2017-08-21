@@ -47,7 +47,7 @@ class Event
         ]);
     }
 
-    public function fireChanges()
+    public function fireChanges($producer)
     {
         if ($this->spy->hasChanges()) {
             // reduce changes list
@@ -67,6 +67,7 @@ class Event
 
             if (count($changes)) {
                 $this->dispatcher->dispatch('event.changes', [
+                    'producer' => $producer,
                     'changes' => $changes,
                     'service' => $this->service->getName(),
                 ]);

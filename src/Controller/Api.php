@@ -40,7 +40,7 @@ class Api
         }
 
         try {
-            $event->fireChanges();
+            $event->fireChanges($request[0]->job);
         } catch (Exception $e) {
             return ['success' => false, 'message' => $e->getMessage()];
         }
