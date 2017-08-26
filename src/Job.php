@@ -57,4 +57,11 @@ abstract class Job
     {
         return $this->get(Mapper::class)->remove($space, $params);
     }
+
+    public function __debugInfo()
+    {
+        $info = get_object_vars($this);
+        unset($info['app']);
+        return $info;
+    }
 }
