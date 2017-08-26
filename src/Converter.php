@@ -49,7 +49,7 @@ class Converter
 
     private $underscores = [];
 
-    public function toUnderscore($input)
+    public function toUnderscore(string $input) : string
     {
         if (!array_key_exists($input, $this->underscores)) {
             preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
@@ -64,7 +64,7 @@ class Converter
 
     private $camelcased = [];
 
-    public function toCamelCase($string, $capitalize = false)
+    public function toCamelCase(string $string, bool $capitalize = false) : string
     {
         $capitalize = $capitalize ? 1 : 0;
 
