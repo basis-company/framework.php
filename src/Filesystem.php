@@ -14,13 +14,13 @@ class Filesystem
         $this->root = $root;
     }
 
-    public function exists()
+    public function exists(string $path) : bool
     {
         $path = call_user_func_array([$this, 'getPath'], func_get_args());
         return is_dir($path) || file_exists($path);
     }
 
-    public function getPath()
+    public function getPath(string $path = null) : string
     {
         if (func_get_args()) {
             $chain = func_get_args();
@@ -36,7 +36,7 @@ class Filesystem
         return $this->root;
     }
 
-    public function listClasses($namespace = '', $location = 'php')
+    public function listClasses(string $namespace = '', string $location = 'php') : array
     {
         if ($namespace) {
             $location .= '/'.str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
@@ -59,7 +59,7 @@ class Filesystem
         return $classes;
     }
 
-    public function listFiles($location)
+    public function listFiles(string $location) : array
     {
         $absolute = $this->getPath($location);
         if (!is_dir($absolute)) {
@@ -83,7 +83,7 @@ class Filesystem
         return $result;
     }
 
-    public function completeClassName($classname)
+    public function completeClassName(string $classname) : string
     {
         if ($this->namespace && $classname) {
             return $this->namespace.'\\'.$classname;

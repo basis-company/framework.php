@@ -12,7 +12,7 @@ class Framework extends Filesystem
         $this->root = dirname(__DIR__);
     }
 
-    public function listClasses($namespace = '', $location = 'src')
+    public function listClasses(string $namespace = '', string $location = 'src') : array
     {
         return parent::listClasses($namespace, $location);
     }

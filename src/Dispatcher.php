@@ -14,7 +14,7 @@ class Dispatcher
         $this->etcd = $etcd;
     }
 
-    public function dispatch($job, $params = [], $service = null)
+    public function dispatch(string $job, array $params = [], string $service = null)
     {
         if (!$service) {
             $service = explode('.', $job)[0];

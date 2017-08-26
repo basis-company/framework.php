@@ -2,9 +2,11 @@
 
 namespace Basis;
 
+use stdClass;
+
 class Converter
 {
-    public function toObject($data)
+    public function toObject($data) : stdClass
     {
         if (is_array($data)) {
             if (array_keys($data) === range(0, count($data) -1)) {
@@ -26,7 +28,7 @@ class Converter
         return $data;
     }
 
-    public function toArray($data)
+    public function toArray($data) : array
     {
         if (!$data) {
             return [];

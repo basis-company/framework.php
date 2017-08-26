@@ -19,12 +19,12 @@ class Service
         }
     }
 
-    public function eventExists($event)
+    public function eventExists(string $event) : bool
     {
         return $this->exists("events/$event");
     }
 
-    public function getName()
+    public function getName() : string
     {
         return $this->name;
     }
@@ -34,7 +34,7 @@ class Service
         $this->store("services/$this->name");
     }
 
-    public function listServices()
+    public function listServices() : array
     {
         $this->client->setRoot('services');
 
@@ -49,22 +49,22 @@ class Service
         return $services;
     }
 
-    public function registerRoute($route)
+    public function registerRoute(string $route)
     {
         $this->store("routes/$route", $this->name);
     }
 
-    public function subscribe($event)
+    public function subscribe(string $event)
     {
         $this->store("events/$event/$this->name");
     }
 
-    public function unsibscribe($event)
+    public function unsibscribe(string $event)
     {
         $this->remove("events/$event/$this->name");
     }
 
-    private function exists($path)
+    private function exists(string $path) : bool
     {
         $chain = explode('/', $path);
         $key = array_pop($chain);
@@ -80,7 +80,7 @@ class Service
         return true;
     }
 
-    private function store($path, $value = null)
+    private function store(string $path, $value = null)
     {
         $chain = explode('/', $path);
 
@@ -103,7 +103,7 @@ class Service
         }
     }
 
-    private function remove($path)
+    private function remove(string $path)
     {
         $chain = explode('/', $path);
 

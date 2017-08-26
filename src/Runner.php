@@ -17,7 +17,7 @@ class Runner
         $this->app = $app;
     }
 
-    public function getMapping()
+    public function getMapping() : array
     {
         if (!$this->mapping) {
             $jobs = [];
@@ -43,12 +43,12 @@ class Runner
         return $this->mapping;
     }
 
-    public function hasJob($nick)
+    public function hasJob(string $nick) : bool
     {
         return array_key_exists($nick, $this->getMapping());
     }
 
-    public function getJobClass($nick)
+    public function getJobClass(string $nick) : string
     {
         $mapping = $this->getMapping();
         if (!array_key_exists($nick, $mapping)) {
@@ -63,7 +63,7 @@ class Runner
         return $class;
     }
 
-    public function dispatch($nick, $arguments = [])
+    public function dispatch(string $nick, array $arguments = [])
     {
         $class = $this->getJobClass($nick);
 
@@ -79,7 +79,7 @@ class Runner
         return $this->app->call([$instance, 'run']);
     }
 
-    private function castArguments($class, $arguments)
+    private function castArguments(string $class, array $arguments) : array
     {
         $reflection = new ReflectionClass($class);
         $properties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);

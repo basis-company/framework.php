@@ -10,7 +10,7 @@ use Tarantool\Mapper\Repository;
 
 class Application extends Container
 {
-    public function __construct($root)
+    public function __construct(string $root)
     {
         parent::__construct();
 
@@ -31,7 +31,7 @@ class Application extends Container
         $this->delegate(new ReflectionContainer());
     }
 
-    public function dispatch($job, $params = [], $service = null)
+    public function dispatch(string $job, array $params = [], string $service = null)
     {
         if ($service) {
             if ($this->get(Service::class)->getName() == $service) {

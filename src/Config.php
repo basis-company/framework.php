@@ -60,14 +60,14 @@ class Config implements ArrayAccess
         unset($parent->$key);
     }
 
-    public function shouldHave($offset)
+    public function shouldHave(string $offset)
     {
         if (!isset($this[$offset])) {
             throw new Exception("No offset $offset");
         }
     }
 
-    private function getNode($offset, $createIfNone = false)
+    private function getNode(string $offset, bool $createIfNone = false) : ?string
     {
         if (!$offset) {
             return $this;
@@ -79,7 +79,7 @@ class Config implements ArrayAccess
                     if ($createIfNone) {
                         $current->$key = (object) [];
                     } else {
-                        return;
+                        return null;
                     }
                 }
                 $current = $current->$key;

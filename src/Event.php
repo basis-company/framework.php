@@ -39,7 +39,7 @@ class Event
         return $subscription;
     }
 
-    public function fire($event, $context)
+    public function fire(string $event, $context)
     {
         $this->dispatcher->dispatch('event.fire', [
             'event' => $this->service->getName().'.'.$event,
@@ -47,7 +47,7 @@ class Event
         ]);
     }
 
-    public function fireChanges($producer)
+    public function fireChanges(string $producer)
     {
         if ($this->spy->hasChanges()) {
             // reduce changes list

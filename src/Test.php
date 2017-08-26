@@ -26,27 +26,27 @@ abstract class Test extends TestCase
         $this->dispatch('tarantool.clear');
     }
 
-    public function dispatch($job, $params = [])
+    public function dispatch(string $job, array $params = [])
     {
         return $this->app->dispatch($job, $params);
     }
 
-    public function get($class)
+    public function get(string $class)
     {
         return $this->app->get($class);
     }
 
-    public function getMapper()
+    public function getMapper() : Mapper
     {
         return $this->get(Mapper::class);
     }
 
-    public function find($space, $params = [])
+    public function find(string $space, array $params = []) : array
     {
         return $this->getMapper()->find($space, $params);
     }
 
-    public function findOne($space, $params = [])
+    public function findOne(string $space, array $params = []) : Entity
     {
         return $this->getMapper()->findOne($space, $params);
     }

@@ -14,7 +14,7 @@ class Http
         $this->app = $app;
     }
 
-    public function process($uri)
+    public function process(string $uri): string
     {
         list($controller, $method) = $this->getChain($uri);
         $className = "Controller\\".ucfirst($controller);
@@ -51,7 +51,7 @@ class Http
         }
     }
 
-    public function getChain($uri)
+    public function getChain(string $uri) : array
     {
         list($clean) = explode('?', $uri);
         $chain = [];

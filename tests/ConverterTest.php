@@ -17,5 +17,7 @@ class ConverterTest extends TestSuite
 
         $this->assertSame('person_role', $converter->toUnderscore('personRole'));
         $this->assertSame('person_role', $converter->toUnderscore('PersonRole'));
+
+        $this->assertSame('test', $converter->toObject(['test' => 'test'])->test);
     }
 }
