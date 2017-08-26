@@ -54,14 +54,12 @@ class Http
     public function getChain($uri)
     {
         list($clean) = explode('?', $uri);
-        $chain = explode('/', $clean);
-        foreach ($chain as $k => $v) {
-            if (!$v) {
-                unset($chain[$k]);
+        $chain = [];
+        foreach (explode('/', $clean) as $k => $v) {
+            if ($v) {
+                $chain[] = $v;
             }
         }
-
-        $chain = array_values($chain);
 
         if (!count($chain)) {
             $chain[] = 'index';
