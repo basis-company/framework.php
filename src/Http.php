@@ -14,7 +14,7 @@ class Http
         $this->app = $app;
     }
 
-    public function process(string $uri): string
+    public function process(string $uri): ?string
     {
         list($controller, $method) = $this->getChain($uri);
         $className = "Controller\\".ucfirst($controller);
