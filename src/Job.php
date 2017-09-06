@@ -33,22 +33,22 @@ abstract class Job
         return $this->app->get($class);
     }
 
-    public function find(string $space, array $params = []) : array
+    public function find(string $space, $params = []) : array
     {
         return $this->get(Mapper::class)->find($space, $params);
     }
 
-    public function findOrCreate(string $space, array $params = []) : Entity
+    public function findOrCreate(string $space, $params = []) : Entity
     {
         return $this->get(Mapper::class)->findOrCreate($space, $params);
     }
 
-    public function findOne(string $space, array $params = []) : ?Entity
+    public function findOne(string $space, $params = []) : ?Entity
     {
         return $this->get(Mapper::class)->findOne($space, $params);
     }
 
-    public function findOrFail(string $space, array $params = []) : Entity
+    public function findOrFail(string $space, $params = []) : Entity
     {
         return $this->get(Mapper::class)->findOrFail($space, $params);
     }
