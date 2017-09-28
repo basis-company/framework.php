@@ -122,7 +122,9 @@ class TarantoolProvider extends AbstractServiceProvider
                         $client->disableRequest(InsertRequest::class);
                         $client->disableRequest(ReplaceRequest::class);
                         $client->disableRequest(UpdateRequest::class);
-                        return new Mapper($client);
+                        $mapper = new Mapper($client);
+                        $mapper->addPlugin(Temporal::class);
+                        return $mapper;
                     });
                 }
             }
