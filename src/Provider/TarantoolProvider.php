@@ -142,7 +142,18 @@ class TarantoolProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(StreamConnection::class, function () {
             $config = $this->getContainer()->get(Config::class);
-            return new StreamConnection($config['tarantool']);
+            $params = [];
+            $env = [
+                'connect_timeout' => 'TARANTOOL_CONNECT_TIMEOUT',
+                'socket_timeout' => 'TARANTOOL_SOCKET_TIMEOUT',
+                'tcp_nodelay' => 'TARANTOOL_TCP_NODELAY',
+            ];
+            foreach ($env as $param => $name) {
+                if (getenv($name)) {
+                    $params[$param] = getenv($name);
+                }
+            }
+            return new StreamConnection($config['tarantool'], $params);
         });
 
         $this->getContainer()->share(TarantoolClient::class, function () {
