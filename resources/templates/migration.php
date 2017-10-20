@@ -11,5 +11,6 @@ class <?php echo $class; ?> implements Migration
 
     public function migrate(Mapper $mapper)
     {
+        throw new \Exception("Not implemented yet!");
     }
 }
