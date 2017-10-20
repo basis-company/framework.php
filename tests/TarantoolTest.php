@@ -27,15 +27,22 @@ class TarantoolTest extends TestSuite
 
     public function testMigrationOrder()
     {
-        $this->app->dispatch('generate.migration', [
+        $migration = $this->app->dispatch('generate.migration', [
             'name' => 'b',
         ]);
+        $contents = file_get_contents($migration['filename']);
+        $contents = str_replace('throw', '//throw', $contents);
+        file_put_contents($migration['filename'], $contents);
 
         sleep(1);
 
-        $this->app->dispatch('generate.migration', [
+        $migration = $this->app->dispatch('generate.migration', [
             'name' => 'a',
         ]);
+
+        $contents = file_get_contents($migration['filename']);
+        $contents = str_replace('throw', '//throw', $contents);
+        file_put_contents($migration['filename'], $contents);
 
         $this->app->dispatch('tarantool.migrate');
 
