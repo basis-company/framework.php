@@ -67,7 +67,7 @@ class Config implements ArrayAccess
         }
     }
 
-    private function getNode(string $offset, bool $createIfNone = false) : ?string
+    private function getNode(string $offset, bool $createIfNone = false)
     {
         if (!$offset) {
             return $this;
