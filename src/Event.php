@@ -65,7 +65,7 @@ class Event
                 }
             }
 
-            if (count($changes)) {
+            if (count(get_object_vars($changes))) {
                 $this->dispatcher->dispatch('event.changes', [
                     'producer' => $producer,
                     'changes' => $changes,
