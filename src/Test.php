@@ -4,6 +4,7 @@ namespace Basis;
 
 use PHPUnit\Framework\TestCase;
 use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Entity;
 
 abstract class Test extends TestCase
 {
@@ -49,5 +50,15 @@ abstract class Test extends TestCase
     public function findOne(string $space, array $params = []) : Entity
     {
         return $this->getMapper()->findOne($space, $params);
+    }
+
+    public function findOrFail(string $space, array $params = []) : Entity
+    {
+        return $this->getMapper()->findOrFail($space, $params);
+    }
+
+    public function findOrCreate(string $space, array $params = []) : Entity
+    {
+        return $this->getMapper()->findOrCreate($space, $params);
     }
 }
