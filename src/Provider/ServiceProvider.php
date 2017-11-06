@@ -22,9 +22,8 @@ class ServiceProvider extends AbstractServiceProvider
     public function register()
     {
         $this->getContainer()->share(Client::class, function () {
-            $host = getenv('ETCD_SERVICE_HOST') ?: 'etcd';
-            $port = getenv('ETCD_SERVICE_PORT') ?: 2379;
-            return new Client("http://$host:$port");
+            $config = $this->getContainer()->get(Config::class);
+            return new Client($config['etcd.connection']);
         });
         $this->getContainer()->share(Event::class, function () {
             $dispatcher = $this->getContainer()->get(Dispatcher::class);
@@ -34,9 +33,9 @@ class ServiceProvider extends AbstractServiceProvider
             return new Event($dispatcher, $service, $spy, $filesystem);
         });
         $this->getContainer()->share(Service::class, function () {
-            $client = $this->getContainer()->get(Client::class);
             $config = $this->getContainer()->get(Config::class);
-            return new Service($client, $config);
+            $client = $this->getContainer()->get(Client::class);
+            return new Service($config['service'], $client);
         });
     }
 }

@@ -10,13 +10,10 @@ class Service
     private $client;
     private $name;
 
-    public function __construct(Client $client, Config $config)
+    public function __construct($name, Client $client)
     {
         $this->client = $client;
-        $this->name = $config['service'];
-        if (!$this->name) {
-            throw new Exception("No service name defined in config");
-        }
+        $this->name = $name;
     }
 
     public function eventExists(string $event) : bool
