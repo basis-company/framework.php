@@ -60,7 +60,7 @@ class Config implements ArrayAccess
         unset($parent->$key);
     }
 
-    public function shouldHave(string $offset)
+    public function require(string $offset)
     {
         if (!isset($this[$offset])) {
             throw new Exception("No offset $offset");
