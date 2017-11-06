@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'etcd' => call_user_func(function() {
         $host = getenv('ETCD_SERVICE_HOST') ?: 'etcd';

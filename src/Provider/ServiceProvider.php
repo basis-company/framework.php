@@ -25,6 +25,7 @@ class ServiceProvider extends AbstractServiceProvider
             $config = $this->getContainer()->get(Config::class);
             return new Client($config['etcd.connection']);
         });
+
         $this->getContainer()->share(Event::class, function () {
             $dispatcher = $this->getContainer()->get(Dispatcher::class);
             $service = $this->getContainer()->get(Service::class);
@@ -32,6 +33,7 @@ class ServiceProvider extends AbstractServiceProvider
             $filesystem = $this->getContainer()->get(Filesystem::class);
             return new Event($dispatcher, $service, $spy, $filesystem);
         });
+
         $this->getContainer()->share(Service::class, function () {
             $config = $this->getContainer()->get(Config::class);
             $client = $this->getContainer()->get(Client::class);
