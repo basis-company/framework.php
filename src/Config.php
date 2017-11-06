@@ -18,6 +18,9 @@ class Config implements ArrayAccess
         }
         $data = include $filename;
         foreach ($data as $k => $v) {
+            if (is_callable($v)) {
+                $v = $v();
+            }
             $this->$k = $v;
             if (is_array($v) || is_object($v)) {
                 $this->$k = $converter->toObject($v);
