@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'environment' => getenv('SERVICE_ENVIRONMENT') ?? 'production',
     'etcd' => call_user_func(function() {
         $host = getenv('ETCD_SERVICE_HOST') ?: 'etcd';
         $port = getenv('ETCD_SERVICE_PORT') ?: 2379;

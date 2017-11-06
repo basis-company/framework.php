@@ -12,6 +12,8 @@ class ConfigTest extends TestSuite
         $this->assertSame($config, $this->app->get(Config::class));
 
         $this->assertSame($config['service'], 'example');
-        $this->assertCount(3, get_object_vars($config));
+        $this->assertSame($config['environment'], 'testing');
+        $this->assertSame($config['etcd.connection'], 'http://etcd:2379');
+        $this->assertCount(4, get_object_vars($config));
     }
 }
