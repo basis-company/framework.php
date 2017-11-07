@@ -20,8 +20,17 @@ return [
         return $service;
     },
     'tarantool' => function() {
-        $host = getenv('TARANTOOL_SERVICE_HOST') ?? $service.'-db';
-        $port = getenv('TARANTOOL_SERVICE_PORT') ?? '3301';
+
+        $service = getenv('SERVICE_NAME');
+        if (!$service) {
+            $service = dirname(getcwd());
+            if ($service === 'html') {
+                throw new Exception("SERVICE_NAME environment not defined");
+            }
+        }
+
+        $host = getenv('TARANTOOL_SERVICE_HOST') ?: $service.'-db';
+        $port = getenv('TARANTOOL_SERVICE_PORT') ?: '3301';
         $connection = "tcp://$host:$port";
 
         $params = [];
