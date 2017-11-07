@@ -22,7 +22,7 @@ class Clear extends Job
 
         $schema = $client->getSpace('_schema')->select([], 0)->getData();
         foreach ($schema as $tuple) {
-            if (strpos($tuple[0], 'mapper-once\\') === 0) {
+            if (strpos($tuple[0], 'mapper-once') === 0) {
                 $client->getSpace('_schema')->delete([$tuple[0]]);
             }
         }
