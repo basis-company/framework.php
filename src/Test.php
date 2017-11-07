@@ -47,7 +47,7 @@ abstract class Test extends TestCase
         return $this->getMapper()->find($space, $params);
     }
 
-    public function findOne(string $space, array $params = []) : Entity
+    public function findOne(string $space, array $params = [])
     {
         return $this->getMapper()->findOne($space, $params);
     }
