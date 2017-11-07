@@ -10,15 +10,7 @@ abstract class Test extends TestCase
 {
     public function setup()
     {
-        $root = getcwd();
-
-        $service = getenv('SERVICE_NAME') ?: basename($root);
-        $host = getenv('TARANTOOL_SERVICE_HOST') ?: '127.0.0.1';
-        $port = getenv('TARANTOOL_SERVICE_PORT') ?: '3302';
-
-        $this->app = new Application($root);
-        $this->get(Config::class)['service'] = $service;
-        $this->get(Config::class)['tarantool'] = "tcp://$host:$port";
+        $this->app = new Application(getcwd());
         $this->dispatch('tarantool.migrate');
     }
 
