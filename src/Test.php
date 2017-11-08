@@ -8,6 +8,8 @@ use Tarantool\Mapper\Entity;
 
 abstract class Test extends TestCase
 {
+    public $params = [];
+
     public function setup()
     {
         $this->app = new Application(getcwd());
@@ -21,7 +23,7 @@ abstract class Test extends TestCase
 
     public function dispatch(string $job, array $params = [])
     {
-        return $this->app->dispatch($job, $params);
+        return $this->app->dispatch($job, array_merge($params, $this->params));
     }
 
     public function get(string $class)
