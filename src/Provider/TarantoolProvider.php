@@ -70,7 +70,7 @@ class TarantoolProvider extends AbstractServiceProvider
                 $mapper->setMeta($meta);
             }
 
-            $annotation = $mapper->addPlugin(Annotation::class);
+            $annotation = $mapper->getPlugin(Annotation::class);
 
             foreach ($filesystem->listClasses('Entity') as $class) {
                 $annotation->register($class);
@@ -79,13 +79,13 @@ class TarantoolProvider extends AbstractServiceProvider
                 $annotation->register($class);
             }
 
-            $mapper->addPlugin(Sequence::class);
-            $mapper->addPlugin(Spy::class);
-            $mapper->addPlugin(Temporal::class);
+            $mapper->getPlugin(Sequence::class);
+            $mapper->getPlugin(Spy::class);
+            $mapper->getPlugin(Temporal::class);
 
             $mapper->application = $this->getContainer();
 
-            $mapper->addPlugin(new class($mapper) extends Plugin {
+            $mapper->getPlugin(new class($mapper) extends Plugin {
                 public function afterInstantiate(Entity $entity)
                 {
                     $entity->app = $this->mapper->application;
@@ -121,7 +121,7 @@ class TarantoolProvider extends AbstractServiceProvider
                         $client->disableRequest(ReplaceRequest::class);
                         $client->disableRequest(UpdateRequest::class);
                         $mapper = new Mapper($client);
-                        $mapper->addPlugin(Temporal::class);
+                        $mapper->getPlugin(Temporal::class);
                         return $mapper;
                     });
                 }
