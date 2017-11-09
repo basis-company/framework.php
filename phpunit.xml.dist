@@ -19,8 +19,8 @@
         <ini name="error_reporting" value="E_ALL" />
         <env name="SERVICE_ENVIRONMENT" value="testing" />
         <env name="SERVICE_NAME" value="example" />
-        <env name="TARANTOOL_SERVICE_HOST" value="127.0.0.1" />
-        <env name="TARANTOOL_SERVICE_PORT" value="3301" />
+        <env name="TARANTOOL_HOST" value="127.0.0.1" />
+        <env name="TARANTOOL_PORT" value="3301" />
         <env name="TNT_MIGRATION" value="migrate" />
     </php>
 

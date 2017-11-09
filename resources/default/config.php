@@ -29,8 +29,8 @@ return [
             }
         }
 
-        $host = getenv('TARANTOOL_SERVICE_HOST') ?: $service.'-db';
-        $port = getenv('TARANTOOL_SERVICE_PORT') ?: '3301';
+        $host = getenv('TARANTOOL_HOST') ?: $service.'-db';
+        $port = getenv('TARANTOOL_PORT') ?: '3301';
         $connection = "tcp://$host:$port";
 
         $params = [];
