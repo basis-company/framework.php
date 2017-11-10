@@ -3,6 +3,8 @@
 namespace Test;
 
 use Basis\Filesystem;
+use Basis\Job;
+use Exception;
 use ReflectionClass;
 use Repository\Note;
 use Tarantool\Mapper\Bootstrap;
@@ -12,6 +14,9 @@ class TarantoolTest extends TestSuite
 {
     public function setup()
     {
+        parent::setup();
+        $this->app->dispatch('tarantool.clear');
+
         parent::setup();
 
         $fs = $this->app->get(Filesystem::class);
@@ -26,6 +31,8 @@ class TarantoolTest extends TestSuite
         foreach ($dirs as $dir => $_) {
             rmdir($dir);
         }
+
+        $this->app->dispatch('tarantool.migrate');
     }
 
     public function testMigrationOrder()
@@ -97,11 +104,51 @@ class TarantoolTest extends TestSuite
         $this->assertSame($note->message, 'test');
 
         $this->assertSame($note->app, $this->app);
+
+        ob_start();
+        var_dump($note);
+        $contents = ob_get_clean();
+
+        $this->assertNotContains("app", $contents);
     }
 
     public function testRepositoryRegistration()
     {
         $repository = $this->app->get(Note::class);
         $this->assertSame($this->app->get(Mapper::class), $repository->getMapper());
+    }
+
+    public function testJobShortcuts()
+    {
+        $job = new class($this->app) extends Job {
+            public function run(TarantoolTest $test)
+            {
+                $mapper = $this->get(Mapper::class);
+                $mapper->getRepository('note')->truncate();
+
+                $test->assertCount(0, $this->find('note'));
+                $note = $this->create('note', ['message' => 'hello world']);
+                $test->assertCount(1, $this->find('note'));
+                $test->assertNotNull($this->findOne('note', ['id' => $note->id]));
+                $test->assertSame([$note], $this->find('note'));
+
+                $testing = $this->findOrCreate('note', ['id' => $note->id]);
+                $test->assertSame($note, $testing);
+
+                $testing = $this->findOrCreate('note', ['id' => $note->id+1]);
+                $test->assertCount(2, $this->find('note'));
+
+                $this->findOrFail('note', $testing->id);
+
+                $this->remove('note', ['id' => $testing->id]);
+
+                $test->assertNull($this->findOne('note', ['id' => $testing->id]));
+
+                $test->expectException(Exception::class);
+                $this->findOrFail('note', $testing->id);
+            }
+        };
+
+        $job->run($this);
     }
 }
