@@ -24,8 +24,11 @@ class Http
         }
 
         if (!class_exists($class)) {
-            if (isset($frameworkClass) && !class_exists($frameworkClass)) {
-                throw new LogicException("No class for $controller $controller, [$class, $frameworkClass]");
+            if (!isset($frameworkClass) || !class_exists($frameworkClass)) {
+                if (isset($frameworkClass) && !class_exists($frameworkClass)) {
+                    throw new LogicException("No class for $controller $controller, [$class, $frameworkClass]");
+                }
+                throw new LogicException("No class for $controller $controller - $class");
             }
             $class = $frameworkClass;
         }
