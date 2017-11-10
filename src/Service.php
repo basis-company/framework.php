@@ -56,7 +56,7 @@ class Service
         $this->store("events/$event/$this->name");
     }
 
-    public function unsibscribe(string $event)
+    public function unsubscribe(string $event)
     {
         $this->remove("events/$event/$this->name");
     }
