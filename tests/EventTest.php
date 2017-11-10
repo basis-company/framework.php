@@ -1,5 +1,7 @@
 <?php
 
+namespace Test;
+
 use Basis\Converter;
 use Basis\Event;
 

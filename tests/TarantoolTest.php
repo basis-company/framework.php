@@ -1,9 +1,12 @@
 <?php
 
+namespace Test;
+
 use Basis\Filesystem;
+use ReflectionClass;
+use Repository\Note;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
-use Repository\Note;
 
 class TarantoolTest extends TestSuite
 {

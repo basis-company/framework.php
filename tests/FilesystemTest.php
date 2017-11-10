@@ -1,5 +1,7 @@
 <?php
 
+namespace Test;
+
 use Basis\Filesystem;
 
 class FilesystemTest extends TestSuite

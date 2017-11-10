@@ -1,5 +1,7 @@
 <?php
 
+namespace Test;
+
 use Basis\Application;
 use Basis\Converter;
 use League\Container\Container;

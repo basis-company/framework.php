@@ -1,6 +1,9 @@
 <?php
 
+namespace Test;
+
 use Basis\Config;
+use BusinessLogic;
 use League\Container\Container;
 use LinkORB\Component\Etcd\Client;
 

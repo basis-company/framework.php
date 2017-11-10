@@ -1,7 +1,8 @@
 <?php
 
-use Basis\Http;
+namespace Test;
 
+use Basis\Http;
 use Controller\Index;
 
 class HttpTest extends TestSuite

@@ -1,5 +1,7 @@
 <?php
 
+namespace Test;
+
 use Basis\Config;
 
 class ConfigTest extends TestSuite

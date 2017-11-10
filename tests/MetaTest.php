@@ -1,5 +1,7 @@
 <?php
 
+namespace Test;
+
 use Basis\Job\Job\Info;
 use Basis\Runner;
 use Job\Hello;
