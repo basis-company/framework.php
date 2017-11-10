@@ -123,23 +123,33 @@ class TarantoolTest extends TestSuite
         $job = new class($this->app) extends Job {
             public function run(TarantoolTest $test)
             {
+                // dispatch shortcut
+                $result = $this->dispatch('example.hello');
+                $test->assertSame($result, ['message' => 'hello world!']);
+
+                // get instance shortcut
                 $mapper = $this->get(Mapper::class);
                 $mapper->getRepository('note')->truncate();
 
+                // find shortcut
                 $test->assertCount(0, $this->find('note'));
                 $note = $this->create('note', ['message' => 'hello world']);
                 $test->assertCount(1, $this->find('note'));
+                // find one shortcut
                 $test->assertNotNull($this->findOne('note', ['id' => $note->id]));
                 $test->assertSame([$note], $this->find('note'));
 
+                // find or create shortcut
                 $testing = $this->findOrCreate('note', ['id' => $note->id]);
                 $test->assertSame($note, $testing);
 
                 $testing = $this->findOrCreate('note', ['id' => $note->id+1]);
                 $test->assertCount(2, $this->find('note'));
 
+                // find or fail shortcut
                 $this->findOrFail('note', $testing->id);
 
+                // remove shortcut
                 $this->remove('note', ['id' => $testing->id]);
 
                 $test->assertNull($this->findOne('note', ['id' => $testing->id]));
