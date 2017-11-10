@@ -14,23 +14,22 @@ class Filesystem
         $this->root = $root;
     }
 
-    public function exists(string $path) : bool
+    public function exists(...$args) : bool
     {
-        $path = call_user_func_array([$this, 'getPath'], func_get_args());
+        $path = $this->getPath(...$args);
         return is_dir($path) || file_exists($path);
     }
 
-    public function getPath(string $path = null) : string
+    public function getPath(...$args) : string
     {
-        if (func_get_args()) {
-            $chain = func_get_args();
-            array_unshift($chain, $this->root);
-            foreach ($chain as $k => $v) {
+        if (count($args)) {
+            array_unshift($args, $this->root);
+            foreach ($args as $k => $v) {
                 if (!strlen($v)) {
-                    unset($chain[$k]);
+                    unset($args[$k]);
                 }
             }
-            return implode(DIRECTORY_SEPARATOR, array_values($chain));
+            return implode(DIRECTORY_SEPARATOR, array_values($args));
         }
 
         return $this->root;
@@ -59,9 +58,9 @@ class Filesystem
         return $classes;
     }
 
-    public function listFiles(string $location) : array
+    public function listFiles(...$args) : array
     {
-        $absolute = $this->getPath($location);
+        $absolute = $this->getPath(...$args);
         if (!is_dir($absolute)) {
             return [];
         }
