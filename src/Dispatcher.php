@@ -16,7 +16,7 @@ class Dispatcher
 
     public function dispatch(string $job, array $params = [], string $service = null)
     {
-        if (!$service) {
+        if ($service === null) {
             $service = explode('.', $job)[0];
         }
 
