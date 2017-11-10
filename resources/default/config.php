@@ -1,5 +1,13 @@
 <?php
 
+$service = getenv('SERVICE_NAME');
+if (!$service) {
+    $service = dirname(getcwd());
+    if ($service === 'html') {
+        throw new Exception("SERVICE_NAME environment not defined");
+    }
+}
+
 return [
     'environment' => getenv('SERVICE_ENVIRONMENT') ?? 'production',
     'etcd' => function() {
@@ -9,28 +17,8 @@ return [
             'connection' => "http://$host:$port"
         ];
     },
-    'service' => function() {
-        $service = getenv('SERVICE_NAME');
-        if (!$service) {
-            $service = dirname(getcwd());
-            if ($service === 'html') {
-                throw new Exception("SERVICE_NAME environment not defined");
-            }
-        }
-        return $service;
-    },
-    'tarantool' => function() {
-
-        $service = getenv('SERVICE_NAME');
-        if (!$service) {
-            $service = dirname(getcwd());
-            if ($service === 'html') {
-                throw new Exception("SERVICE_NAME environment not defined");
-            }
-        }
-
-        $connection = getenv('TARANTOOL_CONNECTION') ?: 'tcp://'.$service.'-db:3301';
-
+    'service' => $service,
+    'tarantool' => function() use ($service) {
         $params = [];
         $mapping = [
             'connect_timeout' => 'TARANTOOL_CONNECT_TIMEOUT',
@@ -43,7 +31,7 @@ return [
             }
         }
         return [
-            'connection' => $connection,
+            'connection' => getenv('TARANTOOL_CONNECTION') ?: 'tcp://'.$service.'-db:3301',
             'params' => $params,
         ];
     },
