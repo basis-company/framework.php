@@ -33,14 +33,14 @@ class Application extends Container
 
     public function dispatch(string $job, array $params = [], string $service = null)
     {
-        if ($service) {
+        if ($service !== null) {
             if ($this->get(Service::class)->getName() == $service) {
                 $service = null;
             }
         }
 
         $runner = $this->get(Runner::class);
-        if (!$service && $runner->hasJob($job)) {
+        if ($service === null && $runner->hasJob($job)) {
             return $runner->dispatch($job, $params);
         }
 
