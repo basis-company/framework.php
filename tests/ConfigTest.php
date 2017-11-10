@@ -17,5 +17,15 @@ class ConfigTest extends TestSuite
         $this->assertSame($config['environment'], 'testing');
         $this->assertSame($config['etcd.connection'], 'http://etcd:2379');
         $this->assertCount(4, get_object_vars($config));
+
+        $this->assertArrayHasKey('service', (array) $config);
+
+        $config['custom.property'] = true;
+        $this->assertArrayHasKey('custom', (array) $config);
+        $this->assertArrayHasKey('custom.property', $config);
+
+        unset($config['custom']);
+        $this->assertNull($config['custom']);
+        $this->assertNull($config['custom.property']);
     }
 }
