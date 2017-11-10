@@ -3,7 +3,6 @@
 namespace Basis\Controller;
 
 use Basis\Application;
-use Basis\Config;
 use Basis\Event;
 use Basis\Filesystem;
 use Basis\Runner;
@@ -11,7 +10,7 @@ use Exception;
 
 class Api
 {
-    public function index(Config $config, Runner $runner, Event $event)
+    public function index(Runner $runner, Event $event)
     {
         if (!array_key_exists('rpc', $_REQUEST)) {
             return [
