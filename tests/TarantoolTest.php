@@ -150,5 +150,11 @@ class TarantoolTest extends TestSuite
         };
 
         $job->run($this);
+
+        ob_start();
+        var_dump($job);
+        $contents = ob_get_clean();
+
+        $this->assertNotContains("app", $contents);
     }
 }
