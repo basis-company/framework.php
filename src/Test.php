@@ -8,6 +8,8 @@ use Tarantool\Mapper\Entity;
 
 abstract class Test extends TestCase
 {
+    protected $app;
+
     public $params = [];
 
     public function setup()
