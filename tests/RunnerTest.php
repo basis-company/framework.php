@@ -16,6 +16,15 @@ class RunnerTest extends TestSuite
         $result = $this->app->dispatch('example.hello', ['name' => 'nekufa']);
         $this->assertSame($result, ['message' => 'hello nekufa!']);
 
+        $result = $this->app->dispatch('example.helloSomebody', ['name' => 'nekufa']);
+        $this->assertSame($result, ['message' => 'hello nekufa!']);
+
+        $result = $this->app->dispatch('example.HelloSomebody', ['name' => 'nekufa']);
+        $this->assertSame($result, ['message' => 'hello nekufa!']);
+
+        $result = $this->app->dispatch('example.hellosomebody', ['name' => 'nekufa']);
+        $this->assertSame($result, ['message' => 'hello nekufa!']);
+
         $result = $this->app->dispatch('hello');
         $this->assertSame($result, ['message' => 'hello world!']);
 
@@ -29,7 +38,7 @@ class RunnerTest extends TestSuite
 
         $jobs = $this->app->dispatch('module.meta')['jobs'];
         $this->assertNotNull($jobs);
-        $this->assertCount(1, $jobs);
+        $this->assertCount(2, $jobs);
         $this->assertContains('hello', $jobs);
     }
 

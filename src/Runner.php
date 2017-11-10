@@ -27,13 +27,16 @@ class Runner
             $serviceName = ucfirst($this->app->get(Config::class)['service']);
             foreach ($this->app->get(Filesystem::class)->listClasses('Job') as $class) {
                 $jobs[$serviceName.'\\'.substr($class, strlen('Job\\'))] = $class;
+                $jobs[$serviceName.'\\'.lcfirst(substr($class, strlen('Job\\')))] = $class;
                 $jobs[substr($class, strlen('Job\\'))] = $class;
+                $jobs[lcfirst(substr($class, strlen('Job\\')))] = $class;
             }
 
 
             foreach ($jobs as $part => $class) {
                 $nick = str_replace('\\', '.', $part);
                 $jobs[$nick] = $class;
+                $jobs[lcfirst($nick)] = $class;
                 $jobs[strtolower($nick)] = $class;
             }
 
