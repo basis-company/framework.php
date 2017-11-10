@@ -2,7 +2,8 @@
 
 namespace Basis;
 
-use Tarantool\Mapper\{Mapper, Entity};
+use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Entity;
 
 abstract class Job
 {
