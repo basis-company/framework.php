@@ -25,5 +25,8 @@ class ApplicationTest extends TestSuite
         $this->assertArrayHasKey('hash', $assets);
         $this->assertArrayHasKey('js', $assets);
         $this->assertArrayHasKey('test.js', $assets['js']);
+        $this->assertArrayHasKey('styl', $assets);
+        $this->assertArrayHasKey('file.styl', $assets['styl']);
+
     }
 }
