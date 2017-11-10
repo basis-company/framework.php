@@ -23,7 +23,7 @@ class Migration extends Job
             $this->name = explode(' ', $this->name);
         }
 
-        if (!$this->name) {
+        if (!count($this->name)) {
             throw new Exception("No migration name defined!");
         }
 

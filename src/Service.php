@@ -115,7 +115,7 @@ class Service
         }
 
         try {
-            $this->client->remove($key);
+            $this->client->rm($key);
         } catch (Exception $e) {
         }
     }

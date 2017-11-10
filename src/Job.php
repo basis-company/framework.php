@@ -6,7 +6,7 @@ use Tarantool\Mapper\{Mapper, Entity};
 
 abstract class Job
 {
-    private $app;
+    protected $app;
 
     public function __construct(Application $app)
     {

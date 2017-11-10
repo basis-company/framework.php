@@ -28,10 +28,12 @@ class Assets extends Job
         $mapping = [];
         if (is_dir($type)) {
             exec('find '.$type.' -name "*.'.$type.'" -exec md5sum {} \; | sort', $contents);
-            foreach ($contents as $i => $row) {
-                list($hash, $file) = explode("  ", $row);
-                $file = substr($file, strlen($type) + 1);
-                $mapping[$file] = $hash;
+            if ($contents !== null) {
+                foreach ($contents as $i => $row) {
+                    list($hash, $file) = explode("  ", $row);
+                    $file = substr($file, strlen($type) + 1);
+                    $mapping[$file] = $hash;
+                }
             }
         }
         return $mapping;

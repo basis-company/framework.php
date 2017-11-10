@@ -17,8 +17,8 @@ class Register extends Job
             $service->registerRoute($route);
         }
 
-        foreach ($event->getSubscription() as $event => $listeners) {
-            $service->subscribe($event);
+        foreach ($event->getSubscription() as $name => $listeners) {
+            $service->subscribe($name);
         }
 
         $assets = $this->dispatch('module.assets');
@@ -29,6 +29,6 @@ class Register extends Job
         ];
 
         $target = $service->getName() == 'web' ? null : $service->getName();
-        $this->dispatch('web.register', $registration, $target);
+        $this->app->dispatch('web.register', $registration, $target);
     }
 }

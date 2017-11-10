@@ -2,6 +2,7 @@
 
 namespace Basis\Provider;
 
+use Basis\Application;
 use Basis\Config;
 use Basis\Converter;
 use Basis\Dispatcher;
@@ -39,11 +40,11 @@ class CoreProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Framework::class, function () {
-            return new Framework($this->getContainer());
+            return new Framework($this->getContainer(), dirname(dirname(__DIR__)));
         });
 
         $this->getContainer()->share(Http::class, function () {
-            return new Http($this->getContainer());
+            return new Http($this->getContainer()->get(Application::class));
         });
     }
 }

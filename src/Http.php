@@ -24,13 +24,12 @@ class Http
         }
 
         if (!class_exists($class)) {
-            if (!class_exists($frameworkClass)) {
+            if (isset($frameworkClass) && !class_exists($frameworkClass)) {
                 throw new LogicException("No class for $controller $controller, [$class, $frameworkClass]");
             }
             $class = $frameworkClass;
         }
 
-        $url = '';
         if (!method_exists($class, $method)) {
             if (!method_exists($class, '__process')) {
                 return "$controller/$method not found";

@@ -2,7 +2,6 @@
 
 namespace Basis\Job\Module;
 
-use Basis\Config;
 use Basis\Filesystem;
 use Basis\Job;
 use ReflectionClass;
@@ -10,14 +9,14 @@ use ReflectionMethod;
 
 class Meta extends Job
 {
-    public function run(Filesystem $fs, Config $config)
+    public function run(Filesystem $fs)
     {
         $routes = [];
         foreach ($fs->listClasses('Controller') as $class) {
             $nick = substr(strtolower($class), 11);
             $methods = (new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
-                $routes[] = $nick.'/'.$method->getName();
+                $routes[] = $nick.'/'.$method->name;
             }
         }
 
