@@ -19,9 +19,9 @@ abstract class Job
         return $this->get(Mapper::class)->create($space, $data);
     }
 
-    public function dispatch(string $job, array $params = [])
+    public function dispatch(string $job, array $params = [], string $service = null)
     {
-        return $this->app->dispatch($job, $params);
+        return $this->app->dispatch($job, $params, $service);
     }
 
     public function fire(string $event, array $context)
