@@ -3,6 +3,7 @@
 namespace Basis;
 
 use ArrayAccess;
+use Closure;
 
 class Config implements ArrayAccess
 {
@@ -18,7 +19,7 @@ class Config implements ArrayAccess
         }
         $data = include $filename;
         foreach ($data as $k => $v) {
-            if (is_callable($v)) {
+            if ($v instanceof Closure) {
                 $v = $v();
             }
             $this->$k = $v;
