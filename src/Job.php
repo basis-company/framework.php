@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Exception;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Entity;
 
@@ -12,6 +13,18 @@ abstract class Job
     public function __construct(Application $app)
     {
         $this->app = $app;
+    }
+
+    protected function confirm($message)
+    {
+        $hash = md5($message);
+        if (!is_array($this->_confirmations) || !in_array($hash, $this->_confirmations)) {
+            throw new Exception(json_encode([
+                'type' => 'confirm',
+                'message' => $message,
+                'hash' => $hash
+            ]));
+        }
     }
 
     public function create(string $space, array $data) : Entity
