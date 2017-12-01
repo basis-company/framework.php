@@ -6,6 +6,7 @@ use Basis\Filesystem;
 use Basis\Job;
 use Exception;
 use ReflectionClass;
+use Procedure\Greet;
 use Repository\Note;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
@@ -33,6 +34,11 @@ class TarantoolTest extends TestSuite
         }
 
         $this->app->dispatch('tarantool.migrate');
+    }
+
+    public function testProcedureRegistration()
+    {
+        $this->assertSame($this->app->get(Greet::class)('Dmitry'), 'Hello, Dmitry!');
     }
 
     public function testMigrationOrder()

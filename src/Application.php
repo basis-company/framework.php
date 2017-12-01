@@ -6,6 +6,8 @@ use League\Container\Container;
 use League\Container\ReflectionContainer;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Annotation;
+use Tarantool\Mapper\Plugin\Procedure as ProcedurePlugin;
+use Tarantool\Mapper\Procedure;
 use Tarantool\Mapper\Repository;
 
 class Application extends Container
@@ -50,14 +52,26 @@ class Application extends Container
 
     public function get($alias, array $args = [])
     {
-        if (!$this->hasShared($alias, true) && is_subclass_of($alias, Repository::class)) {
-            $spaceName = $this->get(Mapper::class)
-                ->getPlugin(Annotation::class)
-                ->getRepositorySpaceName($alias);
+        if (!$this->hasShared($alias, true)) {
+            $instance = null;
+            if (is_subclass_of($alias, Procedure::class)) {
+                $instance = $this->get(Mapper::class)
+                    ->getPlugin(ProcedurePlugin::class)
+                    ->get($alias);
+            }
+            if (is_subclass_of($alias, Repository::class)) {
+                $spaceName = $this->get(Mapper::class)
+                    ->getPlugin(Annotation::class)
+                    ->getRepositorySpaceName($alias);
 
-            if ($spaceName) {
-                $instance = $this->get(Mapper::class)->getRepository($spaceName);
-                $this->share($alias, $instance);
+                if ($spaceName) {
+                    $instance = $this->get(Mapper::class)->getRepository($spaceName);
+                }
+            }
+            if ($instance) {
+                $this->share($alias, function () use ($instance) {
+                    return $instance;
+                });
             }
         }
         return parent::get($alias, $args);
