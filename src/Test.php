@@ -3,18 +3,38 @@
 namespace Basis;
 
 use PHPUnit\Framework\TestCase;
-use Tarantool\Mapper\Mapper;
-use Tarantool\Mapper\Entity;
 
 abstract class Test extends TestCase
 {
-    protected $app;
+    use Toolkit;
 
     public $params = [];
 
     public function setup()
     {
-        $this->app = new Application(getcwd());
+        $this->app = new class(getcwd(), $this) extends Application {
+            public function __construct(string $root, Test $testInstance)
+            {
+                parent::__construct($root);
+                $this->testInstance = $testInstance;
+            }
+            public function dispatch(string $job, array $params = [], string $service = null)
+            {
+                if (array_key_exists($job, $this->testInstance->mocks)) {
+                    $mocks = $this->testInstance->mocks[$job];
+                    $valid = null;
+                    foreach ($mocks as $mock) {
+                        if ($mock->params == $params || (!$mock->params && !$valid)) {
+                            $valid = $mock;
+                        }
+                    }
+                    if ($valid) {
+                        return is_callable($valid->result) ? ($valid->result)() : $valid->result;
+                    }
+                }
+                return parent::dispatch($job, $params, $service);
+            }
+        };
         $this->dispatch('tarantool.migrate');
     }
 
@@ -23,38 +43,34 @@ abstract class Test extends TestCase
         $this->dispatch('tarantool.clear');
     }
 
-    public function dispatch(string $job, array $params = [])
+    public $mocks = [];
+    public function mock(string $job, array $params = [])
     {
-        return $this->app->dispatch($job, array_merge($params, $this->params));
-    }
+        if (!array_key_exists($job, $this->mocks)) {
+            $this->mocks[$job] = [];
+        }
 
-    public function get(string $class)
-    {
-        return $this->app->get($class);
-    }
+        $mock = new class {
+            public $params;
+            public $result;
+            public function withParams($params)
+            {
+                $this->params = $params;
+                return $this;
+            }
+            public function willReturn($result)
+            {
+                $this->result = $result;
+                return $this;
+            }
+        };
 
-    public function getMapper() : Mapper
-    {
-        return $this->get(Mapper::class);
-    }
+        if (count($params)) {
+            $mock->params = $params;
+        }
 
-    public function find(string $space, array $params = []) : array
-    {
-        return $this->getMapper()->find($space, $params);
-    }
+        $this->mocks[$job][] = $mock;
 
-    public function findOne(string $space, array $params = [])
-    {
-        return $this->getMapper()->findOne($space, $params);
-    }
-
-    public function findOrFail(string $space, array $params = []) : Entity
-    {
-        return $this->getMapper()->findOrFail($space, $params);
-    }
-
-    public function findOrCreate(string $space, array $params = []) : Entity
-    {
-        return $this->getMapper()->findOrCreate($space, $params);
+        return $mock;
     }
 }
