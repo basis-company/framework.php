@@ -48,6 +48,11 @@ trait Toolkit
         return $this->app->get($class);
     }
 
+    public function getMapper()
+    {
+        return $this->get(Mapper::class);
+    }
+
     public function remove(string $space, array $params = [])
     {
         return $this->get(Mapper::class)->remove($space, $params);
