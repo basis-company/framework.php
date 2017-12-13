@@ -38,6 +38,11 @@ abstract class Test extends TestCase
         $this->dispatch('tarantool.migrate');
     }
 
+    public function dispatch(string $job, array $params = [])
+    {
+        return $this->app->dispatch($job, array_merge($params, $this->params));
+    }
+
     public function tearDown()
     {
         $this->dispatch('tarantool.clear');
