@@ -1,6 +1,7 @@
 <?php
 
 namespace Basis;
+
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Entity;
 
