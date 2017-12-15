@@ -4,15 +4,15 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.0",
-        "tarantool/mapper": "^4.2.22",
+        "tarantool/mapper": "^4.2.23",
         "league/container": "2.4.1",
         "rybakit/msgpack": "v0.2.2",
         "linkorb/etcd-php": "^1.2.1",
-        "phpdocumentor/reflection-docblock": "^3.1",
+        "phpdocumentor/reflection-docblock": "^4.2.0",
         "nesbot/carbon": "^1.22"
     },
     "require-dev": {
-        "phpunit/phpunit": "6.0.10"
+        "phpunit/phpunit": "^6.5.4"
     },
     "bin": ["bin/console"],
     "authors": [{
