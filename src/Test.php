@@ -12,6 +12,8 @@ abstract class Test extends TestCase
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->app = new class(getcwd(), $this) extends Application {
             public function __construct(string $root, Test $testInstance)
             {
