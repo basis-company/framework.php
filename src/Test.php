@@ -10,7 +10,7 @@ abstract class Test extends TestCase
 
     public $params = [];
 
-    public function setup()
+    public function __construct()
     {
         $this->app = new class(getcwd(), $this) extends Application {
             public function __construct(string $root, Test $testInstance)
@@ -35,6 +35,10 @@ abstract class Test extends TestCase
                 return parent::dispatch($job, $params, $service);
             }
         };
+    }
+
+    public function setup()
+    {
         $this->dispatch('tarantool.migrate');
     }
 
