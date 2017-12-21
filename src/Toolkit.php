@@ -9,6 +9,11 @@ trait Toolkit
 {
     protected $app;
 
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
     public function create(string $space, array $data) : Entity
     {
         return $this->get(Mapper::class)->create($space, $data);

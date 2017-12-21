@@ -8,11 +8,6 @@ abstract class Job
 {
     use Toolkit;
 
-    public function __construct(Application $app)
-    {
-        $this->app = $app;
-    }
-
     protected function confirm($message)
     {
         $hash = md5($message);
