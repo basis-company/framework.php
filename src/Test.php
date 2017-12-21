@@ -2,6 +2,8 @@
 
 namespace Basis;
 
+use Basis\Runner;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 abstract class Test extends TestCase
@@ -33,6 +35,9 @@ abstract class Test extends TestCase
                     if ($valid) {
                         return is_callable($valid->result) ? ($valid->result)() : $valid->result;
                     }
+                }
+                if (!$this->get(Runner::class)->hasJob($job)) {
+                    throw new Exception("Remote calls are disabled for tests");
                 }
                 return parent::dispatch($job, $params, $service);
             }
