@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Basis\Converter;
 use Basis\Runner;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +34,11 @@ abstract class Test extends TestCase
                         }
                     }
                     if ($valid) {
-                        return is_callable($valid->result) ? ($valid->result)() : $valid->result;
+                        $result = $valid->result;
+                        if (is_callable($result)) {
+                            $result = $result();
+                        }
+                        return $this->get(Converter::class)->toObject($result);
                     }
                 }
                 if (!$this->get(Runner::class)->hasJob($job)) {
