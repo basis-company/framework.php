@@ -29,7 +29,7 @@ class TestingTest extends TestSuite
                     if (is_callable($value)) {
                         $value = $value();
                     }
-                    $frameworkTest->assertSame($result, $value);
+                    $frameworkTest->assertSame(get_object_vars($result), $value);
                 }
             }
         };
