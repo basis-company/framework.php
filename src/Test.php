@@ -44,7 +44,7 @@ abstract class Test extends TestCase
                 if (!$this->get(Runner::class)->hasJob($job)) {
                     throw new Exception("Remote calls are disabled for tests");
                 }
-                return parent::dispatch($job, $params, $service);
+                return parent::dispatch($job, array_merge($params, $this->testInstance->params), $service);
             }
         };
     }
@@ -52,11 +52,6 @@ abstract class Test extends TestCase
     public function setup()
     {
         $this->dispatch('tarantool.migrate');
-    }
-
-    public function dispatch(string $job, array $params = [])
-    {
-        return $this->app->dispatch($job, array_merge($params, $this->params));
     }
 
     public function tearDown()
