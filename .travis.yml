@@ -4,13 +4,12 @@ sudo: required
 
 php:
   - 7.1
-  - 7.2snapshot
+  - 7.2
   - nightly
   - master
 
 matrix:
   allow_failures:
-    - php: 7.2snapshot
     - php: nightly
     - php: master
 
