@@ -5,10 +5,11 @@ namespace Basis\Job\Tarantool;
 use Basis\Job;
 use Tarantool\Client\Client;
 use Tarantool\Client\Schema\Index;
+use Basis\Filesystem;
 
 class Clear extends Job
 {
-    public function run(Client $client)
+    public function run(Client $client, Filesystem $fs)
     {
         $space = $client->getSpace('_vspace');
         $response = $space->select([], Index::SPACE_NAME);
@@ -25,6 +26,11 @@ class Clear extends Job
             if (strpos($tuple[0], 'mapper-once') === 0) {
                 $client->getSpace('_schema')->delete([$tuple[0]]);
             }
+        }
+
+        $filename = $fs->getPath('.cache/mapper-meta.php');
+        if (file_exists($filename)) {
+            unlink($filename);
         }
     }
 }
