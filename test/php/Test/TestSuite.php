@@ -11,7 +11,8 @@ class TestSuite extends TestCase
 
     public function setup()
     {
-        $this->app = new Application(__DIR__.DIRECTORY_SEPARATOR.'example');
-        chdir(__DIR__.DIRECTORY_SEPARATOR.'example');
+        $location = dirname(dirname(__DIR__));
+        chdir($location);
+        $this->app = new Application($location);
     }
 }

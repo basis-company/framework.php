@@ -10,7 +10,7 @@
      stopOnFailure="false"
      syntaxCheck="false"
      verbose="true"
-     bootstrap="tests/bootstrap.php"
+     bootstrap="test/bootstrap.php"
 >
     <php>
         <ini name="date.timezone" value="UTC" />
@@ -25,7 +25,7 @@
 
     <testsuites>
         <testsuite name="Tests">
-            <directory>tests</directory>
+            <directory>test</directory>
         </testsuite>
     </testsuites>
 
