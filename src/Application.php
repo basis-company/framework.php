@@ -23,6 +23,7 @@ class Application extends Container
         $this->share(Filesystem::class, $fs);
 
         $this->addServiceProvider(Provider\CoreProvider::class);
+        $this->addServiceProvider(Provider\PoolProvider::class);
         $this->addServiceProvider(Provider\ServiceProvider::class);
         $this->addServiceProvider(Provider\TarantoolProvider::class);
 
