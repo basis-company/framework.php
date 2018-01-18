@@ -36,7 +36,7 @@ abstract class Test extends TestCase
                     if ($valid) {
                         $result = $valid->result;
                         if (is_callable($result)) {
-                            $result = $result();
+                            $result = $result($params);
                         }
                         return $this->get(Converter::class)->toObject($result);
                     }
