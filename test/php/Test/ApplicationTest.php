@@ -22,12 +22,12 @@ class ApplicationTest extends Test
 
     public function testAssets()
     {
-        $assets = $this->app->dispatch('module.assets');
+        $assets = get_object_vars($this->app->dispatch('module.assets'));
         $this->assertArrayHasKey('hash', $assets);
         $this->assertArrayHasKey('js', $assets);
-        $this->assertArrayHasKey('test.js', $assets['js']);
+        $this->assertArrayHasKey('test.js', get_object_vars($assets['js']));
         $this->assertArrayHasKey('styl', $assets);
-        $this->assertArrayHasKey('file.styl', $assets['styl']);
+        $this->assertArrayHasKey('file.styl', get_object_vars($assets['styl']));
 
     }
 }

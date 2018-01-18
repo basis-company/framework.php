@@ -35,6 +35,6 @@ class HttpTest extends Test
         $this->assertSame('url: slug/sub', $http->process("/dynamic/slug/sub"));
 
         $meta = $this->app->dispatch('module.meta');
-        $this->assertContains('index/index', $meta['routes']);
+        $this->assertContains('index/index', $meta->routes);
     }
 }

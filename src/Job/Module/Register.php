@@ -20,8 +20,8 @@ class Register extends Job
 
         $registration = [
             'service' => $service->getName(),
-            'hash' => $assets['hash'],
-            'routes' => $meta['routes'],
+            'hash' => $assets->hash,
+            'routes' => $meta->routes,
         ];
 
         $this->app->dispatch('web.register', $registration, $service->getName());

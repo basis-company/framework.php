@@ -42,9 +42,9 @@ class TarantoolTest extends Test
         $migration = $this->app->dispatch('generate.migration', [
             'name' => 'b',
         ]);
-        $contents = file_get_contents($migration['filename']);
+        $contents = file_get_contents($migration->filename);
         $contents = str_replace('throw', '//throw', $contents);
-        file_put_contents($migration['filename'], $contents);
+        file_put_contents($migration->filename, $contents);
 
         sleep(1);
 
@@ -52,9 +52,9 @@ class TarantoolTest extends Test
             'name' => 'a',
         ]);
 
-        $contents = file_get_contents($migration['filename']);
+        $contents = file_get_contents($migration->filename);
         $contents = str_replace('throw', '//throw', $contents);
-        file_put_contents($migration['filename'], $contents);
+        file_put_contents($migration->filename, $contents);
 
         $this->app->dispatch('tarantool.migrate');
 
@@ -127,7 +127,7 @@ class TarantoolTest extends Test
             {
                 // dispatch shortcut
                 $result = $this->dispatch('test.hello');
-                $test->assertSame($result, ['message' => 'hello world!']);
+                $test->assertSame($result->message, 'hello world!');
 
                 // get instance shortcut
                 $mapper = $this->get(Mapper::class);

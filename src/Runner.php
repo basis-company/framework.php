@@ -79,7 +79,7 @@ class Runner
             $instance->$k = $v;
         }
 
-        return $this->app->call([$instance, 'run']);
+        return $this->app->get(Converter::class)->toObject($this->app->call([$instance, 'run']));
     }
 
     private function castArguments(string $class, array $arguments) : array
