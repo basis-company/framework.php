@@ -45,7 +45,12 @@ abstract class Test extends TestCase
                 if (!$this->get(Runner::class)->hasJob($job)) {
                     throw new Exception("Remote calls are disabled for tests");
                 }
-                return parent::dispatch($job, array_merge($params, $this->testInstance->params), $service);
+                $converter = $this->get(Converter::class);
+                $global = $this->testInstance->params ?: [];
+                if (!is_array($global)) {
+                    $global = get_object_vars($converter->toObject($this->testInstance->params));
+                }
+                return parent::dispatch($job, array_merge($params, $global), $service);
             }
         };
     }
