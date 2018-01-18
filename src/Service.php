@@ -25,7 +25,7 @@ class Service
 
     public function listServices() : array
     {
-        return $this->services ?: $this->services = $this->app->dispatch('web.services')->names;
+        return $this->services ?: $this->services = $this->app->dispatch('web.services')->services;
     }
 
     public function subscribe(string $event)

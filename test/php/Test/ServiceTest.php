@@ -15,7 +15,7 @@ class ServiceTest extends Test
         ];
 
         $this->mock('web.services')->willReturn([
-            'names' => []
+            'services' => []
         ]);
 
         $this->mock('event.subscribe')->willReturn([
@@ -55,7 +55,7 @@ class ServiceTest extends Test
         $service = $this->get(Service::class);
 
         $mock = $this->mock('web.services')->willReturn([
-            'names' => ['gateway', 'audit']
+            'services' => ['gateway', 'audit']
         ]);
 
         $this->assertSame($service->listServices(), ['gateway', 'audit']);
@@ -69,7 +69,7 @@ class ServiceTest extends Test
     {
         $service = $this->get(Service::class);
 
-        $this->mock('web.services')->willReturn(['names' => ['web']]);
+        $this->mock('web.services')->willReturn(['services' => ['web']]);
 
         $this->mock('event.subscribe')->willReturn(['success' => true]);
 

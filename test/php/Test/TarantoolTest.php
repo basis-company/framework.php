@@ -174,7 +174,7 @@ class TarantoolTest extends Test
     {
         $pool = $this->get(Pool::class);
 
-        $this->mock('web.services')->willReturn(['names' => ['guard']]);
+        $this->mock('web.services')->willReturn(['services' => ['guard']]);
 
         $connection = $pool->get('guard')->getClient()->getConnection();
 
