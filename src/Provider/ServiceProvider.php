@@ -2,6 +2,7 @@
 
 namespace Basis\Provider;
 
+use Basis\Application;
 use Basis\Config;
 use Basis\Dispatcher;
 use Basis\Event;
@@ -29,7 +30,8 @@ class ServiceProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(Service::class, function () {
             $config = $this->getContainer()->get(Config::class);
-            return new Service($config['service'], $this->getContainer());
+            $app = $this->getContainer()->get(Application::class);
+            return new Service($config['service'], $app);
         });
     }
 }
