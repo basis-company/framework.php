@@ -32,7 +32,7 @@ class Service
     {
         $this->app->dispatch('event.subscribe', [
             'event' => $event,
-            'name' => $this->getName(),
+            'service' => $this->getName(),
         ]);
     }
 
@@ -40,7 +40,7 @@ class Service
     {
         $this->app->dispatch('event.unsubscribe', [
             'event' => $event,
-            'name' => $this->getName(),
+            'service' => $this->getName(),
         ]);
     }
 
