@@ -17,13 +17,16 @@ $result = $app->dispatch($job, $argv ?: []);
 if($result) {
     if (!is_object($result) || count(get_object_vars($result))) {
         var_dump($result);
+        echo PHP_EOL;
     }
 }
 
 try {
     $app->get(Event::class)->fireChanges($job);
 } catch (Exception $e) {
-    return ['success' => false, 'message' => $e->getMessage()];
+    var_dump([
+        'success' => false,
+        'message' => $e->getMessage()
+    ]);
 }
 
-echo PHP_EOL;
