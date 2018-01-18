@@ -100,32 +100,28 @@ class TarantoolProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Pool::class, function () {
-            $mapper = $this->getContainer()->get(Mapper::class);
+            $container = $this->getContainer();
 
             $pool = new Pool();
-            $pool->register('default', $mapper);
+            $pool->register('default', $container->get(Mapper::class));
 
-            $service = $this->getContainer()->get(Service::class);
+            $service = $container->get(Service::class);
+            $pool->register($service->getName(), $container->get(Mapper::class));
 
-            $local = $service->getName();
-            $pool->register($local, $mapper);
-
-            foreach ($service->listServices() as $remote) {
-                if ($remote != $local) {
-                    $pool->register($remote, function () use ($remote) {
-                        $connection = new StreamConnection('tcp://'.$remote.'-db:3301');
-                        $packer = new PurePacker();
-                        $client = new Client($connection, $packer);
-                        $client->disableRequest(DeleteRequest::class);
-                        $client->disableRequest(InsertRequest::class);
-                        $client->disableRequest(ReplaceRequest::class);
-                        $client->disableRequest(UpdateRequest::class);
-                        $mapper = new Mapper($client);
-                        $mapper->getPlugin(Temporal::class);
-                        return $mapper;
-                    });
+            $pool->registerResolver(function ($name) use ($service) {
+                if (in_array($name, $service->listServices())) {
+                    $connection = new StreamConnection('tcp://'.$name.'-db:3301');
+                    $packer = new PurePacker();
+                    $client = new Client($connection, $packer);
+                    $client->disableRequest(DeleteRequest::class);
+                    $client->disableRequest(InsertRequest::class);
+                    $client->disableRequest(ReplaceRequest::class);
+                    $client->disableRequest(UpdateRequest::class);
+                    $mapper = new Mapper($client);
+                    $mapper->getPlugin(Temporal::class);
+                    return $mapper;
                 }
-            }
+            });
 
             return $pool;
         });

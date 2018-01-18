@@ -3,22 +3,17 @@
 namespace Basis;
 
 use Exception;
-use LinkORB\Component\Etcd\Client;
+use Tarantool\Mapper\Pool;
 
 class Service
 {
-    private $client;
+    private $app;
     private $name;
 
-    public function __construct($name, Client $client)
+    public function __construct($name, Application $app)
     {
-        $this->client = $client;
+        $this->app = $app;
         $this->name = $name;
-    }
-
-    public function eventExists(string $event) : bool
-    {
-        return $this->exists("events/$event");
     }
 
     public function getName() : string
@@ -26,97 +21,55 @@ class Service
         return $this->name;
     }
 
-    public function register()
-    {
-        $this->store("services/$this->name");
-    }
+    private $services;
 
     public function listServices() : array
     {
-        $this->client->setRoot('services');
-
-        $services = [];
-        foreach ($this->client->ls() as $entry) {
-            $name = substr($entry, strlen('/services/'));
-            if ($name) {
-                $services[] = $name;
-            }
-        }
-
-        return $services;
-    }
-
-    public function registerRoute(string $route)
-    {
-        $this->store("routes/$route", $this->name);
+        return $this->services ?: $this->services = $this->app->dispatch('web.services')->names;
     }
 
     public function subscribe(string $event)
     {
-        $this->store("events/$event/$this->name");
+        $this->app->dispatch('event.subscribe', [
+            'event' => $event,
+            'name' => $this->getName(),
+        ]);
     }
 
     public function unsubscribe(string $event)
     {
-        $this->remove("events/$event/$this->name");
+        $this->app->dispatch('event.unsubscribe', [
+            'event' => $event,
+            'name' => $this->getName(),
+        ]);
     }
 
-    private function exists(string $path) : bool
+    public function eventExists(string $event) : bool
     {
-        $chain = explode('/', $path);
-        $key = array_pop($chain);
-        $folder = implode('/', $chain);
+        $types = $this->app->get(Pool::class)->get('event')->find('type');
 
-        try {
-            $this->client->setRoot($folder);
-            $this->client->get($key);
-        } catch (Exception $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function store(string $path, $value = null)
-    {
-        $chain = explode('/', $path);
-
-        $key = array_pop($chain);
-        $folder = implode('/', $chain);
-
-        $this->client->setRoot($folder);
-        try {
-            $this->client->ls('.');
-        } catch (Exception $e) {
-            $this->client->mkdir('.');
-        }
-
-        try {
-            if ($this->client->get($key) != $value) {
-                $this->client->set($key, $value);
+        foreach ($types as $type) {
+            if ($this->eventMatch($event, $type->nick)) {
+                return true;
             }
-        } catch (Exception $e) {
-            $this->client->set($key, $value);
         }
+
+        return false;
     }
 
-    private function remove(string $path)
+    public function eventMatch($event, $spec)
     {
-        $chain = explode('/', $path);
-
-        $key = array_pop($chain);
-        $folder = implode('/', $chain);
-
-        $this->client->setRoot($folder);
-        try {
-            $this->client->ls('.');
-        } catch (Exception $e) {
-            $this->client->mkdir('.');
+        if ($spec == $event) {
+            return true;
+        } else if (strpos($spec, '*') !== false) {
+            $spec = explode('.', $spec);
+            $event = explode('.', $event);
+            $valid = true;
+            foreach (range(0, 2) as $part) {
+                $valid = $valid && ($spec[$part] == '*' || $spec[$part] == $event[$part]);
+            }
+            return $valid;
         }
-
-        try {
-            $this->client->rm($key);
-        } catch (Exception $e) {
-        }
+        return false;
     }
 }

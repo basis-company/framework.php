@@ -7,13 +7,6 @@ use LinkORB\Component\Etcd\Client;
 
 class Dispatcher
 {
-    private $etcd;
-
-    public function __construct(Client $etcd)
-    {
-        $this->etcd = $etcd;
-    }
-
     public function dispatch(string $job, array $params = [], string $service = null)
     {
         if ($service === null) {

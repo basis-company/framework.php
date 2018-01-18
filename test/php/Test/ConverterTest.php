@@ -22,5 +22,8 @@ class ConverterTest extends Test
         $this->assertSame('person_role', $converter->toUnderscore('PersonRole'));
 
         $this->assertSame('test', $converter->toObject(['test' => 'test'])->test);
+        $this->assertSame(['gateway', 'audit'], $converter->toObject([
+            'names' => ['gateway', 'audit']
+        ])->names);
     }
 }

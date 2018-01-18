@@ -1,3 +1,5 @@
-vendor
 composer.lock
 phpunit.xml
+test/.htaccess
+test/server.php
+vendor

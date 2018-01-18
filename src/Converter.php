@@ -3,17 +3,20 @@
 namespace Basis;
 
 use stdClass;
+use Exception;
 
 class Converter
 {
+    protected function isTuple($array)
+    {
+        return !count($array) || array_keys($array) === range(0, count($array) -1);
+    }
+
     public function toObject($data) : stdClass
     {
         if (is_array($data)) {
-            if (array_keys($data) === range(0, count($data) -1)) {
-                foreach ($data as $k => $v) {
-                    $data[$k] = $this->toObject($v);
-                }
-                return $data;
+            if ($this->isTuple($data)) {
+                throw new Exception('Tuple should not be converted to object');
             }
         }
 
@@ -21,7 +24,19 @@ class Converter
 
         foreach ($data as $k => $v) {
             if (is_array($v) || is_object($v)) {
-                $data->$k = $this->toObject($v);
+                if (is_array($v) && $this->isTuple($v)) {
+                    $array = [];
+                    foreach ($v as $vk => $vv) {
+                        if (is_object($vv) || is_array($vv)) {
+                            $array[$vk] = $this->toObject($vv);
+                        } else {
+                            $array[$vk] = $vv;
+                        }
+                    }
+                    $data->$k = $array;
+                } else {
+                    $data->$k = $this->toObject($v);
+                }
             }
         }
 

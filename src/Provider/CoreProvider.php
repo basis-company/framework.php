@@ -10,7 +10,6 @@ use Basis\Filesystem;
 use Basis\Framework;
 use Basis\Http;
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use LinkORB\Component\Etcd\Client;
 
 class CoreProvider extends AbstractServiceProvider
 {
@@ -36,7 +35,7 @@ class CoreProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Dispatcher::class, function () {
-            return new Dispatcher($this->getContainer()->get(Client::class));
+            return new Dispatcher();
         });
 
         $this->getContainer()->share(Framework::class, function () {

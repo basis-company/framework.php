@@ -6,10 +6,12 @@ use Basis\Filesystem;
 use Basis\Job;
 use Exception;
 use ReflectionClass;
+use ReflectionProperty;
 use Procedure\Greet;
 use Repository\Note;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Pool;
 use Basis\Test;
 
 class TarantoolTest extends Test
@@ -124,7 +126,7 @@ class TarantoolTest extends Test
             public function run(TarantoolTest $test)
             {
                 // dispatch shortcut
-                $result = $this->dispatch('example.hello');
+                $result = $this->dispatch('test.hello');
                 $test->assertSame($result, ['message' => 'hello world!']);
 
                 // get instance shortcut
@@ -166,5 +168,22 @@ class TarantoolTest extends Test
         $contents = ob_get_clean();
 
         $this->assertNotContains("app", $contents);
+    }
+
+    public function testPoolConfiguration()
+    {
+        $pool = $this->get(Pool::class);
+
+        $this->mock('web.services')->willReturn(['names' => ['guard']]);
+
+        $connection = $pool->get('guard')->getClient()->getConnection();
+
+        $property = new ReflectionProperty(get_class($connection), 'uri');
+        $property->setAccessible(true);
+
+        $this->assertSame($property->getValue($connection), 'tcp://guard-db:3301');
+
+        $this->expectException(Exception::class);
+        $pool->get('gateway');
     }
 }

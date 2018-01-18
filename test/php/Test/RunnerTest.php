@@ -11,19 +11,19 @@ class RunnerTest extends Test
 {
     public function test()
     {
-        $result = $this->app->dispatch('example.hello');
+        $result = $this->app->dispatch('test.hello');
         $this->assertSame($result, ['message' => 'hello world!']);
 
-        $result = $this->app->dispatch('example.hello', ['name' => 'nekufa']);
+        $result = $this->app->dispatch('test.hello', ['name' => 'nekufa']);
         $this->assertSame($result, ['message' => 'hello nekufa!']);
 
-        $result = $this->app->dispatch('example.helloSomebody', ['name' => 'nekufa']);
+        $result = $this->app->dispatch('test.helloSomebody', ['name' => 'nekufa']);
         $this->assertSame($result, ['message' => 'hello nekufa!']);
 
-        $result = $this->app->dispatch('example.HelloSomebody', ['name' => 'nekufa']);
+        $result = $this->app->dispatch('test.HelloSomebody', ['name' => 'nekufa']);
         $this->assertSame($result, ['message' => 'hello nekufa!']);
 
-        $result = $this->app->dispatch('example.hellosomebody', ['name' => 'nekufa']);
+        $result = $this->app->dispatch('test.hellosomebody', ['name' => 'nekufa']);
         $this->assertSame($result, ['message' => 'hello nekufa!']);
 
         $result = $this->app->dispatch('hello');
@@ -34,8 +34,8 @@ class RunnerTest extends Test
 
         $jobs = $this->app->get(Runner::class)->getMapping();
         $this->assertNotNull($jobs);
-        $this->assertContains('example.hello', array_keys($jobs));
-        $this->assertSame($jobs['example.hello'], Hello::class);
+        $this->assertContains('test.hello', array_keys($jobs));
+        $this->assertSame($jobs['test.hello'], Hello::class);
 
         $jobs = $this->app->dispatch('module.meta')['jobs'];
         $this->assertNotNull($jobs);
@@ -45,10 +45,10 @@ class RunnerTest extends Test
 
     public function testArgumentCasting()
     {
-        $result = $this->app->dispatch('example.hello', ['nekufa']);
+        $result = $this->app->dispatch('test.hello', ['nekufa']);
         $this->assertSame($result, ['message' => 'hello nekufa!']);
 
-        $result = $this->app->dispatch('example.hello', ['dmitry', 'krokhin']);
+        $result = $this->app->dispatch('test.hello', ['dmitry', 'krokhin']);
         $this->assertSame($result, ['message' => 'hello dmitry krokhin!']);
     }
 }

@@ -10,13 +10,6 @@ if (!$service) {
 
 return [
     'environment' => getenv('SERVICE_ENVIRONMENT') ?? 'production',
-    'etcd' => function() {
-        $host = getenv('ETCD_SERVICE_HOST') ?: 'etcd';
-        $port = getenv('ETCD_SERVICE_PORT') ?: 2379;
-        return [
-            'connection' => "http://$host:$port"
-        ];
-    },
     'service' => $service,
     'tarantool' => function() use ($service) {
         $params = [];

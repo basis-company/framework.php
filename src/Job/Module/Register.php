@@ -8,14 +8,9 @@ use Basis\Service;
 
 class Register extends Job
 {
-    public function run(Service $service, Event $event)
+    public function run(Event $event, Service $service)
     {
-        $service->register();
-
         $meta = $this->dispatch('module.meta');
-        foreach ($meta['routes'] as $route) {
-            $service->registerRoute($route);
-        }
 
         foreach ($event->getSubscription() as $name => $listeners) {
             $service->subscribe($name);
@@ -26,9 +21,9 @@ class Register extends Job
         $registration = [
             'service' => $service->getName(),
             'hash' => $assets['hash'],
+            'routes' => $meta['routes'],
         ];
 
-        $target = $service->getName() == 'web' ? null : $service->getName();
-        $this->app->dispatch('web.register', $registration, $target);
+        $this->app->dispatch('web.register', $registration, $service->getName());
     }
 }
