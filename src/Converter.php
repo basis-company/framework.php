@@ -3,11 +3,19 @@
 namespace Basis;
 
 use Exception;
+use stdClass;
+use Tarantool\Mapper\Entity;
 
 class Converter
 {
     protected function isTuple($array)
     {
+        if (is_object($array)) {
+            $array = get_object_vars($array);
+        }
+        if (!is_array($array)) {
+            return false;
+        }
         return !count($array) || array_keys($array) === range(0, count($array) -1);
     }
 
@@ -22,24 +30,29 @@ class Converter
         $data = (object) $data;
 
         foreach ($data as $k => $v) {
-            if (is_array($v) || is_object($v)) {
-                if (is_array($v) && $this->isTuple($v)) {
-                    $array = [];
-                    foreach ($v as $vk => $vv) {
-                        if (is_object($vv) || is_array($vv)) {
-                            $array[$vk] = $this->toObject($vv);
-                        } else {
-                            $array[$vk] = $vv;
-                        }
-                    }
-                    $data->$k = $array;
-                } else {
-                    $data->$k = $this->toObject($v);
-                }
+            if (is_array($v) && $this->isTuple($v)) {
+                $data->$k = $this->convertArrayToObject($v);
+            } elseif(is_array($v) || is_object($v)) {
+                $data->$k = $this->toObject($v);
             }
         }
 
         return $data;
+    }
+
+    public function convertArrayToObject($data)
+    {
+        $result = [];
+        foreach ($data as $k => $v) {
+            if ($this->isTuple($v)) {
+                $result[$k] = $this->convertArrayToObject($v);
+            } elseif (is_object($v) || is_array($v)) {
+                $result[$k] = $this->toObject($v);
+            } else {
+                $result[$k] = $v;
+            }
+        }
+        return $result;
     }
 
     public function toArray($data) : array
