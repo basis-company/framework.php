@@ -2,7 +2,6 @@
 
 namespace Basis;
 
-use stdClass;
 use Exception;
 
 class Converter
@@ -12,7 +11,7 @@ class Converter
         return !count($array) || array_keys($array) === range(0, count($array) -1);
     }
 
-    public function toObject($data) : stdClass
+    public function toObject($data)
     {
         if (is_array($data)) {
             if ($this->isTuple($data)) {
