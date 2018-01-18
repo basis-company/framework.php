@@ -38,6 +38,7 @@ abstract class Test extends TestCase
                         if (is_callable($result)) {
                             $result = $result($params);
                         }
+                        $valid->calls++;
                         return $this->get(Converter::class)->toObject($result);
                     }
                 }
@@ -67,17 +68,31 @@ abstract class Test extends TestCase
         }
 
         $mock = new class {
+
             public $params;
             public $result;
+            public $calls = 0;
+
             public function withParams($params)
             {
                 $this->params = $params;
                 return $this;
             }
-            public function willReturn($result)
+
+            public function handler($result)
             {
                 $this->result = $result;
                 return $this;
+            }
+
+            public function willDo($result)
+            {
+                return $this->handler($result);
+            }
+
+            public function willReturn($result)
+            {
+                return $this->handler($result);
             }
         };
 

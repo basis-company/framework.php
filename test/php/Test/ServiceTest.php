@@ -14,18 +14,19 @@ class ServiceTest extends Test
             'routes' => [],
         ];
 
-        $this->mock('web.services')->willReturn(['names' => []]);
+        $this->mock('web.services')->willReturn([
+            'names' => []
+        ]);
 
-        $this->mock('event.subscribe')
-            ->willReturn(['success' => true]);
+        $this->mock('event.subscribe')->willReturn([
+            'success' => true
+        ]);
 
-        $this->mock('web.register')
-            ->willReturn(function($params) use ($context) {
-                foreach ($params['routes'] as $route) {
-                    $context->routes[] = (object) ['route' => $route, 'service' => $params['service']];
-                }
-                return ['success' => true];
-            });
+        $this->mock('web.register')->willDo(function($params) use ($context) {
+            foreach ($params['routes'] as $route) {
+                $context->routes[] = (object) ['route' => $route, 'service' => $params['service']];
+            }
+        });
 
         // internaly it should analyze routes and call web.register
         // then context will be updated and we should validate it
@@ -53,19 +54,15 @@ class ServiceTest extends Test
     {
         $service = $this->get(Service::class);
 
-        $calls = 0;
-        $this->mock('web.services')
-            ->willReturn(function() use (&$calls) {
-                $calls++;
-                return [
-                    'names' => ['gateway', 'audit']
-                ];
-            });
+        $mock = $this->mock('web.services')->willReturn([
+            'names' => ['gateway', 'audit']
+        ]);
 
         $this->assertSame($service->listServices(), ['gateway', 'audit']);
         $this->assertSame($service->listServices(), ['gateway', 'audit']);
+
         // service list is cached
-        $this->assertSame(1, $calls);
+        $this->assertSame(1, $mock->calls);
     }
 
     public function testEvents()
