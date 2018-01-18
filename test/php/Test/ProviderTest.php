@@ -6,8 +6,9 @@ use Basis\Config;
 use BusinessLogic;
 use League\Container\Container;
 use LinkORB\Component\Etcd\Client;
+use Basis\Test;
 
-class ProviderTest extends TestSuite
+class ProviderTest extends Test
 {
     public function test()
     {

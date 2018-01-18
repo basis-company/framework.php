@@ -4,9 +4,10 @@ namespace Test;
 
 use Basis\Application;
 use Basis\Converter;
+use Basis\Test;
 use League\Container\Container;
 
-class ApplicationTest extends TestSuite
+class ApplicationTest extends Test
 {
     public function testApplication()
     {

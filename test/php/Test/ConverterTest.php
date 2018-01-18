@@ -3,8 +3,9 @@
 namespace Test;
 
 use Basis\Converter;
+use Basis\Test;
 
-class ConverterTest extends TestSuite
+class ConverterTest extends Test
 {
     public function test()
     {

@@ -3,8 +3,9 @@
 namespace Test;
 
 use Basis\Config;
+use Basis\Test;
 
-class ConfigTest extends TestSuite
+class ConfigTest extends Test
 {
     public function test()
     {

@@ -10,16 +10,12 @@ use Procedure\Greet;
 use Repository\Note;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
+use Basis\Test;
 
-class TarantoolTest extends TestSuite
+class TarantoolTest extends Test
 {
-    public function setup()
+    public function tearDown()
     {
-        parent::setup();
-        $this->app->dispatch('tarantool.clear');
-
-        parent::setup();
-
         $fs = $this->app->get(Filesystem::class);
         $classes = $fs->listClasses('Migration');
 
@@ -32,8 +28,6 @@ class TarantoolTest extends TestSuite
         foreach ($dirs as $dir => $_) {
             rmdir($dir);
         }
-
-        $this->app->dispatch('tarantool.migrate');
     }
 
     public function testProcedureRegistration()

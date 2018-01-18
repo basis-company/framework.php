@@ -5,8 +5,9 @@ namespace Test;
 use Basis\Job\Job\Info;
 use Basis\Runner;
 use Job\Hello;
+use Basis\Test;
 
-class RunnerTest extends TestSuite
+class RunnerTest extends Test
 {
     public function test()
     {

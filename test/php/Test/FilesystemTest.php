@@ -3,8 +3,9 @@
 namespace Test;
 
 use Basis\Filesystem;
+use Basis\Test;
 
-class FilesystemTest extends TestSuite
+class FilesystemTest extends Test
 {
     public function test()
     {

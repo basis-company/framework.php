@@ -4,8 +4,9 @@ namespace Test;
 
 use Basis\Converter;
 use Basis\Event;
+use Basis\Test;
 
-class EventTest extends TestSuite
+class EventTest extends Test
 {
     public function test()
     {

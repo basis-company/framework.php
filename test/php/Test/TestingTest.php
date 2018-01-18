@@ -6,7 +6,7 @@ use Basis\Filesystem;
 use Basis\Job;
 use Basis\Test;
 
-class TestingTest extends TestSuite
+class TestingTest extends Test
 {
     public function test()
     {

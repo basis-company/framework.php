@@ -4,8 +4,9 @@ namespace Test;
 
 use Basis\Http;
 use Controller\Index;
+use Basis\Test;
 
-class HttpTest extends TestSuite
+class HttpTest extends Test
 {
     public function test()
     {
