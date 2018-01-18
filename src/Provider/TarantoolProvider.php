@@ -4,17 +4,12 @@ namespace Basis\Provider;
 
 use Basis\Config;
 use Basis\Filesystem;
-use Basis\Service;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Tarantool\Client\Client as TarantoolClient;
 use Tarantool\Client\Connection\Connection;
 use Tarantool\Client\Connection\StreamConnection;
 use Tarantool\Client\Packer\Packer;
 use Tarantool\Client\Packer\PurePacker;
-use Tarantool\Client\Request\DeleteRequest;
-use Tarantool\Client\Request\InsertRequest;
-use Tarantool\Client\Request\ReplaceRequest;
-use Tarantool\Client\Request\UpdateRequest;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Entity;
@@ -24,7 +19,6 @@ use Tarantool\Mapper\Plugin\Annotation;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
 use Tarantool\Mapper\Plugin\Temporal;
-use Tarantool\Mapper\Pool;
 use Tarantool\Mapper\Schema;
 
 class TarantoolProvider extends AbstractServiceProvider
@@ -97,33 +91,6 @@ class TarantoolProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(Packer::class, function () {
             return new PurePacker();
-        });
-
-        $this->getContainer()->share(Pool::class, function () {
-            $container = $this->getContainer();
-
-            $pool = new Pool();
-            $pool->register('default', $container->get(Mapper::class));
-
-            $service = $container->get(Service::class);
-            $pool->register($service->getName(), $container->get(Mapper::class));
-
-            $pool->registerResolver(function ($name) use ($service) {
-                if (in_array($name, $service->listServices())) {
-                    $connection = new StreamConnection('tcp://'.$name.'-db:3301');
-                    $packer = new PurePacker();
-                    $client = new Client($connection, $packer);
-                    $client->disableRequest(DeleteRequest::class);
-                    $client->disableRequest(InsertRequest::class);
-                    $client->disableRequest(ReplaceRequest::class);
-                    $client->disableRequest(UpdateRequest::class);
-                    $mapper = new Mapper($client);
-                    $mapper->getPlugin(Temporal::class);
-                    return $mapper;
-                }
-            });
-
-            return $pool;
         });
 
         $this->getContainer()->share(Schema::class, function () {
