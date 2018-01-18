@@ -15,7 +15,9 @@ array_shift($argv);
 $job = $argv ? array_shift($argv) : 'module.meta';
 $result = $app->dispatch($job, $argv ?: []);
 if($result) {
-    var_dump($result);
+    if (!is_object($result) || count(get_object_vars($result))) {
+        var_dump($result);
+    }
 }
 
 try {
