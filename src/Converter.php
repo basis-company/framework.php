@@ -28,14 +28,20 @@ class Converter
         }
 
         if (is_object($data)) {
+            if ($data instanceof Entity) {
+                // keep instance
+                return $data;
+            }
+
             $tmp = $data;
             $data = [];
             foreach ($tmp as $k => $v) {
                 $data[$k] = $v;
             }
+        } else {
+            $data = (object) $data;
         }
 
-        $data = (object) $data;
 
         foreach ($data as $k => $v) {
             if (is_array($v) && $this->isTuple($v)) {
