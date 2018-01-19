@@ -3,6 +3,7 @@
 namespace Basis;
 
 use Tarantool\Mapper\Plugin\Spy;
+use Tarantool\Mapper\Pool;
 use ReflectionClass;
 
 class Event
@@ -10,14 +11,14 @@ class Event
     private $dispatcher;
     private $filesystem;
     private $service;
-    private $spy;
+    private $pool;
 
-    public function __construct(Dispatcher $dispatcher, Service $service, Spy $spy, Filesystem $filesystem)
+    public function __construct(Dispatcher $dispatcher, Service $service, Pool $pool, Filesystem $filesystem)
     {
         $this->dispatcher = $dispatcher;
         $this->filesystem = $filesystem;
         $this->service = $service;
-        $this->spy = $spy;
+        $this->pool = $pool;
     }
 
     public function getSubscription()
@@ -49,31 +50,34 @@ class Event
 
     public function fireChanges(string $producer)
     {
-        if ($this->spy->hasChanges()) {
-            // reduce changes list
-            $changes = $this->spy->getChanges();
-            foreach ($changes as $action => $collection) {
-                foreach ($collection as $space => $entities) {
-                    $event = $this->service->getName().'.'.$space.'.'.$action;
+        foreach ($this->pool->getMappers() as $mapper) {
+            $spy = $mapper->getPlugin(Spy::class);
+            if ($spy->hasChanges()) {
+                // reduce changes list
+                $changes = $spy->getChanges();
+                foreach ($changes as $action => $collection) {
+                    foreach ($collection as $space => $entities) {
+                        $event = $this->service->getName().'.'.$space.'.'.$action;
 
-                    if (!$this->service->eventExists($event)) {
-                        unset($collection[$space]);
+                        if (!$this->service->eventExists($event)) {
+                            unset($collection[$space]);
+                        }
+                    }
+                    if (!count($collection)) {
+                        unset($changes->$action);
                     }
                 }
-                if (!count($collection)) {
-                    unset($changes->$action);
+
+                if (count(get_object_vars($changes))) {
+                    $this->dispatcher->dispatch('event.changes', [
+                        'producer' => $producer,
+                        'changes' => $changes,
+                        'service' => $this->service->getName(),
+                    ]);
                 }
-            }
 
-            if (count(get_object_vars($changes))) {
-                $this->dispatcher->dispatch('event.changes', [
-                    'producer' => $producer,
-                    'changes' => $changes,
-                    'service' => $this->service->getName(),
-                ]);
+                $spy->reset();
             }
-
-            $this->spy->reset();
         }
     }
 }

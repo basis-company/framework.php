@@ -9,7 +9,7 @@ use Basis\Event;
 use Basis\Filesystem;
 use Basis\Service;
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use Tarantool\Mapper\Plugin\Spy;
+use Tarantool\Mapper\Pool;
 
 class ServiceProvider extends AbstractServiceProvider
 {
@@ -23,9 +23,9 @@ class ServiceProvider extends AbstractServiceProvider
         $this->getContainer()->share(Event::class, function () {
             $dispatcher = $this->getContainer()->get(Dispatcher::class);
             $service = $this->getContainer()->get(Service::class);
-            $spy = $this->getContainer()->get(Spy::class);
+            $pool = $this->getContainer()->get(Pool::class);
             $filesystem = $this->getContainer()->get(Filesystem::class);
-            return new Event($dispatcher, $service, $spy, $filesystem);
+            return new Event($dispatcher, $service, $pool, $filesystem);
         });
 
         $this->getContainer()->share(Service::class, function () {
