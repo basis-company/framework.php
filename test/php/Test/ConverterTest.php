@@ -17,6 +17,10 @@ class ConverterTest extends Test
         $this->validateArray(['config' => ['a' => null]]);
         $this->validateArray(['config' => ['a' => null, 'b' => [1]]]);
         $this->validateArray(['config' => ['a' => null, 'b' => [null]]]);
+
+        $this->assertEquals($this->get(Converter::class)->toObject((object) ['q' => 1]), (object) [
+            'q' => 1
+        ]);
     }
 
     private function validateArray($array)

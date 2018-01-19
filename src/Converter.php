@@ -38,10 +38,9 @@ class Converter
             foreach ($tmp as $k => $v) {
                 $data[$k] = $v;
             }
-        } else {
-            $data = (object) $data;
         }
 
+        $data = (object) $data;
 
         foreach ($data as $k => $v) {
             if (is_array($v) && $this->isTuple($v)) {
