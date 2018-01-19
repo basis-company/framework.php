@@ -72,7 +72,7 @@ class Event
                     $this->dispatcher->dispatch('event.changes', [
                         'producer' => $producer,
                         'changes' => $changes,
-                        'service' => $this->service->getName(),
+                        'service' => $mapper->serviceName,
                     ]);
                 }
 
