@@ -37,13 +37,21 @@ class Event
             }
 
             $result = [];
+            $issues = [];
             foreach ($listeners as $nick => $listener) {
                 $result[$nick] = $this->handleEvent($app, $listener, $context);
+                try {
+                    $event->fireChanges($nick);
+                } catch (Exception $e) {
+                    $issues[$nick] =  $e->getMessage();
+                }
             }
+
 
             return [
                 'success' => true,
                 'data' => $result,
+                'issues' => $issues,
             ];
 
         } catch (Exception $e) {
