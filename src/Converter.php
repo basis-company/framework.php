@@ -27,6 +27,14 @@ class Converter
             }
         }
 
+        if (is_object($data)) {
+            $tmp = $data;
+            $data = [];
+            foreach ($tmp as $k => $v) {
+                $data[$k] = $v;
+            }
+        }
+
         $data = (object) $data;
 
         foreach ($data as $k => $v) {
