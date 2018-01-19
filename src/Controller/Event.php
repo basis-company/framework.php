@@ -15,16 +15,30 @@ class Event
             $context = $this->getRequestContext();
             $subscription = $event->getSubscription();
 
-            if (!array_key_exists($_REQUEST['event'], $subscription)) {
-                $service->unsubscribe($_REQUEST['event']);
+            $patterns = [];
+            foreach (array_keys($subscription) as $pattern) {
+                if ($service->eventMatch($context->event, $pattern)) {
+                    $patterns[] = $pattern;
+                }
+            }
+
+            if (!count($patterns)) {
+                $service->unsubscribe($context->event);
                 throw new Exception("No subscription on event ".$_REQUEST['event'], 1);
             }
 
-            $result = [];
+            $listeners = [];
+            foreach ($patterns as $pattern) {
+                foreach ($subscription[$pattern] as $listener) {
+                    if (!array_key_exists($listener, $listeners)) {
+                        $listeners[$listener] = $app->get('Listener\\'.$listener);
+                    }
+                }
+            }
 
-            foreach ($subscription[$_REQUEST['event']] as $listener) {
-                $instance = $app->get('Listener\\'.$listener);
-                $result[$listener] = $this->handleEvent($app, $instance, $context);
+            $result = [];
+            foreach ($listeners as $nick => $listener) {
+                $result[$nick] = $this->handleEvent($app, $listener, $context);
             }
 
             return [
@@ -52,6 +66,8 @@ class Event
         if (!$context) {
             throw new Exception('Invalid context');
         }
+
+        $context->event = $_REQUEST['event'];
 
         return $context;
     }
