@@ -24,7 +24,7 @@ class Event
 
             foreach ($subscription[$_REQUEST['event']] as $listener) {
                 $instance = $app->get('Listener\\'.$listener);
-                $result[$listener] = $this->handleEvent($instance, $context);
+                $result[$listener] = $this->handleEvent($app, $instance, $context);
             }
 
             return [
@@ -56,7 +56,7 @@ class Event
         return $context;
     }
 
-    private function handleEvent($instance, $context)
+    private function handleEvent($app, $instance, $context)
     {
         foreach ($context as $k => $v) {
             $instance->$k = $v;
