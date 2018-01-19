@@ -13,6 +13,7 @@ use Tarantool\Client\Request\UpdateRequest;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin;
+use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
 use Tarantool\Mapper\Plugin\Temporal;
 use Tarantool\Mapper\Pool;
@@ -45,8 +46,9 @@ class PoolProvider extends AbstractServiceProvider
                     $client->disableRequest(ReplaceRequest::class);
                     $client->disableRequest(UpdateRequest::class);
                     $mapper = new Mapper($client);
-                    $mapper->getPlugin(Temporal::class);
+                    $mapper->getPlugin(Sequence::class);
                     $mapper->getPlugin(Spy::class);
+                    $mapper->getPlugin(Temporal::class);
                     return $mapper;
                 }
             });
