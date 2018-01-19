@@ -23,7 +23,7 @@ class Converter
     {
         if (is_array($data)) {
             if ($this->isTuple($data)) {
-                throw new Exception('Tuple should not be converted to object');
+                return $this->convertArrayToObject($data);
             }
         }
 
