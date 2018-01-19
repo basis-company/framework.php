@@ -30,11 +30,14 @@ class PoolProvider extends AbstractServiceProvider
         $this->getContainer()->share(Pool::class, function () {
             $container = $this->getContainer();
 
-            $pool = new Pool();
-            $pool->register('default', $container->get(Mapper::class));
+            $mapper = $container->get(Mapper::class);
 
             $service = $container->get(Service::class);
-            $pool->register($service->getName(), $container->get(Mapper::class));
+            $mapper->serviceName = $service->getName();
+
+            $pool = new Pool();
+            $pool->register('default', $mapper);
+            $pool->register($mapper->serviceName, $mapper);
 
             $pool->registerResolver(function ($name) use ($service) {
                 if (in_array($name, $service->listServices())) {
@@ -49,6 +52,7 @@ class PoolProvider extends AbstractServiceProvider
                     $mapper->getPlugin(Sequence::class);
                     $mapper->getPlugin(Spy::class);
                     $mapper->getPlugin(Temporal::class);
+                    $mapper->serviceName = $name;
                     return $mapper;
                 }
             });

@@ -176,6 +176,8 @@ class TarantoolTest extends Test
 
         $this->mock('web.services')->willReturn(['services' => ['guard']]);
 
+        $this->assertSame('guard', $pool->get('guard')->serviceName);
+
         $connection = $pool->get('guard')->getClient()->getConnection();
 
         $property = new ReflectionProperty(get_class($connection), 'uri');
