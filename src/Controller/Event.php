@@ -24,7 +24,7 @@ class Event
 
             if (!count($patterns)) {
                 $service->unsubscribe($context->event);
-                throw new Exception("No subscription on event ".$_REQUEST['event'], 1);
+                throw new Exception("No subscription on event ".$context->event);
             }
 
             $listeners = [];
