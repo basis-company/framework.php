@@ -5,6 +5,8 @@ namespace Basis\Job\Module;
 use Basis\Filesystem;
 use Basis\Job;
 use Exception;
+use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Plugin\Procedure;
 
 class Bootstrap extends Job
 {
@@ -17,6 +19,13 @@ class Bootstrap extends Job
                 unlink($fs->getPath('.cache/'.$file));
             }
             rmdir($cache);
+        }
+
+        $procedures = $fs->listClasses('Procedure');
+        if (count($procedures)) {
+            foreach ($procedures as $procedure) {
+                $this->get(Mapper::class)->getPlugin(Procedure::class)->register($procedure);
+            }
         }
 
         $jobs = ['tarantool.migrate', 'tarantool.cache', 'module.defaults', 'module.register'];
