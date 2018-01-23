@@ -8,14 +8,14 @@ use ReflectionClass;
 
 class Event
 {
-    private $dispatcher;
+    private $app;
     private $filesystem;
     private $service;
     private $pool;
 
-    public function __construct(Dispatcher $dispatcher, Service $service, Pool $pool, Filesystem $filesystem)
+    public function __construct(Application $app, Service $service, Pool $pool, Filesystem $filesystem)
     {
-        $this->dispatcher = $dispatcher;
+        $this->app = $app;
         $this->filesystem = $filesystem;
         $this->service = $service;
         $this->pool = $pool;
@@ -42,7 +42,7 @@ class Event
 
     public function fire(string $event, $context)
     {
-        $this->dispatcher->dispatch('event.fire', [
+        $this->app->dispatch('event.fire', [
             'event' => $this->service->getName().'.'.$event,
             'context' => $context,
         ]);
@@ -69,7 +69,7 @@ class Event
                 }
 
                 if (count(get_object_vars($changes))) {
-                    $this->dispatcher->dispatch('event.changes', [
+                    $this->app->dispatch('event.changes', [
                         'producer' => $producer,
                         'changes' => $changes,
                         'service' => $mapper->serviceName,

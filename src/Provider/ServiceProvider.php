@@ -4,7 +4,6 @@ namespace Basis\Provider;
 
 use Basis\Application;
 use Basis\Config;
-use Basis\Dispatcher;
 use Basis\Event;
 use Basis\Filesystem;
 use Basis\Service;
@@ -21,11 +20,11 @@ class ServiceProvider extends AbstractServiceProvider
     public function register()
     {
         $this->getContainer()->share(Event::class, function () {
-            $dispatcher = $this->getContainer()->get(Dispatcher::class);
+            $app = $this->getContainer()->get(Application::class);
             $service = $this->getContainer()->get(Service::class);
             $pool = $this->getContainer()->get(Pool::class);
             $filesystem = $this->getContainer()->get(Filesystem::class);
-            return new Event($dispatcher, $service, $pool, $filesystem);
+            return new Event($app, $service, $pool, $filesystem);
         });
 
         $this->getContainer()->share(Service::class, function () {
