@@ -44,17 +44,22 @@ class Service
         ]);
     }
 
+    private $eventExistence = [];
+
     public function eventExists(string $event) : bool
     {
+        if (array_key_exists($event, $this->eventExistence)) {
+            return $this->eventExistence[$event];
+        }
         $types = $this->app->get(Pool::class)->get('event')->find('type');
 
         foreach ($types as $type) {
             if ($this->eventMatch($event, $type->nick)) {
-                return true;
+                return $this->eventExistence[$event] = true;
             }
         }
 
-        return false;
+        return $this->eventExistence[$event] = false;
     }
 
     public function eventMatch($event, $spec)
