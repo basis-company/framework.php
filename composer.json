@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.1",
-        "tarantool/mapper": "^4.3.4",
+        "tarantool/mapper": "^4.3.5",
         "league/container": "2.4.1",
         "rybakit/msgpack": "v0.2.2",
         "phpdocumentor/reflection-docblock": "^4.2.0",
