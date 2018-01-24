@@ -41,7 +41,7 @@ class Api
         try {
             $event->fireChanges($request[0]->job);
         } catch (Exception $e) {
-            return ['success' => false, 'message' => $e->getMessage()];
+            return ['success' => false, 'message' => 'Fire changes failure: '.$e->getMessage()];
         }
 
         return is_array($data) ? $response : $response[0];
