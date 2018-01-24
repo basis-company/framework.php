@@ -3,7 +3,6 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "require": {
-        "ext-curl": "^7.1",
         "guzzlehttp/guzzle": "^6.0",
         "league/container": "2.4.1",
         "marcj/topsort": "^1.1",
