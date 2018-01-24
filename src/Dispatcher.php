@@ -11,9 +11,8 @@ class Dispatcher
     {
         $this->client = new Client([
             'headers' => [
-                'content-type: multipart/form-data',
-                'x-real-ip: '.$_SERVER['HTTP_X_REAL_IP'],
-                'x-session: '.$_SERVER['HTTP_X_SESSION'],
+                'x-real-ip' => $_SERVER['HTTP_X_REAL_IP'],
+                'x-session' => $_SERVER['HTTP_X_SESSION'],
             ]
         ]);
     }
