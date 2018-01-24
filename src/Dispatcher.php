@@ -11,6 +11,7 @@ class Dispatcher
     {
         $this->client = new Client([
             'headers' => [
+                'transfer-encoding' => 'chunked',
                 'x-real-ip' => $_SERVER['HTTP_X_REAL_IP'],
                 'x-session' => $_SERVER['HTTP_X_SESSION'],
             ]
