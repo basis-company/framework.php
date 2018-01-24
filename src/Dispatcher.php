@@ -3,7 +3,6 @@
 namespace Basis;
 
 use Exception;
-use LinkORB\Component\Etcd\Client;
 
 class Dispatcher
 {
@@ -13,28 +12,28 @@ class Dispatcher
             $service = explode('.', $job)[0];
         }
 
-        $content = http_build_query([
-            'rpc' => json_encode([
-                'job'    => $job,
-                'params' => $params,
-            ])
-        ]);
+        $curl = curl_init();
 
-
-        $context = stream_context_create([
-            'http' => [
-                'method'  => 'POST',
-                'content' => $content,
-                'header'  => implode([
-                    'content-type: application/x-www-form-urlencoded',
-                    'x-real-ip: '.$_SERVER['HTTP_X_REAL_IP'],
-                    'x-session: '.$_SERVER['HTTP_X_SESSION'],
-                ], "\r\n"),
-                'ignore_errors' => '1'
+        curl_setopt_array($curl, [
+            CURLOPT_HEADER => false,
+            CURLOPT_HTTPHEADER => [
+                'content-type: application/x-www-form-urlencoded',
+                'x-real-ip: '.$_SERVER['HTTP_X_REAL_IP'],
+                'x-session: '.$_SERVER['HTTP_X_SESSION'],
             ],
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query([
+                'rpc' => json_encode([
+                    'job'    => $job,
+                    'params' => $params,
+                ])
+            ]),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => "http://$service/api",
         ]);
 
-        $contents = file_get_contents("http://$service/api", false, $context);
+        $contents = curl_exec($curl);
+        curl_close($curl);
 
         if (!$contents) {
             throw new Exception("Host $service unreachable");
