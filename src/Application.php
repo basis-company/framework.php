@@ -22,6 +22,7 @@ class Application extends Container
         $this->share(Container::class, $this);
         $this->share(Filesystem::class, $fs);
 
+        $this->addServiceProvider(Provider\GuzzleProvider::class);
         $this->addServiceProvider(Provider\CoreProvider::class);
         $this->addServiceProvider(Provider\PoolProvider::class);
         $this->addServiceProvider(Provider\ServiceProvider::class);

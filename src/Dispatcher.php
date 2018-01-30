@@ -7,15 +7,9 @@ use GuzzleHttp\Client;
 
 class Dispatcher
 {
-    public function __construct()
+    public function __construct(Client $client)
     {
-        $this->client = new Client([
-            'headers' => [
-                'transfer-encoding' => 'chunked',
-                'x-real-ip' => $_SERVER['HTTP_X_REAL_IP'],
-                'x-session' => $_SERVER['HTTP_X_SESSION'],
-            ]
-        ]);
+        $this->client = $client;
     }
 
     public function dispatch(string $job, array $params = [], string $service = null)
