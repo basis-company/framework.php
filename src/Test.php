@@ -12,6 +12,7 @@ abstract class Test extends TestCase
     use Toolkit;
 
     public $params = [];
+    public $disableRemote = true;
 
     public function __construct()
     {
@@ -42,8 +43,10 @@ abstract class Test extends TestCase
                         return $this->get(Converter::class)->toObject($result);
                     }
                 }
-                if (!$this->get(Runner::class)->hasJob($job)) {
-                    throw new Exception("Remote calls are disabled for tests");
+                if ($this->testInstance->disableRemote) {
+                    if (!$this->get(Runner::class)->hasJob($job)) {
+                        throw new Exception("Remote calls are disabled for tests");
+                    }
                 }
                 $converter = $this->get(Converter::class);
                 $global = $this->testInstance->params ?: [];
