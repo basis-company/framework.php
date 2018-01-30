@@ -8,7 +8,7 @@ use Tarantool\Mapper\Entity;
 
 class Converter
 {
-    protected function isTuple($array)
+    public function isTuple($array)
     {
         if (is_object($array)) {
             $array = get_object_vars($array);

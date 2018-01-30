@@ -68,6 +68,17 @@ class Runner
 
     public function dispatch(string $nick, array $arguments = [])
     {
+        if (count($arguments)) {
+            $converter = $this->app->get(Converter::class);
+            if ($converter->isTuple($arguments) && is_array($arguments[0])) {
+                $result = [];
+                foreach ($arguments as $params) {
+                    $result[] = $this->dispatch($nick, $params);
+                }
+                return $result;
+            }
+        }
+
         $class = $this->getJobClass($nick);
 
         $instance = $this->app->get($class);

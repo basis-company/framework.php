@@ -9,6 +9,29 @@ use Basis\Test;
 
 class RunnerTest extends Test
 {
+    public function testMultiple()
+    {
+        $result = $this->app->dispatch('test.hello');
+        $this->assertSame($result->message, 'hello world!');
+
+        $result = $this->app->dispatch('test.hello', []);
+        $this->assertSame($result->message, 'hello world!');
+
+        $result = $this->app->dispatch('test.hello', [['name' => 'nekufa']]);
+        $this->assertCount(1, $result);
+        $this->assertSame($result[0]->message, 'hello nekufa!');
+
+        $result = $this->app->dispatch('test.hello', [['name' => 'nekufa'], []]);
+        $this->assertCount(2, $result);
+        $this->assertSame($result[0]->message, 'hello nekufa!');
+        $this->assertSame($result[1]->message, 'hello world!');
+
+        $result = $this->app->dispatch('test.hello', [['name' => 'nekufa'], ['name' => 'vasya']]);
+        $this->assertCount(2, $result);
+        $this->assertSame($result[0]->message, 'hello nekufa!');
+        $this->assertSame($result[1]->message, 'hello vasya!');
+    }
+
     public function test()
     {
         $result = $this->app->dispatch('test.hello');
