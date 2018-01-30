@@ -36,5 +36,8 @@ class TestingTest extends Test
 
         $userTest->setup();
         $userTest->testMock($this);
+
+        $this->expectExceptionMessage("Remote calls (service.call) are disabled for tests");
+        $this->dispatch('service.call');
     }
 }

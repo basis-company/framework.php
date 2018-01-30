@@ -45,7 +45,7 @@ abstract class Test extends TestCase
                 }
                 if ($this->testInstance->disableRemote) {
                     if (!$this->get(Runner::class)->hasJob($job)) {
-                        throw new Exception("Remote calls are disabled for tests");
+                        throw new Exception("Remote calls ($job) are disabled for tests");
                     }
                 }
                 $converter = $this->get(Converter::class);
