@@ -73,11 +73,15 @@ class Api
                 'data' => $data,
             ];
         } catch (Exception $e) {
-            return [
+            $error = [
                 'success' => false,
                 'message' => $e->getMessage(),
                 'trace' => explode(PHP_EOL, $e->getTraceAsString()),
             ];
+            if ($e->remoteTrace) {
+                $error['remoteTrace'] = $e->remoteTrace;
+            }
+            return $error;
         }
     }
 

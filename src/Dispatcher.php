@@ -38,7 +38,11 @@ class Dispatcher
 
         $result = json_decode($contents);
         if (!$result || !$result->success) {
-            throw new Exception($result->message ?: $contents);
+            $exception = new Exception($result->message ?: $contents);
+            if ($result->trace) {
+                $exception->remoteTrace = $result->trace;
+            }
+            throw $exception;
         }
 
         return $result->data;
