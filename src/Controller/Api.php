@@ -78,7 +78,7 @@ class Api
                 'message' => $e->getMessage(),
                 'trace' => explode(PHP_EOL, $e->getTraceAsString()),
             ];
-            if ($e->remoteTrace) {
+            if (property_exists($e, 'remoteTrace')) {
                 $error['remoteTrace'] = $e->remoteTrace;
             }
             return $error;
