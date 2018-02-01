@@ -39,5 +39,10 @@ class Migrate extends Job
         }
 
         $bootstrap->migrate();
+
+        $filename = $fs->getPath('.cache/mapper-meta.php');
+        if (file_exists($filename)) {
+            $this->dispatch('tarantool.cache');
+        }
     }
 }
