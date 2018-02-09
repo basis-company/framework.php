@@ -12,19 +12,19 @@ class Event
     public function index(Application $app, BasisEvent $event, Service $service)
     {
         try {
-            $context = $this->getRequestContext();
+            $info = $this->getEventInfo();
             $subscription = $event->getSubscription();
 
             $patterns = [];
             foreach (array_keys($subscription) as $pattern) {
-                if ($service->eventMatch($context->event, $pattern)) {
+                if ($service->eventMatch($info->event, $pattern)) {
                     $patterns[] = $pattern;
                 }
             }
 
             if (!count($patterns)) {
-                $service->unsubscribe($context->event);
-                throw new Exception("No subscription on event ".$context->event);
+                $service->unsubscribe($info->event);
+                throw new Exception("No subscription on event ".$info->event);
             }
 
             $listeners = [];
@@ -39,7 +39,7 @@ class Event
             $result = [];
             $issues = [];
             foreach ($listeners as $nick => $listener) {
-                $result[$nick] = $this->handleEvent($app, $listener, $context);
+                $result[$nick] = $this->handleEvent($app, $listener, $info);
                 try {
                     $event->fireChanges($nick);
                 } catch (Exception $e) {
@@ -59,7 +59,7 @@ class Event
         }
     }
 
-    private function getRequestContext()
+    private function getEventInfo()
     {
         if (!array_key_exists('event', $_REQUEST)) {
             throw new Exception('No event defined');
@@ -75,14 +75,15 @@ class Event
             throw new Exception('Invalid context');
         }
 
-        $context->event = $_REQUEST['event'];
-
-        return $context;
+        return [
+            'event' => $_REQUEST['event'],
+            'context' => $context,
+        ];
     }
 
-    private function handleEvent($app, $instance, $context)
+    private function handleEvent($app, $instance, $info)
     {
-        foreach ($context as $k => $v) {
+        foreach ($info as $k => $v) {
             $instance->$k = $v;
         }
         if (!method_exists($instance, 'run')) {
