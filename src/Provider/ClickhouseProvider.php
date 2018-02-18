@@ -22,7 +22,11 @@ class ClickhouseProvider extends AbstractServiceProvider
                 'username' => 'default',
                 'password' => ''
             ];
-            return new Client($config);
+
+            $clickhouse = new Client($config);
+            $clickhouse->database($serviceName);
+
+            return $clickhouse;
         });
     }
 }
