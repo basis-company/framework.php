@@ -2,8 +2,9 @@
 
 namespace Basis;
 
-use Tarantool\Mapper\Mapper;
+use ClickHouseDB\Client;
 use Tarantool\Mapper\Entity;
+use Tarantool\Mapper\Mapper;
 
 trait Toolkit
 {
@@ -62,6 +63,26 @@ trait Toolkit
     public function remove(string $space, array $params = [])
     {
         return $this->get(Mapper::class)->remove($space, $params);
+    }
+
+    public function select($fields, string $table, array $params)
+    {
+        if (is_array($fields)) {
+            $fields = implode(', ', $fields);
+        }
+
+        $binds = [];
+        $where = [];
+        foreach ($params as $k => $v) {
+            $binds[$k] = (array) $v;
+            $where[] = $k.' in (:'.$k.')';
+        }
+
+        $where = implode(' and ', $where);
+
+        $query = "SELECT $fields FROM $table where $where";
+
+        return $this->get(Client::class)->select($query, $binds);
     }
 
     public function __debugInfo()
