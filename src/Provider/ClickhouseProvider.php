@@ -24,6 +24,7 @@ class ClickhouseProvider extends AbstractServiceProvider
             ];
 
             $clickhouse = new Client($config);
+            $clickhouse->write('create database if not exists '.$serviceName);
             $clickhouse->database($serviceName);
 
             return $clickhouse;
