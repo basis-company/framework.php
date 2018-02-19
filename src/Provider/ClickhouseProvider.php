@@ -2,6 +2,7 @@
 
 namespace Basis\Provider;
 
+use Basis\Clickhouse;
 use Basis\Config;
 use Basis\Service;
 use ClickHouseDB\Client;
@@ -15,6 +16,10 @@ class ClickhouseProvider extends AbstractServiceProvider
 
     public function register()
     {
+        $this->getContainer()->share(Clickhouse::class, function () {
+            return new Clickhouse($this->getContainer());
+        });
+
         $this->getContainer()->share(Client::class, function () {
             $serviceName = $this->getContainer()->get(Service::class)->getName();
             $config = $this->getContainer()->get(Config::class)['clickhouse'];

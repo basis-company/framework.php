@@ -2,7 +2,6 @@
 
 namespace Basis;
 
-use ClickHouseDB\Client;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 
@@ -67,22 +66,12 @@ trait Toolkit
 
     public function select($fields, string $table, array $params)
     {
-        if (is_array($fields)) {
-            $fields = implode(', ', $fields);
-        }
+        return $this->get(Clickhouse::class)->select($fields, $table, $params);
+    }
 
-        $binds = [];
-        $where = [];
-        foreach ($params as $k => $v) {
-            $binds[$k] = (array) $v;
-            $where[] = $k.' in (:'.$k.')';
-        }
-
-        $where = implode(' and ', $where);
-
-        $query = "SELECT $fields FROM $table where $where";
-
-        return $this->get(Client::class)->select($query, $binds);
+    public function insert(string $table, array $data, array $headers)
+    {
+        return $this->get(Clickhouse::class)->insert($table, $data, $headers);
     }
 
     public function __debugInfo()
