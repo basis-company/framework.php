@@ -36,13 +36,13 @@ class Clickhouse
 
     public function insert(string $table, array $data, array $headers)
     {
-        $client = $this->get(Client::class);
         if (count($data) < $this->bucketSize) {
             $buckets = [$data];
         } else {
             $buckets = array_chunk($data, $this->bucketSize);
         }
 
+        $client = $this->get(Client::class);
         foreach ($buckets as $bucket) {
             $client->insert('tester', $bucket, $headers);
         }
