@@ -17,7 +17,7 @@ class ConfigTest extends Test
         $this->assertSame($config['service'], 'test');
         $this->assertSame($config['environment'], 'testing');
         $this->assertSame($config['tarantool.connection'], getenv('TARANTOOL_CONNECTION'));
-        $this->assertCount(3, get_object_vars($config));
+        $this->assertCount(4, get_object_vars($config));
 
         $this->assertArrayHasKey('service', $config);
 

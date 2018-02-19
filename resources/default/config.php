@@ -11,6 +11,14 @@ if (!$service) {
 return [
     'environment' => getenv('SERVICE_ENVIRONMENT') ?? 'production',
     'service' => $service,
+    'clickhouse' => function() use ($service) {
+        return [
+            'host' => getenv('CLICKHOUSE_HOST') ?: $service.'-ch',
+            'port' => getenv('CLICKHOUSE_PORT') ?: '8123',
+            'username' => getenv('CLICKHOUSE_USERNAME') ?: 'default',
+            'password' => getenv('CLICKHOUSE_PASSWORD') ?: '',
+        ];
+    },
     'tarantool' => function() use ($service) {
         $params = [];
         $mapping = [

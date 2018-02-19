@@ -2,6 +2,7 @@
 
 namespace Basis\Provider;
 
+use Basis\Config;
 use Basis\Service;
 use ClickHouseDB\Client;
 use League\Container\ServiceProvider\AbstractServiceProvider;
@@ -16,12 +17,7 @@ class ClickhouseProvider extends AbstractServiceProvider
     {
         $this->getContainer()->share(Client::class, function () {
             $serviceName = $this->getContainer()->get(Service::class)->getName();
-            $config = [
-                'host' => $serviceName.'-ch',
-                'port' => '8123',
-                'username' => 'default',
-                'password' => ''
-            ];
+            $config = $this->getContainer()->get(Config::class)['clickhouse'];
 
             $clickhouse = new Client($config);
             $clickhouse->write('create database if not exists '.$serviceName);
