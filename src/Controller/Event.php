@@ -75,7 +75,7 @@ class Event
             throw new Exception('Invalid context');
         }
 
-        return [
+        return (object) [
             'event' => $_REQUEST['event'],
             'context' => $context,
         ];
