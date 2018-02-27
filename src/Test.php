@@ -71,11 +71,7 @@ abstract class Test extends TestCase
             $this->mockInstances[$job] = [];
         }
 
-        $mock = new Test\Mock($this->get(Converter::class), $this);
-
-        if (count($params)) {
-            $mock->params = $params;
-        }
+        $mock = new Test\Mock($this->get(Converter::class), $this, $params);
 
         $this->mockInstances[$job][] = $mock;
 

@@ -15,10 +15,13 @@ class Mock
     public $result;
     public $calls = 0;
 
-    public function __construct(Converter $converter, Test $test)
+    public function __construct(Converter $converter, Test $test, array $params = [])
     {
         $this->converter = $converter;
         $this->test = $test;
+        if (count($params)) {
+            $this->params = $params;
+        }
     }
 
     public function withParams($params)
