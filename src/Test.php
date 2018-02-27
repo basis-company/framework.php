@@ -6,6 +6,8 @@ use Basis\Converter;
 use Basis\Runner;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
+use Tarantool\Mapper\Pool;
 
 abstract class Test extends TestCase
 {
@@ -14,52 +16,45 @@ abstract class Test extends TestCase
     public $params = [];
     public $disableRemote = true;
 
+    public $mocks = [];
+    public $data = [];
+
     public function __construct()
     {
         parent::__construct();
 
-        $this->app = new class(getcwd(), $this) extends Application {
-            public function __construct(string $root, Test $testInstance)
-            {
-                parent::__construct($root);
-                $this->testInstance = $testInstance;
+        $this->app = new Test\Application($this);
+
+        foreach ($this->mocks as [$method, $params, $result]) {
+            $this->mock($method, $params)->willReturn($result);
+        }
+
+        $serviceData = [];
+        foreach ($this->data as $space => $data) {
+            [$service, $space] = explode('.', $space);
+            if (!array_key_exists($service, $serviceData)) {
+                $serviceData[$service] = [];
             }
-            public function dispatch(string $job, array $params = [], string $service = null)
-            {
-                if (array_key_exists($job, $this->testInstance->mocks)) {
-                    $mocks = $this->testInstance->mocks[$job];
-                    $valid = null;
-                    foreach ($mocks as $mock) {
-                        if ($mock->params == $params || (!$mock->params && !$valid)) {
-                            $valid = $mock;
-                        }
-                    }
-                    if ($valid) {
-                        $result = $valid->result;
-                        if (is_callable($result)) {
-                            $result = $result($params);
-                        }
-                        $valid->calls++;
-                        return $this->get(Converter::class)->toObject($result);
-                    }
-                }
-                if ($this->testInstance->disableRemote) {
-                    if (!$this->get(Runner::class)->hasJob($job)) {
-                        throw new Exception("Remote calls ($job) are disabled for tests");
-                    }
-                }
-                $converter = $this->get(Converter::class);
-                $global = $this->testInstance->params ?: [];
-                if (!is_array($global)) {
-                    $global = get_object_vars($converter->toObject($this->testInstance->params));
-                }
-                return parent::dispatch($job, array_merge($params, $global), $service);
+            $serviceData[$service][$space] = $data;
+        }
+
+        $pool = $this->app->get(Pool::class);
+        $property = new ReflectionProperty(Pool::class, 'resolvers');
+        $property->setAccessible(true);
+        $property->setValue($pool, []);
+
+        $pool->registerResolver(function($service) use ($serviceData) {
+            if (array_key_exists($service, $serviceData)) {
+                $mapper = new Test\Mapper($serviceData[$service]);
+                $mapper->serviceName = $service;
+                return $mapper;
             }
-        };
+        });
     }
 
     public function setup()
     {
+        $this->dispatch('tarantool.clear');
         $this->dispatch('tarantool.migrate');
     }
 
@@ -68,47 +63,21 @@ abstract class Test extends TestCase
         $this->dispatch('tarantool.clear');
     }
 
-    public $mocks = [];
+    public $mockInstances = [];
+
     public function mock(string $job, array $params = [])
     {
-        if (!array_key_exists($job, $this->mocks)) {
-            $this->mocks[$job] = [];
+        if (!array_key_exists($job, $this->mockInstances)) {
+            $this->mockInstances[$job] = [];
         }
 
-        $mock = new class {
-
-            public $params;
-            public $result;
-            public $calls = 0;
-
-            public function withParams($params)
-            {
-                $this->params = $params;
-                return $this;
-            }
-
-            public function handler($result)
-            {
-                $this->result = $result;
-                return $this;
-            }
-
-            public function willDo($result)
-            {
-                return $this->handler($result);
-            }
-
-            public function willReturn($result)
-            {
-                return $this->handler($result);
-            }
-        };
+        $mock = new Test\Mock($this->get(Converter::class), $this);
 
         if (count($params)) {
             $mock->params = $params;
         }
 
-        $this->mocks[$job][] = $mock;
+        $this->mockInstances[$job][] = $mock;
 
         return $mock;
     }

@@ -1,4 +1,5 @@
 composer.lock
+composer.phar
 phpunit.xml
 test/.htaccess
 test/server.php

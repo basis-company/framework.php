@@ -16,6 +16,10 @@ use Basis\Test;
 
 class TarantoolTest extends Test
 {
+    public $data = [
+        'guard.session' => []
+    ];
+
     public function tearDown()
     {
         $fs = $this->app->get(Filesystem::class);
@@ -92,8 +96,6 @@ class TarantoolTest extends Test
 
     public function testEntity()
     {
-        $this->app->dispatch('tarantool.migrate');
-
         $mapper = $this->app->get(Mapper::class);
         $mapper->getRepository('note')->truncate();
         $note = $mapper->getRepository('note')->create('zzz');
@@ -175,15 +177,7 @@ class TarantoolTest extends Test
         $pool = $this->get(Pool::class);
 
         $this->mock('web.services')->willReturn(['services' => ['guard']]);
-
         $this->assertSame('guard', $pool->get('guard')->serviceName);
-
-        $connection = $pool->get('guard')->getClient()->getConnection();
-
-        $property = new ReflectionProperty(get_class($connection), 'uri');
-        $property->setAccessible(true);
-
-        $this->assertSame($property->getValue($connection), 'tcp://guard-db:3301');
 
         $this->expectException(Exception::class);
         $pool->get('gateway');
