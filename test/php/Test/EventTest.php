@@ -29,7 +29,7 @@ class EventTest extends Test
 
     public function testSubscription()
     {
-        $event = $this->app->get(Event::class);
+        $event = $this->get(Event::class);
         $subscription = $event->getSubscription();
 
         $this->assertArrayHasKey('person.created', $subscription);
