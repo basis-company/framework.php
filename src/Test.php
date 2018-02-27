@@ -52,7 +52,6 @@ abstract class Test extends TestCase
 
     public function setup()
     {
-        $this->dispatch('tarantool.clear');
         $this->dispatch('tarantool.migrate');
     }
 
