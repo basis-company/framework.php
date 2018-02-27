@@ -43,9 +43,7 @@ abstract class Test extends TestCase
 
         $pool->registerResolver(function($service) use ($serviceData) {
             if (array_key_exists($service, $serviceData)) {
-                $mapper = new Test\Mapper($serviceData[$service]);
-                $mapper->serviceName = $service;
-                return $mapper;
+                return new Test\Mapper($this, $service);
             }
         });
     }

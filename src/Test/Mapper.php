@@ -2,35 +2,33 @@
 
 namespace Basis\Test;
 
+use Basis\Test;
 use Exception;
 
 class Mapper
 {
-    protected $data;
+    protected $test;
+    public $serviceName;
 
-    public function __construct($data)
+    public function __construct(Test $test, $service)
     {
-        $this->data = [];
-        foreach ($data as $space => $rows) {
-            $this->data[$space] = [];
-            foreach ($rows as $row) {
-                $this->data[$space][] = (object) $row;
-            }
-        }
+        $this->test = $test;
+        $this->serviceName = $service;
     }
 
     public function find(string $space, $params = [])
     {
-        if (array_key_exists($space, $this->data)) {
-            $data = $this->data[$space];
-            if (count($params)) {
-                foreach ($data as $i => $v) {
-                    if (array_intersect_assoc($params, get_object_vars($v)) != $params) {
-                        unset($data[$i]);
-                    }
+        $key = $this->serviceName.'.'.$space;
+        if (array_key_exists($key, $this->test->data)) {
+            $data = $this->test->data[$key];
+            foreach ($data as $i => $v) {
+                if (count($params) && array_intersect_assoc($params, $v) != $params) {
+                    unset($data[$i]);
+                    continue;
                 }
-                $data = array_values($data);
+                $data[$i] = (object) $v;
             }
+            $data = array_values($data);
             return $data;
         }
         return [];
@@ -38,10 +36,11 @@ class Mapper
 
     public function findOne(string $space, $params = [])
     {
-        if (array_key_exists($space, $this->data)) {
-            foreach ($this->data[$space] as $candidate) {
-                if (!count($params) || array_intersect_assoc($params, get_object_vars($candidate)) == $params) {
-                    return $candidate;
+        $key = $this->serviceName.'.'.$space;
+        if (array_key_exists($key, $this->test->data)) {
+            foreach ($this->test->data[$key] as $candidate) {
+                if (!count($params) || array_intersect_assoc($params, $candidate) == $params) {
+                    return (object) $candidate;
                 }
             }
         }

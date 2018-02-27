@@ -35,14 +35,16 @@ class TarantoolTest extends Test
     public function testPool()
     {
         $web = $this->get(Pool::class)->get('web');
-        $services = $web->find('services');
-        $this->assertCount(3, $services);
+        $this->assertCount(3, $web->find('services'));
         $this->assertCount(1, $web->find('services', ['name' => 'web']));
 
         $tester = $this->get(Pool::class)->get('tester');
         $this->assertCount(0, $tester->find('data', ['id' => 2]));
         $this->assertCount(1, $tester->find('data', ['id' => 3]));
         $this->assertCount(2, $tester->find('data', ['value' => 'test']));
+
+        $this->data['web.services'][] = ['id' => 4, 'name' => 'guard'];
+        $this->assertCount(4, $web->find('services'));
 
         $this->assertSame($tester->findOne('data', ['value' => 'test'])->id, 3);
         $this->assertSame($tester->findOrFail('data', ['value' => 'test'])->id, 3);
