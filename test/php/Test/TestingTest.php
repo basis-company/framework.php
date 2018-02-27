@@ -2,8 +2,6 @@
 
 namespace Test;
 
-use Basis\Filesystem;
-use Basis\Job;
 use Tarantool\Mapper\Pool;
 use Basis\Test;
 

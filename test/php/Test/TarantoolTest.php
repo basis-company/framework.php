@@ -6,7 +6,6 @@ use Basis\Filesystem;
 use Basis\Job;
 use Exception;
 use ReflectionClass;
-use ReflectionProperty;
 use Procedure\Greet;
 use Repository\Note;
 use Tarantool\Mapper\Bootstrap;

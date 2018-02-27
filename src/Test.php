@@ -3,8 +3,6 @@
 namespace Basis;
 
 use Basis\Converter;
-use Basis\Runner;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Tarantool\Mapper\Pool;
