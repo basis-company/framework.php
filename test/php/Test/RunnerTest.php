@@ -4,8 +4,9 @@ namespace Test;
 
 use Basis\Job\Job\Info;
 use Basis\Runner;
-use Job\Hello;
 use Basis\Test;
+use Exception;
+use Job\Hello;
 
 class RunnerTest extends Test
 {
@@ -73,5 +74,29 @@ class RunnerTest extends Test
 
         $result = $this->app->dispatch('test.hello', ['dmitry', 'krokhin']);
         $this->assertSame($result->message, 'hello dmitry krokhin!');
+    }
+
+    public function testConfirmation()
+    {
+        $hash = null;
+
+        try {
+            $this->dispatch('test.hello', ['bazyaba']);
+            $this->assertNull('confirmation should be thrown');
+
+        } catch (Exception $e) {
+            $message = json_decode($e->getMessage());
+            if (!is_object($message)) {
+                throw $e;
+            }
+            $this->assertSame($message->type, 'confirm');
+            $this->assertSame($message->message, 'bazyaba?');
+            $hash = $message->hash;
+        }
+
+        $this->assertNotNull($hash);
+        $result = $this->dispatch('test.hello', ['name' => 'bazyaba', '_confirmations' => [$hash]]);
+
+        $this->assertSame($result->message, 'hello bazyaba!');
     }
 }
