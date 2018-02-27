@@ -43,6 +43,13 @@ class TarantoolTest extends Test
         $this->assertCount(0, $tester->find('data', ['id' => 2]));
         $this->assertCount(1, $tester->find('data', ['id' => 3]));
         $this->assertCount(2, $tester->find('data', ['value' => 'test']));
+
+        $this->assertSame($tester->findOne('data', ['value' => 'test'])->id, 3);
+        $this->assertSame($tester->findOrFail('data', ['value' => 'test'])->id, 3);
+        $this->assertNull($tester->findOne('data', ['id' => 1]));
+
+        $this->expectException(Exception::class);
+        $tester->findOrFail('data', ['id' => 1]);
     }
 
     public function tearDown()
