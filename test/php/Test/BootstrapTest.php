@@ -29,6 +29,8 @@ class BootstrapTest extends Test
         // cache exists
         $cache = getcwd().'/.cache';
         $this->assertTrue(is_dir($cache));
+
+        $this->dispatch('module.bootstrap');
         rmdir($cache);
     }
 
