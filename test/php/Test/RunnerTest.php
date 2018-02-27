@@ -63,7 +63,7 @@ class RunnerTest extends Test
 
         $jobs = $this->app->dispatch('module.meta')->jobs;
         $this->assertNotNull($jobs);
-        $this->assertCount(2, $jobs);
+        $this->assertCount(3, $jobs);
         $this->assertContains('hello', $jobs);
     }
 

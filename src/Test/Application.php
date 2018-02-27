@@ -47,8 +47,9 @@ class Application extends BaseApplication
         $converter = $this->get(Converter::class);
 
         $global = $this->test->params ?: [];
-        if (!is_array($global)) {
-            $global = get_object_vars($converter->toObject($this->test->params));
+        $global = $converter->toObject($global);
+        if (is_object($global)) {
+            $global = get_object_vars($global);
         }
 
         return parent::dispatch($job, array_merge($params, $global), $service);

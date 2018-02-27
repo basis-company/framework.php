@@ -29,6 +29,12 @@ class MockTest extends Test
         $this->assertSame('hello tester!', $this->dispatch('test.hello', [])->message);
     }
 
+    public function testParamsToObject()
+    {
+        $this->params = ['session' => ['person' => 1]];
+        $this->assertSame($this->dispatch('test.person')->person, 1);
+    }
+
     public function testMocking()
     {
         foreach ($this->mocks as [$job, $params, $value]) {
