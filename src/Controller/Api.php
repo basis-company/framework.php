@@ -4,7 +4,6 @@ namespace Basis\Controller;
 
 use Basis\Application;
 use Basis\Event;
-use Basis\Filesystem;
 use Basis\Runner;
 use Exception;
 

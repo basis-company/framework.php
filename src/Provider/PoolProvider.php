@@ -12,12 +12,10 @@ use Tarantool\Client\Request\ReplaceRequest;
 use Tarantool\Client\Request\UpdateRequest;
 use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Mapper;
-use Tarantool\Mapper\Plugin;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
 use Tarantool\Mapper\Plugin\Temporal;
 use Tarantool\Mapper\Pool;
-use Tarantool\Mapper\Schema;
 
 class PoolProvider extends AbstractServiceProvider
 {
