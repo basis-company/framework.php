@@ -26,19 +26,15 @@ class PoolProvider extends AbstractServiceProvider
     public function register()
     {
         $this->getContainer()->share(Pool::class, function () {
-            $container = $this->getContainer();
-
-            $mapper = $container->get(Mapper::class);
-
-            $service = $container->get(Service::class);
-            $mapper->serviceName = $service->getName();
-
             $pool = new Pool();
-            $pool->register('default', $mapper);
-            $pool->register($mapper->serviceName, $mapper);
+            $container = $this->getContainer();
+            $pool->registerResolver(function ($name) use ($container) {
 
-            $pool->registerResolver(function ($name) use ($service) {
-                if (in_array($name, $service->listServices())) {
+                if ($name == 'default' || $name == $container->get(Service::class)->getName()) {
+                    return $container->get(Mapper::class);
+                }
+
+                if (in_array($name, $container->get(Service::class)->listServices())) {
                     $connection = new StreamConnection('tcp://'.$name.'-db:3301');
                     $packer = new PurePacker();
                     $client = new Client($connection, $packer);
