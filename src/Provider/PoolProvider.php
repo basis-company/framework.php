@@ -32,7 +32,7 @@ class PoolProvider extends AbstractServiceProvider
 
                 if ($name == 'default' || $name == $container->get(Service::class)->getName()) {
                     $mapper = $container->get(Mapper::class);
-                    $mapper->serviceName = $container->get(Service::class);
+                    $mapper->serviceName = $container->get(Service::class)->getName();
                     return $mapper;
                 }
 
