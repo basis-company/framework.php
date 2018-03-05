@@ -50,6 +50,8 @@ class Event
 
     public function fireChanges(string $producer)
     {
+        $this->pool->get($this->service->getName());
+
         foreach ($this->pool->getMappers() as $mapper) {
             $spy = $mapper->getPlugin(Spy::class);
             if ($spy->hasChanges()) {
