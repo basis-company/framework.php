@@ -31,7 +31,9 @@ class PoolProvider extends AbstractServiceProvider
             $pool->registerResolver(function ($name) use ($container) {
 
                 if ($name == 'default' || $name == $container->get(Service::class)->getName()) {
-                    return $container->get(Mapper::class);
+                    $mapper = $container->get(Mapper::class);
+                    $mapper->serviceName = $container->get(Service::class);
+                    return $mapper;
                 }
 
                 if (in_array($name, $container->get(Service::class)->listServices())) {
