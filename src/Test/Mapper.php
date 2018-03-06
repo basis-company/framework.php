@@ -4,6 +4,7 @@ namespace Basis\Test;
 
 use Basis\Test;
 use Exception;
+use Tarantool\Mapper\Plugin\Spy;
 
 class Mapper
 {
