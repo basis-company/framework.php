@@ -2,9 +2,9 @@
 
 namespace Entity;
 
-use Tarantool\Mapper\Entity as MapperEntity;
+use Tarantool\Mapper\Entity;
 
-class Note extends MapperEntity
+class Note extends Entity
 {
     /**
      * @var integer
