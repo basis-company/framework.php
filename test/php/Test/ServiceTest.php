@@ -99,4 +99,34 @@ class ServiceTest extends Test
         $this->assertTrue($service->eventMatch('test.post.created', '*.post.*'));
         $this->assertFalse($service->eventMatch('test.post.created', '*.posts.*'));
     }
+
+    public function testEntityTriggers()
+    {
+        $bazyaba = $this->create('post', ['text' => 'bazyaba']);
+
+        // afterCreate was triggered
+        $this->assertSame($bazyaba->text, 'bazyaba!');
+
+        $this->dispatch('module.trigger', [
+            'space' => 'post',
+            'id' => $bazyaba->id,
+            'type' => 'create',
+        ]);
+
+        // afterCreate + afterUpdate
+        $this->assertSame($bazyaba->text, 'bazyaba!!.');
+
+        $bazyaba->text = 'test';
+        $bazyaba->save();
+
+        $this->assertSame($bazyaba->text, 'test.');
+
+        $this->dispatch('module.trigger', [
+            'space' => 'post',
+            'id' => $bazyaba->id,
+            'type' => 'update',
+        ]);
+
+        $this->assertSame($bazyaba->text, 'test..');
+    }
 }
