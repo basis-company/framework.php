@@ -54,4 +54,16 @@ class Mapper
         }
         return $result;
     }
+
+    public function getPlugin($class)
+    {
+        if ($class == Spy::class) {
+            return new class {
+                public function hasChanges()
+                {
+                    return false;
+                }
+            };
+        }
+    }
 }
