@@ -8,6 +8,13 @@ abstract class Job
 {
     use Toolkit;
 
+    protected function require($name)
+    {
+        if (!$this->$name) {
+            throw new Exception("$name is not defined");
+        }
+    }
+
     protected function confirm($message)
     {
         $hash = md5($message);
