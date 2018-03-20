@@ -16,6 +16,9 @@ class Meta extends Job
             $nick = substr(strtolower($class), 11);
             $methods = (new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
+                if ($method->isConstructor()) {
+                    continue;
+                }
                 if ($method->name == '__process') {
                     $routes[] = $nick.'/*';
                 } else {
