@@ -74,7 +74,7 @@ trait Toolkit
         return $this->get(Clickhouse::class)->insert($table, $data, $headers);
     }
 
-    protected function __debugInfo()
+    public function __debugInfo()
     {
         $info = get_object_vars($this);
         unset($info['app']);

@@ -16,7 +16,7 @@ class Meta extends Job
             $nick = substr(strtolower($class), 11);
             $methods = (new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
-                if ($method->isConstructor()) {
+                if ($method->isConstructor() || $method->getName() == '__debugInfo') {
                     continue;
                 }
                 if ($method->name == '__process') {
