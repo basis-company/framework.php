@@ -10,6 +10,8 @@ use Tarantool\Mapper\Plugin\Procedure;
 
 class Bootstrap extends Job
 {
+    public $jobs = ['tarantool.migrate', 'tarantool.cache', 'module.defaults', 'module.register'];
+
     public function run(Filesystem $fs)
     {
         $result = [];
@@ -28,8 +30,7 @@ class Bootstrap extends Job
             }
         }
 
-        $jobs = ['tarantool.migrate', 'tarantool.cache', 'module.defaults', 'module.register'];
-        foreach ($jobs as $job) {
+        foreach ($this->jobs as $job) {
             try {
                 $result[$job] = $this->dispatch($job);
             } catch (Exception $e) {
