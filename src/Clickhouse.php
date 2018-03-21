@@ -22,8 +22,14 @@ class Clickhouse
         if (count($params)) {
             $where = [];
             foreach ($params as $k => $v) {
-                $binds[$k] = (array) $v;
-                $where[] = $k.' in (:'.$k.')';
+                $v = (array) $v;
+                if (count($v) == 1) {
+                    $binds[$k] = $v[0];
+                    $where[] = $k.' = :'.$k;
+                } else {
+                    $binds[$k] = $v;
+                    $where[] = $k.' in (:'.$k.')';
+                }
             }
 
             $where = implode(' and ', $where);
