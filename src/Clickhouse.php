@@ -44,7 +44,7 @@ class Clickhouse
 
         $client = $this->get(Client::class);
         foreach ($buckets as $bucket) {
-            $client->insert('tester', $bucket, $headers);
+            $client->insert($table, $bucket, $headers);
         }
 
         return count($buckets);
