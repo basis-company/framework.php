@@ -86,7 +86,7 @@ class ClickhouseTest extends Test
 
         $this->insert('tester', $data, $headers);
 
-        $select = $this->select('*', 'tester', ['id' => 1]);
+        $select = $this->select('*', 'tester', ['id' => "1"]);
         $this->assertCount(1, $select->rows());
 
         $select = $this->select('*', 'tester', ['id' => "2"]);
