@@ -2,10 +2,9 @@
 
 namespace Basis\Job\Module;
 
-use Basis\Job;
 use Exception;
 
-class Trigger extends Job
+class Trigger extends Call
 {
     public $space;
     public $id;
@@ -27,7 +26,8 @@ class Trigger extends Job
         // afterUpdate trigger will be called on save
         if ($this->type != 'update') {
             if (method_exists($entity, $method)) {
-                $entity->$method();
+                $this->method = $method;
+                parent::run();
             }
         }
 
