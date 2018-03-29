@@ -44,10 +44,16 @@ class PoolProvider extends AbstractServiceProvider
                     $client->disableRequest(InsertRequest::class);
                     $client->disableRequest(ReplaceRequest::class);
                     $client->disableRequest(UpdateRequest::class);
+
                     $mapper = new Mapper($client);
+
                     $mapper->getPlugin(Sequence::class);
                     $mapper->getPlugin(Spy::class);
-                    $mapper->getPlugin(Temporal::class);
+
+                    $mapper->getPlugin(Temporal::class)
+                        ->getAggregator()
+                        ->setReferenceAggregation(false);
+
                     $mapper->serviceName = $name;
                     return $mapper;
                 }

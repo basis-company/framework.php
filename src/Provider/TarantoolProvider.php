@@ -75,7 +75,10 @@ class TarantoolProvider extends AbstractServiceProvider
 
             $mapper->getPlugin(Sequence::class);
             $mapper->getPlugin(Spy::class);
-            $mapper->getPlugin(Temporal::class);
+
+            $mapper->getPlugin(Temporal::class)
+                ->getAggregator()
+                ->setReferenceAggregation(false);
 
             $mapper->application = $this->getContainer();
 
