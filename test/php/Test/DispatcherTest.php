@@ -2,6 +2,7 @@
 
 namespace Test;
 
+use Carbon\Carbon;
 use Basis\Test;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -56,5 +57,39 @@ class DispatcherTest extends Test
         ]);
 
         $this->assertNotEquals(-1, strpos($container[1]['request']->getBody(), $body));
+    }
+
+    public function testExpire()
+    {
+        $this->mock('say.hello')->willReturn(function($params) {
+            return [
+                'msg' => 'Hello, ' . $params['name'],
+                'hash' => md5(microtime(1)),
+                'expire' => Carbon::now()->addHour()->getTimestamp(),
+            ];
+        });
+
+        $nekufa1 = $this->dispatch('say.hello', ['name' => 'nekufa']);
+        $nekufa2 = $this->dispatch('say.hello', ['name' => 'nekufa']);
+        $vasya1 = $this->dispatch('say.hello', ['name' => 'vasya']);
+        $this->assertSame($nekufa1->hash, $nekufa2->hash);
+        $this->assertNotSame($nekufa1->hash, $vasya1->hash);
+
+        Carbon::setTestNow(Carbon::now()->addDay());
+        $nekufa3 = $this->dispatch('say.hello', ['name' => 'nekufa']);
+        $this->assertNotSame($nekufa1->hash, $nekufa3->hash);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        if (is_dir('.cache')) {
+            foreach (scandir('.cache') as $f) {
+                if ($f != '.' && $f != '..') {
+                    unlink('.cache/'.$f);
+                }
+            }
+            rmdir('.cache');
+        }
     }
 }

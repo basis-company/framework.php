@@ -3,6 +3,7 @@
 namespace Basis\Provider;
 
 use Basis\Application;
+use Basis\Cache;
 use Basis\Config;
 use Basis\Converter;
 use Basis\Dispatcher;
@@ -15,6 +16,7 @@ use League\Container\ServiceProvider\AbstractServiceProvider;
 class CoreProvider extends AbstractServiceProvider
 {
     protected $provides = [
+        Cache::class,
         Config::class,
         Converter::class,
         Dispatcher::class,
@@ -29,6 +31,11 @@ class CoreProvider extends AbstractServiceProvider
             $fs = $this->getContainer()->get(Filesystem::class);
             $converter = $this->getContainer()->get(Converter::class);
             return new Config($framework, $fs, $converter);
+        });
+
+        $this->getContainer()->share(Cache::class, function () {
+            $converter = $this->getContainer()->get(Converter::class);
+            return new Cache($converter);
         });
 
         $this->getContainer()->share(Converter::class, function () {

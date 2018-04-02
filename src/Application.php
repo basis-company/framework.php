@@ -44,13 +44,16 @@ class Application extends Container
             }
         }
 
-        $runner = $this->get(Runner::class);
-        if ($service === null && $runner->hasJob($job)) {
-            return $runner->dispatch($job, $params);
-        }
+        return $this->get(Cache::class)
+            ->wrap([$job, $params, $service], function() use ($job, $params, $service) {
+                $runner = $this->get(Runner::class);
+                if ($service === null && $runner->hasJob($job)) {
+                    return $runner->dispatch($job, $params);
+                }
 
-        $dispatcher = $this->get(Dispatcher::class);
-        return $dispatcher->dispatch($job, $params, $service);
+                $dispatcher = $this->get(Dispatcher::class);
+                return $dispatcher->dispatch($job, $params, $service);
+            });
     }
 
     public function get($alias, array $args = [])

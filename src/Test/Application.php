@@ -3,6 +3,7 @@
 namespace Basis\Test;
 
 use Basis\Application as BaseApplication;
+use Basis\Cache;
 use Basis\Converter;
 use Basis\Runner;
 use Basis\Test;
@@ -30,12 +31,15 @@ class Application extends BaseApplication
                 }
             }
             if ($valid) {
-                $result = $valid->result;
-                if (is_callable($result)) {
-                    $result = $result($params);
-                }
-                $valid->calls++;
-                return $this->get(Converter::class)->toObject($result);
+                return $this->get(Cache::class)
+                    ->wrap([$job, $params, $service], function () use ($valid, $params) {
+                        $result = $valid->result;
+                        if (is_callable($result)) {
+                            $result = $result($params);
+                        }
+                        $valid->calls++;
+                        return $this->get(Converter::class)->toObject($result);
+                    });
             }
         }
         if ($this->test->disableRemote) {
