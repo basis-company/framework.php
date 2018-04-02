@@ -54,10 +54,13 @@ class Cache
             return $this->get($hash);
         }
         $result = call_user_func($callback);
-        if (is_array($result) && array_key_exists('expire', $result) && $result['expire'] > Carbon::now()->getTimestamp()) {
-            $this->set($hash, $result);
-
-        } elseif (is_object($result) && property_exists($result, 'expire') && $result->expire > Carbon::now()->getTimestamp()) {
+        $expire = null;
+        if (is_array($result) && array_key_exists('expire', $result)) {
+            $expire = $result['expire'];
+        } elseif (is_object($result) && property_exists($result, 'expire')) {
+            $expire = $result->expire;
+        }
+        if ($expire && $expire > Carbon::now()->getTimestamp()) {
             $this->set($hash, $result);
         }
         return $result;
