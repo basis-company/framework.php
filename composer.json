@@ -10,7 +10,7 @@
         "php": "^7.1",
         "phpdocumentor/reflection-docblock": "4.3.0",
         "ramsey/uuid": "3.7.3",
-        "rybakit/msgpack": "v0.2.2",
+        "rybakit/msgpack": "v0.3.0",
         "smi2/phpclickhouse": "^0.17.12.1",
         "tarantool/mapper": "^4.3.6"
     },
