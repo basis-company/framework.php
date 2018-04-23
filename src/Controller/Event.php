@@ -11,6 +11,8 @@ class Event
 {
     public function index(Application $app, BasisEvent $event, Service $service)
     {
+        $start = microtime(1);
+
         try {
             $info = $this->getEventInfo();
             $subscription = $event->getSubscription();
@@ -52,6 +54,7 @@ class Event
                 'success' => true,
                 'data' => $result,
                 'issues' => $issues,
+                'time' => microtime(1) - $start,
             ];
 
         } catch (Exception $e) {
