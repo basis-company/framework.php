@@ -4,6 +4,7 @@ namespace Basis;
 
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
+use Tarantool\Queue\Queue;
 
 trait Toolkit
 {
@@ -57,6 +58,22 @@ trait Toolkit
     protected function getMapper()
     {
         return $this->get(Mapper::class);
+    }
+
+    protected function getQueue($tube)
+    {
+        $alias = "queue.$tube";
+        if (!$this->app->hasShared($alias, true)) {
+            $client = $this->getMapper()->getClient();
+            $client->evaluate("
+                if queue == nil then
+                    queue = require('queue')
+                end
+            ");
+            $this->app->share($alias, new Queue($client, $tube));
+        }
+
+        return $this->app->get($alias);
     }
 
     protected function remove(string $space, array $params = [])
