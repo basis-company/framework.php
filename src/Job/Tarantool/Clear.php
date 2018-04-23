@@ -12,12 +12,27 @@ class Clear extends Job
     public function run(Client $client, Filesystem $fs)
     {
         $space = $client->getSpace('_vspace');
+
+        $client->evaluate("
+            if box.space._queue ~= nil then
+                if queue == nil then
+                    queue = require('queue')
+                end
+                for i, q in box.space._queue:pairs() do
+                    queue.tube[q.tube_name]:drop()
+                end
+            end
+        ");
+
         $response = $space->select([], Index::SPACE_NAME);
         $data = $response->getData();
+
         foreach ($data as $row) {
             if ($row[1] == 0) {
                 // user space
-                $client->evaluate('box.space.'.$row[2].':drop{}');
+                if (strpos($row[2], '_queue') === false) {
+                    $client->evaluate('box.space.'.$row[2].':drop()');
+                }
             }
         }
 
