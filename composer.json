@@ -3,14 +3,14 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "require": {
-        "guzzlehttp/guzzle": "6.3.2",
+        "guzzlehttp/guzzle": "6.3.3",
         "league/container": "2.4.1",
         "marcj/topsort": "1.1",
         "nesbot/carbon": "1.25",
         "php": "^7.1",
         "phpdocumentor/reflection-docblock": "4.3.0",
         "ramsey/uuid": "3.7.3",
-        "rybakit/msgpack": "v0.3.0",
+        "rybakit/msgpack": "v0.3.1",
         "smi2/phpclickhouse": "^0.17.12.1",
         "tarantool/mapper": "^4.3.6",
         "tarantool/queue": "v0.6.1"
