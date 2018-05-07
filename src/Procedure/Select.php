@@ -4,7 +4,7 @@ namespace Basis\Procedure;
 
 use Tarantool\Mapper\Procedure;
 
-class IndexInArray extends Procedure
+class Select extends Procedure
 {
     public function getParams() : array
     {

@@ -4,7 +4,7 @@ namespace Test;
 
 use Basis\Filesystem;
 use Basis\Job;
-use Basis\Procedure\IndexInArray;
+use Basis\Procedure\Select;
 use Basis\Test;
 use Exception;
 use Procedure\Greet;
@@ -218,18 +218,18 @@ class TarantoolTest extends Test
         $pool->get('gateway');
     }
 
-    public function testIndexInArrayProcedureRegistration()
+    public function testSelectRegistration()
     {
         $this->dispatch('tarantool.clear');
         $this->dispatch('module.bootstrap');
 
         // procedure was registered
         $mapper = $this->getMapper();
-        $result = $mapper->getClient()->evaluate("return basis_indexinarray(nil, nil, nil)")->getData();
+        $result = $mapper->getClient()->evaluate("return basis_select(nil, nil, nil)")->getData();
         $this->assertNull($result[0]);
     }
 
-    public function testIndexInArrayProcedureUsage()
+    public function testSelectUsage()
     {
         $this->dispatch('tarantool.clear');
         $this->dispatch('module.bootstrap');
@@ -246,38 +246,38 @@ class TarantoolTest extends Test
         $nekufa = $mapper->create('tester', ['id' => 1, 'name' => 'nekufa']);
         $bazyaba = $mapper->create('tester', ['id' => 2, 'name' => 'bazyaba']);
 
-        $result = $this->get(IndexInArray::class)
+        $result = $this->get(Select::class)
             ('tester', 'id', [$nekufa->id]);
 
         $this->assertCount(1, $result);
 
-        $result = $this->get(IndexInArray::class)
+        $result = $this->get(Select::class)
             ('tester', 'id', [$nekufa->id, $nekufa->id]);
 
         $this->assertCount(1, $result);
 
-        $result = $this->get(IndexInArray::class)
+        $result = $this->get(Select::class)
             ('tester', 'id', [$bazyaba->id, $nekufa->id, $nekufa->id]);
 
         $this->assertCount(2, $result);
 
-        $result = $this->get(IndexInArray::class)
+        $result = $this->get(Select::class)
             ('tester', 'name', ['nekufa']);
 
         $this->assertCount(1, $result);
 
-        $result = $this->get(IndexInArray::class)
+        $result = $this->get(Select::class)
             ('tester', 'name', ['nekufa', 'bazyaba']);
 
         $this->assertCount(2, $result);
 
-        $result = $this->get(IndexInArray::class)
+        $result = $this->get(Select::class)
             ('tester', 'name', ['nekufa', 'bazyaba', 'nekufa', 'dmitry']);
 
         $this->assertCount(2, $result);
     }
 
-    public function testIndexInArrayProcedureUsageWithCompositeKeys()
+    public function testSelectUsageWithCompositeKeys()
     {
         $this->dispatch('tarantool.clear');
         $this->dispatch('module.bootstrap');
@@ -299,7 +299,7 @@ class TarantoolTest extends Test
         $mapper->create('calendar', ['year' => 2018, 'month' => 6, 'day' => 15]);
 
         $select = function($values) {
-            return $this->get(IndexInArray::class)('calendar', 'year_month_day', $values);
+            return $this->get(Select::class)('calendar', 'year_month_day', $values);
         };
 
         $this->assertCount(4, $select([[2018, 5]]));
