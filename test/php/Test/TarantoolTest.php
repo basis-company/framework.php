@@ -300,16 +300,33 @@ class TarantoolTest extends Test
         $mapper->create('calendar', ['year' => 2018, 'month' => 5, 'day' => 5]);
         $mapper->create('calendar', ['year' => 2018, 'month' => 6, 'day' => 15]);
 
-        $select = function($values) {
-            return $this->get(Select::class)('calendar', 'year_month_day', $values);
+        $validations = [
+            [4, [[2018, 5]]],
+            [5, [[2018, 5], [2018, 6]]],
+            [2, [[2018, 5, 1], [2018, 5, 2]]],
+            [1, [[2018, 5, 3], [2018, 5, 4]]],
+            [2, [[2018, 5, 3], [2018, 5, 4], [2018, 4]]],
+            [2, [[2018, 5, 3], [2018, 5, 4], [2018, 4], [2018, 4]]],
+        ];
+
+        $select = function($key) {
+            return $this->get(Select::class)('calendar', 'year_month_day', $key);
         };
 
-        $this->assertCount(4, $select([[2018, 5]]));
-        $this->assertCount(5, $select([[2018, 5], [2018, 6]]));
-        $this->assertCount(2, $select([[2018, 5, 1], [2018, 5, 2]]));
-        $this->assertCount(1, $select([[2018, 5, 3], [2018, 5, 4]]));
-        $this->assertCount(2, $select([[2018, 5, 3], [2018, 5, 4], [2018, 4]]));
-        $this->assertCount(2, $select([[2018, 5, 3], [2018, 5, 4], [2018, 4], [2018, 4]]));
+        foreach ($validations as [$result, $keys]) {
+            $this->assertCount($result, $select($keys));
+        }
+
+        $spaceId = $mapper->getClient()->evaluate('return box.space.calendar.id')->getData()[0];
+        $indexId = $mapper->getClient()->evaluate('return box.space.calendar.index.year_month_day.id')->getData()[0];
+
+        $selectUsingSpaceAndIndexId = function($values) use ($spaceId, $indexId) {
+            return $this->get(Select::class)($spaceId, $indexId, $values);
+        };
+
+        foreach ($validations as [$result, $keys]) {
+            $this->assertCount($result, $selectUsingSpaceAndIndexId($keys));
+        }
     }
 
     public function testSelectUsageWithNestedStructures()
@@ -337,10 +354,47 @@ class TarantoolTest extends Test
             return $this->get(Select::class)('sector', 'id', $values);
         };
 
-        $this->assertCount(1, $select([[$obninsk->id]]));
-        $this->assertCount(2, $select([[$kaluga->id]]));
-        $this->assertCount(3, $select([$kaluga->id, $moscow->id]));
-        $this->assertCount(4, $select([$obninsk->id, $root->id]));
+        $validations = [
+            [1, [$obninsk->id]],
+            [2, [$kaluga->id]],
+            [3, [$kaluga->id, $moscow->id]],
+            [4, [$obninsk->id, $root->id]],
+        ];
+
+        foreach ($validations as [$result, $input]) {
+            $this->assertCount($result, $select($input));
+        }
+
+        $client = $mapper->getClient();
+
+        $selectUsingNetBox = function($values) use ($client) {
+            return $client->evaluate("
+                return require('net.box').connect('tcp://localhost:3301')
+                    :call('basis_select', {
+                        'sector', 'id', ...
+                    })
+            ", [$values])->getData()[0];
+        };
+
+        foreach ($validations as [$result, $input]) {
+            $this->assertCount($result, $selectUsingNetBox($input));
+        }
+
+        $spaceId = $client->evaluate("return box.space.sector.id")->getData()[0];
+        $indexId = $client->evaluate("return box.space.sector.index.id.id")->getData()[0];
+
+        $selectUsingNetBoxWithoutNames = function($values) use ($client, $spaceId, $indexId) {
+            return $client->evaluate("
+                return require('net.box').connect('tcp://localhost:3301')
+                    :call('basis_select', {
+                        $spaceId, $indexId, ...
+                    })
+            ", [$values])->getData()[0];
+        };
+
+        foreach ($validations as [$result, $input]) {
+            $this->assertCount($result, $selectUsingNetBoxWithoutNames($input));
+        }
     }
 }
 

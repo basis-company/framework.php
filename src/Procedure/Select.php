@@ -36,7 +36,7 @@ class Select extends Procedure
         local parentField = nil
 
         for i, f in pairs(box.space[space]:format()) do
-            if f.name == 'parent' and f.reference == space then
+            if f.name == 'parent' and f.reference == box.space[space].name then
                 parentField = i
             end
         end
