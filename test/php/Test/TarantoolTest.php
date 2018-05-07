@@ -69,6 +69,8 @@ class TarantoolTest extends Test
         foreach ($dirs as $dir => $_) {
             rmdir($dir);
         }
+
+        parent::tearDown();
     }
 
     public function testProcedureRegistration()
@@ -285,9 +287,9 @@ class TarantoolTest extends Test
         $mapper = $this->getMapper();
         $mapper->getSchema()
             ->createSpace('calendar', [
-                'year' => 'integer',
-                'month' => 'integer',
-                'day' => 'integer',
+                'year' => 'unsigned',
+                'month' => 'unsigned',
+                'day' => 'unsigned',
             ])
             ->createIndex(['year', 'month', 'day']);
 
@@ -308,6 +310,37 @@ class TarantoolTest extends Test
         $this->assertCount(1, $select([[2018, 5, 3], [2018, 5, 4]]));
         $this->assertCount(2, $select([[2018, 5, 3], [2018, 5, 4], [2018, 4]]));
         $this->assertCount(2, $select([[2018, 5, 3], [2018, 5, 4], [2018, 4], [2018, 4]]));
+    }
+
+    public function testSelectUsageWithNestedStructures()
+    {
+        $mapper = $this->getMapper();
+        $mapper->getSchema()
+            ->createSpace('sector', [
+                'id' => 'unsigned',
+            ])
+            ->addProperty('parent', 'unsigned', false, 'sector')
+            ->createIndex([
+                'fields' => ['id'],
+            ])
+            ->createIndex([
+                'fields' => ['parent'],
+                'unique' => false,
+            ]);
+
+        $root = $this->create('sector', []);
+        $moscow = $this->create('sector', ['parent' => $root]);
+        $kaluga = $this->create('sector', ['parent' => $root]);
+        $obninsk = $this->create('sector', ['parent' => $kaluga]);
+
+        $select = function($values) {
+            return $this->get(Select::class)('sector', 'id', $values);
+        };
+
+        $this->assertCount(1, $select([[$obninsk->id]]));
+        $this->assertCount(2, $select([[$kaluga->id]]));
+        $this->assertCount(3, $select([$kaluga->id, $moscow->id]));
+        $this->assertCount(4, $select([$obninsk->id, $root->id]));
     }
 }
 

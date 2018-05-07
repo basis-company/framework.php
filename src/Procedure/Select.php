@@ -33,7 +33,27 @@ class Select extends Procedure
         local result = {}
         local keys = {}
 
-        for i, value in pairs(values) do
+        local parentField = nil
+
+        for i, f in pairs(box.space[space]:format()) do
+            if f.name == 'parent' and f.reference == space then
+                parentField = i
+            end
+        end
+
+        local childIndex = nil
+
+        if parentField ~= nil then
+            for i, candidate in pairs(box.space[space].index) do
+                if #candidate.parts == 1 then
+                    if candidate.parts[1].fieldno == parentField then
+                        childIndex = candidate.name
+                    end
+                end
+            end
+        end
+
+        local function selector(index, value)
             for j, tuple in box.space[space].index[index]:pairs(value) do
                 local key = ""
                 for i, f in pairs(pk) do
@@ -42,9 +62,18 @@ class Select extends Procedure
                 if keys[key] == nil then
                     keys[key] = true
                     table.insert(result, tuple)
+                    if childIndex ~= nil then
+                        selector(childIndex, tuple[1])
+                    end
                 end
             end
+
         end
+
+        for i, value in pairs(values) do
+            selector(index, value)
+        end
+
         return result
 LUA;
     }
