@@ -14,8 +14,8 @@ class Cache
         $this->converter = $converter;
         if (!is_dir('.cache')) {
             mkdir('.cache');
-            chown('.cache', 'www-data');
-            chgrp('.cache', 'www-data');
+            @chown('.cache', 'www-data');
+            @chgrp('.cache', 'www-data');
         }
     }
 
@@ -46,8 +46,8 @@ class Cache
         $string = '<?php return '.var_export($data, true).';';
 
         file_put_contents($filename, $string);
-        chown($filename, 'www-data');
-        chgrp($filename, 'www-data');
+        @chown($filename, 'www-data');
+        @chgrp($filename, 'www-data');
 
         $this->cache[$key] = $data;
     }
