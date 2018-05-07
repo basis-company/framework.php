@@ -3,6 +3,7 @@
 namespace Basis\Job\Module;
 
 use Basis\Filesystem;
+use Basis\Procedure\IndexInArray;
 use Basis\Job;
 use Exception;
 use Tarantool\Mapper\Mapper;
@@ -29,6 +30,9 @@ class Bootstrap extends Job
                 $this->get(Mapper::class)->getPlugin(Procedure::class)->register($procedure);
             }
         }
+
+        $this->get(Mapper::class)->getPlugin(Procedure::class)
+            ->register(IndexInArray::class);
 
         foreach ($this->jobs as $job) {
             try {

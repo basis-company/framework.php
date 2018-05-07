@@ -4,14 +4,15 @@ namespace Test;
 
 use Basis\Filesystem;
 use Basis\Job;
+use Basis\Procedure\IndexInArray;
+use Basis\Test;
 use Exception;
-use ReflectionClass;
 use Procedure\Greet;
+use ReflectionClass;
 use Repository\Note;
 use Tarantool\Mapper\Bootstrap;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
-use Basis\Test;
 
 class TarantoolTest extends Test
 {
@@ -216,4 +217,97 @@ class TarantoolTest extends Test
         $this->expectException(Exception::class);
         $pool->get('gateway');
     }
+
+    public function testIndexInArrayProcedureRegistration()
+    {
+        $this->dispatch('tarantool.clear');
+        $this->dispatch('module.bootstrap');
+
+        // procedure was registered
+        $mapper = $this->getMapper();
+        $result = $mapper->getClient()->evaluate("return basis_indexinarray(nil, nil, nil)")->getData();
+        $this->assertNull($result[0]);
+    }
+
+    public function testIndexInArrayProcedureUsage()
+    {
+        $this->dispatch('tarantool.clear');
+        $this->dispatch('module.bootstrap');
+
+        $mapper = $this->getMapper();
+        $mapper->getSchema()
+            ->createSpace('tester', [
+                'id' => 'unsigned',
+                'name' => 'string',
+            ])
+            ->createIndex('id')
+            ->createIndex('name');
+
+        $nekufa = $mapper->create('tester', ['id' => 1, 'name' => 'nekufa']);
+        $bazyaba = $mapper->create('tester', ['id' => 2, 'name' => 'bazyaba']);
+
+        $result = $this->get(IndexInArray::class)
+            ('tester', 'id', [$nekufa->id]);
+
+        $this->assertCount(1, $result);
+
+        $result = $this->get(IndexInArray::class)
+            ('tester', 'id', [$nekufa->id, $nekufa->id]);
+
+        $this->assertCount(1, $result);
+
+        $result = $this->get(IndexInArray::class)
+            ('tester', 'id', [$bazyaba->id, $nekufa->id, $nekufa->id]);
+
+        $this->assertCount(2, $result);
+
+        $result = $this->get(IndexInArray::class)
+            ('tester', 'name', ['nekufa']);
+
+        $this->assertCount(1, $result);
+
+        $result = $this->get(IndexInArray::class)
+            ('tester', 'name', ['nekufa', 'bazyaba']);
+
+        $this->assertCount(2, $result);
+
+        $result = $this->get(IndexInArray::class)
+            ('tester', 'name', ['nekufa', 'bazyaba', 'nekufa', 'dmitry']);
+
+        $this->assertCount(2, $result);
+    }
+
+    public function testIndexInArrayProcedureUsageWithCompositeKeys()
+    {
+        $this->dispatch('tarantool.clear');
+        $this->dispatch('module.bootstrap');
+
+        $mapper = $this->getMapper();
+        $mapper->getSchema()
+            ->createSpace('calendar', [
+                'year' => 'integer',
+                'month' => 'integer',
+                'day' => 'integer',
+            ])
+            ->createIndex(['year', 'month', 'day']);
+
+        $mapper->create('calendar', ['year' => 2018, 'month' => 4, 'day' => 1]);
+        $mapper->create('calendar', ['year' => 2018, 'month' => 5, 'day' => 1]);
+        $mapper->create('calendar', ['year' => 2018, 'month' => 5, 'day' => 2]);
+        $mapper->create('calendar', ['year' => 2018, 'month' => 5, 'day' => 3]);
+        $mapper->create('calendar', ['year' => 2018, 'month' => 5, 'day' => 5]);
+        $mapper->create('calendar', ['year' => 2018, 'month' => 6, 'day' => 15]);
+
+        $select = function($values) {
+            return $this->get(IndexInArray::class)('calendar', 'year_month_day', $values);
+        };
+
+        $this->assertCount(4, $select([[2018, 5]]));
+        $this->assertCount(5, $select([[2018, 5], [2018, 6]]));
+        $this->assertCount(2, $select([[2018, 5, 1], [2018, 5, 2]]));
+        $this->assertCount(1, $select([[2018, 5, 3], [2018, 5, 4]]));
+        $this->assertCount(2, $select([[2018, 5, 3], [2018, 5, 4], [2018, 4]]));
+        $this->assertCount(2, $select([[2018, 5, 3], [2018, 5, 4], [2018, 4], [2018, 4]]));
+    }
 }
+
