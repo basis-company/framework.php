@@ -31,9 +31,6 @@ class Bootstrap extends Job
             }
         }
 
-        $this->get(Mapper::class)->getPlugin(Procedure::class)
-            ->register(Select::class);
-
         foreach ($this->jobs as $job) {
             try {
                 $result[$job] = $this->dispatch($job);
@@ -41,6 +38,9 @@ class Bootstrap extends Job
                 $result[$job] = $e->getMessage();
             }
         }
+
+        $this->get(Mapper::class)->getPlugin(Procedure::class)
+            ->register(Select::class);
 
         return $result;
     }
