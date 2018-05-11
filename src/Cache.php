@@ -15,7 +15,7 @@ class Cache
         $this->path = $fs->getPath('.cache');
         if (!is_dir($this->path)) {
             mkdir($this->path);
-            chmod($this->path, 0777);
+            @chmod($this->path, 0777);
         }
     }
 
