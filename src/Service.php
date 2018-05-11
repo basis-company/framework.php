@@ -82,6 +82,11 @@ class Service
 
     public function getHost($name)
     {
+        if (array_key_exists('BASIS_ENVIRONMENT', $_ENV)) {
+            if ($_ENV['BASIS_ENVIRONMENT'] == 'dev') {
+                return $name;
+            }
+        }
         return $this->cache->wrap('service-host-for-' . $name, function() use ($name) {
             return (object) [
                 'address' => gethostbyname($name),
