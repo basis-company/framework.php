@@ -84,7 +84,9 @@ class Service
     {
         if (array_key_exists('BASIS_ENVIRONMENT', $_ENV)) {
             if ($_ENV['BASIS_ENVIRONMENT'] == 'dev') {
-                return $name;
+                return (object) [
+                    'address' => $name,
+                ];
             }
         }
         return $this->cache->wrap('service-host-for-' . $name, function() use ($name) {
