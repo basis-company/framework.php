@@ -3,6 +3,7 @@
 namespace Basis\Provider;
 
 use Basis\Application;
+use Basis\Cache;
 use Basis\Config;
 use Basis\Event;
 use Basis\Filesystem;
@@ -30,7 +31,8 @@ class ServiceProvider extends AbstractServiceProvider
         $this->getContainer()->share(Service::class, function () {
             $config = $this->getContainer()->get(Config::class);
             $app = $this->getContainer()->get(Application::class);
-            return new Service($config['service'], $app);
+            $cache = $this->getContainer()->get(Cache::class);
+            return new Service($config['service'], $app, $cache);
         });
     }
 }

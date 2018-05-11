@@ -8,11 +8,13 @@ use Tarantool\Mapper\Pool;
 class Service
 {
     private $app;
+    private $cache;
     private $name;
 
-    public function __construct($name, Application $app)
+    public function __construct($name, Application $app, Cache $cache)
     {
         $this->app = $app;
+        $this->cache = $cache;
         $this->name = $name;
     }
 
@@ -76,5 +78,12 @@ class Service
             return $valid;
         }
         return false;
+    }
+
+    public function getHost($name)
+    {
+            return gethostbyname($name);
+        return $this->cache->wrap('service-host-for-' . $name, function() use ($name) {
+        });
     }
 }

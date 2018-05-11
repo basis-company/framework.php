@@ -8,6 +8,24 @@ use Tarantool\Mapper\Pool;
 
 class ServiceTest extends Test
 {
+    public function testHostResolver()
+    {
+        $service = $this->get(Service::class);
+        $result = [];
+        foreach ([1, 2] as $attempt) {
+            $start = microtime(1);
+            $host = $service->getHost('basis.company');
+            $timer = microtime(1) - $start;
+            $result[] = [
+                'host' => $host,
+                'timer' => $timer,
+            ];
+        }
+
+        $this->assertGreaterThan($result[1]['timer'], $result[0]['timer']);
+        $this->assertEquals($result[0]['host'], $result[1]['host']);
+    }
+
     public function testBootstrap()
     {
         $context = (object) [

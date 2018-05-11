@@ -23,6 +23,9 @@ class Cache
 
     public function exists($key)
     {
+        if (array_key_exists($key, $this->cache)) {
+            return $this->cache[$key]['expire'] > Carbon::now()->getTimestamp();
+        }
         $filename = '.cache/'.$key;
         if (file_exists($filename)) {
             if (!array_key_exists($key, $this->cache)) {
@@ -54,9 +57,11 @@ class Cache
 
     public function wrap($key, $callback)
     {
-        $hash = md5(json_encode($key));
-        if ($this->exists($hash)) {
-            return $this->get($hash);
+        if (!is_string($key)) {
+            $key = md5(json_encode($key));
+        }
+        if ($this->exists($key)) {
+            return $this->get($key);
         }
         $result = call_user_func($callback);
         $expire = null;
@@ -66,7 +71,7 @@ class Cache
             $expire = $result->expire;
         }
         if ($expire && $expire > Carbon::now()->getTimestamp()) {
-            $this->set($hash, $result);
+            $this->set($key, $result);
         }
         return $result;
     }
