@@ -28,10 +28,11 @@ class CoreProvider extends AbstractServiceProvider
     public function register()
     {
         $this->getContainer()->share(Config::class, function () {
+            $app = $this->getContainer()->get(Application::class);
             $framework = $this->getContainer()->get(Framework::class);
             $fs = $this->getContainer()->get(Filesystem::class);
             $converter = $this->getContainer()->get(Converter::class);
-            return new Config($framework, $fs, $converter);
+            return new Config($app, $framework, $fs, $converter);
         });
 
         $this->getContainer()->share(Cache::class, function () {

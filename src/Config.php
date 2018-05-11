@@ -7,10 +7,12 @@ use Closure;
 
 class Config implements ArrayAccess
 {
-    private $converter;
+    protected $app;
+    protected $converter;
 
-    public function __construct(Framework $framework, Filesystem $fs, Converter $converter)
+    public function __construct(Application $app, Framework $framework, Filesystem $fs, Converter $converter)
     {
+        $this->app = $app;
         $this->converter = $converter;
 
         $filename = $fs->getPath("config.php");
@@ -19,10 +21,10 @@ class Config implements ArrayAccess
         }
         $data = include $filename;
         foreach ($data as $k => $v) {
-            if ($v instanceof Closure) {
-                $v = $v();
-            }
             $this->$k = $v;
+            if ($v instanceof Closure) {
+                continue;
+            }
             if (is_array($v) || is_object($v)) {
                 $this->$k = $converter->toObject($v);
             }
@@ -86,6 +88,16 @@ class Config implements ArrayAccess
                         return null;
                     }
                 }
+                if ($current->$key instanceof Closure) {
+                    $callback = $current->$key;
+                    $v = $callback($this->app);
+
+                    if (is_array($v) || is_object($v)) {
+                        $v = $this->converter->toObject($v);
+                    }
+                    $current->$key = $v;
+                }
+
                 $current = $current->$key;
             }
         }
