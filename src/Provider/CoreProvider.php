@@ -36,8 +36,9 @@ class CoreProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Cache::class, function () {
+            $fs = $this->getContainer()->get(Filesystem::class);
             $converter = $this->getContainer()->get(Converter::class);
-            return new Cache($converter);
+            return new Cache($fs, $converter);
         });
 
         $this->getContainer()->share(Converter::class, function () {

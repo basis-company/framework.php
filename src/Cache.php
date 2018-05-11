@@ -2,20 +2,20 @@
 
 namespace Basis;
 
-use Basis\Converter;
 use Carbon\Carbon;
 
 class Cache
 {
     private $converter;
 
-    public function __construct(Converter $converter)
+    public function __construct(Filesystem $fs, Converter $converter)
     {
         $this->converter = $converter;
-        if (!is_dir('.cache')) {
-            mkdir('.cache');
-            @chown('.cache', 'www-data');
-            @chgrp('.cache', 'www-data');
+        $this->path = $fs->getPath('.cache');
+        if (!is_dir($this->path)) {
+            mkdir($this->path);
+            @chown($this->path, 'www-data');
+            @chgrp($this->path, 'www-data');
         }
     }
 
@@ -26,7 +26,7 @@ class Cache
         if (array_key_exists($key, $this->cache)) {
             return $this->cache[$key]['expire'] > Carbon::now()->getTimestamp();
         }
-        $filename = '.cache/'.$key;
+        $filename = $this->path . '/' . $key;
         if (file_exists($filename)) {
             if (!array_key_exists($key, $this->cache)) {
                 $this->cache[$key] = include $filename;
@@ -44,7 +44,7 @@ class Cache
 
     public function set($key, $value)
     {
-        $filename = '.cache/'.$key;
+        $filename = $this->path . '/' . $key;
         $data = $this->converter->toArray($value);
         $string = '<?php return '.var_export($data, true).';';
 
