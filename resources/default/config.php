@@ -1,5 +1,7 @@
 <?php
 
+use Basis\Service;
+
 $service = getenv('SERVICE_NAME');
 if (!$service) {
     $service = dirname(getcwd());
@@ -11,15 +13,19 @@ if (!$service) {
 return [
     'environment' => getenv('SERVICE_ENVIRONMENT') ?? 'production',
     'service' => $service,
-    'clickhouse' => function() use ($service) {
+    'clickhouse' => function($app) use ($service) {
+        $host = getenv('CLICKHOUSE_HOST');
+        if (!$host) {
+            $host = $app->get(Service::class)->getHost($service.'-ch');
+        }
         return [
-            'host' => getenv('CLICKHOUSE_HOST') ?: $service.'-ch',
+            'host' => $host,
             'port' => getenv('CLICKHOUSE_PORT') ?: '8123',
             'username' => getenv('CLICKHOUSE_USERNAME') ?: 'default',
             'password' => getenv('CLICKHOUSE_PASSWORD') ?: '',
         ];
     },
-    'tarantool' => function() use ($service) {
+    'tarantool' => function($app) use ($service) {
         $params = [];
         $mapping = [
             'connect_timeout' => 'TARANTOOL_CONNECT_TIMEOUT',
@@ -31,8 +37,13 @@ return [
                 $params[$param] = getenv($name);
             }
         }
+        $connection = getenv('TARANTOOL_CONNECTION');
+        if (!$connection) {
+            $host = $app->get(Service::class)->getHost($service.'-db');
+            $connection = 'tcp://'.$host.':3301';
+        }
         return [
-            'connection' => getenv('TARANTOOL_CONNECTION') ?: 'tcp://'.$service.'-db:3301',
+            'connection' => $connection,
             'params' => $params,
         ];
     },
