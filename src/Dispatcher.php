@@ -22,7 +22,7 @@ class Dispatcher
             $service = explode('.', $job)[0];
         }
 
-        $host = $this->service->getHost($service);
+        $host = $this->service->getHost($service)->address;
 
         $response = $this->client->post("http://$host/api", [
             'multipart' => [

@@ -14,7 +14,7 @@ class ServiceTest extends Test
         $result = [];
         foreach ([1, 2] as $attempt) {
             $start = microtime(1);
-            $host = $service->getHost('basis.company');
+            $host = $service->getHost('basis.company')->address;
             $timer = microtime(1) - $start;
             $result[] = [
                 'host' => $host,

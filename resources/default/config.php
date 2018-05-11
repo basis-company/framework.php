@@ -16,7 +16,7 @@ return [
     'clickhouse' => function($app) use ($service) {
         $host = getenv('CLICKHOUSE_HOST');
         if (!$host) {
-            $host = $app->get(Service::class)->getHost($service.'-ch');
+            $host = $app->get(Service::class)->getHost($service.'-ch')->address;
         }
         return [
             'host' => $host,
@@ -39,7 +39,7 @@ return [
         }
         $connection = getenv('TARANTOOL_CONNECTION');
         if (!$connection) {
-            $host = $app->get(Service::class)->getHost($service.'-db');
+            $host = $app->get(Service::class)->getHost($service.'-db')->address;
             $connection = 'tcp://'.$host.':3301';
         }
         return [

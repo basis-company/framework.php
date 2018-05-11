@@ -82,8 +82,11 @@ class Service
 
     public function getHost($name)
     {
-            return gethostbyname($name);
         return $this->cache->wrap('service-host-for-' . $name, function() use ($name) {
+            return (object) [
+                'address' => gethostbyname($name),
+                'expire' => time() + 60 * 30,
+            ];
         });
     }
 }

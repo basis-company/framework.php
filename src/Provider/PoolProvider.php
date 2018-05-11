@@ -39,7 +39,7 @@ class PoolProvider extends AbstractServiceProvider
                 $service = $container->get(Service::class);
 
                 if (in_array($name, $service->listServices())) {
-                    $address = $service->getHost($name.'-db');
+                    $address = $service->getHost($name.'-db')->address;
                     $connection = new StreamConnection('tcp://'.$address.':3301');
                     $packer = new PurePacker();
                     $client = new Client($connection, $packer);
