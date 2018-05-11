@@ -6,6 +6,7 @@ use Carbon\Carbon;
 
 class Cache
 {
+    private $cache = [];
     private $converter;
 
     public function __construct(Filesystem $fs, Converter $converter)
@@ -14,12 +15,19 @@ class Cache
         $this->path = $fs->getPath('.cache');
         if (!is_dir($this->path)) {
             mkdir($this->path);
-            @chown($this->path, 'www-data');
-            @chgrp($this->path, 'www-data');
+            chmod($this->path, 0777);
         }
     }
 
-    private $cache = [];
+
+    public function clear()
+    {
+        foreach (scandir($this->path) as $f) {
+            if ($f != '.' && $f != '..') {
+                unlink($this->path.'/'.$f);
+            }
+        }
+    }
 
     public function exists($key)
     {
@@ -31,7 +39,8 @@ class Cache
             if (!array_key_exists($key, $this->cache)) {
                 $this->cache[$key] = include $filename;
             }
-            return $this->cache[$key]['expire'] > Carbon::now()->getTimestamp();
+            $value = $this->cache[$key];
+            return !array_key_exists('expire', $value) || $value['expire'] > Carbon::now()->getTimestamp();
         }
     }
 
@@ -49,8 +58,7 @@ class Cache
         $string = '<?php return '.var_export($data, true).';';
 
         file_put_contents($filename, $string);
-        @chown($filename, 'www-data');
-        @chgrp($filename, 'www-data');
+        chmod($filename, 0777);
 
         $this->cache[$key] = $data;
     }

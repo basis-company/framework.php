@@ -1,6 +1,7 @@
 composer.lock
 composer.phar
 phpunit.xml
+test/.cache
 test/.htaccess
 test/server.php
 vendor

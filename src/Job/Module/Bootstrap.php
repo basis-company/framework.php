@@ -21,7 +21,6 @@ class Bootstrap extends Job
             foreach ($fs->listFiles('.cache') as $file) {
                 unlink($fs->getPath('.cache/'.$file));
             }
-            rmdir($cache);
         }
 
         $procedures = $fs->listClasses('Procedure');

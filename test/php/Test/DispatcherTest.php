@@ -2,8 +2,9 @@
 
 namespace Test;
 
-use Carbon\Carbon;
+use Basis\Cache;
 use Basis\Test;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -83,13 +84,6 @@ class DispatcherTest extends Test
     public function tearDown()
     {
         parent::tearDown();
-        if (is_dir('.cache')) {
-            foreach (scandir('.cache') as $f) {
-                if ($f != '.' && $f != '..') {
-                    unlink('.cache/'.$f);
-                }
-            }
-            rmdir('.cache');
-        }
+        $this->get(Cache::class)->clear();
     }
 }

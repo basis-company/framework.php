@@ -27,11 +27,7 @@ class BootstrapTest extends Test
         $this->assertSame($this->subscriptions[0]->service, 'test');
 
         // cache exists
-        $cache = getcwd().'/.cache';
-        $this->assertTrue(is_dir($cache));
-
         $this->dispatch('module.bootstrap');
-        rmdir($cache);
     }
 
 
