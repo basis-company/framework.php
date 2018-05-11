@@ -36,8 +36,11 @@ class PoolProvider extends AbstractServiceProvider
                     return $mapper;
                 }
 
-                if (in_array($name, $container->get(Service::class)->listServices())) {
-                    $connection = new StreamConnection('tcp://'.$name.'-db:3301');
+                $service = $container->get(Service::class);
+
+                if (in_array($name, $service->listServices())) {
+                    $address = $service->getHost($name.'-db');
+                    $connection = new StreamConnection('tcp://'.$address.':3301');
                     $packer = new PurePacker();
                     $client = new Client($connection, $packer);
                     $client->disableRequest(DeleteRequest::class);
