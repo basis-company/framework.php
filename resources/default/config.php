@@ -16,8 +16,9 @@ return [
     'clickhouse' => function($app) use ($service) {
         $host = getenv('CLICKHOUSE_HOST');
         if (!$host) {
-            $host = $app->get(Service::class)->getHost($service.'-ch')->address;
+            $host = $service.'-ch';
         }
+        $host = $app->get(Service::class)->getHost($host)->address;
         return [
             'host' => $host,
             'port' => getenv('CLICKHOUSE_PORT') ?: '8123',
