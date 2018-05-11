@@ -7,9 +7,13 @@ use GuzzleHttp\Client;
 
 class Dispatcher
 {
-    public function __construct(Client $client)
+    protected $client;
+    protected $service;
+
+    public function __construct(Client $client, Service $service)
     {
         $this->client = $client;
+        $this->service = $service;
     }
 
     public function dispatch(string $job, array $params = [], string $service = null)
@@ -18,7 +22,9 @@ class Dispatcher
             $service = explode('.', $job)[0];
         }
 
-        $response = $this->client->post("http://$service/api", [
+        $host = $this->service->getHost($service);
+
+        $response = $this->client->post("http://$host/api", [
             'multipart' => [
                 [
                     'name' => 'rpc',
@@ -33,7 +39,7 @@ class Dispatcher
         $contents = $response->getBody();
 
         if (!$contents) {
-            throw new Exception("Host $service unreachable");
+            throw new Exception("Host $host ($service) is unreachable");
         }
 
         $result = json_decode($contents);

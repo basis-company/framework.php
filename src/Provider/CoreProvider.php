@@ -9,6 +9,7 @@ use Basis\Converter;
 use Basis\Dispatcher;
 use Basis\Filesystem;
 use Basis\Framework;
+use Basis\Service;
 use Basis\Http;
 use GuzzleHttp\Client;
 use League\Container\ServiceProvider\AbstractServiceProvider;
@@ -44,7 +45,8 @@ class CoreProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(Dispatcher::class, function () {
             $client = $this->getContainer()->get(Client::class);
-            return new Dispatcher($client);
+            $service = $this->getContainer()->get(Service::class);
+            return new Dispatcher($client, $service);
         });
 
         $this->getContainer()->share(Framework::class, function () {
