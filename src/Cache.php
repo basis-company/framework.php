@@ -58,7 +58,7 @@ class Cache
         $string = '<?php return '.var_export($data, true).';';
 
         file_put_contents($filename, $string);
-        chmod($filename, 0777);
+        @chmod($filename, 0777);
 
         $this->cache[$key] = $data;
     }
