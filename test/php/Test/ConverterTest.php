@@ -2,11 +2,32 @@
 
 namespace Test;
 
+use Carbon\Carbon;
 use Basis\Converter;
 use Basis\Test;
 
 class ConverterTest extends Test
 {
+    public function testDates()
+    {
+        $this->assertSame(time(), $this->get(Converter::class)->getTimestamp('now'));
+
+        $midnight = $this->get(Converter::class)->getTimestamp(date('Ymd'));
+
+        // carbon test tune
+        $yesterday = Carbon::parse('yesterday');
+        Carbon::setTestNow($yesterday);
+        $this->assertSame(
+            $yesterday->timestamp,
+            $this->get(Converter::class)->getTimestamp('now')
+        );
+
+        $this->assertSame(
+            $midnight,
+            $this->get(Converter::class)->getDate('tomorrow')->timestamp
+        );
+    }
+
     public function testArrays()
     {
         $this->validateArray([]);

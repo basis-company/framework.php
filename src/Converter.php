@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Carbon\Carbon;
 use Exception;
 use stdClass;
 use Tarantool\Mapper\Entity;
@@ -123,4 +124,29 @@ class Converter
 
         return $this->camelcased[$capitalize][$string];
     }
+
+
+    private $dates = [];
+
+    public function getDate($string)
+    {
+        if (Carbon::hasTestNow() || !array_key_exists($string, $this->dates)) {
+            if (strlen($string) == 8 && is_numeric($string)) {
+                $value = Carbon::createFromFormat('Ymd', $string)->setTime(0, 0, 0);
+            } else {
+                $value = Carbon::parse($string);
+            }
+            if (Carbon::hasTestNow()) {
+                return $value;
+            }
+            $this->dates[$string] = $value;
+        }
+        return $this->dates[$string];
+    }
+
+    public function getTimestamp($string)
+    {
+        return $this->getDate($string)->timestamp;
+    }
+
 }
