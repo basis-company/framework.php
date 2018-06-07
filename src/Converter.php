@@ -141,7 +141,7 @@ class Converter
             }
             $this->dates[$string] = $value;
         }
-        return $this->dates[$string];
+        return $this->dates[$string]->copy();
     }
 
     public function getTimestamp($string)
