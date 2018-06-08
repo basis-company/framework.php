@@ -13,6 +13,12 @@ class ConverterTest extends Test
         $this->assertSame(time(), $this->get(Converter::class)->getTimestamp('now'));
 
         $midnight = $this->get(Converter::class)->getTimestamp(date('Ymd'));
+        $constructed = $this->get(Converter::class)->getDate(+date('Y'), +date('m'), +date('d'));
+
+        $this->assertSame($midnight, $constructed->timestamp);
+
+        $toolkited = $this->getDate(+date('Y'), +date('m'), +date('d'));
+        $this->assertSame($midnight, $toolkited->timestamp);
 
         // carbon test tune
         $yesterday = Carbon::parse('yesterday');

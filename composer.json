@@ -10,9 +10,9 @@
         "php": "^7.1",
         "phpdocumentor/reflection-docblock": "4.3.0",
         "ramsey/uuid": "3.7.3",
-        "rybakit/msgpack": "v0.3.1",
-        "smi2/phpclickhouse": "^0.17.12.1",
-        "tarantool/mapper": "^4.3.12",
+        "rybakit/msgpack": "v0.5.1",
+        "smi2/phpclickhouse": "^0.18.05.09",
+        "tarantool/mapper": "^4.3.14",
         "tarantool/queue": "v0.6.1"
     },
     "require-dev": {

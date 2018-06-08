@@ -130,18 +130,26 @@ class Converter
 
     public function getDate($string)
     {
-        if (Carbon::hasTestNow() || !array_key_exists($string, $this->dates)) {
+        $key = $string;
+        if (func_num_args() == 3) {
+            $key = implode('.', func_get_args());
+        }
+
+        if (Carbon::hasTestNow() || !array_key_exists($key, $this->dates)) {
             if (strlen($string) == 8 && is_numeric($string)) {
                 $value = Carbon::createFromFormat('Ymd', $string)->setTime(0, 0, 0);
+            } elseif (func_num_args() == 3) {
+                [$year, $month, $day] = func_get_args();
+                $value = Carbon::createFromDate($year, $month, $day)->setTime(0, 0, 0);
             } else {
                 $value = Carbon::parse($string);
             }
             if (Carbon::hasTestNow()) {
                 return $value;
             }
-            $this->dates[$string] = $value;
+            $this->dates[$key] = $value;
         }
-        return $this->dates[$string]->copy();
+        return $this->dates[$key]->copy();
     }
 
     public function getTimestamp($string)

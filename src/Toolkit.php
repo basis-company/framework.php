@@ -55,6 +55,11 @@ trait Toolkit
         return $this->app->get($class);
     }
 
+    protected function getDate()
+    {
+        return call_user_func_array([$this->get(Converter::class), 'getDate'], func_get_args());
+    }
+
     protected function getMapper()
     {
         return $this->get(Mapper::class);
