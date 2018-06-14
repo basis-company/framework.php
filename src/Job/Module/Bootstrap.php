@@ -38,8 +38,10 @@ class Bootstrap extends Job
             }
         }
 
-        $this->get(Mapper::class)->getPlugin(Procedure::class)
-            ->register(Select::class);
+        if ($this->app->hasShared(Mapper::class)) {
+            $this->get(Mapper::class)->getPlugin(Procedure::class)
+                ->register(Select::class);
+        }
 
         return $result;
     }
