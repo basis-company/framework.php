@@ -3,8 +3,10 @@
 namespace Basis;
 
 use Basis\Converter;
+use Basis\Service;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
 
 abstract class Test extends TestCase
@@ -40,6 +42,11 @@ abstract class Test extends TestCase
         $property = new ReflectionProperty(Pool::class, 'resolvers');
         $property->setAccessible(true);
         $property->setValue($pool, []);
+
+        $service = $this->app->get(Service::class)->getName();
+        $pool->register($service, function() {
+            return $this->app->get(Mapper::class);
+        });
 
         $pool->registerResolver(function($service) use ($serviceData) {
             if (array_key_exists($service, $serviceData)) {
