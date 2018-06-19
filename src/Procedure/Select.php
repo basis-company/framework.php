@@ -70,8 +70,11 @@ class Select extends Procedure
 
         end
 
+        local fiber = require('fiber')
+
         for i, value in pairs(values) do
             selector(index, value)
+            fiber.yield()
         end
 
         return result
