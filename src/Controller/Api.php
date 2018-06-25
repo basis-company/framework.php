@@ -35,10 +35,7 @@ class Api
             if (is_null($result)) {
                 $result = [];
             }
-            if (!is_object($result)) {
-                $result = (object) $result;
-            }
-            $result->timing = microtime(1) - $start;
+            $result['timing'] = microtime(1) - $start;
             if (property_exists($rpc, 'tid')) {
                 $result['tid'] = $rpc->tid;
             }
