@@ -32,6 +32,12 @@ class Api
         foreach ($request as $rpc) {
             $start = microtime(1);
             $result = $this->process($runner, $rpc);
+            if (is_null($result)) {
+                $result = [];
+            }
+            if (!is_object($result)) {
+                $result = (object) $result;
+            }
             $result->timing = microtime(1) - $start;
             if (property_exists($rpc, 'tid')) {
                 $result['tid'] = $rpc->tid;
