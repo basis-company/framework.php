@@ -67,14 +67,15 @@ class Select extends Procedure
                     end
                 end
             end
-
         end
 
         local fiber = require('fiber')
 
         for i, value in pairs(values) do
             selector(index, value)
-            fiber.yield()
+            if i % 100 == 0 then
+                fiber.yield()
+            end
         end
 
         return result
