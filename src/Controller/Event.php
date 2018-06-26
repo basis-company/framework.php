@@ -9,6 +9,11 @@ use Exception;
 
 class Event
 {
+    public function __process(Application $app, BasisEvent $event, Service $service)
+    {
+        return $this->index($app, $event, $service);
+    }
+
     public function index(Application $app, BasisEvent $event, Service $service)
     {
         $start = microtime(1);
