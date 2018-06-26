@@ -9,6 +9,11 @@ use Exception;
 
 class Api
 {
+    public function __process(Runner $runner, Event $event)
+    {
+        return $this->index($runner, $event);
+    }
+
     public function index(Runner $runner, Event $event)
     {
         if (!array_key_exists('rpc', $_REQUEST)) {
