@@ -336,7 +336,10 @@ class TarantoolTest extends Test
             ->createSpace('sector', [
                 'id' => 'unsigned',
             ])
-            ->addProperty('parent', 'unsigned', false, 'sector')
+            ->addProperty('parent', 'unsigned', [
+                'is_nullable' => false,
+                'reference' => 'sector'
+            ])
             ->createIndex([
                 'fields' => ['id'],
             ])
