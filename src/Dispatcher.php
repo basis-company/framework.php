@@ -23,8 +23,9 @@ class Dispatcher
         }
 
         $host = $this->service->getHost($service)->address;
+        $url = "http://$host/api/" . str_replace('.', '/', $job);
 
-        $response = $this->client->post("http://$host/api", [
+        $response = $this->client->post($url, [
             'multipart' => [
                 [
                     'name' => 'rpc',
