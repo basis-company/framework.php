@@ -156,5 +156,4 @@ class Converter
     {
         return $this->getDate($string)->timestamp;
     }
-
 }
