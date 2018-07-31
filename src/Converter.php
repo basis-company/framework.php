@@ -17,7 +17,7 @@ class Converter
         if (!is_array($array)) {
             return false;
         }
-        return !count($array) || array_keys($array) === range(0, count($array) -1);
+        return !count($array) || array_values($array) == $array;
     }
 
     public function toObject($data)
@@ -46,7 +46,7 @@ class Converter
         foreach ($data as $k => $v) {
             if (is_array($v) && $this->isTuple($v)) {
                 $data->$k = $this->convertArrayToObject($v);
-            } elseif(is_array($v) || is_object($v)) {
+            } elseif (is_array($v) || is_object($v)) {
                 $data->$k = $this->toObject($v);
             }
         }
