@@ -69,11 +69,13 @@ class Select extends Procedure
             end
         end
 
-        local fiber = require('fiber')
+        if fiber == nil then 
+            fiber = require('fiber')
+        end
 
         for i, value in pairs(values) do
             selector(index, value)
-            if i % 100 == 0 then
+            if i % 1000 == 0 then
                 fiber.yield()
             end
         end
