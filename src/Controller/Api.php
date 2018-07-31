@@ -5,16 +5,20 @@ namespace Basis\Controller;
 use Basis\Application;
 use Basis\Event;
 use Basis\Runner;
+use Basis\Service;
+use Basis\Toolkit;
 use Exception;
 
 class Api
 {
-    public function __process(Runner $runner, Event $event)
+    use Toolkit;
+
+    public function __process()
     {
-        return $this->index($runner, $event);
+        return $this->index();
     }
 
-    public function index(Runner $runner, Event $event)
+    public function index()
     {
         if (!array_key_exists('rpc', $_REQUEST)) {
             return [
@@ -36,7 +40,7 @@ class Api
         $response = [];
         foreach ($request as $rpc) {
             $start = microtime(1);
-            $result = $this->process($runner, $rpc);
+            $result = $this->process($rpc);
             if (is_null($result)) {
                 $result = [];
             }
@@ -48,7 +52,7 @@ class Api
         }
 
         try {
-            $event->fireChanges($request[0]->job);
+            $this->get(Event::class)->fireChanges($request[0]->job);
         } catch (Exception $e) {
             return ['success' => false, 'message' => 'Fire changes failure: '.$e->getMessage()];
         }
@@ -56,7 +60,7 @@ class Api
         return is_array($data) ? $response : $response[0];
     }
 
-    private function process($runner, $rpc)
+    private function process($rpc)
     {
         if (!property_exists($rpc, 'job')) {
             return [
@@ -74,7 +78,7 @@ class Api
 
         try {
             $params = is_object($rpc->params) ? get_object_vars($rpc->params) : [];
-            $data = $runner->dispatch(strtolower($rpc->job), $params);
+            $data = $this->get(Runner::class)->dispatch(strtolower($rpc->job), $params);
             $data = $this->removeSystemObjects($data);
 
             return [
@@ -85,6 +89,7 @@ class Api
             $error = [
                 'success' => false,
                 'message' => $e->getMessage(),
+                'service' => $this->get(Service::class)->getName(),
                 'trace' => explode(PHP_EOL, $e->getTraceAsString()),
             ];
             if (property_exists($e, 'remoteTrace')) {
