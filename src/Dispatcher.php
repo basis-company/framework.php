@@ -2,17 +2,20 @@
 
 namespace Basis;
 
+use Basis\Context;
 use Exception;
 use GuzzleHttp\Client;
 
 class Dispatcher
 {
     protected $client;
+    protected $context;
     protected $service;
 
-    public function __construct(Client $client, Service $service)
+    public function __construct(Client $client, Context $context, Service $service)
     {
         $this->client = $client;
+        $this->context = $context;
         $this->service = $service;
     }
 
@@ -25,13 +28,24 @@ class Dispatcher
         $host = $this->service->getHost($service)->address;
         $url = "http://$host/api/" . str_replace('.', '/', $job);
 
+        $context = get_object_vars($this->context);
+
+        if (array_key_exists('HTTP_X_REAL_IP', $_SERVER)) {
+            $context['host'] = $_SERVER['HTTP_X_REAL_IP'];
+        }
+
+        if (array_key_exists('HTTP_X_SESSION', $_SERVER)) {
+            $context['session'] = $_SERVER['HTTP_X_SESSION'];
+        }
+
         $response = $this->client->post($url, [
             'multipart' => [
                 [
                     'name' => 'rpc',
                     'contents' => json_encode([
-                        'job'    => $job,
-                        'params' => $params,
+                        'context' => $context,
+                        'job'     => $job,
+                        'params'  => $params,
                     ])
                 ]
             ]

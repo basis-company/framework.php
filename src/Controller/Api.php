@@ -3,6 +3,7 @@
 namespace Basis\Controller;
 
 use Basis\Application;
+use Basis\Context;
 use Basis\Event;
 use Basis\Runner;
 use Basis\Service;
@@ -33,6 +34,10 @@ class Api
                 'success' => false,
                 'message' => 'Invalid rpc format',
             ];
+        }
+
+        if ($data->context) {
+            $this->get(Context::class)->apply($data->context);
         }
 
         $request = is_array($data) ? $data : [$data];

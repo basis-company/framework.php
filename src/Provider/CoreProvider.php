@@ -5,6 +5,7 @@ namespace Basis\Provider;
 use Basis\Application;
 use Basis\Cache;
 use Basis\Config;
+use Basis\Context;
 use Basis\Converter;
 use Basis\Dispatcher;
 use Basis\Filesystem;
@@ -46,9 +47,10 @@ class CoreProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Dispatcher::class, function () {
+            $context = $this->getContainer()->get(Context::class);
             $client = $this->getContainer()->get(Client::class);
             $service = $this->getContainer()->get(Service::class);
-            return new Dispatcher($client, $service);
+            return new Dispatcher($client, $context, $service);
         });
 
         $this->getContainer()->share(Framework::class, function () {
@@ -57,6 +59,10 @@ class CoreProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(Http::class, function () {
             return new Http($this->getContainer()->get(Application::class));
+        });
+
+        $this->getContainer()->share(Context::class, function () {
+            return new Context($this->getContainer()->get(Application::class));
         });
     }
 }
