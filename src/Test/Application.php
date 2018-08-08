@@ -4,6 +4,7 @@ namespace Basis\Test;
 
 use Basis\Application as BaseApplication;
 use Basis\Cache;
+use Basis\Context;
 use Basis\Converter;
 use Basis\Runner;
 use Basis\Test;
@@ -22,6 +23,9 @@ class Application extends BaseApplication
 
     public function dispatch(string $job, array $params = [], string $service = null)
     {
+        if (array_key_exists('context', $this->test->params)) {
+            $this->get(Context::class)->apply($this->test->params);
+        }
         if (array_key_exists($job, $this->test->mockInstances)) {
             $mocks = $this->test->mockInstances[$job];
             $valid = null;
