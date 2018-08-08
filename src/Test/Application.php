@@ -24,7 +24,7 @@ class Application extends BaseApplication
     public function dispatch(string $job, array $params = [], string $service = null)
     {
         if (array_key_exists('context', $this->test->params)) {
-            $this->get(Context::class)->apply($this->test->params);
+            $this->get(Context::class)->apply($this->test->params['context']);
         }
         if (array_key_exists($job, $this->test->mockInstances)) {
             $mocks = $this->test->mockInstances[$job];
