@@ -53,12 +53,23 @@ class Select extends Procedure
             end
         end
 
-        local function selector(index, value)
-            for j, tuple in box.space[space].index[index]:pairs(value) do
+        local function getKey(tuple)
+            return tuple[pk[1]]
+        end
+        
+        if #pk > 1 then 
+            getKey = function(tuple)
                 local key = ""
                 for i, f in pairs(pk) do
                     key = key .. tuple[f] .. '-'
                 end
+                return key
+            end
+        end
+
+        local function selector(index, value)
+            for j, tuple in box.space[space].index[index]:pairs(value) do
+                local key = getKey(tuple)
                 if keys[key] == nil then
                     keys[key] = true
                     table.insert(result, tuple)

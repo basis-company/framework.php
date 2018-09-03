@@ -11,8 +11,8 @@
         "phpdocumentor/reflection-docblock": "4.3.0",
         "ramsey/uuid": "3.7.3",
         "rybakit/msgpack": "v0.5.3",
-        "smi2/phpclickhouse": "^0.18.05.09",
-        "tarantool/mapper": "^4.3.17",
+        "smi2/phpclickhouse": "1.2.3",
+        "tarantool/mapper": "^4.3.18",
         "tarantool/queue": "v0.6.1"
     },
     "require-dev": {
