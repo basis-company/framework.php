@@ -25,4 +25,9 @@ class Context
             $this->$k = $v;
         }
     }
+
+    public function getPerson()
+    {
+        return $this->parent ? $this->parent->person : $this->person;
+    }
 }
