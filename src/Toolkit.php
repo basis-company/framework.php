@@ -4,6 +4,7 @@ namespace Basis;
 
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
+use Tarantool\Mapper\Pool;
 use Tarantool\Queue\Queue;
 
 trait Toolkit
@@ -17,7 +18,7 @@ trait Toolkit
 
     protected function create(string $space, array $data) : Entity
     {
-        return $this->get(Mapper::class)->create($space, $data);
+        return $this->getRepository($space)->create($data)->save();
     }
 
     protected function dispatch(string $job, array $params = [], string $service = null)
@@ -27,22 +28,22 @@ trait Toolkit
 
     protected function find(string $space, $params = []) : array
     {
-        return $this->get(Mapper::class)->find($space, $params);
+        return $this->getRepository($space)->find($params);
     }
 
     protected function findOne(string $space, $params = []) : ?Entity
     {
-        return $this->get(Mapper::class)->findOne($space, $params);
+        return $this->getRepository($space)->findOne($params);
     }
 
     protected function findOrCreate(string $space, $params = []) : Entity
     {
-        return $this->get(Mapper::class)->findOrCreate($space, $params);
+        return $this->getRepository($space)->findOrCreate($params);
     }
 
     protected function findOrFail(string $space, $params = []) : Entity
     {
-        return $this->get(Mapper::class)->findOrFail($space, $params);
+        return $this->getRepository($space)->findOrFail($params);
     }
 
     protected function fire(string $event, array $context)
@@ -65,6 +66,14 @@ trait Toolkit
         return $this->get(Mapper::class);
     }
 
+    protected function getRepository($space)
+    {
+        if (strpos($space, '.') !== false) {
+            return $this->get(Pool::class)->getRepository($space);
+        }
+        return $this->get(Mapper::class)->getRepository($space);
+    }
+
     protected function getQueue($tube)
     {
         $alias = "queue.$tube";
@@ -83,7 +92,7 @@ trait Toolkit
 
     protected function remove(string $space, array $params = [])
     {
-        return $this->get(Mapper::class)->remove($space, $params);
+        return $this->getRepository($space)->remove($params);
     }
 
     protected function select($fields, string $table, array $params)
