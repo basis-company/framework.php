@@ -35,7 +35,7 @@ class Cache
             return $this->cache[$key]['expire'] > Carbon::now()->getTimestamp();
         }
         $filename = $this->path . '/' . $key;
-        if (file_exists($filename)) {
+        if (file_exists($filename) && filesize($filename)) {
             if (!array_key_exists($key, $this->cache)) {
                 $this->cache[$key] = include $filename;
             }
