@@ -17,12 +17,14 @@ class Register extends Job
         }
 
         $assets = $this->dispatch('module.assets');
+        $version = $this->dispatch('module.version');
 
         $registration = [
             'service' => $service->getName(),
             'hash' => $assets->hash,
             'routes' => $meta->routes,
             'host' => gethostbyname(gethostname()),
+            'version' => $version->version,
         ];
 
         $this->app->dispatch('web.register', $registration, $service->getName());
