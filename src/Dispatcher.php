@@ -97,7 +97,7 @@ class Dispatcher
         return "http://$host/api/" . str_replace('.', '/', $job);
     }
 
-    public function send(string $job, array $params = [], string $service = null, $context = null) : boolean
+    public function send(string $job, array $params = [], string $service = null, $context = null)
     {
         if ($service === null) {
             $service = $this->getServiceName($job);
