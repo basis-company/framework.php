@@ -128,16 +128,27 @@ class Dispatcher
             return false;
         }
 
-        fwrite($fp, implode("\r\n", [
+        $parts = [
             "POST " . $parts['path'] . " HTTP/1.1",
             "Host: " . $parts['host'],
+        ];
+
+        if (array_key_exists('HTTP_X_REAL_IP', $_SERVER)) {
+            $parts[] = "X-Real-Ip: ".$_SERVER['HTTP_X_REAL_IP'];
+        }
+        if (array_key_exists('HTTP_X_SESSION', $_SERVER)) {
+            $parts[] = "X-Session: ".$_SERVER['HTTP_X_SESSION'];
+        }
+
+        $parts = array_merge($parts, [
             "Content-Type: application/x-www-form-urlencoded",
             "Content-Length: " . strlen($content),
             "Connection: Close",
             "",
             isset($content) ? $content : '',
-        ]));
+        ]);
 
+        fwrite($fp, implode("\r\n", $parts));
         fclose($fp);
 
         return true;
