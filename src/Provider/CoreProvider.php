@@ -10,10 +10,12 @@ use Basis\Converter;
 use Basis\Dispatcher;
 use Basis\Filesystem;
 use Basis\Framework;
-use Basis\Service;
 use Basis\Http;
-use GuzzleHttp\Client;
+use Basis\Lock;
+use Basis\Service;
+use GuzzleHttp\Client as GuzzleHttpClient;
 use League\Container\ServiceProvider\AbstractServiceProvider;
+use Predis\Client as PredisClient;
 
 class CoreProvider extends AbstractServiceProvider
 {
@@ -24,6 +26,7 @@ class CoreProvider extends AbstractServiceProvider
         Dispatcher::class,
         Framework::class,
         Http::class,
+        Lock::class,
     ];
 
     public function register()
@@ -42,13 +45,18 @@ class CoreProvider extends AbstractServiceProvider
             return new Cache($fs, $converter);
         });
 
+        $this->getContainer()->share(Lock::class, function () {
+            $redis = $this->getContainer()->get(PredisClient::class);
+            return new Lock($redis);
+        });
+
         $this->getContainer()->share(Converter::class, function () {
             return new Converter();
         });
 
         $this->getContainer()->share(Dispatcher::class, function () {
             $context = $this->getContainer()->get(Context::class);
-            $client = $this->getContainer()->get(Client::class);
+            $client = $this->getContainer()->get(GuzzleHttpClient::class);
             $service = $this->getContainer()->get(Service::class);
             return new Dispatcher($client, $context, $service);
         });

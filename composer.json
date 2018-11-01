@@ -9,6 +9,7 @@
         "nesbot/carbon": "1.25",
         "php": "^7.1",
         "phpdocumentor/reflection-docblock": "4.3.0",
+        "predis/predis": "v1.1.1",
         "ramsey/uuid": "3.7.3",
         "rybakit/msgpack": "v0.5.3",
         "smi2/phpclickhouse": "1.2.3",
