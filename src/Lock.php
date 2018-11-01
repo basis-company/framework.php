@@ -16,6 +16,23 @@ class Lock
         register_shutdown_function([$this, 'releaseLocks']);
     }
 
+    public function acquireOrQueue($name, $ttl = 1)
+    {
+        if (!$this->lock($name, $ttl)) {
+            if (!$this->lock("queue-$name")) {
+                // somebody else waiting for next
+                return false;
+            }
+            $this->waitUnlock($name);
+            $this->unlock("queue-$name");
+            if (!$this->lock($name, $ttl)) {
+                // somebody else take acquire locks
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function acquire($name, $ttl = 1)
     {
         while (!$this->lock($name, $ttl)) {
@@ -69,7 +86,8 @@ class Lock
     public function waitUnlock($name)
     {
         while ($this->exists($name)) {
-            usleep(100);
+            // 100ms
+            usleep(100000);
         }
         return true;
     }
