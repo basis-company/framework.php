@@ -45,6 +45,7 @@ class Handle extends Job
                 if (!array_key_exists($listener, $listeners)) {
                     $listeners[$listener] = $app->get('Listener\\'.$listener);
                     $listeners[$listener]->event = $this->event;
+                    $listeners[$listener]->eventId = $this->eventId;
                     $listeners[$listener]->context = $this->context;
                 }
             }
