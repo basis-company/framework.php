@@ -17,10 +17,13 @@ class Converter
         if (!is_array($array)) {
             return false;
         }
+        if (!count($array)) {
+            return true;
+        }
         if (version_compare(PHP_VERSION, '7.3.0') >= 0) {
             return array_key_last($array) === count($array) - 1;
         }
-        return !count($array) || array_values($array) == $array;
+        return array_values($array) == $array;
     }
 
     public function toObject($data)

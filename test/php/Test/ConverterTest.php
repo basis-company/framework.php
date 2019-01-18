@@ -48,6 +48,8 @@ class ConverterTest extends Test
         $this->assertEquals($this->get(Converter::class)->toObject((object) ['q' => 1]), (object) [
             'q' => 1
         ]);
+
+        $this->assertTrue($this->app->get(Converter::class)->isTuple((object) []));
     }
 
     private function validateArray($array)
