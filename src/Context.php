@@ -6,16 +6,13 @@ use Carbon\Carbon;
 
 class Context
 {
+    public $access;
+    public $channel;
     public $session;
-    public $host;
-    public $socket;
-
-    public $gateway;
-    public $gatewaySocket;
 
     public $company;
-    public $module;
     public $person;
+    public $module;
 
     public $parent;
 
