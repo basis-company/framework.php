@@ -68,8 +68,8 @@ class Runner
 
     public function dispatch(string $nick, array $arguments = [])
     {
+        $converter = $this->app->get(Converter::class);
         if (count($arguments)) {
-            $converter = $this->app->get(Converter::class);
             if ($converter->isTuple($arguments) && is_array($arguments[0])) {
                 $result = [];
                 foreach ($arguments as $params) {
@@ -87,10 +87,12 @@ class Runner
         }
 
         foreach ($arguments as $k => $v) {
+            if (is_array($v) && !$converter->isTuple($v)) {
+                $v = $converter->toObject($v);
+            }
             $instance->$k = $v;
         }
-
-        return $this->app->get(Converter::class)->toObject($this->app->call([$instance, 'run']));
+        return $converter->toObject($this->app->call([$instance, 'run']));
     }
 
     private function castArguments(string $class, array $arguments) : array
