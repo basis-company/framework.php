@@ -15,6 +15,7 @@ class Context
     public $module;
 
     public $parent;
+    public $event;
 
     public function apply($data)
     {

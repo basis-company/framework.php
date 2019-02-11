@@ -39,6 +39,8 @@ class Handle extends Job
             ]);
         }
 
+        $this->get(Context::class)->event = $this->eventId;
+
         $listeners = [];
         foreach ($patterns as $pattern) {
             foreach ($subscription[$pattern] as $listener) {
