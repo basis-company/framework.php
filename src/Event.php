@@ -2,7 +2,6 @@
 
 namespace Basis;
 
-use Basis\Context;
 use Basis\Dispatcher;
 use ReflectionClass;
 use Tarantool\Mapper\Plugin\Spy;
@@ -47,7 +46,6 @@ class Event
         $this->app->dispatch('event.fire', [
             'event'   => $this->service->getName().'.'.$event,
             'context' => $context,
-            'parent'  => $this->app->get(Context::class)->event,
         ]);
     }
 
@@ -78,7 +76,6 @@ class Event
                 if (count(get_object_vars($changes))) {
                     $dispatcher->send('event.changes', [
                         'changes'  => $changes,
-                        'parent'   => $this->app->get(Context::class)->event,
                         'producer' => $producer,
                         'service'  => $mapper->serviceName,
                     ]);
