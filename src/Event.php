@@ -49,6 +49,13 @@ class Event
         ]);
     }
 
+    public function fireChangesPart(string $producer, int $fraction = 10)
+    {
+        if (++$this->counter % $fraction === 0) {
+            return $this->fireChanges($producer);
+        }
+    }
+
     public function fireChanges(string $producer)
     {
         $this->pool->get($this->service->getName());
