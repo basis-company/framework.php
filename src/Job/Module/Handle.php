@@ -29,7 +29,7 @@ class Handle extends Job
         }
 
         if (!count($patterns)) {
-            $service->unsubscribe($info->event);
+            $service->unsubscribe($this->event);
             return $dispatcher->send('event.feedback', [
                 'eventId' => $this->eventId,
                 'service' => $service->getName(),
