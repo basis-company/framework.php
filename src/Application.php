@@ -48,8 +48,13 @@ class Application extends Container
         return $this->get(Cache::class)
             ->wrap([$job, $params, $service], function() use ($job, $params, $service) {
                 $runner = $this->get(Runner::class);
-                if ($service === null && $runner->hasJob($job)) {
-                    return $runner->dispatch($job, $params);
+                if ($service === null) {
+                    if ($runner->hasJob($job)) {
+                        return $runner->dispatch($job, $params);
+                    }
+                    if (explode('.', $job)[0] == $this->get(Service::class)->getName()) {
+                        return $runner->dispatch($job, $params);
+                    }
                 }
 
                 $dispatcher = $this->get(Dispatcher::class);
