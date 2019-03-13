@@ -62,7 +62,7 @@ class Event
         $this->pool->get($this->service->getName());
 
         $dispatcher = $this->app->get(Dispatcher::class);
-        $changes = false;
+        $changed = false;
 
         foreach ($this->pool->getMappers() as $mapper) {
             $spy = $mapper->getPlugin(Spy::class);
@@ -83,7 +83,7 @@ class Event
                 }
 
                 if (count(get_object_vars($changes))) {
-                    $changes = true;
+                    $changed = true;
                     $dispatcher->send('event.changes', [
                         'changes'  => $changes,
                         'producer' => $producer,
@@ -94,6 +94,6 @@ class Event
                 $spy->reset();
             }
         }
-        return $changes;
+        return $changed;
     }
 }
