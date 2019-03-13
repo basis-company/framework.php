@@ -54,6 +54,7 @@ class Event
         if (++$this->counter % $fraction === 0) {
             return $this->fireChanges($producer);
         }
+        return false;
     }
 
     public function fireChanges(string $producer)
@@ -61,6 +62,7 @@ class Event
         $this->pool->get($this->service->getName());
 
         $dispatcher = $this->app->get(Dispatcher::class);
+        $changes = false;
 
         foreach ($this->pool->getMappers() as $mapper) {
             $spy = $mapper->getPlugin(Spy::class);
@@ -81,6 +83,7 @@ class Event
                 }
 
                 if (count(get_object_vars($changes))) {
+                    $changes = true;
                     $dispatcher->send('event.changes', [
                         'changes'  => $changes,
                         'producer' => $producer,
@@ -91,5 +94,6 @@ class Event
                 $spy->reset();
             }
         }
+        return $changes;
     }
 }
