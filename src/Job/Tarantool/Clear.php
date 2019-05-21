@@ -28,7 +28,7 @@ class Clear extends Job
         $data = $space->select(Criteria::key([]));
 
         foreach ($data as $row) {
-            if ($row[1] == 0) {
+            if ($row[0] >= 512) {
                 // user space
                 if (strpos($row[2], '_queue') === false) {
                     $client->evaluate('box.space.'.$row[2].':drop()');
