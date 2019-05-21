@@ -34,7 +34,9 @@ class TarantoolProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Client::class, function () {
-            return Client::fromDefaults();
+            $client = Client::fromDefaults();
+            $client->evaluate("box.session.su('admin')");
+            return $client;
         });
 
         $this->getContainer()->share(Mapper::class, function () {

@@ -35,6 +35,7 @@ class PoolProvider extends AbstractServiceProvider
                 if (in_array($name, $service->listServices())) {
                     $address = $service->getHost($name.'-db')->address;
                     $client = Client::fromDsn('tcp://'.$address.':3301');
+                    $client->evaluate("box.session.su('admin')");
                     $mapper = new Mapper($client);
                     $mapper->getPlugin(Sequence::class);
                     $mapper->getPlugin(Spy::class);
