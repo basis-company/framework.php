@@ -2,8 +2,8 @@
 
 namespace Repository;
 
-use Tarantool\Mapper\Repository as MapperRepository;
+use Tarantool\Mapper\Repository;
 
-class Note extends MapperRepository
+class Note extends Repository
 {
 }

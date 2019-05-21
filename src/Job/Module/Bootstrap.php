@@ -38,7 +38,7 @@ class Bootstrap extends Job
             }
         }
 
-        if ($this->app->hasShared(Mapper::class)) {
+        if ($this->app->has(Mapper::class)) {
             $this->get(Mapper::class)->getPlugin(Procedure::class)
                 ->register(Select::class);
         }

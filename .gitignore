@@ -4,4 +4,5 @@ phpunit.xml
 test/.cache
 test/.htaccess
 test/server.php
+test/start.sh
 vendor

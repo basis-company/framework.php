@@ -34,7 +34,7 @@ class Application extends Container
             $this->addServiceProvider($provider);
         }
 
-        $this->delegate(new ReflectionContainer());
+        $this->delegate($this->reflection = new ReflectionContainer());
     }
 
     public function dispatch(string $job, array $params = [], string $service = null)
@@ -62,9 +62,9 @@ class Application extends Container
             });
     }
 
-    public function get($alias, array $args = [])
+    public function get($alias, bool $new = false) : object
     {
-        if (!$this->hasShared($alias, true)) {
+        if (!$this->has($alias)) {
             $instance = null;
             if (is_subclass_of($alias, Procedure::class)) {
                 $instance = $this->get(Mapper::class)
@@ -86,6 +86,25 @@ class Application extends Container
                 });
             }
         }
-        return parent::get($alias, $args);
+        return parent::get($alias, $new);
+    }
+
+    public function has($id) : bool
+    {
+        if ($this->definitions->has($id)) {
+            return true;
+        }
+        if ($this->definitions->hasTag($id)) {
+            return true;
+        }
+        if ($this->providers->provides($id)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function call($callback)
+    {
+        return $this->reflection->call(...func_get_args());
     }
 }

@@ -227,7 +227,7 @@ class TarantoolTest extends Test
 
         // procedure was registered
         $mapper = $this->getMapper();
-        $result = $mapper->getClient()->evaluate("return basis_select(nil, nil, nil)")->getData();
+        $result = $mapper->getClient()->evaluate("return basis_select(nil, nil, nil)");
         $this->assertNull($result[0]);
     }
 
@@ -317,8 +317,8 @@ class TarantoolTest extends Test
             $this->assertCount($result, $select($keys));
         }
 
-        $spaceId = $mapper->getClient()->evaluate('return box.space.calendar.id')->getData()[0];
-        $indexId = $mapper->getClient()->evaluate('return box.space.calendar.index.year_month_day.id')->getData()[0];
+        $spaceId = $mapper->getClient()->evaluate('return box.space.calendar.id')[0];
+        $indexId = $mapper->getClient()->evaluate('return box.space.calendar.index.year_month_day.id')[0];
 
         $selectUsingSpaceAndIndexId = function($values) use ($spaceId, $indexId) {
             return $this->get(Select::class)($spaceId, $indexId, $values);
@@ -376,15 +376,15 @@ class TarantoolTest extends Test
                     :call('basis_select', {
                         'sector', 'id', ...
                     })
-            ", [$values])->getData()[0];
+            ", $values)[0];
         };
 
         foreach ($validations as [$result, $input]) {
             $this->assertCount($result, $selectUsingNetBox($input));
         }
 
-        $spaceId = $client->evaluate("return box.space.sector.id")->getData()[0];
-        $indexId = $client->evaluate("return box.space.sector.index.id.id")->getData()[0];
+        $spaceId = $client->evaluate("return box.space.sector.id")[0];
+        $indexId = $client->evaluate("return box.space.sector.index.id.id")[0];
 
         $selectUsingNetBoxWithoutNames = function($values) use ($client, $spaceId, $indexId) {
             return $client->evaluate("
@@ -392,7 +392,7 @@ class TarantoolTest extends Test
                     :call('basis_select', {
                         $spaceId, $indexId, ...
                     })
-            ", [$values])->getData()[0];
+            ", $values)[0];
         };
 
         foreach ($validations as [$result, $input]) {

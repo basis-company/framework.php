@@ -16,7 +16,6 @@ class Migrate extends Job
     public function run(Mapper $mapper, Bootstrap $bootstrap, Filesystem $fs, Application $app)
     {
         $mapper->getPlugin(Annotation::class)->migrate();
-        $mapper->getPlugin(Sequence::class)->initSchema();
 
         $migrations = [];
         foreach ($fs->listClasses('Migration') as $class) {

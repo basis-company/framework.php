@@ -4,13 +4,7 @@ namespace Basis\Provider;
 
 use Basis\Service;
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use Tarantool\Client\Connection\StreamConnection;
-use Tarantool\Client\Packer\PurePacker;
-use Tarantool\Client\Request\DeleteRequest;
-use Tarantool\Client\Request\InsertRequest;
-use Tarantool\Client\Request\ReplaceRequest;
-use Tarantool\Client\Request\UpdateRequest;
-use Tarantool\Mapper\Client;
+use Tarantool\Client\Client;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
@@ -40,19 +34,10 @@ class PoolProvider extends AbstractServiceProvider
 
                 if (in_array($name, $service->listServices())) {
                     $address = $service->getHost($name.'-db')->address;
-                    $connection = new StreamConnection('tcp://'.$address.':3301');
-                    $packer = new PurePacker();
-                    $client = new Client($connection, $packer);
-                    $client->disableRequest(DeleteRequest::class);
-                    $client->disableRequest(InsertRequest::class);
-                    $client->disableRequest(ReplaceRequest::class);
-                    $client->disableRequest(UpdateRequest::class);
-
+                    $client = Client::fromDsn('tcp://'.$address.':3301');
                     $mapper = new Mapper($client);
-
                     $mapper->getPlugin(Sequence::class);
                     $mapper->getPlugin(Spy::class);
-
                     $mapper->getPlugin(Temporal::class)
                         ->getAggregator()
                         ->setReferenceAggregation(false);

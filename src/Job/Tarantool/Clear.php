@@ -4,7 +4,8 @@ namespace Basis\Job\Tarantool;
 
 use Basis\Job;
 use Tarantool\Client\Client;
-use Tarantool\Client\Schema\Index;
+use Tarantool\Client\Schema\IndexIds;
+use Tarantool\Client\Schema\Criteria;
 use Basis\Filesystem;
 
 class Clear extends Job
@@ -23,9 +24,8 @@ class Clear extends Job
                 end
             end
         ");
-
-        $response = $space->select([], Index::SPACE_NAME);
-        $data = $response->getData();
+        
+        $data = $space->select(Criteria::key([]));
 
         foreach ($data as $row) {
             if ($row[1] == 0) {
@@ -36,7 +36,7 @@ class Clear extends Job
             }
         }
 
-        $schema = $client->getSpace('_schema')->select([], 0)->getData();
+        $schema = $client->getSpace('_schema')->select(Criteria::key([]));
         foreach ($schema as $tuple) {
             if (strpos($tuple[0], 'mapper-once') === 0) {
                 $client->getSpace('_schema')->delete([$tuple[0]]);

@@ -5,13 +5,8 @@ namespace Basis\Provider;
 use Basis\Config;
 use Basis\Filesystem;
 use League\Container\ServiceProvider\AbstractServiceProvider;
-use Tarantool\Client\Client as TarantoolClient;
-use Tarantool\Client\Connection\Connection;
-use Tarantool\Client\Connection\StreamConnection;
-use Tarantool\Client\Packer\Packer;
-use Tarantool\Client\Packer\PurePacker;
+use Tarantool\Client\Client;
 use Tarantool\Mapper\Bootstrap;
-use Tarantool\Mapper\Client;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin;
@@ -26,14 +21,9 @@ class TarantoolProvider extends AbstractServiceProvider
     protected $provides = [
         Bootstrap::class,
         Client::class,
-        Connection::class,
         Mapper::class,
-        Packer::class,
-        Pool::class,
         Schema::class,
         Spy::class,
-        StreamConnection::class,
-        TarantoolClient::class,
         Temporal::class,
     ];
 
@@ -44,14 +34,7 @@ class TarantoolProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Client::class, function () {
-            return new Client(
-                $this->getContainer()->get(Connection::class),
-                $this->getContainer()->get(Packer::class)
-            );
-        });
-
-        $this->getContainer()->share(Connection::class, function () {
-            return $this->getContainer()->get(StreamConnection::class);
+            return Client::fromDefaults();
         });
 
         $this->getContainer()->share(Mapper::class, function () {
@@ -83,17 +66,14 @@ class TarantoolProvider extends AbstractServiceProvider
             $mapper->application = $this->getContainer();
 
             $mapper->getPlugin(new class($mapper) extends Plugin {
-                public function afterInstantiate(Entity $entity)
+                public function afterInstantiate(Entity $entity) : Entity
                 {
                     $entity->app = $this->mapper->application;
+                    return $entity;
                 }
             });
 
             return $mapper;
-        });
-
-        $this->getContainer()->share(Packer::class, function () {
-            return new PurePacker();
         });
 
         $this->getContainer()->share(Schema::class, function () {
@@ -102,15 +82,6 @@ class TarantoolProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(Spy::class, function () {
             return $this->getContainer()->get(Mapper::class)->getPlugin(Spy::class);
-        });
-
-        $this->getContainer()->share(StreamConnection::class, function () {
-            $config = $this->getContainer()->get(Config::class);
-            return new StreamConnection($config['tarantool.connection'], $config['tarantool.params']);
-        });
-
-        $this->getContainer()->share(TarantoolClient::class, function () {
-            return $this->getContainer()->get(Client::class);
         });
 
         $this->getContainer()->share(Temporal::class, function () {
