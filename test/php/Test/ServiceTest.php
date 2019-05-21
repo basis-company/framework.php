@@ -58,7 +58,7 @@ class ServiceTest extends Test
             }
         }
 
-        $this->assertCount(2, $serviceRoutes);
+        $this->assertCount(3, $serviceRoutes);
         $this->assertContains('index/index', $serviceRoutes);
         $this->assertContains('dynamic/*', $serviceRoutes);
     }

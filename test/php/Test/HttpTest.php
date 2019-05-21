@@ -37,4 +37,10 @@ class HttpTest extends Test
         $meta = $this->app->dispatch('module.meta');
         $this->assertContains('index/index', $meta->routes);
     }
+
+    public function testResolver()
+    {
+        $http = $this->app->get(Http::class);
+        $this->assertSame('hello world!', $http->process("/index/hello"));
+    }
 }

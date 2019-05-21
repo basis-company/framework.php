@@ -8,6 +8,7 @@ use Basis\Config;
 use Basis\Context;
 use Basis\Converter;
 use Basis\Dispatcher;
+use Basis\Runner;
 use Basis\Filesystem;
 use Basis\Framework;
 use Basis\Http;
@@ -27,6 +28,7 @@ class CoreProvider extends AbstractServiceProvider
         Framework::class,
         Http::class,
         Lock::class,
+        Runner::class,
     ];
 
     public function register()
@@ -67,6 +69,10 @@ class CoreProvider extends AbstractServiceProvider
 
         $this->getContainer()->share(Http::class, function () {
             return new Http($this->getContainer()->get(Application::class));
+        });
+
+        $this->getContainer()->share(Runner::class, function () {
+            return new Runner($this->getContainer()->get(Application::class));
         });
 
         $this->getContainer()->share(Context::class, function () {
