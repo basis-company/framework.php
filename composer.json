@@ -13,7 +13,7 @@
         "ramsey/uuid": "3.8.0",
         "rybakit/msgpack": "v0.5.3",
         "smi2/phpclickhouse": "1.3.5",
-        "tarantool/mapper": "^4.5.1",
+        "tarantool/mapper": "^4.5.2",
         "tarantool/queue": "v0.8.0"
     },
     "require-dev": {
