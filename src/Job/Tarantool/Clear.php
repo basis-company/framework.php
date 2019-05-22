@@ -36,6 +36,11 @@ class Clear extends Job
             }
         }
 
+        $sequences = $client->getSpace('_sequence')->select(Criteria::key([]));
+        foreach ($sequences as $sequence) {
+            $client->evaluate('box.sequence.'.$sequence[2].':drop()');
+        }
+
         $schema = $client->getSpace('_schema')->select(Criteria::key([]));
         foreach ($schema as $tuple) {
             if (strpos($tuple[0], 'mapper-once') === 0) {
