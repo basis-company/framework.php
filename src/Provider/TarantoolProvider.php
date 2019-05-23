@@ -4,6 +4,7 @@ namespace Basis\Provider;
 
 use Basis\Config;
 use Basis\Filesystem;
+use Exception;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Tarantool\Client\Client;
 use Tarantool\Mapper\Bootstrap;
@@ -39,7 +40,10 @@ class TarantoolProvider extends AbstractServiceProvider
                 'uri' => $config['tarantool.connection'],
             ];
             $client = Client::fromOptions(array_merge($config['tarantool.params'], $params));
-            $client->evaluate("box.session.su('admin')");
+            try {
+                $client->evaluate("box.session.su('admin')");
+            } catch (Exception $e) {
+            }
             return $client;
         });
 
