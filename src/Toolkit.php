@@ -77,7 +77,7 @@ trait Toolkit
     protected function getQueue($tube)
     {
         $alias = "queue.$tube";
-        if (!$this->app->hasShared($alias, true)) {
+        if (!$this->app->hasInstance($alias, true)) {
             $client = $this->getMapper()->getClient();
             $client->evaluate("
                 if queue == nil then
