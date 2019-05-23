@@ -12,6 +12,8 @@ use Tarantool\Mapper\Repository;
 
 class Application extends Container
 {
+    private $reflection;
+
     public function __construct(string $root)
     {
         parent::__construct();
@@ -64,7 +66,7 @@ class Application extends Container
 
     public function get($alias, bool $new = false) : object
     {
-        if (!$this->has($alias)) {
+        if (!$this->hasInstance($alias)) {
             $instance = null;
             if (is_subclass_of($alias, Procedure::class)) {
                 $instance = $this->get(Mapper::class)
@@ -89,6 +91,20 @@ class Application extends Container
         return parent::get($alias, $new);
     }
 
+    public function hasInstance($id) : bool
+    {
+        if ($this->definitions->has($id)) {
+            return true;
+        }
+        if ($this->definitions->hasTag($id)) {
+            return true;
+        }
+        if ($this->providers->provides($id)) {
+            return true;
+        }
+        return false;
+    }
+
     public function has($id) : bool
     {
         if ($this->definitions->has($id)) {
@@ -98,6 +114,9 @@ class Application extends Container
             return true;
         }
         if ($this->providers->provides($id)) {
+            return true;
+        }
+        if ($this->reflection && $this->reflection->has($id)) {
             return true;
         }
         return false;

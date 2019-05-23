@@ -11,7 +11,7 @@ class Hello extends Job
 {
     public $name = 'world';
 
-    public function run()
+    public function run(HelloSomebody $dependency)
     {
         if ($this->name === 'bazyaba') {
             $this->confirm('bazyaba?');
