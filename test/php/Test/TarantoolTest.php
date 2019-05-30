@@ -38,6 +38,10 @@ class TarantoolTest extends Test
         $web = $this->get(Pool::class)->get('web');
         $this->assertCount(3, $web->find('services'));
         $this->assertCount(1, $web->find('services', ['name' => 'web']));
+        $this->assertCount(3, $this->find('web.services'));
+        $this->assertCount(1, $this->find('web.services', ['name' => 'web']));
+
+        $this->assertSame($this->getRepository('web.services'), $this->get(Pool::class)->get('web')->getRepository('services'));
 
         $tester = $this->get(Pool::class)->get('tester');
         $this->assertCount(0, $tester->find('data', ['id' => 2]));

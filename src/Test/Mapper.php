@@ -67,4 +67,14 @@ class Mapper
             };
         }
     }
+
+    protected $repositores = [];
+
+    public function getRepository($space)
+    {
+        if (!array_key_exists($space, $this->repositores)) {
+            $this->repositores[$space] = new Repository($this, $space);
+        }
+        return $this->repositores[$space];
+    }
 }
