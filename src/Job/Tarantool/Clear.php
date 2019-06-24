@@ -31,14 +31,14 @@ class Clear extends Job
             if ($row[0] >= 512) {
                 // user space
                 if (strpos($row[2], '_queue') === false) {
-                    $client->evaluate('box.space.'.$row[2].':drop()');
+                    $client->evaluate('box.space["'.$row[2].'"]:drop()');
                 }
             }
         }
 
         $sequences = $client->getSpace('_sequence')->select(Criteria::key([]));
         foreach ($sequences as $sequence) {
-            $client->evaluate('box.sequence.'.$sequence[2].':drop()');
+            $client->evaluate('box.sequence["'.$sequence[2].'"]:drop()');
         }
 
         $schema = $client->getSpace('_schema')->select(Criteria::key([]));
