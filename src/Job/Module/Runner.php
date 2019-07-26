@@ -30,6 +30,6 @@ class Runner extends Job
             echo "time: ", microtime(true) - $start, PHP_EOL;
 
             echo json_encode($result, JSON_PRETTY_PRINT), PHP_EOL;
-            usleep($this->delay * 1000);
+            usleep($delay * 1000);
         }
     }}
