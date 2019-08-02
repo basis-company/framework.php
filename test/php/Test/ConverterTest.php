@@ -8,6 +8,20 @@ use Basis\Test;
 
 class ConverterTest extends Test
 {
+    public function testPlural()
+    {
+        $converter = $this->get(Converter::class);
+        $forms = ['яблоко', 'яблока', 'яблок'];
+
+        $this->assertSame($converter->getPluralForm(0, $forms), 'яблок');
+        $this->assertSame($converter->getPluralForm(1, $forms), 'яблоко');
+        $this->assertSame($converter->getPluralForm(2, $forms), 'яблока');
+        $this->assertSame($converter->getPluralForm(5, $forms), 'яблок');
+        $this->assertSame($converter->getPluralForm(21, $forms), 'яблоко');
+        $this->assertSame($converter->getPluralForm(23, $forms), 'яблока');
+        $this->assertSame($converter->getPluralForm(25, $forms), 'яблок');
+    }
+
     public function testDates()
     {
         $this->assertSame(time(), $this->get(Converter::class)->getTimestamp('now'));
