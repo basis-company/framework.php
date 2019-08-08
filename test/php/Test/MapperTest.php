@@ -51,5 +51,13 @@ class MapperTest extends Test
         $this->getRepository('flow.tracker')->remove($this->findOne('flow.tracker'));
 
         $this->assertCount(0, $this->find('flow.tracker'));
+
+        $tracker = $this->create('flow.tracker', []);
+        $tracker->status = 'ready';
+        $tracker->save();
+        $this->assertSame($tracker->id, 1);
+
+        $tracker = $this->findOne('flow.tracker', [ 'status' => 'ready']);
+        $this->assertSame($tracker->status, 'ready');
     }
 }

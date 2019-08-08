@@ -20,30 +20,14 @@ class Mapper
     public function create($space, $params)
     {
         $key = $this->serviceName.'.'.$space;
-        if (array_key_exists($key, $this->test->data)) {
-            return new class($params, $this->test, $key) {
-                private $data;
-                private $test;
-                private $key;
-                public function __construct($data, $test, $key)
-                {
-                    $this->data = $data;
-                    $this->test = $test;
-                    $this->key = $key;
-                }
-                public function save()
-                {
-                    if (!array_key_exists('id', $this->data)) {
-                        $this->data['id'] = 1;
-                        foreach ($this->test->data[$this->key] as $candidate) {
-                            $this->data['id'] = max($this->data['id'], $candidate['id'] + 1);
-                        }
-                    }
-                    $this->test->data[$this->key][] = $this->data;
-                    return (object) $this->data;
-                }
-            };
+        if (!array_key_exists($key, $this->test->data)) {
+            throw new Exception("No data container for $key");
         }
+        $instance = new Entity($this->test, $key);
+        foreach ($params as $k => $v) {
+            $instance->$k = $v;
+        }
+        return $instance;
     }
 
     public function find(string $space, $params = [])
@@ -52,7 +36,7 @@ class Mapper
         if (array_key_exists($key, $this->test->data)) {
             $data = $this->test->data[$key];
             foreach ($data as $i => $v) {
-                if (count($params) && array_intersect_assoc($params, $v) != $params) {
+                if (count($params) && array_intersect_assoc($params, get_object_vars($v)) != $params) {
                     unset($data[$i]);
                     continue;
                 }
@@ -72,7 +56,7 @@ class Mapper
         }
         if (array_key_exists($key, $this->test->data)) {
             foreach ($this->test->data[$key] as $candidate) {
-                if (!count($params) || array_intersect_assoc($params, $candidate) == $params) {
+                if (!count($params) || array_intersect_assoc($params, get_object_vars($candidate)) == $params) {
                     return (object) $candidate;
                 }
             }
@@ -118,11 +102,10 @@ class Mapper
         $key = $this->serviceName.'.'.$space;
         if (array_key_exists($key, $this->test->data)) {
             foreach ($this->test->data[$key] as $i => $v) {
-                if (count($params) && array_intersect_assoc($params, $v) == $params) {
+                if (count($params) && array_intersect_assoc($params, get_object_vars($v)) == $params) {
                     unset($this->test->data[$key][$i]);
                 }
             }
-            $this->test->data[$key] = array_values($this->test->data[$key]);
         }
     }
 }
