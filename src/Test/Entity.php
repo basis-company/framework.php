@@ -29,4 +29,12 @@ class Entity
         $this->_test->data[$this->_key][$this->id] = $this;
         return $this;
     }
+
+    public function __debugInfo()
+    {
+        $info = get_object_vars($this);
+        unset($info['_test']);
+        unset($info['_key']);
+        return $info;
+    }
 }
