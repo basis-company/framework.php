@@ -53,6 +53,13 @@ abstract class Test extends TestCase
                 return new Test\Mapper($this, $service);
             }
         });
+
+        foreach ($this->data ?: [] as $space => $rows) {
+            $this->data[$space] = [];
+            foreach ($rows as $row) {
+                $pool->getRepository($space)->create($row)->save();
+            }
+        }
     }
 
     public function setup()

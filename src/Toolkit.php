@@ -16,7 +16,7 @@ trait Toolkit
         $this->app = $app;
     }
 
-    protected function create(string $space, array $data) : Entity
+    protected function create(string $space, array $data)
     {
         return $this->getRepository($space)->create($data)->save();
     }
@@ -31,17 +31,17 @@ trait Toolkit
         return $this->getRepository($space)->find($params);
     }
 
-    protected function findOne(string $space, $params = []) : ?Entity
+    protected function findOne(string $space, $params = [])
     {
         return $this->getRepository($space)->findOne($params);
     }
 
-    protected function findOrCreate(string $space, $params = []) : Entity
+    protected function findOrCreate(string $space, $params = [])
     {
         return $this->getRepository($space)->findOrCreate($params);
     }
 
-    protected function findOrFail(string $space, $params = []) : Entity
+    protected function findOrFail(string $space, $params = [])
     {
         return $this->getRepository($space)->findOrFail($params);
     }

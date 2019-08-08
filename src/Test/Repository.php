@@ -17,4 +17,9 @@ class Repository
     {
         return $this->mapper->$method($this->space, ...$args);
     }
+
+    public function getMapper()
+    {
+        return $this->mapper;
+    }
 }
