@@ -59,5 +59,13 @@ class MapperTest extends Test
 
         $tracker = $this->findOne('flow.tracker', [ 'status' => 'ready']);
         $this->assertSame($tracker->status, 'ready');
+
+        $tracker = $this->findOrCreate('flow.tracker', [ 'id' => 27, 'author' => 'nekufa' ]);
+        $this->assertNotNull($tracker);
+        $this->assertSame($tracker->id, 27);
+
+        $trackerByAuthor = $this->findOrCreate('flow.tracker', [ 'author' => 'nekufa' ]);
+        $this->assertNotNull($trackerByAuthor);
+        $this->assertSame($tracker, $trackerByAuthor);
     }
 }

@@ -63,6 +63,14 @@ class Mapper
         }
     }
 
+    public function findOrCreate(string $space, $params = [])
+    {
+        if (!$this->findOne($space, $params)) {
+            $this->create($space, $params)->save();
+        }
+        return $this->findOne($space, $params);
+    }
+
     public function findOrFail(string $space, $params = [])
     {
         $result = $this->findOne($space, $params);
