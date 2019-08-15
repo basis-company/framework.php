@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use GuzzleHttp\Client;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
@@ -103,6 +104,22 @@ trait Toolkit
     protected function insert(string $table, array $data, array $headers)
     {
         return $this->get(Clickhouse::class)->insert($table, $data, $headers);
+    }
+
+    protected function upload(string $filename, $contents) : string
+    {
+        $client = new Client();
+        $response = $client->request('POST', 'http://storage/storage/upload', [
+            'multipart' => [
+                [
+                    'name' => 'file',
+                    'filename' => $filename,
+                    'contents' => $contents,
+                ],
+            ]
+        ]);
+
+        return json_decode($response->getBody())->hash[0];
     }
 
     public function __debugInfo()
