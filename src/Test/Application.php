@@ -7,6 +7,7 @@ use Basis\Cache;
 use Basis\Context;
 use Basis\Converter;
 use Basis\Runner;
+use Basis\Storage as BaseStorage;
 use Basis\Test;
 use Exception;
 
@@ -17,7 +18,7 @@ class Application extends BaseApplication
     public function __construct(Test $test)
     {
         parent::__construct(getcwd());
-
+        $this->share(BaseStorage::class, $this->get(Storage::class));
         $this->test = $test;
     }
 

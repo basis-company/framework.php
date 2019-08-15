@@ -2,7 +2,6 @@
 
 namespace Basis;
 
-use GuzzleHttp\Client;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
@@ -108,18 +107,12 @@ trait Toolkit
 
     protected function upload(string $filename, $contents) : string
     {
-        $client = new Client();
-        $response = $client->request('POST', 'http://storage/storage/upload', [
-            'multipart' => [
-                [
-                    'name' => 'file',
-                    'filename' => $filename,
-                    'contents' => $contents,
-                ],
-            ]
-        ]);
+        return $this->get(Storage::class)->upload($filename, $contents);
+    }
 
-        return json_decode($response->getBody())->hash[0];
+    protected function download(string $hash)
+    {
+        return $this->get(Storage::class)->download($hash);
     }
 
     public function __debugInfo()
