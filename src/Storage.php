@@ -31,6 +31,6 @@ class Storage
 
     public function url(string $hash) : string
     {
-        return "http://$this->hostname/storage/get?=$hash";
+        return "http://$this->hostname/storage/get?$hash";
     }
 }
