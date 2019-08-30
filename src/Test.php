@@ -19,6 +19,16 @@ abstract class Test extends TestCase
     public $mocks = [];
     public $data = [];
 
+    public function actAs($context)
+    {
+        if (is_numeric($context)) {
+            $context = [
+                'person' => $context,
+            ];
+        }
+        return $this->get(Context::class)->reset($context);
+    }
+
     public function __construct()
     {
         parent::__construct();

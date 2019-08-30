@@ -17,11 +17,23 @@ class Context
     public $parent;
     public $event;
 
-    public function apply($data)
+    public function reset($context = []) : self
+    {
+        foreach ($this as $k => $_) {
+            $this->$k = null;
+        }
+        $this->apply($context);
+
+        return $this;
+    }
+
+    public function apply($data) : self
     {
         foreach ($data as $k => $v) {
             $this->$k = $v;
         }
+
+        return $this;
     }
 
     public function getPerson()
