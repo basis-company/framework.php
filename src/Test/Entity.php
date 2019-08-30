@@ -3,8 +3,9 @@
 namespace Basis\Test;
 
 use Basis\Test;
+use Tarantool\Mapper\Entity as MapperEntity;
 
-class Entity 
+class Entity extends MapperEntity
 {
     public $id;
 
@@ -17,7 +18,7 @@ class Entity
         $this->_key = $key;
     }
 
-    public function save()
+    public function save() : MapperEntity
     {
         if (!$this->id) {
             $max = 0;

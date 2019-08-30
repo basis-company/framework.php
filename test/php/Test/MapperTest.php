@@ -12,7 +12,20 @@ class MapperTest extends Test
         'flow.tracker' => [
             [], // use id generator
         ],
+        'flow.status' => [],
     ];
+
+    public function testEntityInheritance()
+    {
+        $status = $this->create('flow.status', []);
+        $this->create('flow.tracker', [
+            'status' => $status // create reference for id
+        ]);
+        $data = $this->find('flow.tracker', [
+            'status' => $status->id
+        ]);
+        $this->assertCount(1, $data);
+    }
 
     public function testFakeMapper()
     {

@@ -5,6 +5,7 @@ namespace Basis\Test;
 use Basis\Test;
 use Exception;
 use Tarantool\Mapper\Plugin\Spy;
+use Tarantool\Mapper\Entity as MapperEntity;
 
 class Mapper
 {
@@ -25,7 +26,7 @@ class Mapper
         }
         $instance = new Entity($this->test, $key);
         foreach ($params as $k => $v) {
-            $instance->$k = $v;
+            $instance->$k = $v instanceof MapperEntity ? $v->id : $v;
         }
         return $instance;
     }
