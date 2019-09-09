@@ -4,6 +4,7 @@ namespace Basis\Provider;
 
 use Basis\Config;
 use Basis\Filesystem;
+use Basis\Service;
 use Exception;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 use Tarantool\Client\Client;
@@ -74,6 +75,8 @@ class TarantoolProvider extends AbstractServiceProvider
                 ->setReferenceAggregation(false);
 
             $mapper->application = $this->getContainer();
+
+            $mapper->serviceName = $this->getContainer()->get(Service::class)->getName();
 
             $mapper->getPlugin(new class($mapper) extends Plugin {
                 public function afterInstantiate(Entity $entity) : Entity

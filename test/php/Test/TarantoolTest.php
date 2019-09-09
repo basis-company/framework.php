@@ -215,6 +215,8 @@ class TarantoolTest extends Test
 
     public function testPoolConfiguration()
     {
+        $this->assertSame($this->getMapper()->serviceName, 'test');
+
         $pool = $this->get(Pool::class);
 
         $this->mock('web.services')->willReturn(['services' => ['guard']]);
