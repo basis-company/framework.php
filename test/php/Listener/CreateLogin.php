@@ -6,7 +6,7 @@ class CreateLogin
 {
     public static $events = [
         'person.created',
-        'person.person.created',
+        'person.person.*',
     ];
 
     public $event;

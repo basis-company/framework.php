@@ -36,8 +36,8 @@ class EventTest extends Test
         $this->assertArrayHasKey('person.created', $subscription);
         $this->assertSame($subscription['person.created'], ['CreateLogin']);
 
-        $this->assertArrayHasKey('person.person.created', $subscription);
-        $this->assertSame($subscription['person.person.created'], ['CreateLogin']);
+        $this->assertArrayHasKey('person.person.*', $subscription);
+        $this->assertSame($subscription['person.person.*'], ['CreateLogin']);
     }
 
     public function testProcessing()
@@ -56,8 +56,8 @@ class EventTest extends Test
         $this->assertSame($response->data->CreateLogin->msg, 'person was created with name nekufa');
 
         $_REQUEST = array_merge($_REQUEST, [
-            'event' => 'person.person.created',
-            'context' => json_encode([ 'name' => 'nekufa' ]),
+            'event' => 'person.person.updated',
+            'context' => json_encode([ 'name' => 'dmitry' ]),
         ]);
 
         $result = $this->get(Http::class)->process('/event');
@@ -66,6 +66,6 @@ class EventTest extends Test
         $this->assertTrue($response->success);
         $this->assertNotNull($response->data->CreateLogin);
 
-        $this->assertSame($response->data->CreateLogin->msg, 'person.person was created with name nekufa');
+        $this->assertSame($response->data->CreateLogin->msg, 'person.person was updated with name dmitry');
     }
 }

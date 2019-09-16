@@ -24,7 +24,7 @@ class BootstrapTest extends Test
         // event.subscribe was called
         $this->assertCount(2, $this->subscriptions);
         $this->assertSame($this->subscriptions[0]->event, 'person.created');
-        $this->assertSame($this->subscriptions[1]->event, 'person.person.created');
+        $this->assertSame($this->subscriptions[1]->event, 'person.person.*');
         $this->assertSame($this->subscriptions[0]->service, 'test');
 
         // cache exists
