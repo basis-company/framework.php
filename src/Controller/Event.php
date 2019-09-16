@@ -83,8 +83,13 @@ class Event
             throw new Exception('Invalid context');
         }
 
+        $parts = explode('.', $_REQUEST['event']);
+        $action = array_pop($parts);
+
         return (object) [
             'event' => $_REQUEST['event'],
+            'space' => implode('.', $parts),
+            'action' => $action,
             'context' => $context,
         ];
     }
