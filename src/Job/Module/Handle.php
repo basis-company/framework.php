@@ -41,6 +41,10 @@ class Handle extends Job
 
         $this->get(Context::class)->event = $this->eventId;
 
+        $parts = explode('.', $this->event);
+        $action = array_pop($parts);
+        $space = implode('.', $parts);
+
         $listeners = [];
         foreach ($patterns as $pattern) {
             foreach ($subscription[$pattern] as $listener) {
@@ -49,6 +53,8 @@ class Handle extends Job
                     $listeners[$listener]->event = $this->event;
                     $listeners[$listener]->eventId = $this->eventId;
                     $listeners[$listener]->context = $this->context;
+                    $listeners[$listener]->space = $space;
+                    $listeners[$listener]->action = $action;
                 }
             }
         }
