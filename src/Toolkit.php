@@ -78,7 +78,12 @@ trait Toolkit
     {
         $alias = "queue.$tube";
         if (!$this->app->hasInstance($alias, true)) {
-            $client = $this->getMapper()->getClient();
+            if (strpos($tube, '.') !== false) {
+                [$service, $tube] = explode('.', $tube);
+                $client = $this->get(Pool::class)->get($service)->getClient();
+            } else {
+                $client = $this->getMapper()->getClient();
+            }
             $client->evaluate("
                 if queue == nil then
                     queue = require('queue')
