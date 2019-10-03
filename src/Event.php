@@ -9,23 +9,12 @@ use Tarantool\Mapper\Pool;
 
 class Event
 {
-    private $app;
-    private $filesystem;
-    private $service;
-    private $pool;
-
-    public function __construct(Application $app, Service $service, Pool $pool, Filesystem $filesystem)
-    {
-        $this->app = $app;
-        $this->filesystem = $filesystem;
-        $this->service = $service;
-        $this->pool = $pool;
-    }
+    use Toolkit;
 
     public function getSubscription()
     {
         $subscription = [];
-        foreach ($this->filesystem->listClasses('Listener') as $class) {
+        foreach ($this->get(Filesystem::class)->listClasses('Listener') as $class) {
             $reflection = new ReflectionClass($class);
             if ($reflection->isAbstract()) {
                 continue;
@@ -44,7 +33,7 @@ class Event
     public function fire(string $event, $context)
     {
         $this->app->dispatch('event.fire', [
-            'event'   => $this->service->getName().'.'.$event,
+            'event'   => $this->get(Service::class)->getName().'.'.$event,
             'context' => $context,
         ]);
     }
@@ -57,23 +46,35 @@ class Event
         return false;
     }
 
+    public function hasChanges()
+    {
+        $hasChanges = false;
+
+        foreach ($this->get(Pool::class)->getMappers() as $mapper) {
+            if ($mapper->getPlugin(Spy::class)->hasChanges()) {
+                $hasChanges = true;
+            }
+        }
+        return $hasChanges;
+    }
+
     public function fireChanges(string $producer)
     {
-        $this->pool->get($this->service->getName());
+        $this->get(Pool::class)->get($this->get(Service::class)->getName());
 
         $dispatcher = $this->app->get(Dispatcher::class);
         $changed = false;
 
-        foreach ($this->pool->getMappers() as $mapper) {
+        foreach ($this->get(Pool::class)->getMappers() as $mapper) {
             $spy = $mapper->getPlugin(Spy::class);
             if ($spy->hasChanges()) {
                 // reduce changes list
                 $changes = $spy->getChanges();
                 foreach ($changes as $action => $collection) {
                     foreach ($collection as $space => $entities) {
-                        $event = $this->service->getName().'.'.$space.'.'.$action;
+                        $event = $this->get(Service::class)->getName().'.'.$space.'.'.$action;
 
-                        if (!$this->service->eventExists($event)) {
+                        if (!$this->get(Service::class)->eventExists($event)) {
                             unset($collection[$space]);
                         }
                     }
@@ -84,11 +85,13 @@ class Event
 
                 if (count(get_object_vars($changes))) {
                     $changed = true;
-                    $dispatcher->send('event.changes', [
+                    $data = $this->get(Converter::class)->toArray([
                         'changes'  => $changes,
                         'producer' => $producer,
                         'service'  => $mapper->serviceName,
+                        'context' => $this->get(Context::class),
                     ]);
+                    $this->getQueue('event.changes')->put($data);
                 }
 
                 $spy->reset();

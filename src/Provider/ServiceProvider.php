@@ -22,10 +22,7 @@ class ServiceProvider extends AbstractServiceProvider
     {
         $this->getContainer()->share(Event::class, function () {
             $app = $this->getContainer()->get(Application::class);
-            $service = $this->getContainer()->get(Service::class);
-            $pool = $this->getContainer()->get(Pool::class);
-            $filesystem = $this->getContainer()->get(Filesystem::class);
-            return new Event($app, $service, $pool, $filesystem);
+            return new Event($app);
         });
 
         $this->getContainer()->share(Service::class, function () {
