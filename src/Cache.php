@@ -31,6 +31,10 @@ class Cache
 
     public function exists($key)
     {
+        if (!is_string($key)) {
+            $key = md5(json_encode($key));
+        }
+        
         if (array_key_exists($key, $this->cache)) {
             return $this->cache[$key]['expire'] > Carbon::now()->getTimestamp();
         }
