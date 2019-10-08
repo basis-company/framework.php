@@ -3,6 +3,7 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "require": {
+        "basis-company/opentelemetry": "^0.0.3",
         "guzzlehttp/guzzle": "6.3.3",
         "league/container": "3.2.2",
         "marcj/topsort": "1.1",

@@ -8,6 +8,9 @@ use Basis\Event;
 use Basis\Service;
 use Basis\Toolkit;
 use Exception;
+use OpenTelemetry\Tracing\Tracer;
+use OpenTelemetry\Transport;
+use OpenTelemetry\Exporter;
 
 class Api
 {
@@ -35,6 +38,7 @@ class Api
             ];
         }
 
+        $tracer = $this->get(Tracer::class);
         if ($data->context) {
             $this->get(Context::class)->apply($data->context);
         }
@@ -43,12 +47,10 @@ class Api
 
         $response = [];
         foreach ($request as $rpc) {
-            $start = microtime(1);
             $result = $this->process($rpc);
             if (is_null($result)) {
                 $result = [];
             }
-            $result['timing'] = microtime(1) - $start;
             if (property_exists($rpc, 'tid')) {
                 $result['tid'] = $rpc->tid;
             }
@@ -56,9 +58,32 @@ class Api
         }
 
         try {
-            $this->get(Event::class)->fireChanges($request[0]->job);
+            if ($this->get(Event::class)->hasChanges()) {
+                $active = $tracer->getActiveSpan();
+                foreach ($tracer->getSpans() as $candidate) {
+                    if ($candidate->getParentSpanContext() == $active->getSpanContext()) {
+                        $last = $candidate;
+                        break;
+                    }
+                }
+                $last->setInterval($last->getStart(), 0);
+                $tracer->setActive($last);
+
+                $changesSpan = $tracer->createSpan('event.changes');
+                $this->get(Event::class)->fireChanges($request[0]->job);
+                $changesSpan->end();
+
+                $last->end();
+            }
         } catch (Exception $e) {
             return ['success' => false, 'message' => 'Fire changes failure: '.$e->getMessage()];
+        }
+
+        try {
+            $response[0]['timing'] = microtime(true) - $tracer->getActiveSpan()->getStart();
+            $this->get(Exporter::class)->flush($tracer, $this->get(Transport::class));
+        } catch (Exception $e) {
+            // no traces is not a problem
         }
 
         return is_array($data) ? $response : $response[0];

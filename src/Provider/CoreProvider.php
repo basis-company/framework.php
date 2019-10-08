@@ -57,10 +57,8 @@ class CoreProvider extends AbstractServiceProvider
         });
 
         $this->getContainer()->share(Dispatcher::class, function () {
-            $context = $this->getContainer()->get(Context::class);
-            $client = $this->getContainer()->get(GuzzleHttpClient::class);
-            $service = $this->getContainer()->get(Service::class);
-            return new Dispatcher($client, $context, $service);
+            $app = $this->getContainer()->get(Application::class);
+            return new Dispatcher($app);
         });
 
         $this->getContainer()->share(Framework::class, function () {

@@ -5,19 +5,11 @@ namespace Basis;
 use Basis\Context;
 use Exception;
 use GuzzleHttp\Client;
+use OpenTelemetry\Tracing\Tracer;
 
 class Dispatcher
 {
-    protected $client;
-    protected $context;
-    protected $service;
-
-    public function __construct(Client $client, Context $context, Service $service)
-    {
-        $this->client = $client;
-        $this->context = $context;
-        $this->service = $service;
-    }
+    use Toolkit;
 
     public function dispatch(string $job, array $params = [], string $service = null, $context = null)
     {
@@ -39,14 +31,22 @@ class Dispatcher
             $context = $this->getContext();
         }
 
-        $response = $this->client->postAsync($url, [
+        $span = $this->get(Tracer::class)
+            ->getActiveSpan()
+            ->getSpanContext();
+
+        $response = $this->get(Client::class)->postAsync($url, [
             'multipart' => [
                 [
                     'name' => 'rpc',
                     'contents' => json_encode([
-                        'context' => $context,
                         'job'     => $job,
                         'params'  => $params,
+                        'context' => $context,
+                        'span' => [
+                            'traceId' => $span->getTraceId(),
+                            'spanId' => $span->getSpanId(),
+                        ],
                     ])
                 ]
             ]
@@ -73,7 +73,7 @@ class Dispatcher
 
     protected function getContext() : array
     {
-        $context = get_object_vars($this->context);
+        $context = get_object_vars($this->get(Context::class));
     
         if (array_key_exists('HTTP_X_REAL_IP', $_SERVER)) {
             $context['host'] = $_SERVER['HTTP_X_REAL_IP'];
@@ -93,7 +93,7 @@ class Dispatcher
 
     protected function getUrl(string $service, string $job) : string
     {
-        $host = $this->service->getHost($service)->address;
+        $host = $this->get(Service::class)->getHost($service)->address;
         return "http://$host/api/" . str_replace('.', '/', $job);
     }
 

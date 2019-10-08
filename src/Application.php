@@ -4,6 +4,7 @@ namespace Basis;
 
 use League\Container\Container;
 use League\Container\ReflectionContainer;
+use OpenTelemetry\Tracing\Tracer;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Annotation;
 use Tarantool\Mapper\Plugin\Procedure as ProcedurePlugin;
@@ -12,6 +13,8 @@ use Tarantool\Mapper\Repository;
 
 class Application extends Container
 {
+    use Toolkit;
+
     private $reflection;
 
     public function __construct(string $root)
@@ -27,6 +30,7 @@ class Application extends Container
         $this->addServiceProvider(Provider\ClickhouseProvider::class);
         $this->addServiceProvider(Provider\CoreProvider::class);
         $this->addServiceProvider(Provider\GuzzleProvider::class);
+        $this->addServiceProvider(Provider\OpenTelemetryProvider::class);
         $this->addServiceProvider(Provider\PoolProvider::class);
         $this->addServiceProvider(Provider\PredisProvider::class);
         $this->addServiceProvider(Provider\ServiceProvider::class);
@@ -37,6 +41,9 @@ class Application extends Container
         }
 
         $this->delegate($this->reflection = new ReflectionContainer());
+
+        // toolkit helpers fix
+        $this->app = $this;
     }
 
     public function dispatch(string $job, array $params = [], string $service = null)
@@ -49,18 +56,27 @@ class Application extends Container
 
         return $this->get(Cache::class)
             ->wrap([$job, $params, $service], function() use ($job, $params, $service) {
-                $runner = $this->get(Runner::class);
-                if ($service === null) {
-                    if ($runner->hasJob($job)) {
-                        return $runner->dispatch($job, $params);
-                    }
-                    if (explode('.', $job)[0] == $this->get(Service::class)->getName()) {
-                        return $runner->dispatch($job, $params);
+                $span = $this->get(Tracer::class)->createSpan($job);
+                foreach ($params as $k => $v) {
+                    if (is_numeric($v) || is_string($v)) {
+                        $span->setAttribute($k, $v);
                     }
                 }
 
+                $serviceName = $this->get(Service::class)->getName();
                 $dispatcher = $this->get(Dispatcher::class);
-                return $dispatcher->dispatch($job, $params, $service);
+                $runner = $this->get(Runner::class);
+
+                if ($service === null && $runner->hasJob($job)) {
+                    $result = $runner->dispatch($job, $params);
+                } elseif ($service === null && explode('.', $job)[0] == $serviceName) {
+                    $result = $runner->dispatch($job, $params);
+                } else {
+                    $result = $dispatcher->dispatch($job, $params, $service);
+                }
+                
+                $span->end();
+                return $result;
             });
     }
 

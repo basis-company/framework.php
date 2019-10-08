@@ -14,9 +14,25 @@ class Meta extends Job
         $routes = [];
         foreach ($fs->listClasses('Controller') as $class) {
             $nick = substr(strtolower($class), 11);
-            $methods = (new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC);
+            $reflectionClass =new ReflectionClass($class);
+            $traits = $reflectionClass->getTraits();
+            $ignore = [];
+            if (count($traits)) {
+                foreach ($traits as $trait) {
+                    foreach ($trait->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+                        if ($method->isConstructor() || $method->getName() == '__debugInfo') {
+                            continue;
+                        }
+                        $ignore[] = $method->getName();
+                    }
+                }
+            }
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
                 if ($method->isConstructor() || $method->getName() == '__debugInfo') {
+                    continue;
+                }
+                if (in_array($method->name, $ignore)) {
                     continue;
                 }
                 if ($method->name == '__process') {

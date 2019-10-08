@@ -74,7 +74,7 @@ trait Toolkit
         return $this->get(Mapper::class)->getRepository($space);
     }
 
-    protected function getQueue($tube)
+    public function getQueue($tube)
     {
         $alias = "queue.$tube";
         if (!$this->app->hasInstance($alias, true)) {
