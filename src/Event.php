@@ -3,6 +3,7 @@
 namespace Basis;
 
 use Basis\Dispatcher;
+use Exception;
 use ReflectionClass;
 use Tarantool\Mapper\Plugin\Spy;
 use Tarantool\Mapper\Pool;
@@ -91,7 +92,14 @@ class Event
                         'service'  => $mapper->serviceName,
                         'context' => $this->get(Context::class),
                     ]);
-                    $this->getQueue('event.changes')->put($data);
+                    try {
+                        // put changes to queue
+                        $this->getQueue('event.changes')->put($data);
+                    } catch (Exception $e) {
+                        // use legacy https transport
+                        // todo split data into chunks
+                        $dispatcher->send('event.changes', $data);
+                    }
                 }
 
                 $spy->reset();
