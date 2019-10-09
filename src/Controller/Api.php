@@ -66,14 +66,18 @@ class Api
                         break;
                     }
                 }
-                $last->setInterval($last->getStart(), 0);
-                $tracer->setActive($last);
+                if ($last) {
+                    $last->setInterval($last->getStart(), 0);
+                    $tracer->setActive($last);
+                }
 
                 $changesSpan = $tracer->createSpan('event.changes');
                 $this->get(Event::class)->fireChanges($request[0]->job);
                 $changesSpan->end();
 
-                $last->end();
+                if ($last) {
+                    $last->end();
+                }
             }
         } catch (Exception $e) {
             return ['success' => false, 'message' => 'Fire changes failure: '.$e->getMessage()];
