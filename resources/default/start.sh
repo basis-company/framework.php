@@ -5,6 +5,7 @@ if [[ ! -z "${BASIS_JOB}" ]]; then
     ./vendor/bin/console module.runner
   done
 else
- ./vendor/bin/console module.bootstrap
+  echo "ServerName $SERVICE_NAME" > /etc/apache2/conf-enabled/server-name.conf
+  ./vendor/bin/console module.bootstrap
   apache2-foreground
 fi
