@@ -51,6 +51,9 @@ class Event
     {
         $hasChanges = false;
 
+        $serviceName = $this->get(Service::class)->getName();
+        $this->get(Pool::class)->get($serviceName);
+
         foreach ($this->get(Pool::class)->getMappers() as $mapper) {
             if ($mapper->getPlugin(Spy::class)->hasChanges()) {
                 $hasChanges = true;

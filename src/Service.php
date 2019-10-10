@@ -56,7 +56,7 @@ class Service
         $types = $this->app->get(Pool::class)->get('event')->find('type');
 
         foreach ($types as $type) {
-            if ($this->eventMatch($event, $type->nick)) {
+            if (!$type->ignore && $this->eventMatch($event, $type->nick)) {
                 return $this->eventExistence[$event] = true;
             }
         }
