@@ -16,6 +16,7 @@ class Assets extends Job
     {
         $artifacts = [
             'js' => $this->map('js'),
+            'php' => $this->map('php'),
             'styl' => $this->map('styl'),
         ];
 
