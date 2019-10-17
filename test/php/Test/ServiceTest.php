@@ -96,8 +96,8 @@ class ServiceTest extends Test
                 return new class {
                     public function find() {
                         return [
-                            (object) ['nick' => 'test.*.*'],
-                            (object) ['nick' => 'web.service.updated'],
+                            (object) ['nick' => 'test.*.*', 'ignore' => false],
+                            (object) ['nick' => 'web.service.updated', 'ignore' => false],
                         ];
                     }
                 };
