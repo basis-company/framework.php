@@ -22,14 +22,18 @@ class Runner extends Job
         $delay = +getenv('BASIS_DELAY') ?: 0;
 
         while ($loops--) {
-            echo '#', $current++," ", $job, PHP_EOL;
-            ob_flush();
-
             $start = microtime(true);
             $result = $this->dispatch($job);
-            echo "time: ", microtime(true) - $start, PHP_EOL;
-
-            echo json_encode($result, JSON_PRETTY_PRINT), PHP_EOL;
+            foreach ($result as $k => $v) {
+                if (!$v) {
+                    unset($result->$k);
+                }
+            }
+            if (json_encode($result) != "{}") {
+                $result->time = microtime(true) - $start;
+                echo json_encode($result), PHP_EOL;
+                ob_flush();
+            }
             usleep($delay * 1000);
         }
     }}
