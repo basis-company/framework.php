@@ -71,14 +71,20 @@ class Handle extends Job
             }
         }
 
+        $result = [
+            'data' => $data,
+            'issues' => $issues,
+            'time' => microtime(1) - $start,
+        ];
+
+        if ($this->sync) {
+            return $result;
+        }
+
         $dispatcher->send('event.feedback', [
             'eventId' => $this->eventId,
             'service' => $service->getName(),
-            'result' => [
-                'data' => $data,
-                'issues' => $issues,
-                'time' => microtime(1) - $start,
-            ]
+            'result' => $result
         ]);
     }
 }
