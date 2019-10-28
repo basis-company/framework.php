@@ -16,6 +16,8 @@ class Handle extends Job
     public $eventId;
     public $context;
 
+    public $sync = false;
+
     public function run(Application $app, Dispatcher $dispatcher, Event $event, Service $service)
     {
         $start = microtime(1);
