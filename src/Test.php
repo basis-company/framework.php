@@ -72,12 +72,12 @@ abstract class Test extends TestCase
         }
     }
 
-    public function setup()
+    public function setUp(): void
     {
         $this->dispatch('tarantool.migrate');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->dispatch('tarantool.clear');
     }

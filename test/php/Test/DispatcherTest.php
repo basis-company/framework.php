@@ -81,7 +81,7 @@ class DispatcherTest extends Test
         $this->assertNotSame($nekufa1->hash, $nekufa3->hash);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $this->get(Cache::class)->clear();

@@ -59,7 +59,7 @@ class TarantoolTest extends Test
         $tester->findOrFail('data', ['id' => 1]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $fs = $this->app->get(Filesystem::class);
         $classes = $fs->listClasses('Migration');

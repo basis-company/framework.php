@@ -8,7 +8,7 @@ use ClickHouseDB\Client;
 
 class ClickhouseTest extends Test
 {
-    public function setup()
+    public function setUp(): void
     {
         parent::setup();
         $client = $this->get(Client::class);

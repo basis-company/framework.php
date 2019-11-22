@@ -18,7 +18,7 @@
         "tarantool/queue": "v0.8.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5.4"
+        "phpunit/phpunit": "^8.4.3"
     },
     "bin": ["bin/console"],
     "authors": [{
