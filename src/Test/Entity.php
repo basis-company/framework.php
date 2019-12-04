@@ -33,7 +33,7 @@ class Entity extends MapperEntity
 
     public function __debugInfo()
     {
-        $info = get_object_vars($this);
+        $info = parent::__debugInfo();
         unset($info['_test']);
         unset($info['_key']);
         return $info;
