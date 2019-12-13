@@ -3,6 +3,7 @@
 namespace Basis\Job\Module;
 
 use Basis\Filesystem;
+use Basis\Framework;
 use Basis\Procedure\Select;
 use Basis\Job;
 use Exception;
@@ -23,10 +24,12 @@ class Bootstrap extends Job
             }
         }
 
-        $procedures = $fs->listClasses('Procedure');
-        if (count($procedures)) {
-            foreach ($procedures as $procedure) {
-                $this->get(Mapper::class)->getPlugin(Procedure::class)->register($procedure);
+        foreach ([Framework::class, Filesystem::class] as $source) {
+            $procedures = $this->get($source)->listClasses('Procedure');
+            if (count($procedures)) {
+                foreach ($procedures as $procedure) {
+                    $this->get(Mapper::class)->getPlugin(Procedure::class)->register($procedure);
+                }
             }
         }
 
