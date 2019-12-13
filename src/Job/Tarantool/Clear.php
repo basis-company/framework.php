@@ -30,7 +30,7 @@ class Clear extends Job
         foreach ($data as $row) {
             if ($row[0] >= 512) {
                 // user space
-                if (strpos($row[2], '_queue') === false) {
+                if (strpos($row[2], '_queue') !== 0) {
                     $client->evaluate('box.space["'.$row[2].'"]:drop()');
                 }
             }

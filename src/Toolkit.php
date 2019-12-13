@@ -21,7 +21,12 @@ trait Toolkit
         return $this->getRepository($space)->create($data)->save();
     }
 
-    protected function dispatch(string $job, array $params = [], string $service = null)
+    public function send(string $job, array $params = [], string $service = null)
+    {
+        return $this->get(Executor::class)->send($job, $params, $service);
+    }
+
+    public function dispatch(string $job, array $params = [], string $service = null)
     {
         return $this->app->dispatch($job, $params, $service);
     }

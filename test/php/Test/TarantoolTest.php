@@ -111,13 +111,13 @@ class TarantoolTest extends Test
 
         $migrations = $property->getValue($bootstrap);
 
-        $this->assertCount(2, $migrations);
+        $this->assertCount(3, $migrations);
 
         $order = [];
         foreach ($migrations as $migration) {
             $order[] = substr($migration, -1);
         }
-        $this->assertSame(['B', 'A'], $order);
+        $this->assertSame(['e', 'B', 'A'], $order);
     }
 
     public function testMigrationGenerator()
