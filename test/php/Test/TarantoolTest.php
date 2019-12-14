@@ -229,9 +229,6 @@ class TarantoolTest extends Test
 
     public function testSelectRegistration()
     {
-        $this->dispatch('tarantool.clear');
-        $this->dispatch('module.bootstrap');
-
         // procedure was registered
         $mapper = $this->getMapper();
         $result = $mapper->getClient()->evaluate("return basis_select(nil, nil, nil)");
@@ -240,9 +237,6 @@ class TarantoolTest extends Test
 
     public function testSelectUsage()
     {
-        $this->dispatch('tarantool.clear');
-        $this->dispatch('module.bootstrap');
-
         $mapper = $this->getMapper();
         $mapper->getSchema()
             ->createSpace('tester', [
@@ -288,9 +282,6 @@ class TarantoolTest extends Test
 
     public function testSelectUsageWithCompositeKeys()
     {
-        $this->dispatch('tarantool.clear');
-        $this->dispatch('module.bootstrap');
-
         $mapper = $this->getMapper();
         $mapper->getSchema()
             ->createSpace('calendar', [
