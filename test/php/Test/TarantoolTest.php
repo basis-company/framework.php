@@ -150,11 +150,7 @@ class TarantoolTest extends Test
 
         $this->assertSame($note->app, $this->app);
 
-        ob_start();
-        var_dump($note);
-        $contents = ob_get_clean();
-
-        $this->assertNotContains("app", $contents);
+        $this->assertStringNotContainsString("app", json_encode($note->__debugInfo()));
     }
 
     public function testRepositoryRegistration()
