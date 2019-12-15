@@ -41,9 +41,9 @@ trait Toolkit
         return $this->getRepository($space)->findOne($params);
     }
 
-    protected function findOrCreate(string $space, $params = [])
+    protected function findOrCreate(string $space, $params = [], $data = [])
     {
-        return $this->getRepository($space)->findOrCreate($params);
+        return $this->getRepository($space)->findOrCreate($params, $data);
     }
 
     protected function findOrFail(string $space, $params = [])

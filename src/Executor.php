@@ -2,15 +2,20 @@
 
 namespace Basis;
 
-use Basis\Procedure\JobQueue\Cast;
+use Basis\Procedure\JobQueue\Cleanup;
 use Basis\Procedure\JobQueue\Take;
+use Basis\Procedure\JobResult\Foreign;
 use Exception;
+use Tarantool\Mapper\Entity;
+use Tarantool\Mapper\Plugin\Procedure;
+use Tarantool\Mapper\Procedure\FindOrCreate;
+use Tarantool\Mapper\Repository;
 
 class Executor
 {
     use Toolkit;
 
-    public function request($request)
+    public function normalize(array $request): array
     {
         if (!array_key_exists('job', $request) || !$request['job']) {
             throw new Exception("No job defined");
@@ -33,11 +38,10 @@ class Executor
         $context = $this->get(Context::class)->toArray();
         $jobContext = $this->findOrCreate('job_context', [
             'hash' => md5(json_encode($context))
+        ], [
+            'hash' => md5(json_encode($context)),
+            'context' => $context,
         ]);
-        if (!$jobContext->context) {
-            $jobContext->context = $context;
-            $jobContext->save();
-        }
 
         $request['context'] = $jobContext->id;
 
@@ -47,36 +51,56 @@ class Executor
             $request['params'],
         ]));
 
-        // ready
-        $request['status'] = 'r';
+        return $request;
+    }
 
-        $tuple = [];
-        foreach ($this->getRepository('job_queue')->getSpace()->getTupleMap() as $key => $index) {
-            if (array_key_exists($key, $request)) {
-                $tuple[$index] = $request[$key];
-            }
-        }
+    public function initRequest($request)
+    {
+        $request = $this->normalize($request);
+        $request['status'] = 'new';
 
-        $casting = $this->get(Cast::class)($request['hash'], $tuple);
+        $params = [
+            'status' => $request['status'],
+            'hash' => $request['hash'],
+        ];
 
-        $this->getRepository('job_queue')->flushCache();
-        return $this->getRepository('job_queue')->getInstance($casting['tuple']);
+        return $this->findOrCreate('job_queue', $params, $request);
     }
 
     public function send(string $job, array $params = [], string $service = null)
     {
-        $this->request(compact('job', 'params', 'service'));
+        $this->initRequest(compact('job', 'params', 'service'));
     }
 
     public function dispatch(string $job, array $params = [], string $service = null)
     {
         $recipient = $this->getServiceName();
-        $request = $this->request(compact('job', 'params', 'service', 'recipient'));
+        $request = compact('job', 'params', 'service', 'recipient');
+        $request = $this->normalize($request);
 
-        return $this->result($request->hash);
+        $result = $this->findOne('job_result', [
+            'service' => $this->getServiceName(),
+            'hash' => $request['hash'],
+        ]);
+        if ($result) {
+            if ($result->expire && $result->expire < time()) {
+                $this->getMapper()->remove($result);
+            } else {
+                return $result->data;
+            }
+        }
+
+        $this->initRequest($request);
+        return $this->getResult($request['hash']);
     }
 
     public function process()
+    {
+        $this->transferResult();
+        return $this->processQueue();
+    }
+
+    public function processQueue()
     {
         $tuple = $this->get(Take::class)();
         if (!$tuple) {
@@ -86,34 +110,108 @@ class Executor
         $request = $this->getRepository('job_queue')->getInstance($tuple);
 
         if ($request->service != $this->getServiceName()) {
-            // move to service queue
-            throw new Exception("Error Processing Request", 1);
-
-        } else {
-            $context = $this->get(Context::class);
-            $runner = $this->get(Runner::class);
-
-            $contextBackup = $context->toArray();
-            $jobContext = $this->findOrFail('job_context', $request->context);
-            $context->reset($jobContext->context);
-            $result = $runner->dispatch($request->job, $request->params);
-
-            $context->reset($contextBackup);
-
-            if ($request->recipient) {
-                $this->create('job_result', [
-                    'service' => $request->recipient,
-                    'hash' => $request->hash,
-                    'data' => $this->get(Converter::class)->toArray($result),
-                    'expire' => property_exists($result, 'expire') ? $result->expire : 0,
-                ]);
+            try {
+                return $this->transferRequest($request);
+            } catch (Exception $e) {
+                return $this->processRequest($request);
             }
+        } 
+
+        return $this->processRequest($request);
+    }
+
+    protected function transferRequest(Entity $request)
+    {
+        $context = $request->getContext();
+        $remoteContext = $this->findOrCreate("$request->service.job_context", [
+            'hash' => $context->hash
+        ], [
+            'hash' => $context->hash,
+            'context' => $context->context,
+        ]);
+
+        $template = $this->get(Converter::class)->toArray($request);
+        $template['context'] = $remoteContext->id;
+        $template['status'] = 'new';
+        unset($template['id']);
+
+        $params = [
+            'hash' => $template['hash'],
+            'status' => $template['status'],
+        ];
+
+        $this->findOrCreate("$request->service.job_queue", $params, $template);
+
+        $request->status = 'transfered';
+        $request->save();
+
+        return $request;
+    }
+
+    public function processRequest($request)
+    {
+        $context = $this->get(Context::class);
+        $backup = $context->toArray();
+        $context->reset($request->getContext()->context);
+
+        $runner = $this->get(Runner::class);
+        if ($request->service != $this->getServiceName()) {
+            $runner = $this->get(Dispatcher::class);
+        }
+        $result = $runner->dispatch($request->job, $request->params, $request->service);
+
+        $context->reset($backup);
+
+        if ($request->recipient) {
+            $this->findOrCreate('job_result', [
+                'service' => $request->recipient,
+                'hash' => $request->hash,
+            ], [
+                'service' => $request->recipient,
+                'hash' => $request->hash,
+                'data' => $this->get(Converter::class)->toArray($result),
+                'expire' => property_exists($result, 'expire') ? $result->expire : 0,
+            ]);
         }
 
         return $this->getMapper()->remove($request);
     }
 
-    public function result($hash)
+    protected function transferResult()
+    {
+        $remote = $this->get(Foreign::class)($this->getServiceName());
+        if (count($remote)) {
+            $group = [];
+            foreach ($remote as $tuple) {
+                $result = $this->getRepository('job_result')->getInstance($tuple);
+                if (!array_key_exists($result->service, $group)) {
+                    $group[$result->service] = [];
+                }
+                $group[$result->service][] = $result;
+            }
+            foreach ($group as $service => $results) {
+                foreach ($results as $result) {
+                    $this->findOrCreate("$service.job_result", [
+                        'service' => $result->service,
+                        'hash' => $result->hash,
+                    ], [
+                        'service' => $result->service,
+                        'hash' => $result->hash,
+                        'data' => $result->data,
+                        'expire' => $result->expire,
+                    ]);
+                    $this->getMapper()->remove($result);
+                }
+
+                $this->getRepository("$result->service.job_queue")
+                    ->getMapper()
+                    ->getPlugin(Procedure::class)
+                    ->get(Cleanup::class)($result->service);
+            }
+        }
+    }
+
+    public function getResult($hash)
     {
         $result = $this->findOne('job_result', [
             'service' => $this->getServiceName(),
@@ -121,10 +219,20 @@ class Executor
         ]);
 
         if (!$result) {
-            if (!$this->process()) {
-                usleep(50000); // 50 milliseconds sleep
+            if (!$this->processQueue()) {
+                $request = $this->findOne('job_queue', [
+                    'status' => 'transfered',
+                    'hash' => $hash,
+                ]);
+                if ($request && $request->service) {
+                    $this->get(Dispatcher::class)
+                        ->dispatch('module.execute', [], $request->service);
+                } else {
+                    usleep(50000); // 50 milliseconds sleep
+                }
             }
-            return $this->result($hash);
+            $this->getRepository('job_result')->flushCache();
+            return $this->getResult($hash);
         }
 
         return $this->get(Converter::class)->toObject($result->data);

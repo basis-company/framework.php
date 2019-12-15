@@ -25,13 +25,13 @@ class JobQueue implements Migration
             ->addProperty('id', 'integer')
             ->addProperty('status', 'string')
             ->addProperty('hash', 'string')
-            ->addProperty('context', 'integer', [ 'is_nullable' => false ])
+            ->addProperty('context', 'integer', [ 'is_nullable' => false, 'reference' => 'job_context' ])
             ->addProperty('service', 'string', [ 'is_nullable' => false ])
             ->addProperty('job', 'string', [ 'is_nullable' => false ])
             ->addProperty('params', '*', [ 'is_nullable' => false ])
             ->addProperty('recipient', 'string', [ 'is_nullable' => true ])
             ->addIndex(['id'])
-            ->addIndex(['hash', 'status'])
+            ->addIndex(['hash', 'status', 'id'])
             ->addIndex(['status', 'id']);
 
         $mapper->getSchema()

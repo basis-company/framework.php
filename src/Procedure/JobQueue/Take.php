@@ -15,9 +15,9 @@ class Take extends Procedure
     {
         return <<<LUA
         box.begin()
-        local tuples = box.space.job_queue.index.status_id:select({'r'}, { limit = 1})
+        local tuples = box.space.job_queue.index.status_id:select({'new'}, { limit = 1})
         if #tuples > 0 then
-            local request = box.space.job_queue:update(tuples[1].id, {{'=', 2, 't'}})
+            local request = box.space.job_queue:update(tuples[1].id, {{'=', 2, 'processing'}})
             box.commit()
             return request
         end

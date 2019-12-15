@@ -47,7 +47,7 @@ class ExecutorTest extends Test
         $this->assertCount(0, $this->find('job_result'));
         $this->assertEquals($note->message, 6);
 
-        $request = $this->get(Executor::class)->request([
+        $request = $this->get(Executor::class)->initRequest([
             'job' => 'increment',
             'recipient' => 'test',
             'params' => [
@@ -63,7 +63,7 @@ class ExecutorTest extends Test
         $this->assertCount(0, $this->find('job_queue'));
         $this->assertCount(1, $this->find('job_result'));
 
-        $result = $this->get(Executor::class)->result($request->hash);
+        $result = $this->get(Executor::class)->getResult($request->hash);
         $this->assertEquals($result->note->message, 7);
     }
 }
