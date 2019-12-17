@@ -24,13 +24,18 @@ class Bootstrap extends Job
             }
         }
 
-        foreach ([Framework::class, Filesystem::class] as $source) {
-            $procedures = $this->get($source)->listClasses('Procedure');
-            if (count($procedures)) {
-                foreach ($procedures as $procedure) {
-                    $this->get(Mapper::class)->getPlugin(Procedure::class)->register($procedure);
+        try {
+            foreach ([Framework::class, Filesystem::class] as $source) {
+                $procedures = $this->get($source)->listClasses('Procedure');
+                if (count($procedures)) {
+                    foreach ($procedures as $procedure) {
+                        $this->get(Mapper::class)->getPlugin(Procedure::class)->register($procedure);
+                    }
                 }
             }
+        } catch (Exception $e) {
+            // ignore issues on procedure registration
+            $result['procedures'] = $e->getMessage();
         }
 
         foreach ($this->jobs as $job) {
