@@ -17,6 +17,17 @@ class Context
     public $parent;
     public $event;
 
+    public function execute($context, $callback)
+    {
+        $origin = $this->toArray();
+
+        $this->reset($context);
+        $result = call_user_func($callback);
+        $this->reset($origin);
+
+        return $result;
+    }
+
     public function reset($context = []) : self
     {
         foreach ($this as $k => $_) {
