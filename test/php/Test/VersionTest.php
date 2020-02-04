@@ -14,6 +14,6 @@ class VersionTest extends Test
         copy(dirname(getcwd()).'/composer.lock', getcwd().'/composer.lock');
         $version = get_object_vars($this->dispatch('module.version')->version);
         unlink(getcwd().'/composer.lock');
-        $this->assertArrayHasKey('tarantool/mapper', $version);
+        $this->assertArrayHasKey('league/container', $version);
     }
 }
