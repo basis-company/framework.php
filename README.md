@@ -4,5 +4,4 @@
 [![Build Status](https://travis-ci.org/basis-company/framework.php.svg?branch=master)](https://travis-ci.org/basis-company/framework.php)
 [![Code Coverage](https://scrutinizer-ci.com/g/basis-company/framework.php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/basis-company/framework.php/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/basis-company/framework.php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/basis-company/framework.php/?branch=master)
-
-Sorry, guys, there is still no readme
+[![codecov](https://codecov.io/gh/basis-company/framework.php/branch/master/graph/badge.svg)](https://codecov.io/gh/basis-company/framework.php)
