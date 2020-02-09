@@ -27,6 +27,12 @@ before_script:
   - composer self-update && composer global require hirak/prestissimo
   - composer install --no-interaction --prefer-source --optimize-autoloader
 
+script:
+    - vendor/bin/phpunit --coverage-clover=coverage.xml
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
+
 after_script:
   - if [[ -f coverage.clover ]]; then
       curl -sSOL https://scrutinizer-ci.com/ocular.phar &&
