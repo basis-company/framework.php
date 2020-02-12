@@ -69,7 +69,10 @@ class Handle extends Job
                 $data[$nick] = $app->call([$listener, 'run']);
                 $event->fireChanges($nick);
             } catch (Exception $e) {
-                $issues[$nick] =  $e->getMessage();
+                $issues[$nick] =  [
+                    'message' => $e->getMessage(),
+                    'trace' => explode(PHP_EOL, $e->getTraceAsString()),
+                ];
             }
         }
 
