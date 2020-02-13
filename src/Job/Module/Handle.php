@@ -31,7 +31,18 @@ class Handle extends Job
         }
 
         if (!count($patterns)) {
-            $service->unsubscribe($this->event);
+            $existingSubscription = $this->find('event.subscription', [
+                'service' => $service->getName(),
+            ]);
+            foreach ($existingSubscription as $candidate) {
+                $nick = $candidate->getType()->nick;
+                if (!array_key_exists($nick, $subscription)) {
+                    $this->dispatch('event.unsubscribe', [
+                        'event' => $nick,
+                        'service' => $service->getName(),
+                    ]);
+                }
+            }
             return $dispatcher->send('event.feedback', [
                 'eventId' => $this->eventId,
                 'service' => $service->getName(),
