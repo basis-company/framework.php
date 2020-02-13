@@ -10,8 +10,14 @@ class Version extends Job
     public function run(Filesystem $fs)
     {
         $version = [
-            'php' => PHP_VERSION
+            'service' => null,
+            'php' => PHP_VERSION,
         ];
+
+        if (file_exists($fs->getPath('version.php'))) {
+            $git = include $fs->getPath('version.php');
+            $version['service'] = $git['tag'] ?: $git['short_sha'];
+        }
 
         $lock = $fs->getPath('composer.lock');
         if (is_file($lock)) {
