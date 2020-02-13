@@ -43,13 +43,16 @@ class Handle extends Job
                     ]);
                 }
             }
-            return $dispatcher->send('event.feedback', [
+            $dispatcher->send('event.feedback', [
                 'eventId' => $this->eventId,
                 'service' => $service->getName(),
                 'result' => [
                     'message' => 'no subscription'
                 ],
             ]);
+            return [
+                'msg' => 'no subscription',
+            ];
         }
 
         $this->get(Context::class)->event = $this->eventId;
