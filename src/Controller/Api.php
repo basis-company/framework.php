@@ -86,7 +86,9 @@ class Api
         try {
             $response[0]['timing'] = microtime(true) - $tracer->getActiveSpan()->getStart();
             if ($this->get(Service::class)->getName() != 'audit') {
-                $this->get(Exporter::class)->flush($tracer, $this->get(Transport::class));
+                if ($response[0]['timing'] >= 0.05) {
+                    $this->get(Exporter::class)->flush($tracer, $this->get(Transport::class));
+                }
             }
         } catch (Exception $e) {
             // no traces is not a problem
