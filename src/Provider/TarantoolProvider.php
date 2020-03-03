@@ -39,7 +39,7 @@ class TarantoolProvider extends AbstractServiceProvider
             $config = $this->getContainer()->get(Config::class);
             $params = [
                 'uri' => $config['tarantool.connection'],
-                'persistent' => true,
+                'persistent' => false,
             ];
             $client = Client::fromOptions(array_merge($config['tarantool.params'], $params));
             try {
