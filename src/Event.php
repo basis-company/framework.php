@@ -75,10 +75,8 @@ class Event
                 // reduce changes list
                 $changes = $spy->getChanges();
                 foreach ($changes as $action => $collection) {
-                    foreach ($collection as $space => $entities) {
-                        $event = $this->get(Service::class)->getName().'.'.$space.'.'.$action;
-
-                        if (!$this->get(Service::class)->eventExists($event)) {
+                    foreach (['job_context', 'job_queue', 'job_result'] as $space) {
+                        if (array_key_exists($space, $collection)) {
                             unset($collection[$space]);
                         }
                     }
