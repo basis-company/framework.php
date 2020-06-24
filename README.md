@@ -5,3 +5,4 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/basis-company/framework.php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/basis-company/framework.php/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/basis-company/framework.php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/basis-company/framework.php/?branch=master)
 [![codecov](https://codecov.io/gh/basis-company/framework.php/branch/master/graph/badge.svg)](https://codecov.io/gh/basis-company/framework.php)
+[![Docker Repository on Quay](https://quay.io/repository/basis-company/skeleton/status "Docker Repository on Quay")](https://quay.io/repository/basis-company/skeleton)
