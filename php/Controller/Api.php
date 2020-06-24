@@ -83,7 +83,7 @@ class Api
                 }
             }
         } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Fire changes failure: '.$e->getMessage()];
+            return ['success' => false, 'message' => 'Fire changes failure: ' . $e->getMessage()];
         }
 
         try {

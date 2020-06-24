@@ -9,33 +9,33 @@ class Entity extends MapperEntity
 {
     public $id;
 
-    private $_test;
-    private $_key;
+    private Test $testReference;
+    private string $entityKey;
     
     public function __construct(Test $test, string $key)
     {
-        $this->_test = $test;
-        $this->_key = $key;
+        $this->testReference = $test;
+        $this->entityKey = $key;
     }
 
-    public function save() : MapperEntity
+    public function save(): MapperEntity
     {
         if (!$this->id) {
             $max = 0;
-            if (count($this->_test->data[$this->_key])) {
-                $max = max(array_keys($this->_test->data[$this->_key]));
+            if (count($this->testReference->data[$this->entityKey])) {
+                $max = max(array_keys($this->testReference->data[$this->entityKey]));
             }
             $this->id = $max + 1;
         }
-        $this->_test->data[$this->_key][$this->id] = $this;
+        $this->testReference->data[$this->entityKey][$this->id] = $this;
         return $this;
     }
 
     public function __debugInfo()
     {
         $info = parent::__debugInfo();
-        unset($info['_test']);
-        unset($info['_key']);
+        unset($info['testReference']);
+        unset($info['entityKey']);
         return $info;
     }
 }

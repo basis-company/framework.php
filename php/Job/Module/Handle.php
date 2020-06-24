@@ -65,7 +65,7 @@ class Handle extends Job
         foreach ($patterns as $pattern) {
             foreach ($subscription[$pattern] as $listener) {
                 if (!array_key_exists($listener, $listeners)) {
-                    $listeners[$listener] = $app->get('Listener\\'.$listener);
+                    $listeners[$listener] = $app->get('Listener\\' . $listener);
                     $listeners[$listener]->event = $this->event;
                     $listeners[$listener]->eventId = $this->eventId;
                     $listeners[$listener]->context = $this->context;
@@ -83,7 +83,7 @@ class Handle extends Job
                 $data[$nick] = $app->call([$listener, 'run']);
                 $event->fireChanges($nick);
             } catch (Exception $e) {
-                $issues[$nick] =  [
+                $issues[$nick] = [
                     'message' => $e->getMessage(),
                     'trace' => explode(PHP_EOL, $e->getTraceAsString()),
                 ];

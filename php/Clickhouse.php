@@ -25,10 +25,10 @@ class Clickhouse
                 $v = (array) $v;
                 if (count($v) == 1) {
                     $binds[$k] = $v[0];
-                    $where[] = $k.' = :'.$k;
+                    $where[] = $k . ' = :' . $k;
                 } else {
                     $binds[$k] = $v;
-                    $where[] = $k.' in (:'.$k.')';
+                    $where[] = $k . ' in (:' . $k . ')';
                 }
             }
 

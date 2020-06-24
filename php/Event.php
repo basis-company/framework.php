@@ -153,7 +153,6 @@ class Event
                         $this->getQueue('event.changes')->put($data);
                     } catch (Exception $e) {
                         // use legacy http transport
-                        // todo split data into chunks
                         $dispatcher->send('event.changes', $data);
                     }
                 }

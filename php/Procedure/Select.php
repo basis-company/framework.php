@@ -6,7 +6,7 @@ use Tarantool\Mapper\Procedure;
 
 class Select extends Procedure
 {
-    public function getParams() : array
+    public function getParams(): array
     {
         return ['space', 'index', 'values'];
     }
