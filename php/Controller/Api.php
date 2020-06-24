@@ -41,7 +41,7 @@ class Api
         }
 
         $tracer = $this->get(Tracer::class);
-        if ($data->context) {
+        if (property_exists($data, 'context') && $data->context) {
             $this->get(Context::class)->apply($data->context);
         }
 
