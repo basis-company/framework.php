@@ -7,7 +7,6 @@ use Basis\Context;
 use Basis\Dispatcher;
 use Basis\Event;
 use Basis\Job;
-use Basis\Service;
 use Exception;
 
 class Handle extends Job
@@ -18,34 +17,34 @@ class Handle extends Job
 
     public $sync = false;
 
-    public function run(Application $app, Dispatcher $dispatcher, Event $event, Service $service)
+    public function run(Application $app, Dispatcher $dispatcher, Event $event)
     {
         $start = microtime(1);
         $subscription = $event->getSubscription();
 
         $patterns = [];
         foreach (array_keys($subscription) as $pattern) {
-            if ($service->eventMatch($this->event, $pattern)) {
+            if ($event->match($this->event, $pattern)) {
                 $patterns[] = $pattern;
             }
         }
 
         if (!count($patterns)) {
             $existingSubscription = $this->find('event.subscription', [
-                'service' => $service->getName(),
+                'service' => $app->getName(),
             ]);
             foreach ($existingSubscription as $candidate) {
                 $nick = $candidate->getType()->nick;
                 if (!array_key_exists($nick, $subscription)) {
                     $this->dispatch('event.unsubscribe', [
                         'event' => $nick,
-                        'service' => $service->getName(),
+                        'service' => $app->getName(),
                     ]);
                 }
             }
             $dispatcher->send('event.feedback', [
                 'eventId' => $this->eventId,
-                'service' => $service->getName(),
+                'service' => $app->getName(),
                 'result' => [
                     'message' => 'no subscription'
                 ],
@@ -102,7 +101,7 @@ class Handle extends Job
 
         $dispatcher->send('event.feedback', [
             'eventId' => $this->eventId,
-            'service' => $service->getName(),
+            'service' => $app->getName(),
             'result' => $result
         ]);
     }
