@@ -3,7 +3,6 @@ language: php
 sudo: required
 
 php:
-  - 7.3
   - 7.4
   - nightly
   - master
@@ -12,6 +11,7 @@ env:
   - TARANTOOL_VERSION=1.10
   - TARANTOOL_VERSION=2.0
   - TARANTOOL_VERSION=2.1
+  - TARANTOOL_VERSION=2.2
 
 matrix:
   allow_failures:
