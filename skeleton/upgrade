@@ -1,0 +1,27 @@
+#!/usr/local/bin/php
+<?php
+
+$script = array_shift($argv);
+$version = array_shift($argv);
+
+function compose($path, $callback) {
+    $json = file_get_contents($path);
+    $data = json_decode($json);
+    $callback($data);
+    $json = json_encode($data, JSON_UNESCAPED_SLASHES);
+    file_put_contents($path, $json);
+}
+
+compose('/tmp/framework/composer.json', function ($data) use ($version) {
+    $data->version = $version;
+});
+
+compose('/app/composer.json', function ($data) use ($version) {
+    $data->require->{'basis-company/framework'} = $version;
+    $data->repositories = [
+        [
+            'type' => 'path',
+            'url' => '/tmp/framework',
+        ],
+    ];
+});
