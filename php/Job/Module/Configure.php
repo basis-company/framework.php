@@ -36,7 +36,7 @@ class Configure
             'http' => [
                 'address' => '0.0.0.0:80',
                 'workers' => [
-                    'command' => 'php vendor/basis-company/framework/bin/server',
+                    'command' => 'php server',
                     'pool' => [
                         'allocateTimeout' => 60,
                         'destroyTimeout' => 60,
