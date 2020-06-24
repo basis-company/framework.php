@@ -25,6 +25,7 @@ ADD . /tmp/framework
 RUN cp -r /tmp/framework/skeleton/* /app \
     && cd /tmp/framework \
     && php /app/upgrade $(git describe --tags) \
+    && cd /app \
     && composer install --no-progress --no-dev -o \
     && ./vendor/bin/rr get-binary
 
