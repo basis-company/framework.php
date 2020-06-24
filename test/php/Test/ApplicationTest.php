@@ -3,9 +3,9 @@
 namespace Test;
 
 use Basis\Application;
+use Basis\Container;
 use Basis\Converter;
 use Basis\Test;
-use League\Container\Container;
 
 class ApplicationTest extends Test
 {
@@ -13,6 +13,7 @@ class ApplicationTest extends Test
     {
         $this->assertNotNull($this->app);
         $this->assertInstanceOf(Application::class, $this->app);
+        $this->assertSame($this->app, $this->get(Application::class));
         $this->assertSame($this->app, $this->app->get(Application::class));
 
         $container = $this->app->get(Container::class);
@@ -28,6 +29,5 @@ class ApplicationTest extends Test
         $this->assertArrayHasKey('test.js', get_object_vars($assets['js']));
         $this->assertArrayHasKey('styl', $assets);
         $this->assertArrayHasKey('file.styl', get_object_vars($assets['styl']));
-
     }
 }

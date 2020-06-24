@@ -16,6 +16,7 @@ class Hello extends Job
         if ($this->name === 'bazyaba') {
             $this->confirm('bazyaba?');
         }
+
         $message = "hello $this->name!";
         return compact('message');
     }

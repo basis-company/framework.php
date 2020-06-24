@@ -59,80 +59,9 @@ class TarantoolTest extends Test
         $tester->findOrFail('data', ['id' => 1]);
     }
 
-    public function tearDown(): void
-    {
-        $fs = $this->app->get(Filesystem::class);
-        $classes = $fs->listClasses('Migration');
-
-        $dirs = [];
-        foreach ($classes as $class) {
-            $filename = $fs->getPath('php/'.str_replace('\\', '/', $class).'.php');
-            unlink($filename);
-            $dirs[dirname($filename)] = true;
-        }
-        foreach ($dirs as $dir => $_) {
-            rmdir($dir);
-        }
-
-        parent::tearDown();
-    }
-
     public function testProcedureRegistration()
     {
         $this->assertSame($this->app->get(Greet::class)('Dmitry'), 'Hello, Dmitry!');
-    }
-
-    public function testMigrationOrder()
-    {
-        $migration = $this->app->dispatch('generate.migration', [
-            'name' => 'b',
-        ]);
-        $contents = file_get_contents($migration->filename);
-        $contents = str_replace('throw', '//throw', $contents);
-        file_put_contents($migration->filename, $contents);
-
-        sleep(1);
-
-        $migration = $this->app->dispatch('generate.migration', [
-            'name' => 'a',
-        ]);
-
-        $contents = file_get_contents($migration->filename);
-        $contents = str_replace('throw', '//throw', $contents);
-        file_put_contents($migration->filename, $contents);
-
-        $this->app->dispatch('tarantool.migrate');
-
-        $bootstrap = $this->app->get(Bootstrap::class);
-
-        $reflection = new ReflectionClass(Bootstrap::class);
-        $property = $reflection->getProperty('migrations');
-        $property->setAccessible(true);
-
-        $migrations = $property->getValue($bootstrap);
-
-        $this->assertCount(3, $migrations);
-
-        $order = [];
-        foreach ($migrations as $migration) {
-            $order[] = substr($migration, -1);
-        }
-        $this->assertSame(['e', 'B', 'A'], $order);
-    }
-
-    public function testMigrationGenerator()
-    {
-        $fs = $this->app->get(Filesystem::class);
-
-        $classes = $fs->listClasses('Migration');
-        $this->assertCount(0, $classes);
-
-        $this->app->dispatch('generate.migration', [
-            'name' => 'my migration created at ' . time(),
-        ]);
-
-        $classes = $fs->listClasses('Migration');
-        $this->assertCount(1, $classes);
     }
 
     public function testEntity()
@@ -161,7 +90,7 @@ class TarantoolTest extends Test
 
     public function testJobShortcuts()
     {
-        $job = new class($this->app) extends Job {
+        $job = new class ($this->app) extends Job {
             public function run(TarantoolTest $test)
             {
                 // dispatch shortcut

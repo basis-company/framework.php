@@ -14,8 +14,8 @@ class Index
         return 'index page';
     }
 
-    public function hello(Runner $runner)
+    public function hello()
     {
-        return $runner->dispatch('test.hello')->message;
+        return $this->dispatch('test.hello')->message;
     }
 }

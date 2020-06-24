@@ -2,19 +2,20 @@
 
 namespace Test;
 
+use Basis\Event;
+use Basis\Http;
 use Basis\Test;
-use Basis\Service;
 use Tarantool\Mapper\Pool;
 
 class ServiceTest extends Test
 {
     public function testHostResolver()
     {
-        $service = $this->get(Service::class);
+        $event = $this->get(Event::class);
         $result = [];
         foreach ([1, 2] as $attempt) {
             $start = microtime(1);
-            $host = $service->getHost('basis.company')->address;
+            $host = $this->dispatch('resolve.address', ['name' => 'ya.ru']);
             $timer = microtime(1) - $start;
             $result[] = [
                 'host' => $host,
@@ -40,7 +41,7 @@ class ServiceTest extends Test
             'success' => true
         ]);
 
-        $this->mock('web.register')->willDo(function($params) use ($context) {
+        $this->mock('web.register')->willDo(function ($params) use ($context) {
             foreach ($params['routes'] as $route) {
                 $context->routes[] = (object) ['route' => $route, 'service' => $params['service']];
             }
@@ -50,51 +51,32 @@ class ServiceTest extends Test
         // then context will be updated and we should validate it
         $this->dispatch('module.register');
 
-        $service = $this->app->get(Service::class);
-        $serviceRoutes = [];
-        foreach ($context->routes as $route) {
-            if ($route->service == $service->getName()) {
-                $serviceRoutes[] = $route->route;
-            }
-        }
+        $http = $this->get(Http::class);
+        $routes = $http->getRoutes();
 
-        $this->assertCount(3, $serviceRoutes);
-        $this->assertContains('index/index', $serviceRoutes);
-        $this->assertContains('dynamic/*', $serviceRoutes);
+        $this->assertContains('dynamic/*', $routes);
+        $this->assertContains('index/index', $routes);
+        $this->assertContains('index/hello', $routes);
     }
 
     public function testName()
     {
-        $this->assertSame('test', $this->get(Service::class)->getName());
-    }
-
-    public function testServices()
-    {
-        $service = $this->get(Service::class);
-
-        $mock = $this->mock('web.services')->willReturn([
-            'services' => ['gateway', 'audit']
-        ]);
-
-        $this->assertSame($service->listServices(), ['gateway', 'audit']);
-        $this->assertSame($service->listServices(), ['gateway', 'audit']);
-
-        // service list is cached
-        $this->assertSame(1, $mock->calls);
+        $this->assertSame('test', $this->app->getName());
     }
 
     public function testEvents()
     {
-        $service = $this->get(Service::class);
+        $event = $this->get(Event::class);
 
         $this->mock('web.services')->willReturn(['services' => ['web']]);
 
         $this->mock('event.subscribe')->willReturn(['success' => true]);
 
-        $this->get(Pool::class)->registerResolver(function($name) {
+        $this->get(Pool::class)->registerResolver(function ($name) {
             if ($name == 'event') {
                 return new class {
-                    public function find() {
+                    public function find()
+                    {
                         return [
                             (object) ['nick' => 'test.*.*', 'ignore' => false],
                             (object) ['nick' => 'web.service.updated', 'ignore' => false],
@@ -104,18 +86,18 @@ class ServiceTest extends Test
             }
         });
 
-        $service->subscribe('test.*.*');
+        $event->subscribe('test.*.*');
 
         // equals
-        $this->assertTrue($service->eventExists('web.service.updated'));
-        $this->assertFalse($service->eventExists('guard.session.created'));
+        $this->assertTrue($event->exists('web.service.updated'));
+        $this->assertFalse($event->exists('guard.session.created'));
 
         // wildcard
-        $this->assertTrue($service->eventExists('test.post.updated'));
+        $this->assertTrue($event->exists('test.post.updated'));
 
         // wildcard
-        $this->assertTrue($service->eventMatch('test.post.created', '*.post.*'));
-        $this->assertFalse($service->eventMatch('test.post.created', '*.posts.*'));
+        $this->assertTrue($event->match('test.post.created', '*.post.*'));
+        $this->assertFalse($event->match('test.post.created', '*.posts.*'));
     }
 
     public function testEntityTriggers()

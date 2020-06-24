@@ -1,0 +1,166 @@
+<?php
+
+namespace Basis;
+
+use Basis\Dispatcher;
+use Basis\Registry;
+use Exception;
+use ReflectionClass;
+use Tarantool\Mapper\Plugin\Spy;
+use Tarantool\Mapper\Pool;
+
+class Event
+{
+    use Toolkit;
+
+    protected array $eventExistence = [];
+
+    public function exists(string $event): bool
+    {
+        if (array_key_exists($event, $this->eventExistence)) {
+            return $this->eventExistence[$event];
+        }
+        $types = $this->app->get(Pool::class)->get('event')->find('type');
+
+        foreach ($types as $type) {
+            if (!$type->ignore && $this->match($event, $type->nick)) {
+                return $this->eventExistence[$event] = true;
+            }
+        }
+
+        return $this->eventExistence[$event] = false;
+    }
+
+    public function match(string $event, string $spec): bool
+    {
+        if ($spec == $event) {
+            return true;
+        } elseif (strpos($spec, '*') !== false) {
+            $spec = explode('.', $spec);
+            $event = explode('.', $event);
+            $valid = true;
+            foreach (range(0, 2) as $part) {
+                $valid = $valid && ($spec[$part] == '*' || $spec[$part] == $event[$part]);
+            }
+            return $valid;
+        }
+        return false;
+    }
+
+    public function unsubscribe(string $event)
+    {
+        $this->dispatch('event.unsubscribe', [
+            'event' => $event,
+            'service' => $this->app->getName(),
+        ]);
+    }
+
+    public function subscribe(string $event)
+    {
+        $this->dispatch('event.subscribe', [
+            'event' => $event,
+            'service' => $this->app->getName(),
+        ]);
+    }
+
+    public function getSubscription()
+    {
+        $registry = $this->get(Registry::class);
+        $subscription = [];
+        foreach ($registry->listClasses('listener') as $class) {
+            if ($registry->isAbstract($class)) {
+                continue;
+            }
+            $reflection = new ReflectionClass($class);
+            if ($reflection->isAbstract()) {
+                continue;
+            }
+            foreach ($reflection->getStaticPropertyValue('events') as $event) {
+                if (!array_key_exists($event, $subscription)) {
+                    $subscription[$event] = [];
+                }
+                $subscription[$event][] = substr($class, strlen('Listener\\'));
+            }
+        }
+
+        return $subscription;
+    }
+
+    public function fire(string $event, $context)
+    {
+        $this->app->dispatch('event.fire', [
+            'event'   => $this->app->getName() . '.' . $event,
+            'context' => $context,
+        ]);
+    }
+
+    public function fireChangesPart(string $producer, int $fraction = 10)
+    {
+        if (++$this->counter % $fraction === 0) {
+            return $this->fireChanges($producer);
+        }
+        return false;
+    }
+
+    public function hasChanges()
+    {
+        $hasChanges = false;
+
+        $serviceName = $this->app->getName();
+        $this->get(Pool::class)->get($serviceName);
+
+        foreach ($this->get(Pool::class)->getMappers() as $mapper) {
+            if ($mapper->getPlugin(Spy::class)->hasChanges()) {
+                $hasChanges = true;
+            }
+        }
+        return $hasChanges;
+    }
+
+    public function fireChanges(string $producer)
+    {
+        $this->get(Pool::class)->get($this->app->getName());
+
+        $dispatcher = $this->app->get(Dispatcher::class);
+        $changed = false;
+
+        foreach ($this->get(Pool::class)->getMappers() as $mapper) {
+            $spy = $mapper->getPlugin(Spy::class);
+            if ($spy->hasChanges()) {
+                // reduce changes list
+                $changes = $spy->getChanges();
+                foreach ($changes as $action => $collection) {
+                    foreach (['job_context', 'job_queue', 'job_result'] as $space) {
+                        if (array_key_exists($space, $collection)) {
+                            unset($collection[$space]);
+                        }
+                    }
+                    if (!count($collection)) {
+                        unset($changes->$action);
+                    }
+                }
+
+                if (count(get_object_vars($changes))) {
+                    $changed = true;
+                    $data = $this->get(Converter::class)->toArray([
+                        'changes'  => $changes,
+                        'producer' => $producer,
+                        'service'  => $mapper->serviceName,
+                        'context' => $this->get(Context::class),
+                    ]);
+                    try {
+                        // put changes to queue
+                        $this->getQueue('event.changes')->put($data);
+                    } catch (Exception $e) {
+                        // use legacy http transport
+                        // todo split data into chunks
+                        $dispatcher->send('event.changes', $data);
+                    }
+                }
+
+                $spy->reset();
+            }
+        }
+        return $changed;
+    }
+}

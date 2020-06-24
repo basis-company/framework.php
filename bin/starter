@@ -1,0 +1,8 @@
+#!/bin/bash
+./composer.phar dump-autoload -o
+php vendor/basis-company/framework/bin/console module.bootstrap
+if test -f "php/Job/Worker.php"; then
+    ./vendor/basis-company/framework/bin/worker&
+fi
+
+./rr serve

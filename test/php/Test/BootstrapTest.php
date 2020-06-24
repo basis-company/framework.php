@@ -31,14 +31,15 @@ class BootstrapTest extends Test
         $this->dispatch('module.bootstrap');
     }
 
+    private array $registrations = [];
 
-    private $registrations = [];
     public function registration($params)
     {
         $this->registrations[] = $params;
     }
 
-    private $subscriptions = [];
+    private array $subscriptions = [];
+
     public function subscription($params)
     {
         $this->subscriptions[] = $params;

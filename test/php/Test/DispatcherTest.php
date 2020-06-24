@@ -24,7 +24,7 @@ class DispatcherTest extends Test
         $handler->push(Middleware::history($container));
 
         $client = new Client(['handler' => $handler]);
-        $this->app->share(Client::class, $client);
+        $this->app->getContainer()->share(Client::class, $client);
 
         $mock->append(
             new Response(200, [], json_encode([
@@ -33,36 +33,13 @@ class DispatcherTest extends Test
             ]))
         );
 
-        $result = $this->app->dispatch('service.hello');
-
-        $mock->append(
-            new Response(200, [], json_encode([
-                'success' => true,
-                'data' => [
-                    ['message' => 'hello, nekufa'],
-                    ['message' => 'hello, rybakit'],
-                ]
-            ]))
-        );
-
-        $results = $this->app->dispatch('service.hello', [['name' => 'nekufa'], ['name' => 'rybakit']]);
-        $this->assertCount(2, $results);
-
-        $this->assertCount(2, $container);
-        $body = json_encode([
-            'job' => 'service.hello',
-            'params' => [
-                ['name' => 'nekufa'],
-                ['name' => 'rybakit']
-            ]
-        ]);
-
-        $this->assertNotEquals(-1, strpos($container[1]['request']->getBody(), $body));
+        $result = $this->dispatch('service.hello');
+        $this->assertTrue($result->mocked);
     }
 
-    public function testExpire()
+    public function testCaching()
     {
-        $this->mock('say.hello')->willReturn(function($params) {
+        $this->mock('say.hello')->willReturn(function ($params) {
             return [
                 'msg' => 'Hello, ' . $params['name'],
                 'hash' => md5(microtime(1)),
@@ -75,15 +52,5 @@ class DispatcherTest extends Test
         $vasya1 = $this->dispatch('say.hello', ['name' => 'vasya']);
         $this->assertSame($nekufa1->hash, $nekufa2->hash);
         $this->assertNotSame($nekufa1->hash, $vasya1->hash);
-
-        Carbon::setTestNow(Carbon::now()->addDay());
-        $nekufa3 = $this->dispatch('say.hello', ['name' => 'nekufa']);
-        $this->assertNotSame($nekufa1->hash, $nekufa3->hash);
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->get(Cache::class)->clear();
     }
 }

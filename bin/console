@@ -1,32 +1,34 @@
 #!/usr/local/bin/php
 <?php
 
+ini_set('date.timezone', 'Europe/Moscow');
+
+include "vendor/autoload.php";
+
 use Basis\Application;
 use Basis\Event;
 
-date_default_timezone_set('Europe/Moscow');
-$root = getcwd();
-
-include $root.'/vendor/autoload.php';
-
 $app = new Application($root);
 
-array_shift($argv);
-$job = $argv ? array_shift($argv) : 'module.meta';
-$result = $app->dispatch($job, $argv ?: []);
-if($result) {
-    if (!is_object($result) || count(get_object_vars($result))) {
-        var_dump($result);
-        echo PHP_EOL;
-    }
-}
-
 try {
-    $app->get(Event::class)->fireChanges($job);
+    array_shift($argv);
+    $job = $argv ? array_shift($argv) : 'module.meta';
+    $result = $app->dispatch($job, $argv ?: []);
+    if ($result) {
+        if (!is_object($result) || count(get_object_vars($result))) {
+            echo json_encode($result), PHP_EOL;
+        }
+    }
+
+    $app->get(Event::class)
+        ->fireChanges($job);
+
+    $app->finalize();
+
 } catch (Exception $e) {
+    throw $e;
     var_dump([
         'success' => false,
         'message' => $e->getMessage()
     ]);
 }
-
