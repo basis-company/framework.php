@@ -14,9 +14,10 @@ RUN apt-get update \
     && docker-php-ext-install json \
     && pecl install ast \
     && pecl install xdebug \
-    && curl -sS https://getcomposer.org/installer | php \
-    && echo "upload_max_filesize = 32M" > /usr/local/etc/php/conf.d/upload-max-filesize.ini \
-    && echo "post_max_size = 32M" > /usr/local/etc/php/conf.d/post-max-size.ini
+    && echo "opcache.enable = 1" > /usr/local/etc/php/conf.d/opcache-enable.ini \
+    && echo "opcache.enable_cli = 1" > /usr/local/etc/php/conf.d/opcache-enable-cli.ini \
+    && echo "post_max_size = 32M" > /usr/local/etc/php/conf.d/post-max-size.ini \
+    && echo "upload_max_filesize = 32M" > /usr/local/etc/php/conf.d/upload-max-filesize.ini
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
