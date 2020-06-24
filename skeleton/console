@@ -26,7 +26,6 @@ try {
     $app->finalize();
 
 } catch (Exception $e) {
-    throw $e;
     var_dump([
         'success' => false,
         'message' => $e->getMessage()
