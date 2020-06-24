@@ -53,4 +53,10 @@ class DispatcherTest extends Test
         $this->assertSame($nekufa1->hash, $nekufa2->hash);
         $this->assertNotSame($nekufa1->hash, $vasya1->hash);
     }
+
+    public function testJobOverwrite()
+    {
+        $result = $this->dispatch('module.contents');
+        $this->assertSame($result->message, 'ok');
+    }
 }

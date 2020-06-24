@@ -129,6 +129,9 @@ class Dispatcher
             foreach ($registry->listClasses('job') as $class) {
                 $start = strpos($class, 'Job\\') + 4;
                 $xtype = $converter->classToXtype(substr($class, $start));
+                if (array_key_exists($xtype, $this->jobs)) {
+                    continue;
+                }
                 $this->jobs[$xtype] = $class;
                 if (strpos($class, 'Basis\\') !== 0) {
                     $xtype = $this->getServiceName() . '.' . $xtype;
