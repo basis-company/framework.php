@@ -22,6 +22,7 @@ RUN apt-get update \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 ADD skeleton /app
+ADD php /tmp
 
 RUN composer install --no-progress --no-dev -o \
     && ./vendor/bin/rr get-binary
