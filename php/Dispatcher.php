@@ -133,10 +133,10 @@ class Dispatcher
                     continue;
                 }
                 $this->jobs[$xtype] = $class;
-                if (strpos($class, 'Basis\\') !== 0) {
+                if ($this->getServiceName() && strpos($class, 'Basis\\') !== 0) {
                     $xtype = $this->getServiceName() . '.' . $xtype;
+                    $this->jobs[$xtype] = $class;
                 }
-                $this->jobs[$xtype] = $class;
             }
         }
 
