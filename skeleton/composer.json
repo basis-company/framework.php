@@ -5,7 +5,7 @@
         }
     },
     "require": {
-        "basis-company/framework": "^4.0.0",
+        "basis-company/framework": "^4.0.4",
         "basis-company/opentelemetry": "^0.0.4",
         "guzzlehttp/guzzle": "6.5.5",
         "nesbot/carbon": "2.35",
