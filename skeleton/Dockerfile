@@ -22,7 +22,8 @@ RUN apt-get update \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 ADD . /app
-RUN composer install --no-progress --no-dev -o
-RUN ./vendor/bin/rr get-binary
 
-CMD ./vendor/basis-company/framework/bin/starter
+RUN composer install --no-progress --no-dev -o \
+    && ./vendor/bin/rr get-binary
+
+CMD ./starter

@@ -1,0 +1,9 @@
+#!/bin/bash
+composer dump-autoload -o
+php console module.bootstrap
+
+if test -f "php/Job/Worker.php"; then
+    ./worker&
+fi
+
+./rr serve

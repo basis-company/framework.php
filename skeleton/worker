@@ -1,0 +1,6 @@
+#!/bin/bash
+while :
+do
+  php console worker
+  sleep 0.1
+done
