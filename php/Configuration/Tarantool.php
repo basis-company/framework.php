@@ -5,6 +5,7 @@ namespace Basis\Configuration;
 use Basis\Container;
 use Basis\Toolkit;
 use Tarantool\Client\Client;
+use Exception;
 
 class Tarantool
 {
