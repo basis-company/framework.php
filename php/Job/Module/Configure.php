@@ -76,7 +76,9 @@ class Configure
                 'services' => [
                     'http' => [
                         'dirs' => [
-                            '.',
+                            'js',
+                            'php',
+                            'styl',
                         ],
                         'recursive' => true,
                     ],
