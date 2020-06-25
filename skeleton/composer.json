@@ -18,7 +18,7 @@
         "php-imap/php-imap": "^3.0.29",
         "phpdocumentor/reflection-docblock": "^5.1",
         "phpoffice/phpexcel": "1.8.1",
-        "phpoffice/phpspreadsheet": "1.6.0",
+        "phpoffice/phpspreadsheet": "1.13.0",
         "predis/predis": "v1.1.1",
         "ramsey/uuid": "3.8.0",
         "rybakit/msgpack": "^0.7.0",
