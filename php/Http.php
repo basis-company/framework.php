@@ -103,16 +103,25 @@ class Http
             $result = "Page not found: $uri";
         }
 
+        if ($result instanceof ResponseInterface) {
+            return $result;
+        }
+
+        $headers = [
+            'Content-Type' => 'text/plain',
+        ];
         if (is_array($result) || is_object($result)) {
+            $headers['Content-Type'] = 'application/json';
             $result = json_encode($result);
         }
 
         $output = ob_get_clean();
         if ($output) {
+            $headers['Content-Type'] = 'text/plain';
             $result = $output . $result;
         }
 
-        return new Response(200, [], $result);
+        return new Response(200, $headers, $result);
     }
 
     public function process(string $url): ?string
