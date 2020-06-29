@@ -23,6 +23,14 @@ class Version
             }
         }
 
+        $frameworkPath = 'vendor/basis-company/framework/composer.json';
+        if (file_exists($frameworkPath)) {
+            $framework = json_decode(file_get_contents($frameworkPath));
+            if (is_object($framework) && property_exists($framework, 'version')) {
+                $version[$framework->name] = $framework->version;
+            }
+        }
+
         return compact('version');
     }
 }
