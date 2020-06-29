@@ -1,36 +1,26 @@
 #!/usr/local/bin/php
 <?php
 
-ini_set('display_errors', 'stderr');
-ini_set('date.timezone', 'Europe/Moscow');
-
 include "vendor/autoload.php";
 
-use Basis\Application;
-use Basis\Http;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7\Response;
-use Spiral\Goridge\StreamRelay;
-use Spiral\RoadRunner\PSR7Client;
-use Spiral\RoadRunner\Worker;
+ini_set('date.timezone', 'Europe/Moscow');
 
-$application = new Application();
-$http = $application->get(Http::class);
+Swoole\Runtime::enableCoroutine();
 
-$relay = new StreamRelay(STDIN, STDOUT);
-$psr7 = new PSR7Client(new Worker($relay), new Psr17Factory());
+$application = new Basis\Application();
+$server = $application->get(Swoole\HTTP\Server::class);
+$logger = $application->get(Psr\Log\LoggerInterface::class);
 
-while ($request = $psr7->acceptRequest()) {
+$server->on('request', function ($request, $response) use ($logger) {
+    $application = new Basis\Application();
     try {
-        ob_start();
-        $response = $http->handle($request);
-        $output = ob_get_clean();
-        if ($output) {
-            throw new Exception($output . PHP_EOL . (string) $response->getBody());
-        }
-        $psr7->respond($response);
+        $application->get(Basis\Http::class)->swoole($request, $response);
         $application->finalize();
     } catch (Throwable $e) {
-        $psr7->getWorker()->error((string) $e);
+        $traceString = implode(PHP_EOL, $e->getTraceAsString());
+        $logger->info($e->getMessage() . PHP_EOL . $traceString);
+        $application->finalize();
     }
-}
+});
+
+$server->start();

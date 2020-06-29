@@ -12,16 +12,23 @@ function compose($path, $callback) {
     file_put_contents($path, $json);
 }
 
-compose('/tmp/framework/composer.json', function ($data) use ($version) {
-    $data->version = $version;
-});
+if (strpos($version, '-') === false) {
+    compose('/app/composer.json', function ($data) use ($version) {
+        $data->require->{'basis-company/framework'} = $version;
+    });
+} else {
+    $version = 'dev';
+    compose('/tmp/framework/composer.json', function ($data) use ($version) {
+        $data->version = $version;
+    });
 
-compose('/app/composer.json', function ($data) use ($version) {
-    $data->require->{'basis-company/framework'} = $version;
-    $data->repositories = [
-        [
-            'type' => 'path',
-            'url' => '/tmp/framework',
-        ],
-    ];
-});
+    compose('/app/composer.json', function ($data) use ($version) {
+        $data->require->{'basis-company/framework'} = $version;
+        $data->repositories = [
+            [
+                'type' => 'path',
+                'url' => '/tmp/framework',
+            ],
+        ];
+    });
+}

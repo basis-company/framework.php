@@ -10,7 +10,6 @@ class Bootstrap
     use Toolkit;
 
     public array $jobs = [
-        'module.configure',
         'tarantool.migrate',
         'module.register',
     ];

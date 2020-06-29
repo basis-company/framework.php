@@ -3,11 +3,14 @@
 namespace Basis;
 
 use Exception;
+use LogicException;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
-use LogicException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
+use Swoole\HTTP\Request as SwooleRequest;
+use Swoole\HTTP\Response as SwooleResponse;
 use Throwable;
 
 class Http
@@ -139,6 +142,50 @@ class Http
 
         $response = $this->handle($request);
         return (string) $response->getBody();
+    }
+
+    public function swoole(SwooleRequest $swooleRequest, SwooleResponse $swooleResponse)
+    {
+        $serverRequest = new ServerRequest(
+            $swooleRequest->server['request_method'],
+            $swooleRequest->server['request_uri'],
+            $swooleRequest->header,
+            $swooleRequest->rawContent,
+            $swooleRequest->server['server_protocol'],
+            $swooleRequest->server,
+        );
+
+        if (property_exists($swooleRequest, 'post')) {
+            if (is_array($swooleRequest->post)) {
+                if (count($swooleRequest->post)) {
+                    $serverRequest = $serverRequest->withParsedBody($swooleRequest->post);
+                }
+            }
+        }
+
+        $start = microtime(true);
+        $response = $this->handle($serverRequest);
+        $type = $response->getHeaderLine('Content-Type');
+
+        $log = sprintf(
+            "%s %s [%01.3f]",
+            $swooleRequest->server['request_method'],
+            $swooleRequest->server['request_uri'],
+            microtime(true) - $start
+        );
+
+        if (microtime(true) - $start <= 0.001) {
+            $log = sprintf(
+                "%s %s",
+                $swooleRequest->server['request_method'],
+                $swooleRequest->server['request_uri'],
+            );
+        }
+
+        $this->get(LoggerInterface::class)->info($log);
+
+        $swooleResponse->header("Content-Type", $type);
+        $swooleResponse->end($response->getBody());
     }
 
     public function error(string $url): string

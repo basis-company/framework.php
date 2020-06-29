@@ -6,4 +6,4 @@ if test -f "php/Job/Worker.php"; then
     ./worker&
 fi
 
-./rr serve -v -d
+php server
