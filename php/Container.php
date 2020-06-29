@@ -16,6 +16,7 @@ class Container implements ContainerInterface
     protected $factory = [];
     protected $instance = [];
     protected $registry;
+    protected $trace = [];
 
     public function __construct(Registry $registry)
     {
@@ -104,7 +105,7 @@ class Container implements ContainerInterface
 
         if (array_key_exists($name, $this->instance)) {
             if ($this->instance[$name] === null) {
-                throw new LogicException("Circular dependency for $name");
+                throw new LogicException("Circular dependency " . implode(', ', $this->trace));
             }
             return $this->instance[$name];
         }
@@ -112,8 +113,10 @@ class Container implements ContainerInterface
         if (array_key_exists($name, $this->alias)) {
             $instance = $this->get($this->alias[$name]);
         } else {
+            array_push($this->trace, $name);
             $this->instance[$name] = null;
             $instance = $this->create($name);
+            array_pop($this->trace);
         }
 
         $this->instance[$name] = $instance;
