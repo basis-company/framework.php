@@ -79,7 +79,7 @@ class Handle extends Job
         $issues = [];
         foreach ($listeners as $nick => $listener) {
             try {
-                $data[$nick] = $app->call([$listener, 'run']);
+                $data[$nick] = $app->call($listener, 'run');
                 $event->fireChanges($nick);
             } catch (Exception $e) {
                 $issues[$nick] = [
