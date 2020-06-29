@@ -2,6 +2,7 @@
 
 namespace Basis\Configuration;
 
+use Basis\Application;
 use Basis\Container;
 use Basis\Toolkit;
 use Tarantool\Client\Client;
@@ -44,6 +45,10 @@ class Tarantool
                 $client->evaluate("box.session.su('admin')");
             } catch (Exception $e) {
             }
+
+            $this->get(Application::class)->registerFinalizer(function () {
+                $this->getContainer()->drop(Client::class);
+            });
 
             return $client;
         });
