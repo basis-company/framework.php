@@ -62,6 +62,7 @@ class Api
         try {
             $event = $this->get(Event::class);
             if ($event->hasChanges()) {
+                $last = null;
                 $active = $tracer->getActiveSpan();
                 foreach ($tracer->getSpans() as $candidate) {
                     if ($candidate->getParentSpanContext() == $active->getSpanContext()) {
