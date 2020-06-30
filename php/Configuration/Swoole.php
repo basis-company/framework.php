@@ -5,7 +5,7 @@ namespace Basis\Configuration;
 use Basis\Application;
 use Basis\Container;
 use Psr\Log\LoggerInterface;
-use Swoole\HTTP\Server;
+use Swoole\Http\Server;
 
 class Swoole
 {

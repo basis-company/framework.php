@@ -8,7 +8,7 @@ ini_set('date.timezone', 'Europe/Moscow');
 Swoole\Runtime::enableCoroutine();
 
 $application = new Basis\Application();
-$server = $application->get(Swoole\HTTP\Server::class);
+$server = $application->get(Swoole\Http\Server::class);
 $logger = $application->get(Psr\Log\LoggerInterface::class);
 
 $server->on('request', function ($request, $response) use ($logger) {
