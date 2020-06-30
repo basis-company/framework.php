@@ -1,25 +1,53 @@
 #!/usr/local/bin/php
 <?php
 
+use Basis\Application;
+use Basis\Container;
+use Basis\Http;
+use Basis\Metric\Registry;
+use Psr\Log\LoggerInterface;
+use Swoole\Http\Server;
+
 include "vendor/autoload.php";
 
 ini_set('date.timezone', 'Europe/Moscow');
 
 Swoole\Runtime::enableCoroutine();
+$startTime = microtime(true);
 
-$application = new Basis\Application();
-$server = $application->get(Swoole\Http\Server::class);
-$logger = $application->get(Psr\Log\LoggerInterface::class);
+$thread = new Application();
+$server = $thread->get(Server::class);
 
-$server->on('request', function ($request, $response) use ($logger) {
-    $application = new Basis\Application();
+$server->tick(500, function () use ($thread, $startTime) {
+    $thread->get(Basis\Metric\MemoryUsage::class)
+        ->update();
+
+    $thread->get(Basis\Metric\Uptime::class)
+        ->set(microtime(true) - $startTime);
+});
+
+$registry = $thread->get(Registry::class);
+
+$server->on('request', function ($request, $response) use ($registry, $server) {
+    if (getenv('BASIS_ENVIRONMENT') === 'dev') {
+        opcache_reset();
+        $server->reload();
+    }
+
+    $coroutine = new Application();
+    $coroutine->getContainer()->share(Registry::class, $registry);
+    $coroutine->getContainer()->share(Server::class, $server);
+
     try {
-        $application->get(Basis\Http::class)->swoole($request, $response);
-        $application->finalize();
+        $coroutine->get(Basis\Metric\RequestCounter::class)->increment();
+        $coroutine->get(Http::class)->swoole($request, $response);
+        $coroutine->finalize();
+
     } catch (Throwable $e) {
-        $traceString = implode(PHP_EOL, $e->getTraceAsString());
-        $logger->info($e->getMessage() . PHP_EOL . $traceString);
-        $application->finalize();
+        $logger = $coroutine->get(LoggerInterface::class);
+        $logger->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+
+        $coroutine->finalize();
     }
 });
 

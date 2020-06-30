@@ -2,7 +2,8 @@
 
 namespace Basis;
 
-use Spiral\RoadRunner\Metrics;
+use Exception;
+use Basis\Metric\Registry;
 
 class Metric
 {
@@ -11,7 +12,6 @@ class Metric
     public const COUNTER = 'counter';
     public const GAUGE = 'gauge';
     public const HISTOGRAM = 'histogram';
-    public const SUMMARY = 'summary';
 
     public string $type = self::GAUGE;
     public string $help;
@@ -20,8 +20,17 @@ class Metric
 
     public function getNick(): string
     {
-        $xtype = $this->get(Converter::class)->classToXtype(get_class($this));
-        return str_replace('.', '_', substr($xtype, strlen('metric.')));
+        static $nick;
+
+        if ($nick === null) {
+            $converter = $this->get(Converter::class);
+            $xtype = $converter->toUnderscore(get_class($this));
+            $position = strpos($xtype, 'metric_');
+            $length = strlen('metric_');
+            $nick = substr($xtype, $position + $length);
+        }
+
+        return $nick;
     }
 
     public function toArray(): array
@@ -30,7 +39,6 @@ class Metric
             self::COUNTER,
             self::GAUGE,
             self::HISTOGRAM,
-            self::SUMMARY,
         ];
 
         if (!in_array($this->type, $validTypes)) {
@@ -48,15 +56,30 @@ class Metric
 
         return $array;
     }
-
-    public function __call(string $name, array $arguments)
+    
+    public function getType()
     {
-        $value = 1;
-        if (count($arguments)) {
-            [ $value ] = $arguments;
-        }
+        return $this->type;
+    }
+    public function getHelp()
+    {
+        return $this->help;
+    }
 
-        $this->get(Metrics::class)
-            ->$name($this->getNick(), $value, $this->labels);
+    public function getRow()
+    {
+        return $this->getContainer()
+            ->get(Registry::class)
+            ->getRow($this);
+    }
+
+    public function set($value)
+    {
+        $this->getRow()['value'] = $value;
+    }
+
+    public function increment()
+    {
+        $this->getRow()['value'] = $this->getRow()['value'] + 1;
     }
 }
