@@ -26,15 +26,17 @@ $server->tick(500, function () use ($thread, $startTime) {
         ->update($startTime);
 });
 
+$logger = $thread->get(LoggerInterface::class);
 $registry = $thread->get(Registry::class);
 
-$server->on('request', function ($request, $response) use ($registry, $server) {
+$server->on('request', function ($request, $response) use ($registry, $logger, $server) {
     if (getenv('BASIS_ENVIRONMENT') === 'dev') {
         opcache_reset();
         $server->reload();
     }
 
     $coroutine = new Application();
+    $coroutine->getContainer()->share(LoggerInterface::class, $logger);
     $coroutine->getContainer()->share(Registry::class, $registry);
     $coroutine->getContainer()->share(Server::class, $server);
 
@@ -44,7 +46,6 @@ $server->on('request', function ($request, $response) use ($registry, $server) {
         $coroutine->finalize();
 
     } catch (Throwable $e) {
-        $logger = $coroutine->get(LoggerInterface::class);
         $logger->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
 
         $coroutine->finalize();
