@@ -19,7 +19,7 @@ class Registry extends Table
 
     public function getRow(Metric $metric)
     {
-        if (!array_key_exists($metric->getNick(), $this)) {
+        if (!$this->offsetExists($metric->getNick())) {
             $this[$metric->getNick()] = [
                 'help' => $metric->getHelp(),
                 'nick' => $metric->getNick(),
