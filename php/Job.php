@@ -4,6 +4,7 @@ namespace Basis;
 
 use Basis\Feedback\Confirm;
 use Basis\Feedback\Choose;
+use Exception;
 
 abstract class Job
 {
