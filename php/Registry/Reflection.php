@@ -10,6 +10,7 @@ use LogicException;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;
+use ReflectionProperty;
 
 class Reflection implements Registry
 {
@@ -25,6 +26,21 @@ class Reflection implements Registry
             '' => $app->getRoot(),
             "Basis\\" => dirname(dirname(__DIR__)),
         ];
+    }
+
+    public function getClassProperties(string $class): array
+    {
+        $reflectionClass = new ReflectionClass($class);
+        $properties = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC);
+
+        $result = [];
+        foreach ($properties as $property) {
+            if ($property->getDeclaringClass() == $reflectionClass) {
+                $result[] = $property->getName();
+            }
+        }
+
+        return $result;
     }
 
     public function getStaticPropertyValue(string $class, string $name)

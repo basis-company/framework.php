@@ -6,7 +6,7 @@
     },
     "require": {
         "aws/aws-sdk-php": "3.54.3",
-        "basis-company/framework": "^4.0",
+        "basis-company/framework": "^4.1",
         "basis-company/opentelemetry": "^0.0.4",
         "guzzlehttp/guzzle": "6.5.5",
         "league/flysystem": "^1.0",
