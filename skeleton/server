@@ -23,7 +23,7 @@ $server->tick(500, function () use ($thread, $startTime) {
         ->update();
 
     $thread->get(Basis\Metric\Uptime::class)
-        ->set(microtime(true) - $startTime);
+        ->update($startTime);
 });
 
 $registry = $thread->get(Registry::class);

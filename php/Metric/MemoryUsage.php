@@ -10,6 +10,6 @@ class MemoryUsage extends Metric
 
     public function update()
     {
-        return $this->set(memory_get_peak_usage(true));
+        return $this->setValue(memory_get_peak_usage(true));
     }
 }

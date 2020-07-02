@@ -7,4 +7,9 @@ use Basis\Metric;
 class Uptime extends Metric
 {
     public string $help = 'uptime in seconds';
+
+    public function update($startTime)
+    {
+        $this->setValue(microtime(true) - $startTime);
+    }
 }

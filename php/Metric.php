@@ -73,7 +73,12 @@ class Metric
             ->getRow($this);
     }
 
-    public function set($value)
+    public function getValue()
+    {
+        return $this->getRow()['value'];
+    }
+
+    public function setValue($value)
     {
         $this->getRow()['value'] = $value;
     }
