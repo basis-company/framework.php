@@ -6,7 +6,10 @@ use Basis\Container;
 use Basis\Http;
 use Basis\Metric\Registry;
 use Psr\Log\LoggerInterface;
+use Swoole\Coroutine;
+use Swoole\Coroutine\Scheduler;
 use Swoole\Http\Server;
+use Swoole\Process;
 
 include "vendor/autoload.php";
 
@@ -51,5 +54,35 @@ $server->on('request', function ($request, $response) use ($registry, $logger, $
         $coroutine->finalize();
     }
 });
+
+if (file_exists('php/Job/Background.php')) {
+    $server->addProcess(new Process(function ($process) use ($registry, $logger) {
+        sleep(1);
+        $coroutine = new Application();
+        $scheduler = new Scheduler();
+
+        $coroutine->getContainer()
+            ->share(LoggerInterface::class, $logger)
+            ->share(Process::class, $process)
+            ->share(Registry::class, $registry)
+            ->share(Scheduler::class, $scheduler);
+
+        $process->name($coroutine->getName().'-background');
+        $coroutine->get(Basis\Metric\BackgroundStart::class)->update();
+        $logger->info('start background process');
+
+        $scheduler->add(function () use ($coroutine) {
+            Coroutine::sleep(1);
+            $coroutine->dispatch('background');
+        });
+
+        $scheduler->add(function () use ($coroutine) {
+            Coroutine::sleep(1);
+            $coroutine->get(Basis\Metric\BackgroundHold::class)->update();
+        });
+
+        $scheduler->start();
+    }));
+}
 
 $server->start();
