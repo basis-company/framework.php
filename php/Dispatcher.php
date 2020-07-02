@@ -43,7 +43,7 @@ class Dispatcher
             } catch (Feedback $feedback) {
                 throw new Exception(json_encode($feedback->serialize()));
             } catch (Throwable $e) {
-                throw new Exception("Error processing $job: " . $e->getMessage(), 0, $e);
+                throw $e;
             }
             return (object) $converter->toObject($result);
         }
