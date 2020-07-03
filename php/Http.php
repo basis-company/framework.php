@@ -150,7 +150,7 @@ class Http
             $swooleRequest->server['request_method'],
             $swooleRequest->server['request_uri'],
             $swooleRequest->header,
-            $swooleRequest->rawContent,
+            property_exists($swooleRequest, 'rawContent') ? $swooleRequest->rawContent : null,
             $swooleRequest->server['server_protocol'],
             $swooleRequest->server,
         );
