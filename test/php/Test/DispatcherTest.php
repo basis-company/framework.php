@@ -5,37 +5,10 @@ namespace Test;
 use Basis\Cache;
 use Basis\Test;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
 
 class DispatcherTest extends Test
 {
     public $disableRemote = false;
-
-    public function test()
-    {
-        $container = [];
-        $mock = new MockHandler();
-
-        $handler = HandlerStack::create($mock);
-        $handler->push(Middleware::history($container));
-
-        $client = new Client(['handler' => $handler]);
-        $this->app->getContainer()->share(Client::class, $client);
-
-        $mock->append(
-            new Response(200, [], json_encode([
-                'success' => true,
-                'data' => ['mocked' => true]
-            ]))
-        );
-
-        $result = $this->dispatch('service.hello');
-        $this->assertTrue($result->mocked);
-    }
 
     public function testCaching()
     {

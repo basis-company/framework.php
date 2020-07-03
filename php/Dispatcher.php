@@ -5,8 +5,8 @@ namespace Basis;
 use Basis\Converter;
 use Basis\Feedback\Feedback;
 use Exception;
-use GuzzleHttp\Client;
 use LogicException;
+use Swoole\Coroutine\Http\Client;
 use Throwable;
 
 class Dispatcher
@@ -48,54 +48,46 @@ class Dispatcher
             return (object) $converter->toObject($result);
         }
 
-        return $this->send($job, $params, $service)->wait();
-    }
-
-    public function send(string $job, array $params = [], string $service = null)
-    {
-        if (!$service) {
-            $service = $this->getJobService($job);
-        }
-
         $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
-        $url = "http://$host/api/index/" . str_replace('.', '/', $job);
+        $url = "/api/index/" . str_replace('.', '/', $job);
         $context = $this->get(Context::class)->toArray();
 
-        if ($this->container->has(Client::class)) {
-            $client = $this->container->get(Client::class);
-        } else {
-            $client = $this->container->create(Client::class);
-        }
-        $response = $client->postAsync($url, [
-            'multipart' => [
-                [
-                    'name' => 'rpc',
-                    'contents' => json_encode([
-                        'context' => $context,
-                        'job'     => $job,
-                        'params'  => $params,
-                    ])
-                ]
-            ]
-        ]);
+        $form = [
+            'rpc' => json_encode([
+                'context' => $context,
+                'job'     => $job,
+                'params'  => $params,
+            ]),
+        ];
 
-        return $response->then(function ($response) {
-            $contents = $response->getBody();
-            if (!$contents) {
-                throw new Exception("Host $host ($service) is unreachable");
-            }
-    
-            $result = json_decode($contents);
-            if (!$result || !$result->success) {
-                $exception = new Exception($result->message ?: $contents);
-                if ($result->trace) {
-                    $exception->remoteTrace = $result->trace;
+        $headers = [];
+        if ($this->container->has(ServerRequestInterface::class)) {
+            $request = $this->container->get(ServerRequestInterface::class);
+            foreach ([ 'x-session', 'x-real-ip' ] as $header) {
+                if ($request->hasHeader($header)) {
+                    $headers[$header] = $request->getHeaderLine($header);
                 }
-                throw $exception;
             }
-    
-            return (object) $this->get(Converter::class)->toObject($result->data);
-        });
+        }
+
+        $client = new Client($host, 80);
+        $client->setHeaders($headers);
+        $client->post($url, $form);
+
+        if (!$client->body) {
+            throw new Exception("Host $host ($service) is unreachable");
+        }
+
+        $result = json_decode($client->body);
+        if (!$result || !$result->success) {
+            $exception = new Exception($result->message ?: $client->body);
+            if ($result->trace) {
+                $exception->remoteTrace = $result->trace;
+            }
+            throw $exception;
+        }
+
+        return (object) $this->get(Converter::class)->toObject($result->data);
     }
 
     public function isLocalJob(string $job): bool

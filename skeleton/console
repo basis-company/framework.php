@@ -5,46 +5,50 @@ include "vendor/autoload.php";
 
 ini_set('date.timezone', 'Europe/Moscow');
 
-$application = new Basis\Application();
+Swoole\Runtime::enableCoroutine();
+Swoole\Coroutine::create(function() use ($argv) {
 
-try {
-    array_shift($argv);
-    $job = $argv ? array_shift($argv) : 'module.meta';
+    $application = new Basis\Application();
 
-    $params = [];
-    if (count($argv)) {
-        $className = $application->get(Basis\Dispatcher::class)
-            ->getClass($job);
+    try {
+        array_shift($argv);
+        $job = $argv ? array_shift($argv) : 'module.meta';
 
-        $properties = $application->get(Basis\Registry::class)    
-            ->getClassProperties($className);
+        $params = [];
+        if (count($argv)) {
+            $className = $application->get(Basis\Dispatcher::class)
+                ->getClass($job);
 
-        if (count($properties) == count($argv)) {
-            $params = array_combine($properties, $argv);
-        } else if (array_key_exists('argv', $properties)) {
-            $params = [
-                'argv' => $argv,
-            ];
-        } else if (count($properties) == 1) {
-            $params = [
-                $properties[0] => implode(' ', $argv),
-            ];
+            $properties = $application->get(Basis\Registry::class)    
+                ->getClassProperties($className);
+
+            if (count($properties) == count($argv)) {
+                $params = array_combine($properties, $argv);
+            } else if (array_key_exists('argv', $properties)) {
+                $params = [
+                    'argv' => $argv,
+                ];
+            } else if (count($properties) == 1) {
+                $params = [
+                    $properties[0] => implode(' ', $argv),
+                ];
+            }
         }
-    }
 
-    $result = $application->dispatch($job, $params);
-    if ($result) {
-        if (!is_object($result) || count(get_object_vars($result))) {
-            echo json_encode($result), PHP_EOL;
+        $result = $application->dispatch($job, $params);
+        if ($result) {
+            if (!is_object($result) || count(get_object_vars($result))) {
+                echo json_encode($result), PHP_EOL;
+            }
         }
+
+        $application->get(Basis\Event::class)->fireChanges($job);
+        $application->finalize();
+
+    } catch (Exception $e) {
+        var_dump([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
     }
-
-    $application->get(Basis\Event::class)->fireChanges($job);
-    $application->finalize();
-
-} catch (Exception $e) {
-    var_dump([
-        'success' => false,
-        'message' => $e->getMessage()
-    ]);
-}
+});

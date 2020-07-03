@@ -10,6 +10,6 @@ class Uptime extends Metric
 
     public function update($startTime)
     {
-        $this->setValue(microtime(true) - $startTime);
+        $this->setValue(round(time() - $startTime));
     }
 }
