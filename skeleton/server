@@ -22,6 +22,9 @@ $thread = new Application();
 $server = $thread->get(Server::class);
 
 $server->tick(1000, function () use ($thread, $startTime) {
+    $thread->get(Basis\Metric\BackgroundHold::class)
+        ->update();
+
     $thread->get(Basis\Metric\MemoryUsage::class)
         ->update();
 
@@ -73,13 +76,6 @@ if (file_exists('php/Job/Background.php')) {
                 $coroutine->get(Basis\Metric\BackgroundStart::class)->update();
                 $coroutine->get(Basis\Metric\BackgroundHold::class)->update();
                 $coroutine->dispatch('background');
-            }
-        });
-
-        $scheduler->add(function () use ($coroutine) {
-            while (true) {
-                $coroutine->get(Basis\Metric\BackgroundHold::class)->update();
-                Coroutine::sleep(1);
             }
         });
 
