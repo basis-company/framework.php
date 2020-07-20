@@ -54,8 +54,6 @@ RUN apt-get update \
     && echo "upload_max_filesize = 32M" > /usr/local/etc/php/conf.d/upload-max-filesize.ini \
     && rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 RUN cd /tmp && git clone https://github.com/swoole/swoole-src.git \
     && cd swoole-src \
     && git checkout v4.5.2 \
@@ -68,6 +66,9 @@ RUN cd /tmp && git clone https://github.com/swoole/swoole-src.git \
     && cd /tmp \
     && rm -rf swoole-src \
     && rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN ln /usr/bin/composer composer.phar
 
 COPY skeleton/composer.json /app/
 RUN composer install --no-progress --no-dev -o
