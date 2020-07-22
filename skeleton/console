@@ -5,9 +5,7 @@ include "vendor/autoload.php";
 
 ini_set('date.timezone', 'Europe/Moscow');
 
-Swoole\Runtime::enableCoroutine();
-Swoole\Coroutine::create(function() use ($argv) {
-
+function process($argv) {
     $application = new Basis\Application();
 
     try {
@@ -50,5 +48,15 @@ Swoole\Coroutine::create(function() use ($argv) {
             'success' => false,
             'message' => $e->getMessage()
         ]);
-    }
-});
+    }    
+}
+
+if (!class_exists(Swoole\Runtime::class)) {
+    process($argv);
+
+} else {
+    Swoole\Runtime::enableCoroutine();
+    Swoole\Coroutine::create(function() use ($argv) {
+        return process($argv);
+    });
+}
