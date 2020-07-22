@@ -1,12 +1,20 @@
 #!/usr/local/bin/php
 <?php
 
+use Basis\Application;
+use Basis\Dispatcher;
+use Basis\Event;
+use Basis\Registry;
+use Swoole\Coroutine;
+use Swoole\Runtime;
+use Symfony\Component\Yaml\Yaml;
+
 include "vendor/autoload.php";
 
 ini_set('date.timezone', 'Europe/Moscow');
 
 function process($argv) {
-    $application = new Basis\Application();
+    $application = new Application();
 
     try {
         array_shift($argv);
@@ -14,10 +22,10 @@ function process($argv) {
 
         $params = [];
         if (count($argv)) {
-            $className = $application->get(Basis\Dispatcher::class)
+            $className = $application->get(Dispatcher::class)
                 ->getClass($job);
 
-            $properties = $application->get(Basis\Registry::class)    
+            $properties = $application->get(Registry::class)    
                 ->getClassProperties($className);
 
             if (count($properties) == count($argv)) {
@@ -36,11 +44,15 @@ function process($argv) {
         $result = $application->dispatch($job, $params);
         if ($result) {
             if (!is_object($result) || count(get_object_vars($result))) {
-                echo json_encode($result), PHP_EOL;
+                if (class_exists(Yaml::class)) {
+                    echo Yaml::dump($result, 2, 2, Yaml::DUMP_OBJECT_AS_MAP);
+                } else {
+                    echo json_encode($result), PHP_EOL;
+                }
             }
         }
 
-        $application->get(Basis\Event::class)->fireChanges($job);
+        $application->get(Event::class)->fireChanges($job);
         $application->finalize();
 
     } catch (Exception $e) {
@@ -51,12 +63,12 @@ function process($argv) {
     }    
 }
 
-if (!class_exists(Swoole\Runtime::class)) {
+if (!class_exists(Runtime::class)) {
     process($argv);
 
 } else {
-    Swoole\Runtime::enableCoroutine();
-    Swoole\Coroutine::create(function() use ($argv) {
+    Runtime::enableCoroutine();
+    Coroutine::create(function() use ($argv) {
         return process($argv);
     });
 }
