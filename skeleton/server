@@ -4,7 +4,11 @@
 use Basis\Application;
 use Basis\Container;
 use Basis\Http;
+use Basis\Metric\BackgroundHold;
+use Basis\Metric\BackgroundStart;
+use Basis\Metric\MemoryUsage;
 use Basis\Metric\Registry;
+use Basis\Metric\Uptime;
 use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Scheduler;
@@ -22,14 +26,9 @@ $thread = new Application();
 $server = $thread->get(Server::class);
 
 $server->tick(1000, function () use ($thread, $startTime) {
-    $thread->get(Basis\Metric\BackgroundHold::class)
-        ->update();
-
-    $thread->get(Basis\Metric\MemoryUsage::class)
-        ->update();
-
-    $thread->get(Basis\Metric\Uptime::class)
-        ->update($startTime);
+    $thread->get(BackgroundHold::class)->update();
+    $thread->get(MemoryUsage::class)->update();
+    $thread->get(Uptime::class)->update($startTime);
 });
 
 $logger = $thread->get(LoggerInterface::class);
@@ -73,8 +72,8 @@ if (file_exists('php/Job/Background.php')) {
 
         $scheduler->add(function () use ($coroutine) {
             while (true) {
-                $coroutine->get(Basis\Metric\BackgroundStart::class)->update();
-                $coroutine->get(Basis\Metric\BackgroundHold::class)->update();
+                $coroutine->get(BackgroundStart::class)->update();
+                $coroutine->get(BackgroundHold::class)->update();
                 $coroutine->dispatch('background');
             }
         });
