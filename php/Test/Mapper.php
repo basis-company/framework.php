@@ -4,9 +4,10 @@ namespace Basis\Test;
 
 use Basis\Test;
 use Exception;
-use Tarantool\Mapper\Plugin\Spy;
 use Tarantool\Mapper\Entity as MapperEntity;
 use Tarantool\Mapper\Mapper as MapperMapper;
+use Tarantool\Mapper\Plugin\Spy;
+use Tarantool\Mapper\Repository as MapperRepository;
 
 class Mapper extends MapperMapper
 {
@@ -19,7 +20,7 @@ class Mapper extends MapperMapper
         $this->serviceName = $service;
     }
 
-    public function create(string $space, $params): Entity
+    public function create(string $space, $params): MapperEntity
     {
         $key = $this->serviceName . '.' . $space;
         if (!array_key_exists($key, $this->test->data)) {
@@ -50,7 +51,7 @@ class Mapper extends MapperMapper
         return [];
     }
 
-    public function findOne(string $space, $params = []): ?Entity
+    public function findOne(string $space, $params = []): ?MapperEntity
     {
         $key = $this->serviceName . '.' . $space;
         if (is_numeric($params) || is_string($params)) {
@@ -66,7 +67,7 @@ class Mapper extends MapperMapper
         return null;
     }
 
-    public function findOrCreate(string $space, $params = [], $data = []): Entity
+    public function findOrCreate(string $space, $params = [], $data = []): MapperEntity
     {
         if (!$this->findOne($space, $params)) {
             $this->create($space, $data ?: $params)->save();
@@ -74,7 +75,7 @@ class Mapper extends MapperMapper
         return $this->findOne($space, $params);
     }
 
-    public function findOrFail(string $space, $params = []): Entity
+    public function findOrFail(string $space, $params = []): MapperEntity
     {
         $result = $this->findOne($space, $params);
         if (!$result) {
@@ -97,7 +98,7 @@ class Mapper extends MapperMapper
 
     protected $repositores = [];
 
-    public function getRepository(string $space): Repository
+    public function getRepository(string $space): MapperRepository
     {
         if (!array_key_exists($space, $this->repositores)) {
             $this->repositores[$space] = new Repository($this, $space);
@@ -105,7 +106,7 @@ class Mapper extends MapperMapper
         return $this->repositores[$space];
     }
 
-    public function remove($space, $params = []): Mapper
+    public function remove($space, $params = []): MapperMapper
     {
         if (is_object($params)) {
             $params = get_object_vars($params);

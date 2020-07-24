@@ -2,6 +2,8 @@
 
 namespace Basis\Test;
 
+use Tarantool\Mapper\Entity as MapperEntity;
+use Tarantool\Mapper\Mapper as MapperMapper;
 use Tarantool\Mapper\Repository as MapperRepository;
 
 class Repository extends MapperRepository
@@ -15,7 +17,7 @@ class Repository extends MapperRepository
         $this->space = $space;
     }
 
-    public function create($data): Entity
+    public function create($data): MapperEntity
     {
         return $this->mapper->create($this->space, ...func_get_args());
     }
@@ -25,17 +27,17 @@ class Repository extends MapperRepository
         return $this->mapper->find($this->space, ...func_get_args());
     }
 
-    public function findOne($data = []): ?Entity
+    public function findOne($data = []): ?MapperEntity
     {
         return $this->mapper->findOne($this->space, ...func_get_args());
     }
 
-    public function findOrCreate($params = [], $data = []): Entity
+    public function findOrCreate($params = [], $data = []): MapperEntity
     {
         return $this->mapper->findOrCreate($this->space, ...func_get_args());
     }
 
-    public function findOrFail($data = []): Entity
+    public function findOrFail($data = []): MapperEntity
     {
         return $this->mapper->findOrFail($this->space, ...func_get_args());
     }
@@ -51,7 +53,7 @@ class Repository extends MapperRepository
         return $this->mapper->$method($this->space, ...$args);
     }
 
-    public function getMapper(): Mapper
+    public function getMapper(): MapperMapper
     {
         return $this->mapper;
     }
