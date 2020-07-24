@@ -146,9 +146,13 @@ class Http
 
     public function swoole(SwooleRequest $swooleRequest, SwooleResponse $swooleResponse)
     {
+        $uri = $swooleRequest->server['request_uri'];
+        if (array_key_exists('query_string', $swooleRequest->server)) {
+            $uri .= '?' . $swooleRequest->server['query_string'];
+        }
         $serverRequest = new ServerRequest(
             $swooleRequest->server['request_method'],
-            $swooleRequest->server['request_uri'],
+            $uri,
             $swooleRequest->header,
             property_exists($swooleRequest, 'rawContent') ? $swooleRequest->rawContent : null,
             $swooleRequest->server['server_protocol'],
