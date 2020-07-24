@@ -8,6 +8,6 @@ class Metrics
 {
     public function index(Registry $registry)
     {
-        return $registry->render();
+        return $registry->render('svc_');
     }
 }

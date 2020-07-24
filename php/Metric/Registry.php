@@ -30,7 +30,7 @@ class Registry extends Table
         return $this[$metric->getNick()];
     }
 
-    public function render(): string
+    public function render(string $prefix = ''): string
     {
         // sorted key collection
         $keys = [];
@@ -42,11 +42,12 @@ class Registry extends Table
         // render prometheus format
         foreach ($keys as $key) {
             $v = $this[$key];
+            $nick = $prefix . $v['nick'];
             if ($v['help']) {
-                $output[] = sprintf('# HELP %s %s', $v['nick'], $v['help']);
+                $output[] = sprintf('# HELP %s %s', $nick, $v['help']);
             }
-            $output[] = sprintf('# TYPE %s %s', $v['nick'], $v['type']);
-            $output[] = sprintf("%s %s", $v['nick'], $v['value']);
+            $output[] = sprintf('# TYPE %s %s', $nick, $v['type']);
+            $output[] = sprintf("%s %s", $nick, $v['value']);
         }
         
         return implode(PHP_EOL, $output);
