@@ -41,6 +41,13 @@ class Api
         }
 
         $tracer = $this->get(Tracer::class);
+
+        if ($request->getHeaderLine('x-real-ip')) {
+            $this->get(Context::class)->apply([
+                'ip' => $request->getHeaderLine('x-real-ip'),
+            ]);
+        }
+
         if (property_exists($data, 'context') && $data->context) {
             $this->get(Context::class)->apply($data->context);
         }

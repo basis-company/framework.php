@@ -7,6 +7,8 @@ use Carbon\Carbon;
 class Context
 {
     public $channel;
+    public $ip;
+
     public $session;
 
     public $company;
