@@ -188,6 +188,7 @@ class Http
 
         $this->get(LoggerInterface::class)->info($log);
 
+        $swooleResponse->status($response->getStatusCode());
         $swooleResponse->header("Content-Type", $type);
         $swooleResponse->end($response->getBody());
     }
