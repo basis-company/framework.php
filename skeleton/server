@@ -36,11 +36,6 @@ $logger = $thread->get(LoggerInterface::class);
 $registry = $thread->get(Registry::class);
 
 $server->on('request', function ($request, $response) use ($registry, $logger, $server) {
-    if (getenv('BASIS_ENVIRONMENT') === 'dev') {
-        opcache_reset();
-        $server->reload();
-    }
-
     $coroutine = new Application();
     $coroutine->getContainer()->share(LoggerInterface::class, $logger);
     $coroutine->getContainer()->share(Registry::class, $registry);
