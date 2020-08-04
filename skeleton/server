@@ -75,7 +75,7 @@ if (file_exists('php/Job/Background.php')) {
                     if (!is_object($result) || count(get_object_vars($result))) {
                         $body = json_encode($result);
                         if (class_exists(Yaml::class)) {
-                            $body = Yaml::dump($Tresult, 2, 2, Yaml::DUMP_OBJECT_AS_MAP);
+                            $body = Yaml::dump($result, 2, 2, Yaml::DUMP_OBJECT_AS_MAP);
                         }
                         $logger->info($body);
                     }
