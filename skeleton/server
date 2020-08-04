@@ -14,6 +14,7 @@ use Swoole\Coroutine;
 use Swoole\Coroutine\Scheduler;
 use Swoole\Http\Server;
 use Swoole\Process;
+use Symfony\Component\Yaml\Yaml;
 
 include "vendor/autoload.php";
 
@@ -70,11 +71,20 @@ if (file_exists('php/Job/Background.php')) {
 
         $process->name($coroutine->getName().'-background');
 
-        $scheduler->add(function () use ($coroutine) {
+        $scheduler->add(function () use ($coroutine, $logger) {
             while (true) {
                 $coroutine->get(BackgroundStart::class)->update();
                 $coroutine->get(BackgroundHold::class)->update();
-                $coroutine->dispatch('background');
+                $result = $coroutine->dispatch('background');
+                if ($result) {
+                    if (!is_object($result) || count(get_object_vars($result))) {
+                        $body = json_encode($result);
+                        if (class_exists(Yaml::class)) {
+                            $body = Yaml::dump($Tresult, 2, 2, Yaml::DUMP_OBJECT_AS_MAP);
+                        }
+                        $logger->info($body);
+                    }
+                }
             }
         });
 
