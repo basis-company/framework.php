@@ -9,6 +9,6 @@ class Restart
     public function index(Server $server)
     {
         opcache_reset();
-        $server->reload(true);
+        $server->reload();
     }
 }
