@@ -51,15 +51,6 @@ class Dispatcher
 
         $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
         $url = "/api/index/" . str_replace('.', '/', $job);
-        $context = $this->get(Context::class)->toArray();
-
-        $form = [
-            'rpc' => json_encode([
-                'context' => $context,
-                'job'     => $job,
-                'params'  => $params,
-            ]),
-        ];
 
         $headers = [];
         if ($this->container->has(ServerRequestInterface::class)) {
@@ -70,6 +61,21 @@ class Dispatcher
                 }
             }
         }
+
+        $context = $this->get(Context::class)->toArray();
+        $span = $this->get(Tracer::class)->getActiveSpan()->getSpanContext();
+
+        $form = [
+            'rpc' => json_encode([
+                'context' => $context,
+                'job'     => $job,
+                'params'  => $params,
+                'span'    => [
+                    'traceId' => $span->getTraceId(),
+                    'spanId'  => $span->getSpanId(),
+                ],
+            ]),
+        ];
 
         $client = new Client($host, 80);
         $client->setHeaders($headers);
