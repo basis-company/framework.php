@@ -6,6 +6,7 @@ use Basis\Converter;
 use Basis\Feedback\Feedback;
 use Exception;
 use LogicException;
+use OpenTelemetry\Tracing\Tracer;
 use Psr\Http\Message\ServerRequestInterface;
 use Swoole\Coroutine\Http\Client;
 use Throwable;
