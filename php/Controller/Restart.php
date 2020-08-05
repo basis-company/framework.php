@@ -2,13 +2,10 @@
 
 namespace Basis\Controller;
 
-use Swoole\Http\Server;
-
 class Restart
 {
-    public function index(Server $server)
+    public function index()
     {
-        opcache_reset();
-        $server->reload();
+        exec('kill `pgrep starter`')
     }
 }
