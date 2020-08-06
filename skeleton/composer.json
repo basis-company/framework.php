@@ -19,9 +19,5 @@
         "tarantool/mapper": "^4.6.5",
         "tarantool/queue": "v0.8.0",
         "tarantool/symfony-lock": "^0.2.4"
-    },
-    "require-dev": {
-        "phan/phan": "^3.0.3",
-        "phpunit/phpunit": "^9.2.5"
     }
 }
