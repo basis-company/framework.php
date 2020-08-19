@@ -26,17 +26,17 @@ class Swoole
 
             $server->on("start", function () use ($container, $host, $port) {
                 $container->get(LoggerInterface::class)
-                    ->info("Swoole http server is started at http://$host:$port");
-            });
-
-            $server->on("start", function () use ($container, $host, $port) {
-                $container->get(LoggerInterface::class)
-                    ->info("Swoole http server is started at http://$host:$port");
+                    ->info([
+                        'message' => 'server started',
+                        'url' => "http://$host:$port",
+                    ]);
             });
 
             $server->on("shutdown", function () use ($container) {
                 $container->get(LoggerInterface::class)
-                    ->info("Swoole http server is stopped");
+                    ->info([
+                        'message' => 'server stopped',
+                    ]);
             });
 
             return $server;

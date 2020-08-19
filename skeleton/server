@@ -47,7 +47,10 @@ $server->on('request', function ($request, $response) use ($registry, $logger, $
         $coroutine->finalize();
 
     } catch (Throwable $e) {
-        $logger->info($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+        $logger->info([
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
 
         $coroutine->finalize();
     }
@@ -73,11 +76,7 @@ if (file_exists('php/Job/Background.php')) {
                 $result = $coroutine->dispatch('background');
                 if ($result) {
                     if (!is_object($result) || count(get_object_vars($result))) {
-                        $body = json_encode($result);
-                        if (class_exists(Yaml::class)) {
-                            $body = Yaml::dump($result, 2, 2, Yaml::DUMP_OBJECT_AS_MAP);
-                        }
-                        $logger->info($body);
+                        $logger->info($result);
                     }
                 }
             }

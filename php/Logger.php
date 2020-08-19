@@ -10,6 +10,10 @@ class Logger extends AbstractLogger
     {
         $row = $message;
 
+        if (is_array($row) || is_object($row)) {
+            $row = json_encode($row);
+        }
+
         if (count($context)) {
             $row .= ' ' . json_encode($context);
         }

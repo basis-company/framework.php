@@ -171,19 +171,14 @@ class Http
         $response = $this->handle($serverRequest);
         $type = $response->getHeaderLine('Content-Type');
 
-        $log = sprintf(
-            "%s %s [%01.3f]",
-            $swooleRequest->server['request_method'],
-            $swooleRequest->server['request_uri'],
-            microtime(true) - $start
-        );
+        $log = [
+            'method' => $swooleRequest->server['request_method'],
+            'uri' => $swooleRequest->server['request_uri'],
+        ];
 
-        if (microtime(true) - $start <= 0.001) {
-            $log = sprintf(
-                "%s %s",
-                $swooleRequest->server['request_method'],
-                $swooleRequest->server['request_uri'],
-            );
+        $time = microtime(true) - $start;
+        if ($time >= 0.001) {
+            $log['time'] = $time;
         }
 
         $this->get(LoggerInterface::class)->info($log);

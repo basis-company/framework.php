@@ -1,4 +1,5 @@
 #!/bin/bash
-composer dump-autoload -o
+classes=$(composer dump-autoload --optimize | grep -o -E '[0-9]+')
+echo "{\"message\":\"generated optimized autoload files containing ${classes} classes\"}"
 php console module.bootstrap
 php server
