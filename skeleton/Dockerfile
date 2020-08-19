@@ -67,11 +67,13 @@ RUN cd /tmp && git clone https://github.com/swoole/swoole-src.git \
     && rm -rf swoole-src \
     && rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN ln /usr/bin/composer composer.phar
 
 COPY skeleton/composer.json /app/
-RUN composer install --no-progress --no-dev -o
+RUN composer update --no-dev --no-progress --optimize-autoloader
+COPY skeleton /app
+RUN ./starter
 
 COPY skeleton /app
 COPY php /app/vendor/basis-company/framework/php
