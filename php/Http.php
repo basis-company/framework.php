@@ -181,7 +181,13 @@ class Http
             $log['time'] = $time;
         }
 
-        $this->get(LoggerInterface::class)->info($log);
+        $blacklist = [
+            '/health',
+            '/metrics',
+        ];
+        if (!in_array($log['uri'], $blacklist)) {
+            $this->get(LoggerInterface::class)->info($log);
+        }
 
         $swooleResponse->status($response->getStatusCode());
         $swooleResponse->header("Content-Type", $type);
