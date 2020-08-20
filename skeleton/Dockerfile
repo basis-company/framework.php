@@ -72,8 +72,6 @@ RUN ln /usr/bin/composer composer.phar
 
 COPY skeleton/composer.json /app/
 RUN composer update --no-dev --no-progress --optimize-autoloader
-COPY skeleton /app
-RUN ./starter
 
 COPY skeleton /app
 COPY php /app/vendor/basis-company/framework/php
