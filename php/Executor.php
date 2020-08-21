@@ -6,6 +6,7 @@ use Basis\Procedure\JobQueue\Cleanup;
 use Basis\Procedure\JobQueue\Take;
 use Basis\Procedure\JobResult\Foreign;
 use Exception;
+use Swoole\Coroutine;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Plugin\Procedure;
 use Tarantool\Mapper\Procedure\FindOrCreate;
@@ -227,7 +228,7 @@ class Executor
                     $r = $this->get(Dispatcher::class)
                         ->dispatch('module.execute', [], $request->service);
                 } else {
-                    usleep(50000); // 50 milliseconds sleep
+                    Coroutine::sleep(0.1);
                 }
             }
             $this->getRepository('job_result')->flushCache();

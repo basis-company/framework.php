@@ -3,6 +3,7 @@
 namespace Basis;
 
 use Exception;
+use Swoole\Coroutine;
 use Symfony\Component\Lock\LockFactory;
 use Tarantool\Client\Client;
 use Tarantool\Client\Exception\RequestFailed;
@@ -111,7 +112,7 @@ class Lock
     {
         while ($this->exists($name)) {
             // 100ms
-            usleep(100000);
+            Coroutine::sleep(0.1);
         }
 
         return true;

@@ -3,6 +3,7 @@
 namespace Basis\Job\Module;
 
 use Basis\Job;
+use Swoole\Coroutine;
 
 class Runner extends Job
 {
@@ -34,7 +35,7 @@ class Runner extends Job
                 echo json_encode($result), PHP_EOL;
                 ob_flush();
             }
-            usleep($delay * 1000);
+            Coroutine::sleep($delay / 1000);
         }
     }
 }
