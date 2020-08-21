@@ -21,33 +21,15 @@ class Dispatcher
         $this->container = $container;
     }
 
-    public function dispatch(string $job, array $params = [], string $service = null): object
+    public function send(string $job, array $params = [], string $service = null): Client
     {
         $job = strtolower($job);
-        
-        $converter = $this->get(Converter::class);
-
         if (!$service) {
             $service = $this->getJobService($job);
         }
 
         if ($service == $this->getServiceName()) {
-            $class = $this->getClass($job);
-            if (!$class) {
-                throw new Exception("No class for job $job");
-            }
-            try {
-                $instance = $this->container->create($class);
-                foreach ($params as $k => $v) {
-                    $instance->$k = $v;
-                }
-                $result = $this->call($instance, 'run');
-            } catch (Feedback $feedback) {
-                throw new Exception(json_encode($feedback->serialize()));
-            } catch (Throwable $e) {
-                throw $e;
-            }
-            return (object) $converter->toObject($result);
+            return $this->dispatch($job, $params, $service);
         }
 
         $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
@@ -81,6 +63,41 @@ class Dispatcher
         $client = new Client($host, 80);
         $client->setHeaders($headers);
         $client->post($url, $form);
+
+        return $client;
+    }
+
+    public function dispatch(string $job, array $params = [], string $service = null): object
+    {
+        $job = strtolower($job);
+        
+        $converter = $this->get(Converter::class);
+
+        if (!$service) {
+            $service = $this->getJobService($job);
+        }
+
+        if ($service == $this->getServiceName()) {
+            $class = $this->getClass($job);
+            if (!$class) {
+                throw new Exception("No class for job $job");
+            }
+            try {
+                $instance = $this->container->create($class);
+                foreach ($params as $k => $v) {
+                    $instance->$k = $v;
+                }
+                $result = $this->call($instance, 'run');
+            } catch (Feedback $feedback) {
+                throw new Exception(json_encode($feedback->serialize()));
+            } catch (Throwable $e) {
+                throw $e;
+            }
+            return (object) $converter->toObject($result);
+        }
+
+
+        $client = $this->send($job, $params, $service);
 
         if (!$client->body) {
             throw new Exception("Host $host ($service) is unreachable");
