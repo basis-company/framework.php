@@ -122,7 +122,7 @@ class Dispatcher
 
         $parts = parse_url($url);
         $port = isset($parts['port']) ? $parts['port'] : 80;
-        $fp = fsockopen($parts['host'], $port, $errno, $errstr, 30);
+        $fp = pfsockopen($parts['host'], $port, $errno, $errstr, 30);
 
         if (!$fp) {
             return false;
@@ -149,7 +149,6 @@ class Dispatcher
         ]);
 
         fwrite($fp, implode("\r\n", $parts));
-        fclose($fp);
 
         return true;
     }
