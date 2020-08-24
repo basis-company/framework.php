@@ -9,6 +9,7 @@ class Address
     use Toolkit;
 
     public ?string $name = null;
+    public int $cache = 60;
 
     public function run()
     {
@@ -19,7 +20,7 @@ class Address
 
         return [
             'host' => $host,
-            'expire' => time() + 60,
+            'expire' => time() + 60 * $this->cache,
         ];
     }
 }
