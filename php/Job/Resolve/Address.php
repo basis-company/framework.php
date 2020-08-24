@@ -3,19 +3,30 @@
 namespace Basis\Job\Resolve;
 
 use Basis\Toolkit;
+use Swoole\Coroutine\System;
 
 class Address
 {
     use Toolkit;
 
-    public ?string $name = null;
+    public string $name;
     public int $cache = 60;
 
     public function run()
     {
+        if ($this->name === null) {
+            throw new Exception("Name should be defined");
+        }
+
         $host = $this->name;
+
         if (getenv('BASIS_ENVIRONMENT') !== 'dev') {
-            $host = gethostbyname($this->name);
+            $host = System::dnsLookup($this->name, 1);
+            if ($host === false) {
+                return [
+                    'host' => $this->name,
+                ];
+            }
         }
 
         return [
