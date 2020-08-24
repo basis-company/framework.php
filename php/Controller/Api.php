@@ -25,12 +25,20 @@ class Api
     {
         $body = $request->getParsedBody();
 
-        if (!is_array($body) || !array_key_exists('rpc', $body)) {
+        if (!is_array($body)) {
+            return [
+                'success' => false,
+                'message' => 'Invalid request',
+            ];
+        }
+
+        if (!array_key_exists('rpc', $body)) {
             return [
                 'success' => false,
                 'message' => 'No rpc defined',
             ];
         }
+
         $data = json_decode($body['rpc']);
 
         if (!$data) {
