@@ -22,7 +22,7 @@ class Address
 
         if (getenv('BASIS_ENVIRONMENT') !== 'dev') {
             if (class_exists(System::class)) {
-                $host = System::dnsLookup($this->name, 1);
+                $host = System::gethostbyname($this->name);
             } else {
                 $host = gethostbyname($this->name);
             }
