@@ -148,7 +148,14 @@ class Dispatcher
             isset($content) ? $content : '',
         ]);
 
-        fwrite($fp, implode("\r\n", $parts));
+        $body = implode("\r\n", $parts);
+
+        if (fwrite($fp, $body) === false) {
+            // connection is not writable, force close
+            fclose($fp);
+            // try again
+            return $this->send($job, $params, $service, $context);
+        }
 
         return true;
     }
