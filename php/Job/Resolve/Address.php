@@ -21,7 +21,11 @@ class Address
         $host = $this->name;
 
         if (getenv('BASIS_ENVIRONMENT') !== 'dev') {
-            $host = System::dnsLookup($this->name, 1);
+            if (class_exists(System::class)) {
+                $host = System::dnsLookup($this->name, 1);
+            } else {
+                $host = gethostbyname($this->name);
+            }
             if ($host === false) {
                 return [
                     'host' => $this->name,
