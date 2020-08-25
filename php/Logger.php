@@ -11,15 +11,14 @@ class Logger extends AbstractLogger
         $row = $message;
 
         if (is_array($row) || is_object($row)) {
+            if (count($context)) {
+                $row['context'] = $context;
+            }
             $row = json_encode($row);
-        }
-
-        if (count($context)) {
+        } elseif (count($context)) {
             $row .= ' ' . json_encode($context);
         }
 
-        $row .= PHP_EOL;
-
-        echo $row;
+        fwrite(STDOUT, $row . PHP_EOL);
     }
 }
