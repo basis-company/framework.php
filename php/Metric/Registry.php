@@ -40,6 +40,7 @@ class Registry extends Table
         sort($keys);
 
         // render prometheus format
+        $output = [];
         foreach ($keys as $key) {
             $v = $this[$key];
             $nick = $prefix . $v['nick'];
