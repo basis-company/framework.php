@@ -95,14 +95,14 @@ class Handle extends Job
             'time' => microtime(1) - $start,
         ];
 
-        if ($this->sync) {
-            return $result;
+        if (!$this->sync) {
+            $dispatcher->send('event.feedback', [
+                'eventId' => $this->eventId,
+                'service' => $app->getName(),
+                'result' => $result
+            ]);
         }
 
-        $dispatcher->send('event.feedback', [
-            'eventId' => $this->eventId,
-            'service' => $app->getName(),
-            'result' => $result
-        ]);
+        return $result;
     }
 }
