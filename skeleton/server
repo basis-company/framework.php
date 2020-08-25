@@ -79,6 +79,7 @@ if (file_exists('php/Job/Background.php')) {
                         $logger->info($result);
                     }
                 }
+                Coroutine::sleep(0.1);
             }
         });
 
