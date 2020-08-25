@@ -46,9 +46,12 @@ class Metric
         }
 
         $array = [
-            'help' => $this->help,
             'type' => $this->type,
         ];
+
+        if ($this->help !== null) {
+            $array['help'] = $this->help;
+        }
 
         if ($this->labels !== null) {
             $array['labels'] = $this->labels;
