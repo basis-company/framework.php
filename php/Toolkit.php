@@ -5,6 +5,7 @@ namespace Basis;
 use Basis\Applicatoin;
 use Basis\Clickhouse;
 use Basis\Context;
+use Basis\Event;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
 use Swoole\Coroutine;
@@ -172,6 +173,8 @@ trait Toolkit
             $app = new Application();
             $app->get(Context::class)->reset($context);
             $app->dispatch($job, $params, $service);
+            $app->get(Event::class)->fireChanges($job);
+            $app->finalize();
         });
     }
 }
