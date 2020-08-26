@@ -2,9 +2,12 @@
 
 namespace Basis;
 
+use Basis\Applicatoin;
 use Basis\Clickhouse;
+use Basis\Context;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
+use Swoole\Coroutine;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
@@ -160,5 +163,15 @@ trait Toolkit
         $span->end();
 
         return $result;
+    }
+
+    public function fork(string $job, array $params = [], string $service = null)
+    {
+        $context = $this->get(Context::class)->toArray();
+        Coroutine::create(function () use ($job, $params, $service, $context) {
+            $app = new Application();
+            $app->get(Context::class)->reset($context);
+            $app->dispatch($job, $params, $service);
+        });
     }
 }
