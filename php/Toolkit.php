@@ -168,6 +168,9 @@ trait Toolkit
 
     public function fork(string $job, array $params = [], string $service = null)
     {
+        if (!class_exists(Coroutine::class)) {
+            return $this->dispatch($job, $params, $service);
+        }
         $context = $this->get(Context::class)->toArray();
         Coroutine::create(function () use ($job, $params, $service, $context) {
             $app = new Application();
