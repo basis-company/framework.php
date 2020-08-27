@@ -63,7 +63,7 @@ class Lock
         }
 
         try {
-            $data = $this->client->getSpace('lock')
+            $data = $this->client->getSpace('basis_lock')
                 ->select(Criteria::key([ $name ]));
             return count($data) > 0 && $data[0][2] >= microtime(true);
         } catch (RequestFailed $e) {
