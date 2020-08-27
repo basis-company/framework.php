@@ -20,6 +20,7 @@ class Lock
             $redis = $container->get(Client::class);
             return new TarantoolStore($redis, [
                 'createSchema' => true,
+                'space' => 'basis_lock',
             ]);
         });
     }
