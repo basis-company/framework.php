@@ -10,7 +10,8 @@ use Basis\Test;
 class EventTest extends Test
 {
     public $mocks = [
-        ['event.fire', [], 'fireEvent']
+        [ 'event.fire', [], 'fireEvent' ],
+        [ 'event.changes', [], 'fireEvent' ],
     ];
 
     private $firedEvents = [];
@@ -42,30 +43,21 @@ class EventTest extends Test
 
     public function testProcessing()
     {
-        $_REQUEST = array_merge($_REQUEST, [
+        $response = $this->dispatch('module.handle', [
             'event' => 'person.created',
-            'context' => json_encode([ 'name' => 'nekufa' ]),
+            'context' => (object) [ 'name' => 'nekufa' ],
         ]);
 
-        $result = $this->get(Http::class)->process('/event');
-        $response = json_decode($result);
-
-        $this->assertTrue($response->success);
         $this->assertNotNull($response->data->CreateLogin);
 
         $this->assertSame($response->data->CreateLogin->msg, 'person was created with name nekufa');
 
-        $_REQUEST = array_merge($_REQUEST, [
+        $response = $this->dispatch('module.handle', [
             'event' => 'person.person.updated',
-            'context' => json_encode([ 'name' => 'dmitry' ]),
+            'context' => (object) [ 'name' => 'dmitry' ],
         ]);
 
-        $result = $this->get(Http::class)->process('/event');
-        $response = json_decode($result);
-
-        $this->assertTrue($response->success);
         $this->assertNotNull($response->data->CreateLogin);
-
         $this->assertSame($response->data->CreateLogin->msg, 'person.person was updated with name dmitry');
     }
 }
