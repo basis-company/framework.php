@@ -15,8 +15,6 @@ class Handle extends Job
     public $eventId;
     public $context;
 
-    public $sync = false;
-
     public function run(Application $app, Dispatcher $dispatcher, Event $event)
     {
         $start = microtime(1);
@@ -42,13 +40,6 @@ class Handle extends Job
                     ]);
                 }
             }
-            $dispatcher->send('event.feedback', [
-                'eventId' => $this->eventId,
-                'service' => $app->getName(),
-                'result' => [
-                    'message' => 'no subscription'
-                ],
-            ]);
             return [
                 'msg' => 'no subscription',
             ];
@@ -89,20 +80,10 @@ class Handle extends Job
             }
         }
 
-        $result = [
+        return [
             'data' => $data,
             'issues' => $issues,
             'time' => microtime(1) - $start,
         ];
-
-        if (!$this->sync) {
-            $dispatcher->send('event.feedback', [
-                'eventId' => $this->eventId,
-                'service' => $app->getName(),
-                'result' => $result
-            ]);
-        }
-
-        return $result;
     }
 }
