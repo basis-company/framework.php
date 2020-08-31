@@ -41,7 +41,10 @@ class TarantoolTest extends Test
         $this->assertCount(3, $this->find('web.services'));
         $this->assertCount(1, $this->find('web.services', ['name' => 'web']));
 
-        $this->assertSame($this->getRepository('web.services'), $this->get(Pool::class)->get('web')->getRepository('services'));
+        $this->assertSame(
+            $this->getRepository('web.services'),
+            $this->get(Pool::class)->get('web')->getRepository('services')
+        );
 
         $tester = $this->get(Pool::class)->get('tester');
         $this->assertCount(0, $tester->find('data', ['id' => 2]));
@@ -113,7 +116,7 @@ class TarantoolTest extends Test
                 $testing = $this->findOrCreate('note', ['id' => $note->id]);
                 $test->assertSame($note, $testing);
 
-                $testing = $this->findOrCreate('note', ['id' => $note->id+1]);
+                $testing = $this->findOrCreate('note', ['id' => $note->id + 1]);
                 $test->assertCount(2, $this->find('note'));
 
                 // find or fail shortcut
@@ -173,33 +176,27 @@ class TarantoolTest extends Test
         $nekufa = $mapper->create('tester', ['id' => 1, 'name' => 'nekufa']);
         $bazyaba = $mapper->create('tester', ['id' => 2, 'name' => 'bazyaba']);
 
-        $result = $this->get(Select::class)
-            ('tester', 'id', [$nekufa->id]);
+        $result = $this->get(Select::class)('tester', 'id', [$nekufa->id]);
 
         $this->assertCount(1, $result);
 
-        $result = $this->get(Select::class)
-            ('tester', 'id', [$nekufa->id, $nekufa->id]);
+        $result = $this->get(Select::class)('tester', 'id', [$nekufa->id, $nekufa->id]);
 
         $this->assertCount(1, $result);
 
-        $result = $this->get(Select::class)
-            ('tester', 'id', [$bazyaba->id, $nekufa->id, $nekufa->id]);
+        $result = $this->get(Select::class)('tester', 'id', [$bazyaba->id, $nekufa->id, $nekufa->id]);
 
         $this->assertCount(2, $result);
 
-        $result = $this->get(Select::class)
-            ('tester', 'name', ['nekufa']);
+        $result = $this->get(Select::class)('tester', 'name', ['nekufa']);
 
         $this->assertCount(1, $result);
 
-        $result = $this->get(Select::class)
-            ('tester', 'name', ['nekufa', 'bazyaba']);
+        $result = $this->get(Select::class)('tester', 'name', ['nekufa', 'bazyaba']);
 
         $this->assertCount(2, $result);
 
-        $result = $this->get(Select::class)
-            ('tester', 'name', ['nekufa', 'bazyaba', 'nekufa', 'dmitry']);
+        $result = $this->get(Select::class)('tester', 'name', ['nekufa', 'bazyaba', 'nekufa', 'dmitry']);
 
         $this->assertCount(2, $result);
     }
@@ -231,7 +228,7 @@ class TarantoolTest extends Test
             [2, [[2018, 5, 3], [2018, 5, 4], [2018, 4], [2018, 4]]],
         ];
 
-        $select = function($key) {
+        $select = function ($key) {
             return $this->get(Select::class)('calendar', 'year_month_day', $key);
         };
 
@@ -242,7 +239,7 @@ class TarantoolTest extends Test
         $spaceId = $mapper->getClient()->evaluate('return box.space.calendar.id')[0];
         $indexId = $mapper->getClient()->evaluate('return box.space.calendar.index.year_month_day.id')[0];
 
-        $selectUsingSpaceAndIndexId = function($values) use ($spaceId, $indexId) {
+        $selectUsingSpaceAndIndexId = function ($values) use ($spaceId, $indexId) {
             return $this->get(Select::class)($spaceId, $indexId, $values);
         };
 
@@ -275,7 +272,7 @@ class TarantoolTest extends Test
         $kaluga = $this->create('sector', ['parent' => $root]);
         $obninsk = $this->create('sector', ['parent' => $kaluga]);
 
-        $select = function($values) {
+        $select = function ($values) {
             return $this->get(Select::class)('sector', 'id', $values);
         };
 
@@ -292,7 +289,7 @@ class TarantoolTest extends Test
 
         $client = $mapper->getClient();
 
-        $selectUsingNetBox = function($values) use ($client) {
+        $selectUsingNetBox = function ($values) use ($client) {
             return $client->evaluate("
                 return require('net.box').connect('tcp://localhost:3301')
                     :call('basis_select', {
@@ -308,7 +305,7 @@ class TarantoolTest extends Test
         $spaceId = $client->evaluate("return box.space.sector.id")[0];
         $indexId = $client->evaluate("return box.space.sector.index.id.id")[0];
 
-        $selectUsingNetBoxWithoutNames = function($values) use ($client, $spaceId, $indexId) {
+        $selectUsingNetBoxWithoutNames = function ($values) use ($client, $spaceId, $indexId) {
             return $client->evaluate("
                 return require('net.box').connect('tcp://localhost:3301')
                     :call('basis_select', {
@@ -322,4 +319,3 @@ class TarantoolTest extends Test
         }
     }
 }
-
