@@ -73,7 +73,16 @@ if (file_exists('php/Job/Background.php')) {
             while (true) {
                 $coroutine->get(BackgroundStart::class)->update();
                 $coroutine->get(BackgroundHold::class)->update();
-                $result = $coroutine->dispatch('background');
+                try {
+                    $result = $coroutine->dispatch('background');
+                } catch (Throwable $e) {
+                    Coroutine::sleep(1);
+                    $result = [
+                        'type' => 'exception',
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ];
+                }
                 if ($result) {
                     if (!is_object($result) || count(get_object_vars($result))) {
                         $logger->info($result);
