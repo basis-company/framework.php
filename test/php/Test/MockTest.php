@@ -15,7 +15,7 @@ class MockTest extends Test
 
     public function hello($params)
     {
-        return ['text' => 'Hello, '.$params->nick];
+        return ['text' => 'Hello, ' . $params->nick];
     }
 
     public function testContext()
@@ -33,6 +33,9 @@ class MockTest extends Test
     {
         $this->params = ['session' => ['person' => 1]];
         $this->assertSame($this->dispatch('test.person')->person, 1);
+
+        $params = ['session' => ['person' => 2]];
+        $this->assertSame($this->dispatch('test.person', $params)->person, 1);
     }
 
     public function testMocking()

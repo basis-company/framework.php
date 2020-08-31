@@ -84,7 +84,7 @@ class Dispatcher
             }
             try {
                 $instance = $this->container->create($class);
-                foreach ($params as $k => $v) {
+                foreach ($converter->toObject($params) as $k => $v) {
                     $instance->$k = $v;
                 }
                 $result = $this->call($instance, 'run');

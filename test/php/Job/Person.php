@@ -6,7 +6,7 @@ use Basis\Job;
 
 class Person extends Job
 {
-    public $session;
+    public ?object $session = null;
 
     public function run()
     {

@@ -45,10 +45,6 @@ class Dispatcher extends Basis
         $converter = $this->get(Converter::class);
 
         $global = $test->params ?: [];
-        $global = $converter->toObject($global);
-        if (is_object($global)) {
-            $global = get_object_vars($global);
-        }
 
         return parent::dispatch($job, array_merge($params, $global), $service);
     }
