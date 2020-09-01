@@ -29,7 +29,7 @@ class Lock
         });
     }
 
-    public function acquireOrQueue($name, $ttl = 1)
+    public function acquireOrQueue($name, $ttl = 60)
     {
         if (!$this->lock($name, $ttl)) {
             if (!$this->lock("queue-$name")) {
@@ -46,7 +46,7 @@ class Lock
         return true;
     }
 
-    public function acquire($name, $ttl = 1)
+    public function acquire($name, $ttl = 60)
     {
         while (!$this->lock($name, $ttl)) {
             $this->waitUnlock($name);
@@ -71,7 +71,7 @@ class Lock
         }
     }
 
-    public function lock($name, $ttl = 1)
+    public function lock($name, $ttl = 60)
     {
         if (array_key_exists($name, $this->locks)) {
             throw new Exception("Lock $name was already registered");
