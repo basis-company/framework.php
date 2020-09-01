@@ -2,18 +2,16 @@
 
 namespace Basis;
 
-use Basis\Applicatoin;
-use Basis\Clickhouse;
-use Basis\Context;
-use Basis\Event;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
 use Tarantool\Mapper\Repository;
 use Tarantool\Queue\Queue;
+use Throwable;
 
 trait Toolkit
 {
@@ -174,10 +172,18 @@ trait Toolkit
         $context = $this->get(Context::class)->toArray();
         Coroutine::create(function () use ($job, $params, $service, $context) {
             $app = new Application();
-            $app->get(Context::class)->reset($context);
-            $app->dispatch($job, $params, $service);
-            $app->get(Event::class)->fireChanges($job);
-            $app->finalize();
+            try {
+                $app->get(Context::class)->reset($context);
+                $app->dispatch($job, $params, $service);
+                $app->get(Event::class)->fireChanges($job);
+                $app->finalize();
+            } catch (Throwable $e) {
+                $app->get(LoggerInterface::class)->info([
+                    'type' => 'exception',
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
         });
     }
 }
