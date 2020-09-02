@@ -19,11 +19,15 @@ class Register extends Job
         $assets = $this->dispatch('module.assets');
         $version = $this->dispatch('module.version');
 
+        $address = $this->dispatch('resolve.address', [
+            'name' => gethostname(),
+        ]);
+
         $this->dispatch('web.register', [
             'service' => $this->app->getName(),
             'hash' => $assets->hash,
             'routes' => $meta->routes,
-            'host' => System::gethostbyname(gethostname()),
+            'host' => $address->host,
             'version' => $version->version,
         ]);
     }
