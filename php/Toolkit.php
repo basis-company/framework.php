@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Basis\Metric\Registry;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -170,9 +171,11 @@ trait Toolkit
             return $this->dispatch($job, $params, $service);
         }
         $context = $this->get(Context::class)->toArray();
-        Coroutine::create(function () use ($job, $params, $service, $context) {
+        $registry = $this->get(Registry::class);
+        Coroutine::create(function () use ($job, $params, $service, $context, $registry) {
             $app = new Application();
             try {
+                $app->getContainer()->share(Registry::class, $registry);
                 $app->get(Context::class)->reset($context);
                 $app->dispatch($job, $params, $service);
                 $app->get(Event::class)->fireChanges($job);
