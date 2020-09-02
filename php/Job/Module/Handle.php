@@ -11,9 +11,9 @@ use Exception;
 
 class Handle extends Job
 {
+    public $context;
     public $event;
     public $eventId;
-    public $context;
 
     public function run(Application $app, Dispatcher $dispatcher, Event $event)
     {

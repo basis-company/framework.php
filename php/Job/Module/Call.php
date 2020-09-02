@@ -7,9 +7,9 @@ use Exception;
 
 class Call extends Job
 {
-    public string $space;
     public int $id;
     public string $method;
+    public string $space;
 
     public function run()
     {

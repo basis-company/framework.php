@@ -6,8 +6,8 @@ use Exception;
 
 class Trigger extends Call
 {
-    public string $space;
     public int $id;
+    public string $space;
     public string $type;
 
     public function run()

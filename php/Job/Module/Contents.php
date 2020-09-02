@@ -7,7 +7,7 @@ use Exception;
 
 class Contents extends Job
 {
-    public $path;
+    public string $path;
 
     public function run()
     {
