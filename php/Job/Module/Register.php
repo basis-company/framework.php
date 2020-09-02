@@ -4,6 +4,7 @@ namespace Basis\Job\Module;
 
 use Basis\Event;
 use Basis\Job;
+use Swoole\Coroutine\System;
 
 class Register extends Job
 {
@@ -22,7 +23,7 @@ class Register extends Job
             'service' => $this->app->getName(),
             'hash' => $assets->hash,
             'routes' => $meta->routes,
-            'host' => gethostbyname(gethostname()),
+            'host' => System::gethostbyname(gethostname()),
             'version' => $version->version,
         ]);
     }
