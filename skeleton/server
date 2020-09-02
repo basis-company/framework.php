@@ -76,7 +76,7 @@ if (file_exists('php/Job/Background.php')) {
                 try {
                     $result = $coroutine->dispatch('background');
                 } catch (Throwable $e) {
-                    Coroutine::sleep(1);
+                    Coroutine::sleep(5);
                     $result = [
                         'type' => 'exception',
                         'message' => $e->getMessage(),
@@ -88,7 +88,7 @@ if (file_exists('php/Job/Background.php')) {
                         $logger->info($result);
                     }
                 }
-                Coroutine::sleep(0.1);
+                Coroutine::sleep(1);
             }
         });
 
