@@ -28,7 +28,7 @@ class Clickhouse
 
         if (!$config['host']) {
             $address = $this->dispatch('resolve.address', [
-                'name' => $serviceName . '-db',
+                'name' => $serviceName . '-ch',
             ]);
             $config['host'] = $address->host;
         }
