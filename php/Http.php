@@ -178,7 +178,7 @@ class Http
 
         $time = microtime(true) - $start;
         if ($time >= 0.001) {
-            $log['time'] = $time;
+            $log['time'] = round($time, 3);
         }
 
         $blacklist = [

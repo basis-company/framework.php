@@ -83,7 +83,7 @@ class Handle extends Job
         return [
             'data' => $data,
             'issues' => $issues,
-            'time' => microtime(1) - $start,
+            'time' => round(microtime(1) - $start, 3),
         ];
     }
 }

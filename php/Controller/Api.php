@@ -103,9 +103,9 @@ class Api
         }
 
         try {
-            $response[0]['timing'] = microtime(true) - $tracer->getActiveSpan()->getStart();
+            $response[0]['time'] = round(microtime(true) - $tracer->getActiveSpan()->getStart(), 3);
             if ($this->app->getName() != 'audit') {
-                if ($response[0]['timing'] >= 0.1) {
+                if ($response[0]['time'] >= 0.1) {
                     $exporter = $this->get(Exporter::class);
                     $transport = $this->get(Transport::class);
                     $exporter->flush($tracer, $transport);
