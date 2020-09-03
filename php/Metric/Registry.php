@@ -44,7 +44,7 @@ class Registry
         // render prometheus format
         $output = [];
         foreach ($keys as $key) {
-            $v = $this[$key];
+            $v = $this->table[$key];
             $nick = $prefix . $v['nick'];
             if ($v['help']) {
                 $output[] = sprintf('# HELP %s %s', $nick, $v['help']);
