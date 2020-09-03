@@ -5,36 +5,38 @@ namespace Basis\Metric;
 use Basis\Metric;
 use Swoole\Table;
 
-class Registry extends Table
+class Registry
 {
+    protected $table;
+
     public function __construct()
     {
-        parent::__construct(32);
-        $this->column('type', Table::TYPE_STRING, 16);
-        $this->column('nick', Table::TYPE_STRING, 64);
-        $this->column('help', Table::TYPE_STRING, 256);
-        $this->column('value', Table::TYPE_FLOAT);
-        $this->create();
+        $this->table = new Table(32);
+        $this->table->column('type', Table::TYPE_STRING, 16);
+        $this->table->column('nick', Table::TYPE_STRING, 64);
+        $this->table->column('help', Table::TYPE_STRING, 256);
+        $this->table->column('value', Table::TYPE_FLOAT);
+        $this->table->create();
     }
 
     public function getRow(Metric $metric)
     {
-        if (!$this->offsetExists($metric->getNick())) {
-            $this[$metric->getNick()] = [
+        if (!$this->table->offsetExists($metric->getNick())) {
+            $this->table[$metric->getNick()] = [
                 'help' => $metric->getHelp(),
                 'nick' => $metric->getNick(),
                 'type' => $metric->getType(),
             ];
         }
 
-        return $this[$metric->getNick()];
+        return $this->table[$metric->getNick()];
     }
 
     public function render(string $prefix = ''): string
     {
         // sorted key collection
         $keys = [];
-        foreach ($this as $k => $v) {
+        foreach ($this->table as $k => $v) {
             $keys[] = $k;
         }
         sort($keys);
