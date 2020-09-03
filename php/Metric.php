@@ -78,7 +78,7 @@ class Metric
 
     public function getValue()
     {
-        return $this->getRow()['value'];
+        return $this->getRow()->offsetExists('value') ? $this->getRow()['value'] : null;
     }
 
     public function setValue($value)
