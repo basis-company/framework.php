@@ -111,8 +111,7 @@ class Lock
     public function waitUnlock($name)
     {
         while ($this->exists($name)) {
-            // 100ms
-            Coroutine::sleep(0.1);
+            $this->app->dispatch('module.sleep', [ 'seconds' => 0.1 ]);
         }
 
         return true;
