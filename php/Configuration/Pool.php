@@ -7,6 +7,7 @@ use Basis\Container;
 use Basis\Toolkit;
 use Exception;
 use Tarantool\Client\Client;
+use Tarantool\Client\Middleware\RetryMiddleware;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
@@ -42,7 +43,9 @@ class Pool
                         'uri' => 'tcp://' . $address->host . ':3301',
                     ];
 
-                    $client = Client::fromOptions($options);
+                    $client = Client::fromOptions($options)
+                        ->withMiddleware(RetryMiddleware::linear(5, 100));
+
                     try {
                         $client->evaluate("box.session.su('admin')");
                     } catch (Exception $e) {

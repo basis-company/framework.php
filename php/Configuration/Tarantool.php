@@ -5,8 +5,9 @@ namespace Basis\Configuration;
 use Basis\Application;
 use Basis\Container;
 use Basis\Toolkit;
-use Tarantool\Client\Client;
 use Exception;
+use Tarantool\Client\Client;
+use Tarantool\Client\Middleware\RetryMiddleware;
 
 class Tarantool
 {
@@ -39,7 +40,8 @@ class Tarantool
                 }
             }
 
-            $client = Client::fromOptions($options);
+            $client = Client::fromOptions($options)
+                ->withMiddleware(RetryMiddleware::linear(5, 100));
 
             try {
                 $client->evaluate("box.session.su('admin')");
