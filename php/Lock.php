@@ -73,12 +73,9 @@ class Lock
 
     public function lock($name, $ttl = 60)
     {
-        if (array_key_exists($name, $this->locks)) {
-            throw new Exception("Lock $name was already registered");
-        }
-
         $lock = $this->factory->createLock($name, $ttl);
 
+        // overerite if acquired
         if ($lock->acquire()) {
             $this->locks[$name] = $lock;
             return true;
@@ -92,6 +89,8 @@ class Lock
         foreach ($this->locks as $name => $_) {
             $this->unlock($name);
         }
+        
+        $this->locks = [];
     }
 
     public function unlock($name)
