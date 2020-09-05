@@ -38,9 +38,9 @@ class Telemetry
             if ($container->has(ServerRequestInterface::class)) {
                 $request = $container->get(ServerRequestInterface::class);
                 $body = $request->getParsedBody();
-                if (array_key_exists('rpc', $body)) {
+                if (is_array($body) && array_key_exists('rpc', $body)) {
                     $data = json_decode($body['rpc']);
-                    if ($data && property_exists($data, 'span')) {
+                    if ($data !== null && property_exists($data, 'span')) {
                         $traceId = $data->span->traceId;
                         $spanId = $data->span->spanId;
                         $context = SpanContext::restore($traceId, $spanId);
