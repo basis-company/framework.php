@@ -26,7 +26,7 @@ class Swoole
                 'backlog' => getenv('SWOOLE_HTTP_SERVER_BACKLOG') ?: 64,
                 'dispatch_mode' => getenv('SWOOLE_HTTP_SERVER_DISPATCH_MODE') ?: 1,
                 'http_parse_post' => true,
-                'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 0,
+                'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 128,
                 'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 2,
                 'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 8,
             ]);
