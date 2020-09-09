@@ -111,6 +111,7 @@ class Api
                     $exporter->flush($tracer, $transport);
                 }
             }
+            $response[0]['timing'] = $response[0]['time'];
         } catch (Exception $e) {
             // no traces is not a problem
         }
