@@ -56,7 +56,7 @@ RUN apt-get update \
 
 RUN cd /tmp && git clone https://github.com/swoole/swoole-src.git \
     && cd swoole-src \
-    && git checkout v4.5.2 \
+    && git checkout v4.5.3 \
     && phpize \
     && ./configure  --enable-openssl \
     && make \
