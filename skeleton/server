@@ -35,6 +35,14 @@ $server->tick(1000, function () use ($thread, $startTime) {
 $logger = $thread->get(LoggerInterface::class);
 $registry = $thread->get(Registry::class);
 
+// register all metrics
+$metrics = $thread->get(Basis\Registry::class)->listClasses('metric');
+foreach ($metrics as $metric) {
+    if (method_exists($metric, 'getValue')) {
+        $thread->get($metric)->getValue();
+    }
+}
+
 $server->on('request', function ($request, $response) use ($registry, $logger, $server) {
     $coroutine = new Application();
     $coroutine->getContainer()->share(LoggerInterface::class, $logger);
