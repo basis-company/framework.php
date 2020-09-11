@@ -24,7 +24,7 @@ class Swoole
                 'enable_static_handler' => true,
                 'http_compression' => false,
                 'backlog' => getenv('SWOOLE_HTTP_SERVER_BACKLOG') ?: 64,
-                'dispatch_mode' => getenv('SWOOLE_HTTP_SERVER_DISPATCH_MODE') ?: 1,
+                'dispatch_mode' => getenv('SWOOLE_HTTP_SERVER_DISPATCH_MODE') ?: 3,
                 'http_parse_post' => true,
                 'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 32,
                 'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 2,
