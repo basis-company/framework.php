@@ -20,10 +20,10 @@ class Swoole
             $server->set([
                 'backlog' => getenv('SWOOLE_HTTP_SERVER_BACKLOG') ?: 64,
                 'buffer_output_size' => getenv('SWOOLE_HTTP_SERVER_BUFFER_OUTPUT_SIZE') ?: 128 * 1024 * 1024,
-                'discard_timeout_request' => true,
+                'discard_timeout_request' => getenv('SWOOLE_HTTP_SERVER_DISCARD_TIMEOUT_REQUEST') !== 'false',
                 'dispatch_mode' => getenv('SWOOLE_HTTP_SERVER_DISPATCH_MODE') ?: 7,
                 'document_root' => getcwd(),
-                'enable_coroutine' => true,
+                'enable_coroutine' => getenv('SWOOLE_HTTP_SERVER_ENABLE_COROUTINE') !== 'false',
                 'enable_static_handler' => true,
                 'http_compression' => false,
                 'http_parse_post' => true,
