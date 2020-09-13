@@ -27,6 +27,7 @@ class Swoole
                 'enable_static_handler' => true,
                 'http_compression' => false,
                 'http_parse_post' => true,
+                'log_level' => getenv('SWOOLE_HTTP_SERVER_LOG_LEVEL') ?: 4,
                 'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 64,
                 'open_http_protocol' => true,
                 'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 1,
