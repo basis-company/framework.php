@@ -2,7 +2,7 @@
 
 namespace Basis;
 
-use GuzzleHttp\Client;
+use Swoole\Coroutine\Http\Client;
 
 class Storage
 {
@@ -17,23 +17,35 @@ class Storage
 
     public function upload(string $filename, $contents): string
     {
-        if ($this->getContainer()->has(Client::class)) {
-            $client = $this->getContainer()->get(Client::class);
+        $container = $this->getContainer();
+        if ($container->has(Client::class)) {
+            $client = $container->get(Client::class);
         } else {
-            $client = $this->getContainer()->create(Client::class);
+            $client = new Client($this->hostname, 80);
         }
 
-        $response = $client->request('POST', "http://$this->hostname/storage/upload", [
-            'multipart' => [
-                [
-                    'name' => 'file',
-                    'filename' => $filename,
-                    'contents' => $contents,
-                ],
-            ]
-        ]);
+        $tmp = '/tmp/' . md5($contents);
+        file_put_contents($tmp, $contents);
 
-        return json_decode($response->getBody())->hash[0];
+        $mime = mime_content_type($tmp);
+
+        $client->addFile($tmp, $filename, $mime);
+        $client->set(['timeout' => -1]);
+        $client->post('/storage/upload', $contents);
+
+        if (!$client->body) {
+            throw new Exception("Host $this->hostname is unreachable");
+        }
+
+        $response = json_decode($client->body);
+        $client->close();
+
+        if ($response->data) {
+            return $response->data;
+        }
+
+
+        return $response->hash[0];
     }
 
     public function url(string $hash): string
