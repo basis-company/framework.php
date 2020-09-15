@@ -21,17 +21,17 @@ class Swoole
                 'backlog' => getenv('SWOOLE_HTTP_SERVER_BACKLOG') ?: 64,
                 'buffer_output_size' => getenv('SWOOLE_HTTP_SERVER_BUFFER_OUTPUT_SIZE') ?: 128 * 1024 * 1024,
                 'discard_timeout_request' => getenv('SWOOLE_HTTP_SERVER_DISCARD_TIMEOUT_REQUEST') !== 'false',
-                'dispatch_mode' => getenv('SWOOLE_HTTP_SERVER_DISPATCH_MODE') ?: 7,
+                'dispatch_mode' => getenv('SWOOLE_HTTP_SERVER_DISPATCH_MODE') ?: 1,
                 'document_root' => getcwd(),
                 'enable_coroutine' => getenv('SWOOLE_HTTP_SERVER_ENABLE_COROUTINE') !== 'false',
                 'enable_static_handler' => true,
                 'http_compression' => false,
                 'http_parse_post' => true,
                 'log_level' => getenv('SWOOLE_HTTP_SERVER_LOG_LEVEL') ?: 4,
-                'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 64,
+                'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 0,
                 'open_http_protocol' => true,
-                'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 1,
-                'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 16,
+                'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 2,
+                'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 2,
             ]);
 
             $server->on("start", function () use ($container, $host, $port) {
