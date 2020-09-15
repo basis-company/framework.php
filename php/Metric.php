@@ -86,8 +86,9 @@ class Metric
         $this->getRow()['value'] = $value;
     }
 
-    public function increment()
+    public function increment($amount = 1)
     {
-        $this->getRow()['value'] = $this->getRow()['value'] + 1;
+        $this->getRow()['value'] = $this->getRow()['value'] + $amount;
+        return $this->getRow()['value'];
     }
 }

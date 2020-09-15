@@ -8,6 +8,9 @@ use Basis\Metric\BackgroundHold;
 use Basis\Metric\BackgroundStart;
 use Basis\Metric\MemoryUsage;
 use Basis\Metric\Registry;
+use Basis\Metric\RequestAverageTime;
+use Basis\Metric\RequestCounter;
+use Basis\Metric\RequestTotalTime;
 use Basis\Metric\Uptime;
 use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
@@ -50,8 +53,13 @@ $server->on('request', function ($request, $response) use ($registry, $logger, $
     $coroutine->getContainer()->share(Server::class, $server);
 
     try {
-        $coroutine->get(Basis\Metric\RequestCounter::class)->increment();
+        $start = microtime(true);
+        $requestCounter = $coroutine->get(RequestCounter::class)->increment();
         $coroutine->get(Http::class)->swoole($request, $response);
+        $requestTime = microtime(true) - $start;
+        $requestTotalTime = $coroutine->get(RequestTotalTime::class)->increment($requestTime);
+
+        $coroutine->get(RequestAverageTime::class)->setValue($requestTotalTime / $requestCounter);
         $coroutine->finalize();
 
     } catch (Throwable $e) {
