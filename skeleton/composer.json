@@ -13,7 +13,7 @@
         "rybakit/msgpack": "^0.7.0",
         "symfony/cache": "^v5.1.3",
         "symfony/lock": "^v5.1.3",
-        "tarantool/client": "^0.8.0",
+        "tarantool/client": "^0.8.1",
         "tarantool/mapper": "^4.6.6",
         "tarantool/queue": "v0.8.0",
         "tarantool/symfony-lock": "^0.2.4"

@@ -19,6 +19,7 @@ class Tarantool
 
             $options = [
                 'uri' => getenv('TARANTOOL_CONNECTION'),
+                'persistent' => getenv('TARANTOOL_CLIENT_PERSISTENT_CONNECTION') !== 'false',
             ];
 
             if (!$options['uri']) {

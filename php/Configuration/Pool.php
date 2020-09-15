@@ -41,6 +41,7 @@ class Pool
                     ]);
                     $options = [
                         'uri' => 'tcp://' . $address->host . ':3301',
+                        'persistent' => getenv('TARANTOOL_CLIENT_PERSISTENT_CONNECTION') !== 'false',
                     ];
 
                     $client = Client::fromOptions($options)
