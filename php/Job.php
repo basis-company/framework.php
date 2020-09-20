@@ -2,8 +2,9 @@
 
 namespace Basis;
 
-use Basis\Feedback\Confirm;
 use Basis\Feedback\Choose;
+use Basis\Feedback\Confirm;
+use Basis\Feedback\Info;
 use Exception;
 
 abstract class Job
@@ -27,6 +28,12 @@ abstract class Job
     protected function confirm(string $message): bool
     {
         return !!(new Confirm($message))
+            ->process($this);
+    }
+
+    protected function info(string $message): bool
+    {
+        return !!(new Info($message))
             ->process($this);
     }
 }
