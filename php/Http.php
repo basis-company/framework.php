@@ -146,10 +146,15 @@ class Http
 
     public function swoole(SwooleRequest $swooleRequest, SwooleResponse $swooleResponse)
     {
+        $params = [];
         $uri = $swooleRequest->server['request_uri'];
+
         if (array_key_exists('query_string', $swooleRequest->server)) {
-            $uri .= '?' . $swooleRequest->server['query_string'];
+            $query = $swooleRequest->server['query_string'];
+            parse_str($query, $params);
+            $uri .= '?' . $query;
         }
+
         $serverRequest = new ServerRequest(
             $swooleRequest->server['request_method'],
             $uri,
@@ -158,6 +163,10 @@ class Http
             $swooleRequest->server['server_protocol'],
             $swooleRequest->server,
         );
+
+        if (count($params)) {
+            $serverRequest = $serverRequest->withQueryParams($params);
+        }
 
         if (property_exists($swooleRequest, 'post')) {
             if (is_array($swooleRequest->post)) {
