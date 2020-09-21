@@ -42,7 +42,7 @@ class Tarantool
             }
 
             $client = Client::fromOptions($options)
-                ->withMiddleware(RetryMiddleware::linear(5, 100));
+                ->withMiddleware(RetryMiddleware::linear(30, 500));
 
             try {
                 $client->evaluate("box.session.su('admin')");
