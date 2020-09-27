@@ -25,7 +25,7 @@ class Api
     {
         $body = $request->getParsedBody();
 
-        if (!is_array($body)) {
+        if ($body === null || !is_array($body)) {
             return [
                 'success' => false,
                 'message' => 'Invalid request',
@@ -99,7 +99,11 @@ class Api
                 }
             }
         } catch (Exception $e) {
-            return ['success' => false, 'message' => 'Fire changes failure: ' . $e->getMessage()];
+            return [
+                'success' => false,
+                'message' => 'Fire changes failure: ' . $e->getMessage(),
+                'trace' => explode(PHP_EOL, $e->getTraceAsString()),
+            ];
         }
 
         try {
