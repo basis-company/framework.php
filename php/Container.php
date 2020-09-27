@@ -91,6 +91,14 @@ class Container implements ContainerInterface
             || array_key_exists($key, $this->factory);
     }
 
+    public function hasInstance($key): bool
+    {
+        if (array_key_exists($key, $this->alias)) {
+            return $this->hasInstance($this->alias[$key]);
+        }
+        return array_key_exists($key, $this->instance);
+    }
+
     public function factory(string $class): self
     {
         $type = $this->registry->getReturnType($class, 'factory');

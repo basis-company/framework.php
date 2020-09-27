@@ -2,10 +2,12 @@
 
 namespace Basis;
 
+use Basis\Container;
 use Basis\Dispatcher;
 use Basis\Registry;
 use Exception;
 use ReflectionClass;
+use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Spy;
 use Tarantool\Mapper\Pool;
 
@@ -106,8 +108,10 @@ class Event
     {
         $hasChanges = false;
 
-        $serviceName = $this->app->getName();
-        $this->get(Pool::class)->get($serviceName);
+        if ($this->get(Container::class)->hasInstance(Mapper::class)) {
+            $serviceName = $this->app->getName();
+            $this->get(Pool::class)->get($serviceName);
+        }
 
         foreach ($this->get(Pool::class)->getMappers() as $mapper) {
             if ($mapper->getPlugin(Spy::class)->hasChanges()) {
@@ -119,7 +123,10 @@ class Event
 
     public function fireChanges(string $producer)
     {
-        $this->get(Pool::class)->get($this->app->getName());
+        if ($this->get(Container::class)->hasInstance(Mapper::class)) {
+            $serviceName = $this->app->getName();
+            $this->get(Pool::class)->get($serviceName);
+        }
 
         $dispatcher = $this->app->get(Dispatcher::class);
         $changed = false;
