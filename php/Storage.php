@@ -24,7 +24,8 @@ class Storage
             $client = new Client($this->hostname, 80);
         }
 
-        $tmp = '/tmp/' . md5($contents);
+        $extension = array_reverse(explode('.', $filename))[0];
+        $tmp = '/tmp/' . md5($contents) . '.' . $extension;
         file_put_contents($tmp, $contents);
 
         $mime = mime_content_type($tmp);
