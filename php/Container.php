@@ -104,10 +104,12 @@ class Container implements ContainerInterface
         }
 
         if (array_key_exists($name, $this->instance)) {
-            if ($this->instance[$name] === null) {
+            if ($this->instance[$name] !== null) {
+                return $this->instance[$name];
+            }
+            if (count($this->trace) > 1) {
                 throw new LogicException("Circular dependency " . implode(', ', $this->trace));
             }
-            return $this->instance[$name];
         }
 
         if (array_key_exists($name, $this->alias)) {
