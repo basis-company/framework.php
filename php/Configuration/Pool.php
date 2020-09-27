@@ -4,10 +4,10 @@ namespace Basis\Configuration;
 
 use Basis\Application;
 use Basis\Container;
+use Basis\Middleware\TarantoolRetryMiddleware;
 use Basis\Toolkit;
 use Exception;
 use Tarantool\Client\Client;
-use Tarantool\Client\Middleware\RetryMiddleware;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Plugin\Sequence;
 use Tarantool\Mapper\Plugin\Spy;
@@ -45,7 +45,7 @@ class Pool
                     ];
 
                     $client = Client::fromOptions($options)
-                        ->withMiddleware(RetryMiddleware::linear(30, 500));
+                        ->withMiddleware($this->get(TarantoolRetryMiddleware::class));
 
                     try {
                         $client->evaluate("box.session.su('admin')");
