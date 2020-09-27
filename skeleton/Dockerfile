@@ -13,13 +13,27 @@ WORKDIR /app
 
 RUN apt-get update \
     && apt-get install procps zip -y \
-    && pecl install ast swoole xdebug \
+    && pecl install ast xdebug \
     && docker-php-ext-install opcache \
-    && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini \
     && echo "opcache.enable = 1" > /usr/local/etc/php/conf.d/opcache-enable.ini \
     && echo "opcache.enable_cli = 1" > /usr/local/etc/php/conf.d/opcache-enable-cli.ini \
     && echo "post_max_size = 32M" > /usr/local/etc/php/conf.d/post-max-size.ini \
     && echo "upload_max_filesize = 32M" > /usr/local/etc/php/conf.d/upload-max-filesize.ini \
+    && rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
+
+RUN cd /tmp \
+    && apt-get update \
+    && apt-get install git libssl-dev -y \
+    && git clone --depth 1 https://github.com/swoole/swoole-src.git \ 
+    && cd swoole-src \
+    && phpize \
+    && ./configure --enable-openssl \
+    && make \
+    && make install \
+    && echo 'extension=swoole.so' > /usr/local/etc/php/conf.d/swoole.ini \
+    && cd /tmp \
+    && rm -rf swoole-src \
+    && apt-get remove git libssl-dev -y \
     && rm -rf /var/lib/apt/lists/* /usr/bin/qemu-*-static
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
