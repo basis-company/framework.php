@@ -12,7 +12,7 @@ FROM php:cli
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install zip -y \
+    && apt-get install procps zip -y \
     && pecl install ast swoole xdebug \
     && docker-php-ext-install opcache \
     && echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini \
