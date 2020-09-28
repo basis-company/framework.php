@@ -22,7 +22,9 @@ RUN apt-get update \
 
 RUN cd /tmp \
     && apt-get install git libssl-dev -y \
-    && git clone --depth 1 https://github.com/swoole/swoole-src.git \ 
+    && git clone --depth 64 https://github.com/swoole/swoole-src.git \ 
+    && latestTag=$(git describe --tags `git rev-list --tags --max-count=1`) \
+    && git checkout $latestTag \
     && cd swoole-src \
     && phpize \
     && ./configure --enable-openssl \
