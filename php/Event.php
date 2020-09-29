@@ -37,6 +37,8 @@ class Event
     {
         if ($spec == $event) {
             return true;
+        } elseif ($spec === '*.*.*') {
+            return true;
         } elseif (strpos($spec, '*') !== false) {
             $spec = explode('.', $spec);
             $event = explode('.', $event);
