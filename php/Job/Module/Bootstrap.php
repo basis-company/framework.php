@@ -16,10 +16,19 @@ class Bootstrap
 
     public function run()
     {
+        $jobs = $this->jobs;
+
+        if (class_exists('Job\\Bootstrap')) {
+            $bootstrap = $this->app->getName() . '.bootstrap';
+            if (!in_array($bootstrap, $jobs)) {
+                $jobs[] = $bootstrap;
+            }
+        }
+
         $success = [];
         $failure = [];
 
-        foreach ($this->jobs as $job) {
+        foreach ($jobs as $job) {
             try {
                 $success[$job] = $this->dispatch($job);
             } catch (Throwable $e) {
