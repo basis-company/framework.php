@@ -12,19 +12,21 @@ use Tarantool\SymfonyLock\TarantoolStore;
 
 class Lock
 {
-    protected LockFactory $factory;
+    protected Application $app;
     protected Client $client;
+    protected LockFactory $factory;
     protected TarantoolStore $store;
 
     protected array $locks = [];
 
     public function __construct(Application $app, Client $client, LockFactory $factory, TarantoolStore $store)
     {
+        $this->app = $app;
         $this->factory = $factory;
         $this->client = $client;
         $this->store = $store;
 
-        $app->registerFinalizer(function () {
+        $this->app->registerFinalizer(function () {
             $this->releaseLocks();
         });
     }
@@ -32,14 +34,14 @@ class Lock
     public function acquireOrQueue($name, $ttl = 60)
     {
         if (!$this->lock($name, $ttl)) {
-            if (!$this->lock("queue-$name")) {
+            if (!$this->lock("queue-$name", $ttl)) {
                 // somebody else waiting for next
                 return false;
             }
             $this->waitUnlock($name);
             $this->unlock("queue-$name");
             if (!$this->lock($name, $ttl)) {
-                // somebody else take acquire locks
+                // somebody else take lock
                 return false;
             }
         }
