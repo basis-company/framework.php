@@ -20,6 +20,6 @@ class Sleep extends Job
             }
         }
 
-        return usleep($this->seconds / 1000000)
+        return usleep($this->seconds / 1000000);
     }
 }
