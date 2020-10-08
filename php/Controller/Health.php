@@ -2,13 +2,16 @@
 
 namespace Basis\Controller;
 
+use Basis\Http;
 use Basis\Metric\BackgroundHold;
 use Nyholm\Psr7\Response;
 
 class Health
 {
-    public function index(BackgroundHold $hold)
+    public function index(Http $http, BackgroundHold $hold)
     {
+        $http->setLogging(false);
+
         // 5 minutes default limit
         $threshold = getenv('BACKGROUND_HOLD_MAX') ?: 5 * 60;
         

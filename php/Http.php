@@ -18,6 +18,13 @@ class Http
     use Toolkit;
 
     private ?array $mapping = null;
+    private bool $logging = true;
+
+    public function setLogging(bool $logging): self
+    {
+        $this->logging = $logging;
+        return $this;
+    }
 
     public function getMapping(): array
     {
@@ -190,11 +197,7 @@ class Http
             $log['time'] = round($time, 3);
         }
 
-        $blacklist = [
-            '/health',
-            '/metrics',
-        ];
-        if (!in_array($log['uri'], $blacklist)) {
+        if ($this->logging) {
             $this->get(LoggerInterface::class)->info($log);
         }
 
