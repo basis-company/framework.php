@@ -107,6 +107,7 @@ class Dispatcher
         if (!$result || !$result->success) {
             $exception = new Exception($result->message ?: $client->body);
             if ($result->trace) {
+                $exception->remoteService = $service;
                 $exception->remoteTrace = $result->trace;
             }
             throw $exception;
