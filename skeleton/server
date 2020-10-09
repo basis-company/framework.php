@@ -6,7 +6,6 @@ use Basis\Container;
 use Basis\Http;
 use Basis\Metric\BackgroundHold;
 use Basis\Metric\BackgroundStart;
-use Basis\Metric\MemoryUsage;
 use Basis\Metric\Registry;
 use Basis\Metric\RequestCounter;
 use Basis\Metric\RequestTotalTime;
@@ -30,7 +29,6 @@ $server = $thread->get(Server::class);
 
 $server->tick(1000, function () use ($thread, $startTime) {
     $thread->get(BackgroundHold::class)->update();
-    $thread->get(MemoryUsage::class)->update();
     $thread->get(Uptime::class)->update($startTime);
 });
 
