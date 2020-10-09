@@ -8,7 +8,6 @@ use Basis\Metric\BackgroundHold;
 use Basis\Metric\BackgroundStart;
 use Basis\Metric\MemoryUsage;
 use Basis\Metric\Registry;
-use Basis\Metric\RequestAverageTime;
 use Basis\Metric\RequestCounter;
 use Basis\Metric\RequestTotalTime;
 use Basis\Metric\Uptime;
@@ -59,7 +58,6 @@ $server->on('request', function ($request, $response) use ($registry, $logger, $
         $requestTime = microtime(true) - $start;
         $requestTotalTime = $coroutine->get(RequestTotalTime::class)->increment($requestTime);
 
-        $coroutine->get(RequestAverageTime::class)->setValue($requestTotalTime / $requestCounter);
         $coroutine->finalize();
 
     } catch (Throwable $e) {
