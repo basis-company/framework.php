@@ -96,16 +96,22 @@ class Dispatcher
             return (object) $converter->toObject($result);
         }
 
+        $body = null;
+        $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 32;
+        while (!$body && $limit-- > 0) {
+            $body = $this->send($job, $params, $service)->body;
+            if (!$body) {
+                $this->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
+            }
+        }
 
-        $client = $this->send($job, $params, $service);
-
-        if (!$client->body) {
+        if (!$body) {
             throw new Exception("Host $host ($service) is unreachable");
         }
 
-        $result = json_decode($client->body);
+        $result = json_decode($body);
         if (!$result || !$result->success) {
-            $exception = new Exception($result->message ?: $client->body);
+            $exception = new Exception($result->message ?: $body);
             if ($result->trace) {
                 $exception->remoteService = $service;
                 $exception->remoteTrace = $result->trace;
