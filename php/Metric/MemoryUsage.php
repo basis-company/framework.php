@@ -6,6 +6,7 @@ use Basis\Metric;
 
 class MemoryUsage extends Metric
 {
+    public string $type = self::GAUGE;
     public string $help = 'memory peak usage';
 
     public function update()

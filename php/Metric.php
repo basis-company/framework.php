@@ -13,7 +13,7 @@ class Metric
     public const GAUGE = 'gauge';
     public const HISTOGRAM = 'histogram';
 
-    public string $type = self::GAUGE;
+    public string $type = self::COUNTER;
     public string $help;
 
     public array $labels = [];
