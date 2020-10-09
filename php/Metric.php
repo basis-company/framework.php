@@ -69,26 +69,26 @@ class Metric
         return $this->help;
     }
 
-    public function getRow()
+    public function getRow($labels = [])
     {
         return $this->getContainer()
             ->get(Registry::class)
-            ->getRow($this);
+            ->getRow($this, $labels);
     }
 
-    public function getValue()
+    public function getValue($labels = [])
     {
-        return $this->getRow()->offsetExists('value') ? $this->getRow()['value'] : null;
+        return $this->getRow($labels)->offsetExists('value') ? $this->getRow($labels)['value'] : null;
     }
 
-    public function setValue($value)
+    public function setValue($value, $labels = [])
     {
-        $this->getRow()['value'] = $value;
+        $this->getRow($labels)['value'] = $value;
     }
 
-    public function increment($amount = 1)
+    public function increment($amount = 1, $labels = [])
     {
-        $this->getRow()['value'] = $this->getRow()['value'] + $amount;
-        return $this->getRow()['value'];
+        $this->getRow($labels)['value'] = $this->getRow($labels)['value'] + $amount;
+        return $this->getRow($labels)['value'];
     }
 }

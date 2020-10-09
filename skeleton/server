@@ -53,10 +53,10 @@ $server->on('request', function ($request, $response) use ($registry, $logger, $
 
     try {
         $start = microtime(true);
-        $requestCounter = $coroutine->get(RequestCounter::class)->increment();
+        $coroutine->get(RequestCounter::class)->increment();
         $coroutine->get(Http::class)->swoole($request, $response);
         $requestTime = microtime(true) - $start;
-        $requestTotalTime = $coroutine->get(RequestTotalTime::class)->increment($requestTime);
+        $coroutine->get(RequestTotalTime::class)->increment($requestTime);
 
         $coroutine->finalize();
 

@@ -11,25 +11,34 @@ class Registry
 
     public function __construct()
     {
-        $this->table = new Table(32);
+        $this->table = new Table(256);
         $this->table->column('type', Table::TYPE_STRING, 16);
         $this->table->column('nick', Table::TYPE_STRING, 64);
-        $this->table->column('help', Table::TYPE_STRING, 256);
+        $this->table->column('labels', Table::TYPE_STRING, 128);
+        $this->table->column('help', Table::TYPE_STRING, 128);
         $this->table->column('value', Table::TYPE_FLOAT);
         $this->table->create();
     }
 
-    public function getRow(Metric $metric)
+    public function getRow(Metric $metric, $labels = [])
     {
-        if (!$this->table->offsetExists($metric->getNick())) {
-            $this->table[$metric->getNick()] = [
+        $rendered = [];
+        foreach ($labels as $k => $v) {
+            $rendered[] = $k . '="' . $v . '"';
+        }
+        $labels = implode(',', $rendered);
+        $key = $metric->getNick() . ' ' . $labels;
+
+        if (!$this->table->offsetExists($key)) {
+            $this->table[$key] = [
                 'help' => $metric->getHelp(),
                 'nick' => $metric->getNick(),
                 'type' => $metric->getType(),
+                'labels' => $labels,
             ];
         }
 
-        return $this->table[$metric->getNick()];
+        return $this->table[$key];
     }
 
     public function render(string $prefix = ''): string
@@ -43,13 +52,24 @@ class Registry
 
         // render prometheus format
         $output = [];
+        $typed = [];
         foreach ($keys as $key) {
             $v = $this->table[$key];
             $nick = $prefix . $v['nick'];
-            if ($v['help']) {
-                $output[] = sprintf('# HELP %s %s', $nick, $v['help']);
+            if (!array_key_exists($nick, $typed)) {
+                $typed[$nick] = true;
+                if ($v['help']) {
+                    $output[] = sprintf('# HELP %s %s', $nick, $v['help']);
+                }
+                $output[] = sprintf('# TYPE %s %s', $nick, $v['type']);
+            } elseif ($output[count($output) - 1] == "$nick 0") {
+                // metric with labels should not have zero row
+                array_pop($output);
             }
-            $output[] = sprintf('# TYPE %s %s', $nick, $v['type']);
+            $labels = [];
+            if ($v['labels']) {
+                $nick .= '{' . $v['labels'] . '}';
+            }
             $output[] = sprintf("%s %s", $nick, $v['value']);
         }
         
