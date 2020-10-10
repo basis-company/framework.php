@@ -106,6 +106,7 @@ class Dispatcher
         }
 
         if (!$body) {
+            $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
             throw new Exception("Host $host ($service) is unreachable");
         }
 
