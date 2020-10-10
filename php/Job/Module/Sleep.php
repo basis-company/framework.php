@@ -12,6 +12,10 @@ class Sleep extends Job
 
     public function run()
     {
+        if (!$this->seconds) {
+            return;
+        }
+
         if (class_exists(Coroutine::class)) {
             try {
                 return Coroutine::sleep($this->seconds);
