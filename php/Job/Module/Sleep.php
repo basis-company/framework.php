@@ -4,7 +4,6 @@ namespace Basis\Job\Module;
 
 use Basis\Job;
 use Swoole\Coroutine;
-use Swoole\Error;
 
 class Sleep extends Job
 {
@@ -16,12 +15,8 @@ class Sleep extends Job
             return;
         }
 
-        if (class_exists(Coroutine::class)) {
-            try {
-                return Coroutine::sleep($this->seconds);
-            } catch (Error $error) {
-                // API must be called in the coroutine
-            }
+        if (class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
+            return Coroutine::sleep($this->seconds);
         }
 
         return usleep($this->seconds * 1000000);
