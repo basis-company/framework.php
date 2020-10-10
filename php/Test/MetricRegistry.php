@@ -13,16 +13,18 @@ class MetricRegistry extends Registry
         $this->table = new ArrayObject();
     }
 
-    public function getRow(Metric $metric)
+    public function getRow(Metric $metric, $labels = [])
     {
-        if (!$this->table->offsetExists($metric->getNick())) {
-            $this->table[$metric->getNick()] = new ArrayObject([
+        $labels = count($labels) ? json_encode($labels) : '';
+        if (!$this->table->offsetExists($metric->getNick() . $labels)) {
+            $this->table[$metric->getNick() . $labels] = new ArrayObject([
                 'help' => $metric->getHelp(),
                 'nick' => $metric->getNick(),
                 'type' => $metric->getType(),
+                'labels' => $labels,
             ]);
         }
 
-        return $this->table[$metric->getNick()];
+        return $this->table[$metric->getNick() . $labels];
     }
 }
