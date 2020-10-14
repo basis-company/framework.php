@@ -20,6 +20,7 @@ class Swoole
             $server->set([
                 'buffer_output_size' => getenv('SWOOLE_HTTP_SERVER_BUFFER_OUTPUT_SIZE') ?: 128 * 1024 * 1024,
                 'document_root' => getcwd(),
+                'dispatch_mode' => getenv('SWOOLE_HTTP_SERVER_DISPATCH_MODE') ?: 2,
                 'enable_coroutine' => getenv('SWOOLE_HTTP_SERVER_ENABLE_COROUTINE') !== 'false',
                 'enable_static_handler' => true,
                 'http_compression' => false,
