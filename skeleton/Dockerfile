@@ -15,7 +15,7 @@ RUN apt-get update \
     && apt-get install procps zip -y \
     && pecl install ast xdebug \
     && docker-php-ext-install opcache \
-    && echo "memory_limit = 512M" > /usr/local/etc/php/conf.d/memory-limit.ini \
+    && echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini \
     && echo "opcache.enable = 1" > /usr/local/etc/php/conf.d/opcache-enable.ini \
     && echo "opcache.enable_cli = 1" > /usr/local/etc/php/conf.d/opcache-enable-cli.ini \
     && echo "post_max_size = 32M" > /usr/local/etc/php/conf.d/post-max-size.ini \
