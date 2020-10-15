@@ -8,6 +8,7 @@ use Exception;
 use LogicException;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Swoole\Coroutine\Http\Client;
 use Throwable;
 
@@ -97,11 +98,16 @@ class Dispatcher
         }
 
         $body = null;
-        $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 32;
+        $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 16;
         while (!$body && $limit-- > 0) {
             $body = $this->send($job, $params, $service)->body;
             if (!$body) {
-                $this->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
+                $this->get(LoggerInterface::class)->info([
+                    'type' => 'retry',
+                    'job' => $job,
+                    'sleep' => 1,
+                ]);
+                $this->dispatch('module.sleep', [ 'seconds' => 1 ]);
             }
         }
 
