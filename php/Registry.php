@@ -3,20 +3,179 @@
 namespace Basis;
 
 use Closure;
+use LogicException;
+use ReflectionClass;
+use ReflectionFunction;
+use ReflectionMethod;
+use ReflectionProperty;
 
-interface Registry
+class Registry
 {
-    public function getClass(string $path): ?string;
-    public function getClosureTypes(Closure $closure): array;
-    public function getMethodTypes(string $class, string $method): array;
-    public function getPath(string $path): ?string;
-    public function getPropertyDefaultValue(string $class, string $name);
-    public function getPublicMethods(string $class): array;
-    public function getReflectionParameters($reflection): array;
-    public function getReturnType(string $class, string $method): string;
-    public function getStaticPropertyValue(string $class, string $name);
-    public function hasConstructor(string $class): bool;
-    public function isAbstract(string $class): bool;
-    public function listClasses(string $namespace, bool $recursive = false): array;
-    public function listFiles(string $path): array;
+    protected array $cache = [];
+    protected array $prefixes;
+    protected Converter $converter;
+
+    public function __construct(Application $app, Converter $converter)
+    {
+        $service = $converter->xtypeToClass($app->getName());
+
+        $this->converter = $converter;
+        $this->prefixes = [
+            '' => $app->getRoot(),
+            "Basis\\" => dirname(__DIR__),
+        ];
+    }
+
+    public function getClassProperties(string $class): array
+    {
+        $reflectionClass = new ReflectionClass($class);
+        $properties = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC);
+
+        $result = [];
+        foreach ($properties as $property) {
+            if ($property->getDeclaringClass() == $reflectionClass) {
+                $result[] = $property->getName();
+            }
+        }
+
+        return $result;
+    }
+
+    public function getStaticPropertyValue(string $class, string $name)
+    {
+        return (new ReflectionClass($class))->getStaticPropertyValue('events');
+    }
+
+    public function getPropertyDefaultValue(string $class, string $name)
+    {
+        $reflection = new ReflectionClass($class);
+        return $reflection->getDefaultProperties()[$name];
+    }
+
+    public function getClass(string $path): ?string
+    {
+        $class = $this->converter->xtypeToClass($path);
+
+        foreach ($this->prefixes as $prefix => $path) {
+            if (class_exists($prefix . $class)) {
+                return $prefix . $class;
+            }
+        }
+
+        return null;
+    }
+
+    public function getPath(string $path): ?string
+    {
+        foreach ($this->prefixes as $prefix) {
+            if (file_exists($prefix . '/' . $path)) {
+                return $prefix . '/' . $path;
+            }
+        }
+    }
+
+    public function getReturnType(string $class, string $method): string
+    {
+        $reflection = new ReflectionMethod($class, $method);
+        return $reflection->getReturnType();
+    }
+
+    public function getClosureTypes(Closure $closure): array
+    {
+        $reflection = new ReflectionFunction($closure);
+        return $this->getReflectionParameters($reflection);
+    }
+
+    public function getPublicMethods(string $class): array
+    {
+        $reflection = new ReflectionClass($class);
+        $methods = [];
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            $methods[] = $method->getName();
+        }
+
+        return $methods;
+    }
+
+    public function getMethodTypes(string $class, string $method): array
+    {
+        $reflection = new ReflectionMethod($class, $method);
+        return $this->getReflectionParameters($reflection);
+    }
+
+    public function getReflectionParameters($reflection): array
+    {
+        $types = [];
+        foreach ($reflection->getParameters() as $parameter) {
+            $type = $parameter->getType();
+            $types[$parameter->getName()] = $type ? $type->getName() : null;
+        }
+        return $types;
+    }
+
+    public function hasConstructor(string $class): bool
+    {
+        if (method_exists($class, '__construct')) {
+            $types = $this->getMethodTypes($class, '__construct');
+            return count($types) > 0;
+        }
+        return false;
+    }
+
+    public function listClasses(string $namespace, bool $recursive = false): array
+    {
+        $cached = __METHOD__ . $namespace . ($recursive ? 1 : 0);
+        if (!array_key_exists($cached, $this->cache)) {
+            $namespace = $this->converter->xtypeToClass($namespace);
+            $namespace = str_replace('\\', '/', $namespace);
+            $classes = [];
+
+            foreach ($this->prefixes as $prefix => $path) {
+                $files = $this->listFiles($path . '/php/' . $namespace);
+                foreach ($files as $file) {
+                    $class = str_replace('/', '\\', substr($file, 0, -4));
+                    $classes[] = $prefix . $namespace . '\\' . $class;
+                }
+            }
+            return $this->cache[$cached] = $classes;
+        }
+
+        return $this->cache[$cached];
+    }
+
+    public function listFiles(string $path): array
+    {
+
+        if ($path[0] !== '/') {
+            $result = [];
+            foreach ($this->prefixes as $prefix) {
+                $result = array_merge($result, $this->listFiles($prefix . '/' . $path));
+            }
+            return array_unique($result);
+        }
+
+        if (!is_dir($path)) {
+            return [];
+        }
+
+        $result = [];
+        foreach (scandir($path) as $file) {
+            if ($file != '.' && $file != '..') {
+                if (is_file("$path/$file")) {
+                    $result[] = $file;
+                } else {
+                    foreach ($this->listFiles("$path/$file") as $child) {
+                        $result[] = "$file/$child";
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public function isAbstract(string $class): bool
+    {
+        return (new ReflectionClass($class))->isAbstract();
+    }
 }

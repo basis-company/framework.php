@@ -2,8 +2,9 @@
 
 namespace Basis\Job\Module;
 
+use Amp\Delayed;
+use Amp\Promise;
 use Basis\Job;
-use Swoole\Coroutine;
 
 class Sleep extends Job
 {
@@ -15,8 +16,9 @@ class Sleep extends Job
             return;
         }
 
-        if (class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
-            return Coroutine::sleep($this->seconds);
+        if (class_exists(Delayed::class)) {
+            $result = yield new Delayed($this->seconds * 1000);
+            return;
         }
 
         return usleep($this->seconds * 1000000);

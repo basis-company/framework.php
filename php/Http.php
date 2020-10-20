@@ -2,6 +2,13 @@
 
 namespace Basis;
 
+use Amp\Http\Server\FormParser;
+use Amp\Http\Server\Request as AmpRequest;
+use Amp\Http\Server\RequestHandler\CallableRequestHandler;
+use Amp\Http\Server\Response as AmpResponse;
+use Amp\Http\Server\Router;
+use Amp\Http\Server\StaticContent\DocumentRoot;
+use Amp\Http\Status;
 use Exception;
 use LogicException;
 use Nyholm\Psr7\Response;
@@ -9,14 +16,13 @@ use Nyholm\Psr7\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Swoole\Http\Request as SwooleRequest;
-use Swoole\Http\Response as SwooleResponse;
 use Throwable;
 
 class Http
 {
     use Toolkit;
 
+    private ?Router $router = null;
     private ?array $mapping = null;
     private bool $logging = true;
 
@@ -26,6 +32,125 @@ class Http
         return $this;
     }
 
+    public function getRouter(): Router
+    {
+        if ($this->router === null) {
+            $this->router = new Router();
+            $mapping = $this->getMapping();
+            foreach ($mapping as $pattern => $target) {
+                [ $class, $method ] = $target;
+                $handler = new CallableRequestHandler(function (AmpRequest $request) use ($pattern, $class, $method) {
+                    return $this->handle($request, $pattern, $class, $method);
+                });
+                $this->router->addRoute('GET', $pattern, $handler);
+                $this->router->addRoute('POST', $pattern, $handler);
+            }
+            $assets = new DocumentRoot(getcwd());
+            $assets->setFallback(new CallableRequestHandler(function (AmpRequest $request) use ($mapping) {
+                if (strpos($request->getUri()->getPath(), '/api/index/') === 0) {
+                    [ $class, $method ] = $mapping['/api'];
+                    return $this->handle($request, '/api/index', $class, $method);
+                }
+                return new AmpResponse(
+                    Status::NOT_FOUND,
+                    [ 'Content-Type' => 'text/plain; charset=utf-8' ],
+                    'Not found: ' . $request->getUri()->getPath()
+                );
+            }));
+
+            $this->router->setFallback($assets);
+        }
+
+        return $this->router;
+    }
+
+    private function handle(AmpRequest $request, string $pattern, string $class, string $method)
+    {
+        $start = microtime(true);
+
+        $uri = $request->getUri()->getPath();
+        $params = [];
+
+        if ($request->getUri()->getQuery() !== '') {
+            parse_str($request->getUri()->getQuery(), $params);
+            $uri = $uri . '?' . $request->getUri()->getQuery();
+        }
+
+        $serverRequest = new ServerRequest(
+            (string) $request->getMethod(),
+            (string) $uri,
+            (array) $request->getHeaders(),
+            (string) '',
+            (string) $request->getProtocolVersion(),
+            (array) []
+        );
+
+        if (count($params)) {
+            $serverRequest = $serverRequest->withQueryParams($params);
+        }
+
+        if ($request->getMethod() == 'POST') {
+            $form = yield FormParser\parseForm($request);
+            $parsedBody = $form->getValues();
+            foreach ($parsedBody as $k => $v) {
+                if (is_array($v) && count($v) == 1) {
+                    $parsedBody[$k] = $v[0];
+                }
+            }
+            $serverRequest = $serverRequest->withParsedBody($parsedBody);
+        }
+
+        $url = trim(substr($request->getUri()->getPath(), strlen($pattern)), '/');
+        $arguments = [
+            'uri' => $request->getUri()->getPath(), // absolute path
+            'url' => $url, // relative path
+            'chain' => $url ? explode('/', $url) : [], // relative chain
+        ];
+
+        ob_start();
+        try {
+            $thread = $this->app->fork();
+            $thread->getContainer()->share(ServerRequestInterface::class, $serverRequest);
+            $response = $thread->getContainer()->call($class, $method, $arguments);
+        } catch (Throwable $e) {
+            $response = $class . '::' . $method . '<br/>' . $e->getMessage();
+        }
+        $output = ob_get_clean();
+
+        if (!$response instanceof ResponseInterface) {
+            $headers = [
+                'Content-Type' => 'text/plain; charset=utf-8',
+            ];
+            if (is_array($response) || is_object($response)) {
+                $headers['Content-Type'] = 'application/json; charset=utf-8';
+                $response = json_encode($response);
+            }
+
+            if ($output) {
+                $headers['Content-Type'] = 'text/plain; charset=utf-8';
+                $response = $output . $response;
+            }
+
+            $response = new Response(200, $headers, $response);
+        }
+
+        $log = [
+            'method' => $request->getMethod(),
+            'url' => substr($arguments['uri'], 1),
+        ];
+
+        $time = microtime(true) - $start;
+        if ($time >= 0.001) {
+            $log['time'] = round($time, 3);
+        }
+
+        if ($this->logging) {
+            $this->get(LoggerInterface::class)->info($log);
+        }
+
+        return new AmpResponse($response->getStatusCode(), $response->getHeaders(), $response->getBody());
+    }
+
     public function getMapping(): array
     {
         if ($this->mapping === null) {
@@ -33,7 +158,7 @@ class Http
             $converter = $this->get(Converter::class);
             $registry = $this->get(Registry::class);
             $toolkit = $registry->getPublicMethods(Toolkit::class);
-
+            $dynamic = [];
             foreach ($registry->listClasses('controller') as $class) {
                 $namespace = null;
                 foreach ($registry->getPublicMethods($class) as $name) {
@@ -47,17 +172,20 @@ class Http
                         $start = strpos($class, 'Controller\\') + 11;
                         $namespace = $converter->classToXtype(substr($class, $start));
                     }
+                    $route = "/" . $namespace;
                     if ($name == '__process') {
-                        $route = "$namespace/*";
-                        $start = strlen($route);
-                    } else {
-                        $route = "$namespace/$name";
-                        $start = strlen($route) + 1;
+                        $route .= "/{query}";
+                        $dynamic[$route] = [ $class, $name ];
+                        continue;
+                    } elseif ($name !== 'index') {
+                        $route .= "/$name";
                     }
-                    $this->mapping[$route] = [ $class, $name, $start ];
-                    if (strpos($route, '*') === false) {
-                        $this->mapping[$route . '/*'] = [ $class, $name, $start + 1 ];
-                    }
+                    $start = strlen($route);
+                    $this->mapping[$route] = [ $class, $name ];
+                }
+                // dynamic routes should be latest
+                foreach ($dynamic as $route => $info) {
+                    $this->mapping[$route] = $info;
                 }
             }
         }
@@ -68,185 +196,5 @@ class Http
     public function getRoutes(): array
     {
         return array_keys($this->getMapping());
-    }
-
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $container = $this->getContainer();
-        $container->share(ServerRequestInterface::class, $request);
-
-        $uri = $request->getUri()->getPath();
-        $chain = $this->getChain($uri);
-        $path = implode('/', $chain);
-
-        $pattern = $path;
-        $mapping = $this->getMapping();
-        if (!array_key_exists($pattern, $mapping)) {
-            foreach ($mapping as $candidate => $callback) {
-                if ($this->match($path, $candidate)) {
-                    $pattern = $candidate;
-                    break;
-                }
-            }
-        }
-
-        ob_start();
-
-        if (array_key_exists($pattern, $mapping)) {
-            [ $class, $method, $start ] = $mapping[$pattern];
-
-            $url = trim(substr($uri, $start), '/');
-            $arguments = [
-                // absolute path
-                'uri' => $uri,
-                // relative path
-                'url' => $url,
-                // relative chain
-                'chain' => $url ? explode('/', $url) : [],
-            ];
-            try {
-                $result = $container->call($class, $method, $arguments);
-            } catch (Throwable $e) {
-                $result = $class . '::' . $method . '<br/>' . $e->getMessage();
-            }
-        } else {
-            $result = "Page not found: $uri";
-        }
-
-        if ($result instanceof ResponseInterface) {
-            return $result;
-        }
-
-        $headers = [
-            'Content-Type' => 'text/plain',
-        ];
-        if (is_array($result) || is_object($result)) {
-            $headers['Content-Type'] = 'application/json';
-            $result = json_encode($result);
-        }
-
-        $output = ob_get_clean();
-        if ($output) {
-            $headers['Content-Type'] = 'text/plain';
-            $result = $output . $result;
-        }
-
-        return new Response(200, $headers, $result);
-    }
-
-    public function process(string $url): ?string
-    {
-        $method = 'get';
-        if (array_key_exists('REQUEST_METHOD', $_SERVER)) {
-            $method = $_SERVER['REQUEST_METHOD'];
-        }
-
-        $request = new ServerRequest($method, $url, [], null, '1.1', $_SERVER);
-
-        if (count($_REQUEST)) {
-            $request = $request->withParsedBody($_REQUEST);
-        }
-
-        $response = $this->handle($request);
-        return (string) $response->getBody();
-    }
-
-    public function swoole(SwooleRequest $swooleRequest, SwooleResponse $swooleResponse)
-    {
-        $params = [];
-        $uri = $swooleRequest->server['request_uri'];
-
-        if (array_key_exists('query_string', $swooleRequest->server)) {
-            $query = $swooleRequest->server['query_string'];
-            parse_str($query, $params);
-            $uri .= '?' . $query;
-        }
-
-        $serverRequest = new ServerRequest(
-            $swooleRequest->server['request_method'],
-            $uri,
-            $swooleRequest->header,
-            property_exists($swooleRequest, 'rawContent') ? $swooleRequest->rawContent : null,
-            $swooleRequest->server['server_protocol'],
-            $swooleRequest->server,
-        );
-
-        if (count($params)) {
-            $serverRequest = $serverRequest->withQueryParams($params);
-        }
-
-        if (property_exists($swooleRequest, 'post')) {
-            if (is_array($swooleRequest->post)) {
-                if (count($swooleRequest->post)) {
-                    $serverRequest = $serverRequest->withParsedBody($swooleRequest->post);
-                }
-            }
-        }
-
-        $start = microtime(true);
-        $response = $this->handle($serverRequest);
-        $type = $response->getHeaderLine('Content-Type');
-
-        $log = [
-            'method' => $swooleRequest->server['request_method'],
-            'uri' => $swooleRequest->server['request_uri'],
-        ];
-
-        $time = microtime(true) - $start;
-        if ($time >= 0.001) {
-            $log['time'] = round($time, 3);
-        }
-
-        if ($this->logging) {
-            $this->get(LoggerInterface::class)->info($log);
-        }
-
-        $swooleResponse->status($response->getStatusCode());
-        $swooleResponse->header("Content-Type", $type);
-        $swooleResponse->end($response->getBody());
-    }
-
-    public function error(string $url): string
-    {
-        return "Invalid request: $url";
-    }
-
-    public function match(string $url, string $pattern): bool
-    {
-        if ($url == $pattern) {
-            return true;
-        } elseif (strpos($pattern, '*') !== false) {
-            $url = explode('/', $url);
-            $pattern = explode('/', $pattern);
-            $valid = true;
-            foreach (range(0, 1) as $part) {
-                $valid = $valid && ($pattern[$part] == '*' || $url[$part] == $pattern[$part]);
-            }
-            return $valid;
-        }
-
-        return false;
-    }
-
-
-    public function getChain(string $url): array
-    {
-        list($clean) = explode('?', $url);
-        $chain = [];
-        foreach (explode('/', $clean) as $k => $v) {
-            if ($v) {
-                $chain[] = $v;
-            }
-        }
-
-        if (!count($chain)) {
-            $chain[] = 'index';
-        }
-
-        if (count($chain) == 1) {
-            $chain[] = 'index';
-        }
-
-        return $chain;
     }
 }

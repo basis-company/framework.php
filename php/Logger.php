@@ -2,10 +2,18 @@
 
 namespace Basis;
 
+use Amp\ByteStream\OutputStream;
 use Psr\Log\AbstractLogger;
 
 class Logger extends AbstractLogger
 {
+    public OutputStream $stream;
+
+    public function __construct(OutputStream $stream)
+    {
+        $this->stream = $stream;
+    }
+
     public function log($level, $message, array $context = [])
     {
         $row = $message;
@@ -19,6 +27,6 @@ class Logger extends AbstractLogger
             $row .= ' ' . json_encode($context);
         }
 
-        fwrite(STDOUT, $row . PHP_EOL);
+        $this->stream->write($row . PHP_EOL);
     }
 }

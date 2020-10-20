@@ -2,8 +2,9 @@
 
 namespace Basis;
 
-use Basis\Registry\Reflection;
+use Basis\Registry;
 use Closure;
+use Exception;
 
 class Application
 {
@@ -14,26 +15,32 @@ class Application
     protected string $root;
     protected array $finalizers = [];
 
-    public function __construct(string $root = null, string $name = null)
+    public function __construct(self $parent = null)
     {
-        if (!$root) {
-            $root = getcwd();
-        }
-        if (!$name) {
-            $name = getenv('SERVICE_NAME');
-        }
-
         $this->app = $this;
-        $this->name = $name;
-        $this->root = $root;
+        $this->name = getenv('SERVICE_NAME');
+        $this->root = getcwd();
 
-        $converter = new Converter();
-        $registry = new Reflection($this, $converter);
+        if (!$this->name) {
+            throw new Exception("SERVICE_NAME is null", 1);
+        }
+
+        if ($parent) {
+            $converter = $parent->get(Converter::class);
+            $registry = $parent->get(Registry::class);
+        } else {
+            $converter = new Converter();
+            $registry = new Registry($this, $converter);
+        }
 
         $this->container = (new Container($registry))
             ->share(Converter::class, $converter)
             ->share(self::class, $this)
             ->share(static::class, $this);
+
+        if ($parent) {
+            $this->container->share('parent', $parent);
+        }
 
         foreach ($registry->listClasses('configuration') as $class) {
             $this->container->call($class, 'init');
@@ -55,6 +62,11 @@ class Application
     public function getRoot()
     {
         return $this->root;
+    }
+
+    public function fork()
+    {
+        return new Application($this);
     }
 
     public function finalize()

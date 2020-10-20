@@ -7,18 +7,7 @@ use Swoole\Table;
 
 class Registry
 {
-    protected $table;
-
-    public function __construct()
-    {
-        $this->table = new Table(256);
-        $this->table->column('type', Table::TYPE_STRING, 16);
-        $this->table->column('nick', Table::TYPE_STRING, 64);
-        $this->table->column('labels', Table::TYPE_STRING, 128);
-        $this->table->column('help', Table::TYPE_STRING, 128);
-        $this->table->column('value', Table::TYPE_FLOAT);
-        $this->table->create();
-    }
+    protected $table = [];
 
     public function getRow(Metric $metric, $labels = [])
     {
@@ -29,7 +18,7 @@ class Registry
         $labels = implode(',', $rendered);
         $key = $metric->getNick() . ' ' . $labels;
 
-        if (!$this->table->offsetExists($key)) {
+        if (!array_key_exists($key, $this->table)) {
             $this->table[$key] = [
                 'help' => $metric->getHelp(),
                 'nick' => $metric->getNick(),

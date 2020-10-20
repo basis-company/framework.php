@@ -2,10 +2,16 @@
 
 namespace Basis\Controller;
 
+use Amp\Loop;
+
 class Restart
 {
     public function index()
     {
-        exec('kill `pgrep starter`');
+        Loop::delay(1, function () {
+            exec('kill `pgrep starter`');
+        });
+
+        return 'ok';
     }
 }

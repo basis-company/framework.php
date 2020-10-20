@@ -5,6 +5,11 @@
         }
     },
     "require": {
+        "amphp/http-server": "^2.1.0",
+        "amphp/http-server-form-parser": "^1.1.4",
+        "amphp/http-server-router": "^1.0.2",
+        "amphp/http-server-static-content": "^1.0.6",
+        "amphp/log": "^1.1.0",
         "basis-company/framework": "^4.2",
         "basis-company/opentelemetry": "^0.0.4",
         "nesbot/carbon": "2.38",
