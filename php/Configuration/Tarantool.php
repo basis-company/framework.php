@@ -8,6 +8,8 @@ use Basis\Middleware\TarantoolRetryMiddleware;
 use Basis\Toolkit;
 use Exception;
 use Tarantool\Client\Client;
+use Tarantool\Client\Handler\MiddlewareHandler;
+use ReflectionProperty;
 
 class Tarantool
 {
@@ -49,11 +51,23 @@ class Tarantool
             } catch (Exception $e) {
             }
 
-            $this->get(Application::class)->registerFinalizer(function () {
+            $this->get(Application::class)->registerFinalizer(function () use ($client) {
                 $this->getContainer()->drop(Client::class);
+                $this->finalizeClient($client);
             });
 
             return $client;
         });
+    }
+
+    public function finalizeClient(Client $client)
+    {
+        $spaces = new ReflectionProperty(Client::class, 'spaces');
+        $spaces->setAccessible(true);
+        $spaces->setValue($client, []);
+
+        $middlewares = new ReflectionProperty(MiddlewareHandler::class, 'middlewares');
+        $middlewares->setAccessible(true);
+        $middlewares->setValue($client->getHandler(), []);
     }
 }

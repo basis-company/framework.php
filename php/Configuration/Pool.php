@@ -4,6 +4,8 @@ namespace Basis\Configuration;
 
 use Basis\Application;
 use Basis\Container;
+use Basis\Configuration\Mapper as MapperConfiguration;
+use Basis\Configuration\Tarantool as TarantoolConfiguration;
 use Basis\Middleware\TarantoolRetryMiddleware;
 use Basis\Toolkit;
 use Exception;
@@ -52,6 +54,9 @@ class Pool
                     } catch (Exception $e) {
                     }
                     $container->share("$name-client", $client);
+                    $this->app->registerFinalizer(function () use ($client) {
+                        $this->get(TarantoolConfiguration::class)->finalizeClient($client);
+                    });
                 }
 
                 $mapper = new Mapper($container->get("$name-client"));
@@ -66,6 +71,7 @@ class Pool
 
                 $this->app->registerFinalizer(function () use ($mapper) {
                     $this->get(TarantoolPool::class)->drop($mapper->service);
+                    $this->get(MapperConfiguration::class)->finalizeMapper($mapper);
                 });
 
                 return $mapper;

@@ -40,6 +40,10 @@ class Application
         }
 
         register_shutdown_function([$this, 'finalize']);
+
+        $this->registerFinalizer(function () {
+            $this->container->finalize();
+        });
     }
 
     public function getContainer()
@@ -62,6 +66,10 @@ class Application
         while ($callback = array_pop($this->finalizers)) {
             $this->call($callback, null);
         }
+
+        $this->finalizers = [];
+        $this->container = null;
+        unset($this->app);
     }
 
     public function registerFinalizer(Closure $callback): self

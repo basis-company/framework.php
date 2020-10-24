@@ -158,4 +158,12 @@ class Container implements ContainerInterface
 
         return $this;
     }
+
+    public function finalize()
+    {
+        $this->alias = [];
+        $this->factory = [];
+        $this->instance = [];
+        $this->trace = [];
+    }
 }
