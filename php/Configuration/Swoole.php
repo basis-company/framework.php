@@ -28,7 +28,7 @@ class Swoole
                 'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 1024,
                 'open_http_protocol' => true,
                 'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 1,
-                'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 4,
+                'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 1,
             ]);
 
             $server->on("start", function () use ($container, $host, $port) {
