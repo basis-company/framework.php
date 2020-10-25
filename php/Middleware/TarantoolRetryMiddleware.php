@@ -2,8 +2,8 @@
 
 namespace Basis\Middleware;
 
-use Basis\Toolkit;
 use Psr\Log\LoggerInterface;
+use Swoole\Coroutine;
 use Tarantool\Client\Exception\CommunicationFailed;
 use Tarantool\Client\Exception\ConnectionFailed;
 use Tarantool\Client\Exception\RequestFailed;
@@ -15,7 +15,12 @@ use Tarantool\Client\Response;
 
 class TarantoolRetryMiddleware implements Middleware
 {
-    use Toolkit;
+    protected LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * delay in milliseconds
@@ -50,15 +55,17 @@ class TarantoolRetryMiddleware implements Middleware
 
             $sleep = ($this->interval * $retries) / 1000;
 
-            $this->get(LoggerInterface::class)->info([
+            $this->logger->info([
                 'exception' => array_reverse(explode('\\', get_class($e)))[0],
                 'message' => $e->getMessage(),
                 'sleep' => round($sleep, 3),
             ]);
 
-            $this->dispatch('module.sleep', [
-                'seconds' => $sleep,
-            ]);
+            if (class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
+                Coroutine::sleep($this->seconds);
+            } else {
+                usleep($this->seconds * 1000000);
+            }
         }
 
         throw $e;
