@@ -25,10 +25,10 @@ class Swoole
                 'enable_static_handler' => true,
                 'http_compression' => false,
                 'http_parse_post' => true,
-                'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 1024,
+                'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 128,
                 'open_http_protocol' => true,
                 'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 1,
-                'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 1,
+                'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 2,
             ]);
 
             $server->on("start", function () use ($container, $host, $port) {
