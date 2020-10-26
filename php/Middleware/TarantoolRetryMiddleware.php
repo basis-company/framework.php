@@ -62,9 +62,9 @@ class TarantoolRetryMiddleware implements Middleware
             ]);
 
             if (class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
-                Coroutine::sleep($this->seconds);
+                Coroutine::sleep($sleep);
             } else {
-                usleep($this->seconds * 1000000);
+                usleep($sleep * 1000000);
             }
         }
 
