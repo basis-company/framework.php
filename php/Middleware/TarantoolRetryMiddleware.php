@@ -48,6 +48,9 @@ class TarantoolRetryMiddleware implements Middleware
                 if (strpos($e->getMessage(), 'call box.cfg{} first') === false) {
                     break;
                 }
+                if (strpos($e->getMessage(), 'Failed to allocate') !== false) {
+                    throw $e;
+                }
             }
             if ($retries++ >= $this->maxRetries) {
                 break;
