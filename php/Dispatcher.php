@@ -72,7 +72,7 @@ class Dispatcher
     public function dispatch(string $job, array $params = [], string $service = null): object
     {
         $job = strtolower($job);
-        
+
         $converter = $this->get(Converter::class);
 
         if (!$service) {
