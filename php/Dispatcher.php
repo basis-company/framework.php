@@ -5,11 +5,10 @@ namespace Basis;
 use Basis\Converter;
 use Basis\Feedback\Feedback;
 use Exception;
-use LogicException;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Swoole\Coroutine\Http\Client;
+use Symfony\Component\HttpClient\HttpClient;
 use Throwable;
 
 class Dispatcher
@@ -22,7 +21,7 @@ class Dispatcher
         $this->container = $container;
     }
 
-    public function send(string $job, array $params = [], string $service = null): Client
+    public function httpTransport(string $job, array $params = [], string $service = null)
     {
         $job = strtolower($job);
         if (!$service) {
@@ -61,11 +60,13 @@ class Dispatcher
             ]),
         ];
 
-        $client = new Client($host, 80);
-        $client->setHeaders($headers);
-        $client->post($url, $form);
+        $client = HttpClient::create();
+        $response = $client->request('POST', 'http://' . $host . $url, [
+            'headers' => $headers,
+            'body' => $form,
+        ]);
 
-        return $client;
+        return $response->getContent();
     }
 
     public function dispatch(string $job, array $params = [], string $service = null): object
@@ -99,8 +100,9 @@ class Dispatcher
 
         $body = null;
         $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 16;
+
         while (!$body && $limit-- > 0) {
-            $body = $this->send($job, $params, $service)->body;
+            $body = $this->httpTransport($job, $params, $service);
             if (!$body) {
                 $this->get(LoggerInterface::class)->info([
                     'type' => 'retry',

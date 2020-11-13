@@ -48,8 +48,11 @@ class TarantoolRetryMiddleware implements Middleware
                 if (strpos($e->getMessage(), 'call box.cfg{} first') === false) {
                     break;
                 }
+                if (strpos($e->getMessage(), 'reading of the same socket in coroutine') === false) {
+                    break;
+                }
                 if (strpos($e->getMessage(), 'Failed to allocate') !== false) {
-                    throw $e;
+                    break;
                 }
             }
             if ($retries++ >= $this->maxRetries) {

@@ -53,7 +53,7 @@ class Event
 
     public function unsubscribe(string $event)
     {
-        $this->app->fork('event.unsubscribe', [
+        $this->app->dispatch('event.unsubscribe', [
             'event' => $event,
             'service' => $this->app->getName(),
         ]);
@@ -61,7 +61,7 @@ class Event
 
     public function subscribe(string $event)
     {
-        $this->app->fork('event.subscribe', [
+        $this->app->dispatch('event.subscribe', [
             'event' => $event,
             'service' => $this->app->getName(),
         ]);
@@ -92,7 +92,7 @@ class Event
 
     public function fire(string $event, $context)
     {
-        $this->app->fork('event.fire', [
+        $this->app->dispatch('event.fire', [
             'event'   => $this->app->getName() . '.' . $event,
             'context' => $context,
         ]);
@@ -162,7 +162,7 @@ class Event
                         $this->getQueue('event.changes')->put($data);
                     } catch (Exception $e) {
                         // use legacy http transport
-                        $this->app->fork('event.changes', $data);
+                        $this->app->dispatch('event.changes', $data);
                     }
                 }
 

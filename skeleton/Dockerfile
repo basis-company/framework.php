@@ -13,8 +13,14 @@ WORKDIR /app
 
 RUN apt-get update \
     && apt-get install procps zip -y \
-    && pecl install ast xdebug \
+    && pecl install \
+        apcu \
+        ast \
+        xdebug \
     && docker-php-ext-install opcache \
+    && docker-php-ext-enable \
+        apcu \
+        opcache \
     && echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini \
     && echo "opcache.enable = 1" > /usr/local/etc/php/conf.d/opcache-enable.ini \
     && echo "opcache.enable_cli = 1" > /usr/local/etc/php/conf.d/opcache-enable-cli.ini \
@@ -25,7 +31,7 @@ RUN cd /tmp \
     && apt-get install git libssl-dev -y \
     && git clone --depth 256 https://github.com/swoole/swoole-src.git \ 
     && cd swoole-src \
-    && git checkout v4.5.3 \
+    && git checkout v4.5.7 \
     && phpize \
     && ./configure --enable-openssl \
     && make \

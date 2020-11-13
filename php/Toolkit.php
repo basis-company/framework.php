@@ -164,29 +164,4 @@ trait Toolkit
 
         return $result;
     }
-
-    public function fork(string $job, array $params = [], string $service = null)
-    {
-        if (!class_exists(Coroutine::class)) {
-            return $this->dispatch($job, $params, $service);
-        }
-        $context = $this->get(Context::class)->toArray();
-        $registry = $this->get(Registry::class);
-        Coroutine::create(function () use ($job, $params, $service, $context, $registry) {
-            $app = new Application();
-            try {
-                $app->getContainer()->share(Registry::class, $registry);
-                $app->get(Context::class)->reset($context);
-                $app->dispatch($job, $params, $service);
-                $app->get(Event::class)->fireChanges($job);
-                $app->finalize();
-            } catch (Throwable $e) {
-                $app->get(LoggerInterface::class)->info([
-                    'type' => 'exception',
-                    'message' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                ]);
-            }
-        });
-    }
 }

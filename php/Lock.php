@@ -3,7 +3,6 @@
 namespace Basis;
 
 use Exception;
-use Swoole\Coroutine;
 use Symfony\Component\Lock\LockFactory;
 use Tarantool\Client\Client;
 use Tarantool\Client\Exception\RequestFailed;
@@ -25,10 +24,6 @@ class Lock
         $this->factory = $factory;
         $this->client = $client;
         $this->store = $store;
-
-        $this->app->registerFinalizer(function () {
-            $this->releaseLocks();
-        });
     }
 
     public function acquireOrQueue($name, $ttl = 60)

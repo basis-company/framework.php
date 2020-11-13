@@ -57,38 +57,7 @@ class Mapper
                 }
             });
 
-            $this->get(Application::class)->registerFinalizer(function () use ($mapper) {
-                $this->finalizeMapper($mapper);
-                $this->getContainer()->drop(TarantoolMapper::class);
-            });
-
             return $mapper;
         });
-    }
-
-    public function finalizeMapper(TarantoolMapper $mapper)
-    {
-        $persisted = new ReflectionProperty(Repository::class, 'persisted');
-        $persisted->setAccessible(true);
-        $keys = new ReflectionProperty(Repository::class, 'keys');
-        $keys->setAccessible(true);
-        $results = new ReflectionProperty(Repository::class, 'results');
-        $results->setAccessible(true);
-
-        foreach ($mapper->getRepositories() as $repository) {
-            $keys->setValue($repository, null);
-            $persisted->setValue($repository, null);
-            $results->setValue($repository, null);
-        }
-
-        $plugins = new ReflectionProperty(TarantoolMapper::class, 'plugins');
-        $plugins->setAccessible(true);
-        $plugins->setValue($mapper, []);
-
-        $spaces = new ReflectionProperty(Schema::class, 'spaces');
-        $spaces->setAccessible(true);
-        $spaces->setValue($mapper->getSchema(), []);
-
-        unset($mapper->app);
     }
 }

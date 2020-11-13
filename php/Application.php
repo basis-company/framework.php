@@ -12,7 +12,6 @@ class Application
     protected self $app;
     protected string $name;
     protected string $root;
-    protected array $finalizers = [];
 
     public function __construct(string $root = null, string $name = null)
     {
@@ -38,12 +37,6 @@ class Application
         foreach ($registry->listClasses('configuration') as $class) {
             $this->container->call($class, 'init');
         }
-
-        register_shutdown_function([$this, 'finalize']);
-
-        $this->registerFinalizer(function () {
-            $this->container->finalize();
-        });
     }
 
     public function getContainer()
@@ -59,23 +52,5 @@ class Application
     public function getRoot()
     {
         return $this->root;
-    }
-
-    public function finalize()
-    {
-        while ($callback = array_pop($this->finalizers)) {
-            $this->call($callback, null);
-        }
-
-        $this->finalizers = [];
-        $this->container = null;
-        unset($this->app);
-    }
-
-    public function registerFinalizer(Closure $callback): self
-    {
-        $this->finalizers[] = $callback;
-
-        return $this;
     }
 }

@@ -4,7 +4,6 @@ namespace Basis\Job\Module;
 
 use Basis\Event;
 use Basis\Job;
-use Swoole\Coroutine\System;
 
 class Register extends Job
 {

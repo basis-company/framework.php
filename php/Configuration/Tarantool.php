@@ -51,23 +51,7 @@ class Tarantool
             } catch (Exception $e) {
             }
 
-            $this->get(Application::class)->registerFinalizer(function () use ($client) {
-                $this->getContainer()->drop(Client::class);
-                $this->finalizeClient($client);
-            });
-
             return $client;
         });
-    }
-
-    public function finalizeClient(Client $client)
-    {
-        $spaces = new ReflectionProperty(Client::class, 'spaces');
-        $spaces->setAccessible(true);
-        $spaces->setValue($client, []);
-
-        $middlewares = new ReflectionProperty(MiddlewareHandler::class, 'middlewares');
-        $middlewares->setAccessible(true);
-        $middlewares->setValue($client->getHandler(), []);
     }
 }

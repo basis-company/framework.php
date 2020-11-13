@@ -29,12 +29,6 @@ class Telemetry
         });
 
         $container->share(Tracer::class, function () use ($container) {
-
-            $this->get(Application::class)
-                ->registerFinalizer(function () use ($container) {
-                    $container->drop(Tracer::class);
-                });
-
             if ($container->has(ServerRequestInterface::class)) {
                 $request = $container->get(ServerRequestInterface::class);
                 $body = $request->getParsedBody();
@@ -48,7 +42,6 @@ class Telemetry
                     }
                 }
             }
-
             return new Tracer();
         });
     }

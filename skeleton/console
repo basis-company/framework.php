@@ -5,68 +5,53 @@ use Basis\Application;
 use Basis\Dispatcher;
 use Basis\Event;
 use Basis\Registry;
-use Swoole\Coroutine;
-use Swoole\Runtime;
 use Symfony\Component\Yaml\Yaml;
 
 include "vendor/autoload.php";
 
 ini_set('date.timezone', 'Europe/Moscow');
 
-function process($argv) {
-    $application = new Application();
+$application = new Application();
 
-    try {
-        array_shift($argv);
-        $job = $argv ? array_shift($argv) : 'module.meta';
+try {
+    array_shift($argv);
+    $job = $argv ? array_shift($argv) : 'module.meta';
 
-        $params = [];
-        if (count($argv)) {
-            $className = $application->get(Dispatcher::class)
-                ->getClass($job);
+    $params = [];
+    if (count($argv)) {
+        $className = $application->get(Dispatcher::class)
+            ->getClass($job);
 
-            $properties = $application->get(Registry::class)    
-                ->getClassProperties($className);
+        $properties = $application->get(Registry::class)    
+            ->getClassProperties($className);
 
-            if (count($properties) == count($argv)) {
-                $params = array_combine($properties, $argv);
-            } else if (array_key_exists('argv', $properties)) {
-                $params = [
-                    'argv' => $argv,
-                ];
-            } else if (count($properties) == 1) {
-                $params = [
-                    $properties[0] => implode(' ', $argv),
-                ];
-            }
+        if (count($properties) == count($argv)) {
+            $params = array_combine($properties, $argv);
+        } else if (array_key_exists('argv', $properties)) {
+            $params = [
+                'argv' => $argv,
+            ];
+        } else if (count($properties) == 1) {
+            $params = [
+                $properties[0] => implode(' ', $argv),
+            ];
         }
-
-        $result = $application->dispatch($job, $params);
-        if ($result) {
-            if (!is_object($result) || count(get_object_vars($result))) {
-                if (class_exists(Yaml::class)) {
-                    echo Yaml::dump($result, 2, 2, Yaml::DUMP_OBJECT_AS_MAP);
-                } else {
-                    echo json_encode($result), PHP_EOL;
-                }
-            }
-        }
-
-        $application->get(Event::class)->fireChanges($job);
-        $application->finalize();
-
-    } catch (Exception $e) {
-        echo get_class($e), ': ', $e->getMessage(), PHP_EOL;
-        echo $e->getTraceAsString(), PHP_EOL;
     }
-}
 
-if (!class_exists(Runtime::class)) {
-    process($argv);
+    $result = $application->dispatch($job, $params);
+    if ($result) {
+        if (!is_object($result) || count(get_object_vars($result))) {
+            if (class_exists(Yaml::class)) {
+                echo Yaml::dump($result, 2, 2, Yaml::DUMP_OBJECT_AS_MAP);
+            } else {
+                echo json_encode($result), PHP_EOL;
+            }
+        }
+    }
 
-} else {
-    Runtime::enableCoroutine();
-    Coroutine::create(function() use ($argv) {
-        return process($argv);
-    });
+    $application->get(Event::class)->fireChanges($job);
+
+} catch (Exception $e) {
+    echo get_class($e), ': ', $e->getMessage(), PHP_EOL;
+    echo $e->getTraceAsString(), PHP_EOL;
 }

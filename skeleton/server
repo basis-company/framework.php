@@ -11,8 +11,6 @@ use Basis\Metric\RequestCounter;
 use Basis\Metric\RequestTotalTime;
 use Basis\Metric\Uptime;
 use Psr\Log\LoggerInterface;
-use Swoole\Coroutine;
-use Swoole\Coroutine\Scheduler;
 use Swoole\Http\Server;
 use Swoole\Process;
 use Symfony\Component\Yaml\Yaml;
@@ -21,90 +19,74 @@ include "vendor/autoload.php";
 
 ini_set('date.timezone', 'Europe/Moscow');
 
-Swoole\Runtime::enableCoroutine();
 $startTime = microtime(true);
+$app = new Application();
+$server = $app->get(Server::class);
 
-$thread = new Application();
-$server = $thread->get(Server::class);
-
-$server->tick(1000, function () use ($thread, $startTime) {
-    $thread->get(BackgroundHold::class)->update();
-    $thread->get(Uptime::class)->update($startTime);
+$server->tick(1000, function () use ($app, $startTime) {
+    $app->get(BackgroundHold::class)->update();
+    $app->get(Uptime::class)->update($startTime);
 });
 
-$logger = $thread->get(LoggerInterface::class);
-$registry = $thread->get(Registry::class);
+$logger = $app->get(LoggerInterface::class);
+$registry = $app->get(Registry::class);
 
 // register all metrics
-$metrics = $thread->get(Basis\Registry::class)->listClasses('metric');
+$metrics = $app->get(Basis\Registry::class)->listClasses('metric');
 foreach ($metrics as $metric) {
     if (method_exists($metric, 'getValue')) {
-        $thread->get($metric)->getValue();
+        $app->get($metric)->getValue();
     }
 }
 
-$server->on('request', function ($request, $response) use ($registry, $logger, $server) {
-    $coroutine = new Application();
-    $coroutine->getContainer()->share(LoggerInterface::class, $logger);
-    $coroutine->getContainer()->share(Registry::class, $registry);
-    $coroutine->getContainer()->share(Server::class, $server);
-
+$server->on('request', function ($request, $response) use ($app, $logger) {
     try {
         $start = microtime(true);
-        $coroutine->get(RequestCounter::class)->increment();
-        $coroutine->get(Http::class)->swoole($request, $response);
+        $app->get(RequestCounter::class)->increment();
+        $app->get(Http::class)->swoole($request, $response);
         $requestTime = microtime(true) - $start;
-        $coroutine->get(RequestTotalTime::class)->increment($requestTime);
-
-        $coroutine->finalize();
+        $app->get(RequestTotalTime::class)->increment($requestTime);
 
     } catch (Throwable $e) {
         $logger->info([
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString(),
         ]);
-
-        $coroutine->finalize();
     }
+
+    $app->dispatch('tarantool.housekeeping');
 });
 
 if (file_exists('php/Job/Background.php')) {
     $server->addProcess(new Process(function ($process) use ($registry, $logger) {
-        $coroutine = new Application();
-        $scheduler = new Scheduler();
-
-        $coroutine->getContainer()
+        $background = new Application();
+        $background->getContainer()
             ->share(LoggerInterface::class, $logger)
             ->share(Process::class, $process)
-            ->share(Registry::class, $registry)
-            ->share(Scheduler::class, $scheduler);
+            ->share(Registry::class, $registry);
 
-        $process->name($coroutine->getName().'-background');
+        $process->name('background');
 
-        $scheduler->add(function () use ($coroutine, $logger) {
-            while (true) {
-                $coroutine->get(BackgroundStart::class)->update();
-                $coroutine->get(BackgroundHold::class)->update();
-                try {
-                    $result = $coroutine->dispatch('background');
-                } catch (Throwable $e) {
-                    Coroutine::sleep(5);
-                    $result = [
-                        'type' => 'exception',
-                        'message' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString(),
-                    ];
-                }
-                if ($result) {
-                    if (!is_object($result) || count(get_object_vars($result))) {
-                        $logger->info($result);
-                    }
-                }
-                Coroutine::sleep(1);
+        while (true) {
+            $background->get(BackgroundStart::class)->update();
+            $background->get(BackgroundHold::class)->update();
+            try {
+                $result = $background->dispatch('background');
+            } catch (Throwable $e) {
+                sleep(5);
+                $result = [
+                    'type' => 'exception',
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ];
             }
-        });
-
-        $scheduler->start();
+            if ($result) {
+                if (!is_object($result) || count(get_object_vars($result))) {
+                    $logger->info($result);
+                }
+            }
+            $background->dispatch('module.sleep', [ 'seconds' => 1 ]);
+        }
     }));
 }
 
