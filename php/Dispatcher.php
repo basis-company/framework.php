@@ -106,6 +106,7 @@ class Dispatcher
             if (!$body) {
                 $this->get(LoggerInterface::class)->info([
                     'type' => 'retry',
+                    'service' => $service,
                     'job' => $job,
                     'sleep' => 1,
                 ]);
