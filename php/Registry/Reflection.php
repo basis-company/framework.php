@@ -43,6 +43,25 @@ class Reflection implements Registry
         return $result;
     }
 
+    public function getRequiredClassProperties(string $class): array
+    {
+        $reflectionClass = new ReflectionClass($class);
+        $properties = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC);
+
+        $result = [];
+        foreach ($properties as $property) {
+            if ($property->getDeclaringClass() != $reflectionClass) {
+                continue;
+            }
+            if ($this->getPropertyDefaultValue($class, $property->getName()) !== null) {
+                continue;
+            }
+            $result[] = $property->getName();
+        }
+
+        return $result;
+    }
+
     public function getStaticPropertyValue(string $class, string $name)
     {
         return (new ReflectionClass($class))->getStaticPropertyValue('events');

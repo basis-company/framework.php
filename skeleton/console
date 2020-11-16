@@ -35,6 +35,12 @@ try {
             $params = [
                 $properties[0] => implode(' ', $argv),
             ];
+        } else {
+            $required = $application->get(Registry::class)
+                ->getRequiredClassProperties($className);
+            if (count($required) == count($argv)) {
+                $params = array_combine($required, $argv);
+            }
         }
     }
 
