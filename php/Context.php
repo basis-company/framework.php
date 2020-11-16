@@ -58,24 +58,11 @@ class Context
 
     public function toArray(): array
     {
-        $result = [];
-        foreach (get_object_vars($this) as $k => $v) {
-            if ($v !== null) {
-                if ($k == 'parent') {
-                    $result[$k] = [];
-                    foreach ($v as $kk => $vv) {
-                        if ($vv) {
-                            $result[$k][$kk] = $vv;
-                        }
-                    }
-                    if (!count($result[$k])) {
-                        unset($result[$k]);
-                    }
-                } else {
-                    $result[$k] = $v;
-                }
-            }
+        static $converter;
+        if (!$converter) {
+            $converter = new Converter();
         }
-        return $result;
+
+        return $converter->toArray($this);
     }
 }
