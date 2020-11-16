@@ -85,6 +85,7 @@ if (file_exists('php/Job/Background.php')) {
                     $logger->info($result);
                 }
             }
+            $background->dispatch('tarantool.housekeeping');
             $background->dispatch('module.sleep', [ 'seconds' => 1 ]);
         }
     }));
