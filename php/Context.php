@@ -42,7 +42,7 @@ class Context
     public function apply($data): self
     {
         foreach ($data as $k => $v) {
-            if ($k == 'parent') {
+            if ($k == 'parent' && $v) {
                 $v = (object) $v;
             }
             $this->$k = $v;
