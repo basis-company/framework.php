@@ -16,9 +16,9 @@ class Api
 {
     use Toolkit;
 
-    public function __process(ServerRequestInterface $request)
+    public function __process(ServerRequestInterface $request, Context $context)
     {
-        return $this->index($request);
+        return $this->index($request, $context);
     }
 
     public function index(ServerRequestInterface $request, Context $context)
