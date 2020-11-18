@@ -21,7 +21,7 @@ class Api
         return $this->index($request);
     }
 
-    public function index(ServerRequestInterface $request)
+    public function index(ServerRequestInterface $request, Context $context)
     {
         $body = $request->getParsedBody();
 
@@ -50,14 +50,16 @@ class Api
 
         $tracer = $this->get(Tracer::class);
 
+        $context->reset();
+
         if ($request->getHeaderLine('x-real-ip')) {
-            $this->get(Context::class)->apply([
+            $context->apply([
                 'ip' => $request->getHeaderLine('x-real-ip'),
             ]);
         }
 
         if (property_exists($data, 'context') && $data->context) {
-            $this->get(Context::class)->apply($data->context);
+            $context->apply($data->context);
         }
 
         $request = is_array($data) ? $data : [$data];
