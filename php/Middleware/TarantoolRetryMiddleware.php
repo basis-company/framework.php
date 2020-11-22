@@ -54,6 +54,9 @@ class TarantoolRetryMiddleware implements Middleware
                 if (strpos($e->getMessage(), 'Failed to allocate') !== false) {
                     break;
                 }
+                if (strpos($e->getMessage(), 'type does not match one required by operation') !== false) {
+                    break;
+                }
             }
             if ($retries++ >= $this->maxRetries) {
                 break;
