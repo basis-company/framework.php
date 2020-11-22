@@ -115,7 +115,7 @@ class Container implements ContainerInterface
             if ($this->instance[$name] !== null) {
                 return $this->instance[$name];
             }
-            if (count($this->trace) > 1) {
+            if (count($this->trace) > 16) {
                 throw new LogicException("Circular dependency " . implode(', ', $this->trace));
             }
         }
