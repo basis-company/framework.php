@@ -27,7 +27,7 @@ class Swoole
                 'open_http2_protocol' => true,
                 'open_http_protocol' => true,
                 'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 1,
-                'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 4,
+                'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 8,
             ]);
 
             $server->on("start", function () use ($container, $host, $port) {
