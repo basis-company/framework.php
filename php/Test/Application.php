@@ -6,8 +6,6 @@ use Basis\Application as Basis;
 use Basis\Registry;
 use Basis\Metric\Registry as Metrics;
 use Basis\Test;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class Application extends Basis
 {
@@ -17,7 +15,6 @@ class Application extends Basis
 
         $container = $this->getContainer();
         $container->share(Test::class, $test);
-        $container->share(AdapterInterface::class, new ArrayAdapter());
         $container->share(Metrics::class, new MetricRegistry());
 
         $classes = $this->get(Registry::class)->listClasses('Test');
