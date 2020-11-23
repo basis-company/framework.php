@@ -33,7 +33,7 @@ RUN cd /tmp \
     && cd swoole-src \
     && git checkout v4.5.8 \
     && phpize \
-    && ./configure --enable-openssl \
+    && ./configure --enable-openssl --enable-http2 \
     && make \
     && make install \
     && echo 'extension=swoole.so' > /usr/local/etc/php/conf.d/swoole.ini \
