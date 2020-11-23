@@ -31,7 +31,7 @@ RUN cd /tmp \
     && apt-get install git libssl-dev -y \
     && git clone --depth 256 https://github.com/swoole/swoole-src.git \ 
     && cd swoole-src \
-    && git checkout v4.5.7 \
+    && git checkout v4.5.8 \
     && phpize \
     && ./configure --enable-openssl \
     && make \
