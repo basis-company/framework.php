@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Basis\Cache;
 use Basis\Converter;
 use Basis\Feedback\Feedback;
 use Exception;
@@ -71,65 +72,67 @@ class Dispatcher
 
     public function dispatch(string $job, array $params = [], string $service = null): object
     {
-        $job = strtolower($job);
+        return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service) {
+            $job = strtolower($job);
+            $converter = $this->get(Converter::class);
 
-        $converter = $this->get(Converter::class);
-
-        if (!$service) {
-            $service = $this->getJobService($job);
-        }
-
-        if ($service == $this->getServiceName()) {
-            $class = $this->getClass($job);
-            if (!$class) {
-                throw new Exception("No class for job $job");
+            if (!$service) {
+                $service = $this->getJobService($job);
             }
-            try {
-                $instance = $this->container->create($class);
-                foreach ($converter->toObject($params) as $k => $v) {
-                    $instance->$k = $v;
+
+            if ($service == $this->getServiceName()) {
+                $class = $this->getClass($job);
+                if (!$class) {
+                    throw new Exception("No class for job $job");
                 }
-                $result = $this->call($instance, 'run');
-            } catch (Feedback $feedback) {
-                throw new Exception(json_encode($feedback->serialize()));
-            } catch (Throwable $e) {
-                throw $e;
+                try {
+                    $instance = $this->container->create($class);
+                    foreach ($converter->toObject($params) as $k => $v) {
+                        $instance->$k = $v;
+                    }
+                    $result = $this->call($instance, 'run');
+                } catch (Feedback $feedback) {
+                    throw new Exception(json_encode($feedback->serialize()));
+                } catch (Throwable $e) {
+                    throw $e;
+                }
+                return (object) $converter->toObject($result);
             }
-            return (object) $converter->toObject($result);
-        }
 
-        $body = null;
-        $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 16;
 
-        while (!$body && $limit-- > 0) {
-            $body = $this->httpTransport($job, $params, $service);
+            $body = null;
+            $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 16;
+
+            while (!$body && $limit-- > 0) {
+                $body = $this->httpTransport($job, $params, $service);
+                if (!$body) {
+                    $this->get(LoggerInterface::class)->info([
+                        'type' => 'retry',
+                        'service' => $service,
+                        'job' => $job,
+                        'sleep' => 1,
+                    ]);
+                    $this->dispatch('module.sleep', [ 'seconds' => 1 ]);
+                }
+            }
+
             if (!$body) {
-                $this->get(LoggerInterface::class)->info([
-                    'type' => 'retry',
-                    'service' => $service,
-                    'job' => $job,
-                    'sleep' => 1,
-                ]);
-                $this->dispatch('module.sleep', [ 'seconds' => 1 ]);
+                $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
+                throw new Exception("Host $host ($service) is unreachable");
             }
-        }
 
-        if (!$body) {
-            $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
-            throw new Exception("Host $host ($service) is unreachable");
-        }
-
-        $result = json_decode($body);
-        if (!$result || !$result->success) {
-            $exception = new Exception($result->message ?: $body);
-            if ($result->trace) {
-                $exception->remoteService = $service;
-                $exception->remoteTrace = $result->trace;
+            $result = json_decode($body);
+            if (!$result || !$result->success) {
+                $exception = new Exception($result->message ?: $body);
+                if ($result->trace) {
+                    $exception->remoteService = $service;
+                    $exception->remoteTrace = $result->trace;
+                }
+                throw $exception;
             }
-            throw $exception;
-        }
 
-        return (object) $this->get(Converter::class)->toObject($result->data);
+            return (object) $this->get(Converter::class)->toObject($result->data);
+        });
     }
 
     public function isLocalJob(string $job): bool
@@ -147,11 +150,14 @@ class Dispatcher
 
     public function getJobService(string $job): string
     {
-        if (array_key_exists($job, $this->getJobs())) {
-            return $this->getServiceName();
-        }
+        $key = 'getJobService-' . $job;
+        return $this->get(Cache::class)->wrap($key, function () use ($job) {
+            if (array_key_exists($job, $this->getJobs())) {
+                return $this->getServiceName();
+            }
 
-        return explode('.', $job)[0];
+            return explode('.', $job)[0];
+        });
     }
 
     public function getJobs(): array

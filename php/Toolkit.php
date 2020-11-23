@@ -40,9 +40,7 @@ trait Toolkit
 
     public function dispatch(string $job, array $params = [], string $service = null): object
     {
-        return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service) {
-            return $this->get(Dispatcher::class)->dispatch($job, $params, $service);
-        });
+        return $this->get(Dispatcher::class)->dispatch($job, $params, $service);
     }
 
     public function get(string $class): object
