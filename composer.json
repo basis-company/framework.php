@@ -29,6 +29,7 @@
         "spiral/roadrunner": "^v1.8.1",
         "symfony/cache": "^v5.1.2",
         "symfony/lock": "^v5.1.2",
+        "symfony/http-client": "^v5.1.8",
         "tarantool/client": "^0.8.0",
         "tarantool/mapper": "^4.6.8",
         "tarantool/queue": "v0.8.0",

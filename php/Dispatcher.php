@@ -9,16 +9,18 @@ use Exception;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpClient\CurlHttpClient;
 use Throwable;
 
 class Dispatcher
 {
-    private Container $container;
     private ?array $jobs = null;
+    private Container $container;
+    private CurlHttpClient $client;
 
     public function __construct(Container $container)
     {
+        $this->client = new CurlHttpClient();
         $this->container = $container;
     }
 
@@ -61,8 +63,7 @@ class Dispatcher
             ]),
         ];
 
-        $client = HttpClient::create();
-        $response = $client->request('POST', 'http://' . $host . $url, [
+        $response = $this->client->request('POST', 'http://' . $host . $url, [
             'headers' => $headers,
             'body' => $form,
         ]);
