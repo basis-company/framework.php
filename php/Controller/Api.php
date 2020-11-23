@@ -48,7 +48,9 @@ class Api
             ];
         }
 
-        $tracer = $this->get(Tracer::class);
+        $tracer = $this->getContainer()
+            ->drop(Tracer::class)
+            ->get(Tracer::class);
 
         $context->reset();
 
