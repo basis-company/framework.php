@@ -25,15 +25,18 @@ class Housekeeping
 
     private function flush(Mapper $mapper)
     {
-        $persisted = new ReflectionProperty(Repository::class, 'persisted');
-        $persisted->setAccessible(true);
         $keys = new ReflectionProperty(Repository::class, 'keys');
         $keys->setAccessible(true);
+        $original = new ReflectionProperty(Repository::class, 'original');
+        $original->setAccessible(true);
+        $persisted = new ReflectionProperty(Repository::class, 'persisted');
+        $persisted->setAccessible(true);
         $results = new ReflectionProperty(Repository::class, 'results');
         $results->setAccessible(true);
 
         foreach ($mapper->getRepositories() as $repository) {
             $keys->setValue($repository, new SplObjectStorage());
+            $original->setValue($repository, []);
             $persisted->setValue($repository, []);
             $results->setValue($repository, []);
         }
