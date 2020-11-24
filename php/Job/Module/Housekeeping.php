@@ -1,7 +1,8 @@
 <?php
 
-namespace Basis\Job\Tarantool;
+namespace Basis\Job\Module;
 
+use Basis\Lock;
 use Basis\Container;
 use ReflectionProperty;
 use SplObjectStorage;
@@ -13,6 +14,8 @@ class Housekeeping
 {
     public function run(Container $container)
     {
+        $container->get(Lock::class)->releaseLocks();
+
         if ($container->hasInstance(Pool::class)) {
             foreach ($container->get(Pool::class)->getMappers() as $mapper) {
                 $this->flush($mapper);

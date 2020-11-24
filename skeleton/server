@@ -54,7 +54,7 @@ $server->on('request', function ($request, $response) use ($app, $logger) {
         ]);
     }
 
-    $app->dispatch('tarantool.housekeeping');
+    $app->dispatch('module.housekeeping');
 });
 
 if (file_exists('php/Job/Background.php')) {
@@ -85,7 +85,7 @@ if (file_exists('php/Job/Background.php')) {
                     $logger->info($result);
                 }
             }
-            $background->dispatch('tarantool.housekeeping');
+            $background->dispatch('module.housekeeping');
             $background->dispatch('module.sleep', [ 'seconds' => 1 ]);
         }
     }));
