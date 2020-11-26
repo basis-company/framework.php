@@ -152,10 +152,11 @@ class Event
                 if (count(get_object_vars($changes))) {
                     $changed = true;
                     $data = $this->get(Converter::class)->toArray([
-                        'changes'  => $changes,
-                        'producer' => $producer,
-                        'service'  => $mapper->serviceName,
-                        'context' => $this->get(Context::class),
+                        'changes'   => $changes,
+                        'context'   => $this->get(Context::class),
+                        'producer'  => $producer,
+                        'service'   => $mapper->serviceName,
+                        'timestamp' => microtime(true),
                     ]);
                     try {
                         // put changes to queue
