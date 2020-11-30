@@ -11,7 +11,7 @@ class Registry
 
     public function __construct()
     {
-        $this->table = new Table(256);
+        $this->table = new Table(512);
         $this->table->column('type', Table::TYPE_STRING, 16);
         $this->table->column('nick', Table::TYPE_STRING, 64);
         $this->table->column('labels', Table::TYPE_STRING, 128);
