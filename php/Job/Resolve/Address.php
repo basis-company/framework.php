@@ -11,10 +11,13 @@ class Address
     use Toolkit;
 
     public string $name;
-    public int $cache = 60;
+    public ?int $cache = null;
 
     public function run()
     {
+        if ($this->cache === null) {
+            $this->cache = getenv('BASIS_RESOLVE_ADDRESS_CACHE') ?: 60;
+        }
         if ($this->name === null) {
             throw new Exception("Name should be defined");
         }
