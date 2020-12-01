@@ -29,9 +29,8 @@ RUN apt-get update \
 
 RUN cd /tmp \
     && apt-get install git libssl-dev -y \
-    && git clone --depth 256 https://github.com/swoole/swoole-src.git \ 
+    && git clone --depth 1 --branch v4.5.9 https://github.com/swoole/swoole-src.git \ 
     && cd swoole-src \
-    && git checkout v4.5.8 \
     && phpize \
     && ./configure --enable-openssl --enable-http2 \
     && make \
