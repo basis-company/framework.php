@@ -14,7 +14,9 @@ class Housekeeping
 {
     public function run(Container $container)
     {
-        $container->get(Lock::class)->releaseLocks();
+        if ($container->hasInstance(Lock::class)) {
+            $container->get(Lock::class)->releaseLocks();
+        }
 
         if ($container->hasInstance(Pool::class)) {
             foreach ($container->get(Pool::class)->getMappers() as $mapper) {
