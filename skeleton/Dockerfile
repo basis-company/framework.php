@@ -1,4 +1,4 @@
-FROM php:cli as version
+FROM php:7-cli as version
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY .git composer.json skeleton/upgrade /app/
 RUN php upgrade $(git describe --tags)
 RUN cat /app/composer.json
 
-FROM php:cli
+FROM php:7-cli
 
 WORKDIR /app
 
