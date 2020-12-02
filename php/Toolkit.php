@@ -162,4 +162,14 @@ trait Toolkit
 
         return $result;
     }
+
+    public function getSpaceName(int $entity): string
+    {
+        return $this->dispatch('resolve.space', compact('entity'))->name;
+    }
+
+    public function getEntityId(string $space): int
+    {
+        return $this->dispatch('resolve.entity', compact('space'))->id;
+    }
 }
