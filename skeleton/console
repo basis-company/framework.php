@@ -35,6 +35,12 @@ try {
             $params = [
                 $properties[0] => implode(' ', $argv),
             ];
+        } else if (strpos($argv[0], '=') !== false) {
+            $params = [];
+            foreach ($argv as $kv) {
+                [ $k, $v ] = explode('=', $kv);
+                $params[$k] = $v;
+            }
         } else {
             $required = $application->get(Registry::class)
                 ->getRequiredClassProperties($className);
