@@ -4,6 +4,7 @@ namespace Basis\Middleware;
 
 use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
+use Tarantool\Client\Connection\StreamConnection;
 use Tarantool\Client\Exception\CommunicationFailed;
 use Tarantool\Client\Exception\ConnectionFailed;
 use Tarantool\Client\Exception\RequestFailed;
@@ -12,6 +13,7 @@ use Tarantool\Client\Handler\Handler;
 use Tarantool\Client\Middleware\Middleware;
 use Tarantool\Client\Request\Request;
 use Tarantool\Client\Response;
+use ReflectionProperty;
 
 class TarantoolRetryMiddleware implements Middleware
 {
@@ -42,19 +44,24 @@ class TarantoolRetryMiddleware implements Middleware
             try {
                 return $handler->handle($request);
             } catch (ConnectionFailed $e) {
+                // sleep and reconnect
             } catch (CommunicationFailed | UnexpectedResponse $e) {
+                // retry without any delay
                 $handler->getConnection()->close();
+                continue;
             } catch (RequestFailed $e) {
-                if (strpos($e->getMessage(), 'call box.cfg{} first') === false) {
-                    break;
+                $retry = false;
+                $allowed = [
+                    'instance is in read-only mode',
+                    'call box.cfg{} first',
+                ];
+                foreach ($allowed as $candidate) {
+                    if (strpos($e->getMessage(), $candidate) !== false) {
+                        $retry = true;
+                        break;
+                    }
                 }
-                if (strpos($e->getMessage(), 'reading of the same socket in coroutine') === false) {
-                    break;
-                }
-                if (strpos($e->getMessage(), 'Failed to allocate') !== false) {
-                    break;
-                }
-                if (strpos($e->getMessage(), 'type does not match one required by operation') !== false) {
+                if (!$retry) {
                     break;
                 }
             }
@@ -64,11 +71,23 @@ class TarantoolRetryMiddleware implements Middleware
 
             $sleep = ($this->interval * $retries) / 1000;
 
-            $this->logger->info([
+            $data = [
                 'exception' => array_reverse(explode('\\', get_class($e)))[0],
                 'message' => $e->getMessage(),
                 'sleep' => round($sleep, 3),
-            ]);
+            ];
+
+            static $property;
+            if ($property === null) {
+                $property = new ReflectionProperty(StreamConnection::class, 'uri');
+                $property->setAccessible(true);
+            }
+            $uri = $property->getValue($handler->getConnection());
+            if (strpos($data['message'], $uri) === false) {
+                $data['uri'] = $uri;
+            }
+
+            $this->logger->info($data);
 
             if (class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
                 Coroutine::sleep($sleep);
