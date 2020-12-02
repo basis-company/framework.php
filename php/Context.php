@@ -9,6 +9,7 @@ class Context
     public $channel;
     public $ip;
 
+    public $access;
     public $session;
 
     public $company;
