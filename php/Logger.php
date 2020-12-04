@@ -19,7 +19,7 @@ class Logger extends AbstractLogger
             $row .= ' ' . json_encode($context);
         }
 
-        if (constant('STDOUT')) {
+        if (defined('STDOUT')) {
             fwrite(STDOUT, $row . PHP_EOL);
         } else {
             echo $row, PHP_EOL;
