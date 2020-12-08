@@ -6,9 +6,9 @@ use Basis\Procedure\JobQueue\Cleanup;
 use Basis\Procedure\JobQueue\Take;
 use Basis\Procedure\JobResult\Foreign;
 use Exception;
+use Tarantool\Client\Schema\Criteria;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Plugin\Procedure;
-use Tarantool\Mapper\Procedure\FindOrCreate;
 use Tarantool\Mapper\Repository;
 
 class Executor
@@ -39,9 +39,15 @@ class Executor
         $jobContext = $this->findOrCreate('job_context', [
             'hash' => md5(json_encode($context))
         ], [
-            'hash' => md5(json_encode($context)),
+            'activity' => time(),
             'context' => $context,
+            'hash' => md5(json_encode($context)),
         ]);
+
+        if (!$jobContext->activity || $jobContext->activity < time() - 60) {
+            $jobContext->activity = time();
+            $jobContext->save();
+        }
 
         $request['context'] = $jobContext->id;
 
@@ -96,8 +102,47 @@ class Executor
 
     public function process()
     {
-        $this->transferResult();
-        return $this->processQueue();
+        $total = $this->transferResult();
+        while ($this->processQueue()) {
+            $total++;
+        }
+
+        if ($total) {
+            $total += $this->cleanup();
+        }
+
+        return $total;
+    }
+
+    public function cleanup()
+    {
+        // 24 hours inactivity for context
+        $criteria = Criteria::index('activity')
+            ->andKey([ time() - 24 * 60 * 60 ])
+            ->andLeIterator()
+            ->andLimit(100);
+
+        $contexts = $this->getMapper()->getClient()->getSpace('job_context');
+        $counter = 0;
+        foreach ($contexts->select($criteria) as $tuple) {
+            $contexts->delete([ $tuple[0] ]);
+            $counter++;
+        }
+
+        // 1 minute expiration for result
+        $criteria = Criteria::index('expire_id')
+            ->andKey([ time() - 60 ])
+            ->andLeIterator()
+            ->andLimit(100);
+
+        $results = $this->getMapper()->getClient()->getSpace('job_result');
+        $counter = 0;
+        foreach ($results->select($criteria) as $tuple) {
+            $results->delete([ $tuple[0] ]);
+            $counter++;
+        }
+
+        return $counter;
     }
 
     public function processQueue()
@@ -112,8 +157,7 @@ class Executor
             try {
                 return $this->transferRequest($request);
             } catch (Exception $e) {
-                throw $e;
-                // return $this->processRequest($request);
+                return $this->processRequest($request);
             }
         }
 
@@ -128,7 +172,13 @@ class Executor
         ], [
             'hash' => $context->hash,
             'context' => $context->context,
+            'activity' => time(),
         ]);
+
+        if (!$remoteContext->activity || $remoteContext->activity < time() - 60) {
+            $remoteContext->activity = time();
+            $remoteContext->save();
+        }
 
         $template = $this->get(Converter::class)->toArray($request);
         $template['context'] = $remoteContext->id;
@@ -142,8 +192,12 @@ class Executor
 
         $this->findOrCreate("$request->service.job_queue", $params, $template);
 
-        $request->status = 'transfered';
-        $request->save();
+        if ($request->recipient) {
+            $request->status = 'transfered';
+            $request->save();
+        } else {
+            $this->getMapper()->remove($request);
+        }
 
         return $request;
     }
@@ -166,7 +220,7 @@ class Executor
                 'service' => $request->recipient,
                 'hash' => $request->hash,
                 'data' => $this->get(Converter::class)->toArray($result),
-                'expire' => property_exists($result, 'expire') ? $result->expire : 0,
+                'expire' => property_exists($result, 'expire') ? $result->expire : time() - 1,
             ]);
         }
 
@@ -205,6 +259,8 @@ class Executor
                     ->get(Cleanup::class)($result->service);
             }
         }
+
+        return count($remote);
     }
 
     public function getResult($hash)
@@ -214,7 +270,6 @@ class Executor
             'hash' => $hash,
         ]);
 
-        
         ob_flush();
 
         if (!$result) {
@@ -223,12 +278,11 @@ class Executor
                     'status' => 'transfered',
                     'hash' => $hash,
                 ]);
-                if ($request && $request->service) {
-                    $r = $this->get(Dispatcher::class)
-                        ->dispatch('module.execute', [], $request->service);
+                $dispatcher = $this->get(Dispatcher::class);
+                if ($request && $request->service !== $this->getServiceName()) {
+                    $dispatcher->dispatch('module.execute', [], $request->service);
                 } else {
-                    // 100ms
-                    usleep(100 * 1000);
+                    $dispatcher->dispatch('module.sleep', [ 'seconds' => 0.1 ]);
                 }
             }
             $this->getRepository('job_result')->flushCache();

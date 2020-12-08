@@ -70,25 +70,24 @@ if (file_exists('php/Job/Background.php')) {
         while (true) {
             $background->get(BackgroundStart::class)->update();
             $background->get(BackgroundHold::class)->update();
-            try {
-                $result = $background->dispatch('background');
-            } catch (Throwable $e) {
-                sleep(5);
-                $result = [
-                    'type' => 'exception',
-                    'message' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString(),
-                ];
-            }
-            if ($result) {
-                if (!is_object($result) || count(get_object_vars($result))) {
-                    $logger->info($result);
-                }
-            }
-            $background->dispatch('module.housekeeping');
+            $background->dispatch('module.process', [ 'job' => 'background' ]);
             $background->dispatch('module.sleep', [ 'seconds' => 1 ]);
         }
     }));
 }
+
+$server->addProcess(new Process(function ($process) use ($registry, $logger) {
+    $process->name('executor');
+    $executor = new Application();
+    $executor->getContainer()
+        ->share(LoggerInterface::class, $logger)
+        ->share(Process::class, $process)
+        ->share(Registry::class, $registry);
+
+    while (true) {
+        $executor->dispatch('module.process', [ 'job' => 'module.execute' ]);
+        $executor->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
+    }
+}));
 
 $server->start();

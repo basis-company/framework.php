@@ -18,6 +18,9 @@ class BootstrapTest extends Test
         $this->assertCount(0, $this->registrations);
         $result = $this->dispatch('module.bootstrap');
 
+        // process sends
+        $this->dispatch('module.execute');
+
         // web.register was called
         $this->assertCount(1, $this->registrations);
 

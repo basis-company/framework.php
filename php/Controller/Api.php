@@ -8,8 +8,6 @@ use Basis\Event;
 use Basis\Toolkit;
 use Exception;
 use OpenTelemetry\Tracing\Tracer;
-use OpenTelemetry\Transport;
-use OpenTelemetry\Exporter;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Api
@@ -48,9 +46,11 @@ class Api
             ];
         }
 
-        $tracer = $this->getContainer()
+        $span = $this->getContainer()
             ->drop(Tracer::class)
-            ->get(Tracer::class);
+            ->get(Tracer::class)
+            ->getActiveSpan()
+            ->setName($this->app->getName() . '.api');
 
         $context->reset();
 
@@ -78,51 +78,8 @@ class Api
             $response[] = $result;
         }
 
-        try {
-            $event = $this->get(Event::class);
-            if ($event->hasChanges()) {
-                $last = null;
-                $active = $tracer->getActiveSpan();
-                foreach ($tracer->getSpans() as $candidate) {
-                    if ($candidate->getParentSpanContext() == $active->getSpanContext()) {
-                        $last = $candidate;
-                        break;
-                    }
-                }
-                if ($last) {
-                    $last->setInterval($last->getStart(), 0);
-                    $tracer->setActive($last);
-                }
-
-                $changesSpan = $tracer->createSpan('event.changes');
-                $event->fireChanges($request[0]->job);
-                $changesSpan->end();
-
-                if ($last) {
-                    $last->end();
-                }
-            }
-        } catch (Exception $e) {
-            return [
-                'success' => false,
-                'message' => 'Fire changes failure: ' . $e->getMessage(),
-                'trace' => explode(PHP_EOL, $e->getTraceAsString()),
-            ];
-        }
-
-        try {
-            $response[0]['time'] = round(microtime(true) - $tracer->getActiveSpan()->getStart(), 3);
-            if ($this->app->getName() != 'audit') {
-                if ($response[0]['time'] >= 0.1) {
-                    $exporter = $this->get(Exporter::class);
-                    $transport = $this->get(Transport::class);
-                    $exporter->flush($tracer, $transport);
-                }
-            }
-            $response[0]['timing'] = $response[0]['time'];
-        } catch (Exception $e) {
-            // no traces is not a problem
-        }
+        $this->dispatch('module.changes', [ 'producer' => $request[0]->job ]);
+        $this->dispatch('module.trace');
 
         return is_array($data) ? $response : $response[0];
     }

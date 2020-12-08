@@ -24,6 +24,7 @@ class EventTest extends Test
     public function testEventFire()
     {
         $this->get(Event::class)->fire('person.authorized', ['name' => 'nekufa']);
+        $this->dispatch('module.execute');
         $this->assertCount(1, $this->firedEvents);
         $this->assertSame($this->firedEvents[0]->event, 'test.person.authorized');
         $this->assertSame(get_object_vars($this->firedEvents[0]->context), ['name' => 'nekufa']);

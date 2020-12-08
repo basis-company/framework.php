@@ -22,7 +22,7 @@ class Register extends Job
             'name' => gethostname(),
         ]);
 
-        $this->dispatch('web.register', [
+        $this->send('web.register', [
             'service' => $this->app->getName(),
             'hash' => $assets->hash,
             'routes' => $meta->routes,

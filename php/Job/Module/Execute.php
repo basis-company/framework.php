@@ -9,8 +9,6 @@ class Execute extends Job
 {
     public function run(Executor $executor)
     {
-        return [
-            'success' => !!$executor->process(),
-        ];
+        $executor->process();
     }
 }

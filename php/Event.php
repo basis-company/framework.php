@@ -53,7 +53,7 @@ class Event
 
     public function unsubscribe(string $event)
     {
-        $this->app->dispatch('event.unsubscribe', [
+        $this->send('event.unsubscribe', [
             'event' => $event,
             'service' => $this->app->getName(),
         ]);
@@ -61,7 +61,7 @@ class Event
 
     public function subscribe(string $event)
     {
-        $this->app->dispatch('event.subscribe', [
+        $this->send('event.subscribe', [
             'event' => $event,
             'service' => $this->app->getName(),
         ]);
@@ -92,8 +92,9 @@ class Event
 
     public function fire(string $event, $context)
     {
-        $this->app->dispatch('event.fire', [
+        $this->send('event.fire', [
             'event'   => $this->app->getName() . '.' . $event,
+            'timestamp' => microtime(true),
             'context' => $context,
         ]);
     }
@@ -125,6 +126,8 @@ class Event
 
     public function fireChanges(string $producer)
     {
+        $timestamp = microtime(true);
+
         if ($this->get(Container::class)->hasInstance(Mapper::class)) {
             $serviceName = $this->app->getName();
             $this->get(Pool::class)->get($serviceName);
@@ -156,15 +159,9 @@ class Event
                         'context'   => $this->get(Context::class),
                         'producer'  => $producer,
                         'service'   => $mapper->serviceName,
-                        'timestamp' => microtime(true),
+                        'timestamp' => $timestamp,
                     ]);
-                    try {
-                        // put changes to queue
-                        $this->getQueue('event.changes')->put($data);
-                    } catch (Exception $e) {
-                        // use legacy http transport
-                        $this->app->dispatch('event.changes', $data);
-                    }
+                    $this->send('event.changes', $data);
                 }
 
                 $spy->reset();
