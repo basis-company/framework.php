@@ -5,8 +5,8 @@
         }
     },
     "require": {
-        "basis-company/framework": "^4.6",
-        "basis-company/opentelemetry": "^0.0.4",
+        "basis-company/framework": "^4.7",
+        "basis-company/opentelemetry": "^0.0.5",
         "nesbot/carbon": "2.38",
         "nyholm/psr7": "^1.3.2",
         "phpdocumentor/reflection-docblock": "^5.2.2",
