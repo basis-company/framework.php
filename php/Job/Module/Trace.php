@@ -18,9 +18,13 @@ class Trace extends Job
 
     public function run(LoggerInterface $logger)
     {
-        if ($this->app->getName() === 'audit') {
+        $blacklist = [
+            'audit',
+            'developer',
+        ];
+        if (in_array($this->app->getName(), $blacklist)) {
             return [
-                'msg' => 'no audit auditing',
+                'msg' => 'disable audition',
             ];
         }
 
