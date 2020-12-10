@@ -7,6 +7,8 @@ use Basis\Job;
 
 class Register extends Job
 {
+    public string $method = 'send';
+
     public function run(Event $event)
     {
         $meta = $this->dispatch('module.meta');
@@ -22,7 +24,7 @@ class Register extends Job
             'name' => gethostname(),
         ]);
 
-        $this->send('web.register', [
+        $this->{$this->method}('web.register', [
             'service' => $this->app->getName(),
             'hash' => $assets->hash,
             'routes' => $meta->routes,
