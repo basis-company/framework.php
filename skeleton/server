@@ -6,6 +6,7 @@ use Basis\Container;
 use Basis\Http;
 use Basis\Metric\BackgroundHold;
 use Basis\Metric\BackgroundStart;
+use Basis\Metric\JobQueueLength;
 use Basis\Metric\Registry;
 use Basis\Metric\RequestCounter;
 use Basis\Metric\RequestTotalTime;
@@ -14,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Swoole\Http\Server;
 use Swoole\Process;
 use Symfony\Component\Yaml\Yaml;
+use Tarantool\Client\Client;
 
 include "vendor/autoload.php";
 
@@ -26,6 +28,10 @@ $server = $app->get(Server::class);
 $server->tick(1000, function () use ($app, $startTime) {
     $app->get(BackgroundHold::class)->update();
     $app->get(Uptime::class)->update($startTime);
+    if (getenv('SERVICE_JOB_QUEUE_METRIC') !== 'false') {
+        $client = $app->get(Client::class);
+        $app->get(JobQueueLength::class)->update($client);
+    }
 });
 
 $logger = $app->get(LoggerInterface::class);
