@@ -12,6 +12,7 @@ class Bootstrap
     public array $jobs = [
         'tarantool.migrate',
         'module.register',
+        'module.recover',
     ];
 
     public function run()
