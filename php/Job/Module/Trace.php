@@ -14,10 +14,13 @@ class Trace extends Job
     /**
      * minimum span duration in seconds
      */
-    public float $threshold = 0.05;
+    public ?float $threshold = null;
 
     public function run(LoggerInterface $logger)
     {
+        if ($this->threshold === null) {
+            $this->threshold = +getenv('SERVICE_TRACE_THRESHOLD') ?: 0.1
+        }
         $blacklist = [
             'audit',
             'developer',
