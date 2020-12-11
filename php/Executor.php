@@ -275,18 +275,10 @@ class Executor
 
         if (!$result) {
             if (!$this->processQueue()) {
-                $request = $this->findOne('job_queue', [
-                    'status' => 'transfered',
-                    'hash' => $hash,
-                ]);
                 $logger = $this->get(LoggerInterface::class);
                 $logger->info([ 'msg' => 'executor result wait', 'from' => $service ]);
                 $dispatcher = $this->get(Dispatcher::class);
-                if ($request && $request->service !== $this->getServiceName()) {
-                    $dispatcher->dispatch('module.execute', [], $request->service);
-                } else {
-                    $dispatcher->dispatch('module.sleep', [ 'seconds' => 0.1 ]);
-                }
+                $dispatcher->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
             }
             $this->getRepository('job_result')->flushCache();
             return $this->getResult($hash, $service);
