@@ -35,7 +35,6 @@ class Process extends Job
 
             $this->dispatch('module.changes', [ 'producer' => $this->job ]);
             $this->dispatch('module.housekeeping');
-            $this->dispatch('module.trace');
         } catch (Throwable $e) {
             $logger->info([
                 'type' => 'exception',
