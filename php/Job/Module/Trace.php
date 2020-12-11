@@ -19,7 +19,7 @@ class Trace extends Job
     public function run(LoggerInterface $logger)
     {
         if ($this->threshold === null) {
-            $this->threshold = +getenv('SERVICE_TRACE_THRESHOLD') ?: 0.1
+            $this->threshold = +getenv('SERVICE_TRACE_THRESHOLD') ?: 0.1;
         }
         $blacklist = [
             'audit',

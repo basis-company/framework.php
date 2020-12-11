@@ -6,7 +6,6 @@ use Basis\Metric\Registry;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Swoole\Coroutine;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
