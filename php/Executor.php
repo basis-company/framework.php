@@ -6,6 +6,7 @@ use Basis\Procedure\JobQueue\Cleanup;
 use Basis\Procedure\JobQueue\Take;
 use Basis\Procedure\JobResult\Foreign;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Tarantool\Client\Schema\Criteria;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Plugin\Procedure;
@@ -97,7 +98,7 @@ class Executor
         }
 
         $this->initRequest($request);
-        return $this->getResult($request['hash']);
+        return $this->getResult($request['hash'], $request['service']);
     }
 
     public function process()
@@ -263,7 +264,7 @@ class Executor
         return count($remote);
     }
 
-    public function getResult($hash)
+    public function getResult($hash, $service)
     {
         $result = $this->findOne('job_result', [
             'service' => $this->getServiceName(),
@@ -278,6 +279,8 @@ class Executor
                     'status' => 'transfered',
                     'hash' => $hash,
                 ]);
+                $logger = $this->get(LoggerInterface::class);
+                $logger->info([ 'msg' => 'executor result wait', 'from' => $service ]);
                 $dispatcher = $this->get(Dispatcher::class);
                 if ($request && $request->service !== $this->getServiceName()) {
                     $dispatcher->dispatch('module.execute', [], $request->service);
@@ -286,7 +289,7 @@ class Executor
                 }
             }
             $this->getRepository('job_result')->flushCache();
-            return $this->getResult($hash);
+            return $this->getResult($hash, $service);
         }
         return $this->get(Converter::class)->toObject($result->data);
     }
