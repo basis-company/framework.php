@@ -32,6 +32,9 @@ class Mapper
                 return $mapper->getRepository($space);
             });
         }
+        $container->share(Spy::class, function (TarantoolMapper $mapper) {
+            return $mapper->getPlugin(Spy::class);
+        });
 
         $container->share(TarantoolMapper::class, function (Client $client, Registry $registry) {
             $mapper = new TarantoolMapper($client);
