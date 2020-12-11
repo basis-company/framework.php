@@ -118,6 +118,12 @@ class Reflection implements Registry
         return $methods;
     }
 
+    public function hasTrait($class, $trait): bool
+    {
+        $reflection = new ReflectionClass($class);
+        return in_array($trait, $reflection->getTraitNames());
+    }
+
     public function getMethodTypes(string $class, string $method): array
     {
         $reflection = new ReflectionMethod($class, $method);

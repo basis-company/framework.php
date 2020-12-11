@@ -40,7 +40,7 @@ class Http
                     if (in_array($name, ['__construct', '__debugInfo'])) {
                         continue;
                     }
-                    if (in_array($name, $toolkit)) {
+                    if ($registry->hasTrait($class, Toolkit::class) && in_array($name, $toolkit)) {
                         continue;
                     }
                     if (!$namespace) {
