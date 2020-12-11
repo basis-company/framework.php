@@ -6,6 +6,7 @@ use Exception;
 use LogicException;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\UploadedFile;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -175,6 +176,19 @@ class Http
             $serverRequest = $serverRequest->withQueryParams($params);
         }
 
+        if (property_exists($swooleRequest, 'files') && $swooleRequest->files) {
+            $uploadedFiles = [];
+            foreach ($swooleRequest->files as $file) {
+                $uploadedFiles[] = new UploadedFile(
+                    $file['tmp_name'],
+                    $file['size'],
+                    $file['error'],
+                    $file['name'],
+                    $file['type'],
+                );
+            }
+            $serverRequest = $serverRequest->withUploadedFiles($uploadedFiles);
+        }
         if (property_exists($swooleRequest, 'post')) {
             if (is_array($swooleRequest->post)) {
                 if (count($swooleRequest->post)) {
