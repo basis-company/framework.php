@@ -37,12 +37,13 @@ class Executor
         }
 
         $context = $this->get(Context::class)->toArray();
+        $hash = md5(json_encode($context));
         $jobContext = $this->findOrCreate('job_context', [
-            'hash' => md5(json_encode($context))
+            'hash' => $hash
         ], [
             'activity' => time(),
             'context' => $context,
-            'hash' => md5(json_encode($context)),
+            'hash' => $hash,
         ]);
 
         if (!$jobContext->activity || $jobContext->activity < time() - 60) {
@@ -51,13 +52,7 @@ class Executor
         }
 
         $request['context'] = $jobContext->id;
-
-        $request['hash'] = md5(json_encode([
-            $request['service'],
-            $request['job'],
-            $request['params'],
-        ]));
-
+        $request['hash'] = md5(microtime(true));
         return $request;
     }
 
