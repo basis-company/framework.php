@@ -52,7 +52,7 @@ class Executor
         }
 
         $request['context'] = $jobContext->id;
-        $request['hash'] = md5(microtime(true));
+        $request['hash'] = microtime(true) . '.' . bin2hex(random_bytes(8));
         return $request;
     }
 
