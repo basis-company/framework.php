@@ -185,7 +185,6 @@ class Http
 
         $start = microtime(true);
         $response = $this->handle($serverRequest);
-        $type = $response->getHeaderLine('Content-Type');
 
         $log = [
             'method' => $swooleRequest->server['request_method'],
@@ -202,7 +201,11 @@ class Http
         }
 
         $swooleResponse->status($response->getStatusCode());
-        $swooleResponse->header("Content-Type", $type);
+        foreach ($response->getHeaders() as $k => $rows) {
+            foreach ($rows as $row) {
+                $swooleResponse->header($k, $row);
+            }
+        }
         $swooleResponse->end($response->getBody());
     }
 
