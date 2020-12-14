@@ -53,7 +53,11 @@ class Executor
 
         $request['context'] = $jobContext->id;
         if (!array_key_exists('hash', $request)) {
-            $request['hash'] = microtime(true) . '.' . bin2hex(random_bytes(8));
+            if (array_key_exists('job_queue_hash', $request['params'])) {
+                $request['hash'] = $request['params']['job_queue_hash'];
+            } else {
+                $request['hash'] = microtime(true) . '.' . bin2hex(random_bytes(8));
+            }
         }
         return $request;
     }

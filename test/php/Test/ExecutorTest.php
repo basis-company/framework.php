@@ -8,6 +8,14 @@ use Basis\Test;
 
 class ExecutorTest extends Test
 {
+    public function testHashParams()
+    {
+        $note = $this->create('note', []);
+        $result = $this->get(Executor::class)->send('actor', ['note' => $note->id, 'job_queue_hash' => 'bazyaba']);
+        $request = $this->findOrFail('job_queue');
+        $this->assertSame($request->hash, 'bazyaba');
+    }
+
     public function testDispatcherProcessingTrigger()
     {
         $note = $this->create('note', []);
