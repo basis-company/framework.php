@@ -14,6 +14,7 @@
         "symfony/cache": "^5.2.0",
         "symfony/http-client": "^5.2.0",
         "symfony/lock": "^5.2.0",
+        "symfony/mime": "^5.2.0",
         "tarantool/client": "^0.9.0",
         "tarantool/mapper": "^4.6.11",
         "tarantool/queue": "v0.8.0",

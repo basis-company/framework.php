@@ -2,7 +2,9 @@
 
 namespace Basis;
 
-use Swoole\Coroutine\Http\Client;
+use Symfony\Component\HttpClient\CurlHttpClient;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 
 class Storage
 {
@@ -17,36 +19,27 @@ class Storage
 
     public function upload(string $filename, $contents): string
     {
-        $container = $this->getContainer();
-        if ($container->has(Client::class)) {
-            $client = $container->get(Client::class);
-        } else {
-            $client = new Client($this->hostname, 80);
+        static $client;
+        if (!$client) {
+            $client = new CurlHttpClient();
         }
 
         $extension = array_reverse(explode('.', $filename))[0];
         $tmp = '/tmp/' . md5($contents) . '.' . $extension;
         file_put_contents($tmp, $contents);
 
-        $mime = mime_content_type($tmp);
+        $formData = new FormDataPart([
+            'file' => DataPart::fromPath($tmp),
+        ]);
 
-        $client->addFile($tmp, $filename, $mime);
-        $client->set(['timeout' => -1]);
-        $client->post('/storage/upload', $contents);
+        $host = $this->dispatch('resolve.address', [ 'name' => 'storage' ])->host;
+        $response = $client->request('POST', "http://$host/storage/upload", [
+            'headers' => $formData->getPreparedHeaders()->toArray(),
+            'body' => $formData->bodyToIterable(),
+        ]);
+        $result = json_decode($response->getContent());
 
-        if (!$client->body) {
-            throw new Exception("Host $this->hostname is unreachable");
-        }
-
-        $response = json_decode($client->body);
-        $client->close();
-
-        if ($response->data) {
-            return $response->data;
-        }
-
-
-        return $response->hash[0];
+        return $result->data ? $result->data : $result->hash[0];
     }
 
     public function url(string $hash): string
