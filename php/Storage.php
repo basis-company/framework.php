@@ -12,7 +12,7 @@ class Storage
 
     public function download(string $hash)
     {
-        return file_get_contents($this->url($hash));
+        return @file_get_contents($this->url($hash));
     }
 
     public function upload(string $filename, $contents): string
