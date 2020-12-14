@@ -19,20 +19,19 @@
         "psr/log": "^1.1.3"
     },
     "require-dev": {
-        "basis-company/opentelemetry": "^0.0.4",
+        "basis-company/opentelemetry": "^0.0.6",
         "nesbot/carbon": "2.38",
         "nyholm/psr7": "^1.3.2",
         "phpdocumentor/reflection-docblock": "^5.2.2",
         "phpunit/phpunit": "^9.2.5",
-        "rybakit/msgpack": "^0.7.0",
         "smi2/phpclickhouse": "1.3.9",
-        "spiral/roadrunner": "^v1.8.1",
-        "symfony/cache": "^v5.1.8",
-        "symfony/http-client": "^v5.1.8",
-        "symfony/lock": "^v5.1.8",
-        "tarantool/client": "^0.8.0",
-        "tarantool/mapper": "^4.6.8",
+        "rybakit/msgpack": "^0.7.1",
+        "symfony/cache": "^5.2.0",
+        "symfony/http-client": "^5.2.0",
+        "symfony/lock": "^5.2.0",
+        "tarantool/client": "^0.9.0",
+        "tarantool/mapper": "^4.6.11",
         "tarantool/queue": "v0.8.0",
-        "tarantool/symfony-lock": "^0.2.4"
+        "tarantool/symfony-lock": "^0.2.5"
     }
 }
