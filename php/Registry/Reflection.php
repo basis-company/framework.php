@@ -70,7 +70,10 @@ class Reflection implements Registry
     public function getPropertyDefaultValue(string $class, string $name)
     {
         $reflection = new ReflectionClass($class);
-        return $reflection->getDefaultProperties()[$name];
+        $defaults = $reflection->getDefaultProperties();
+        if (array_key_exists($name, $defaults)) {
+            return $defaults[$name];
+        }
     }
 
     public function getClass(string $path): ?string
