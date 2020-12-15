@@ -118,7 +118,9 @@ class Api
             ];
             if (property_exists($e, 'remoteTrace')) {
                 $error['remoteTrace'] = $e->remoteTrace;
-                $error['remoteService'] = $e->remoteService;
+                if (property_exists($e, 'remoteService')) {
+                    $error['remoteService'] = $e->remoteService;
+                }
             }
             return $error;
         }
