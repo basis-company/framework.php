@@ -101,6 +101,7 @@ class Api
         }
 
         try {
+            $start = microtime(true);
             $params = is_object($rpc->params) ? get_object_vars($rpc->params) : [];
             $data = $this->dispatch(strtolower($rpc->job), $params);
             $data = $this->removeSystemObjects($data);
@@ -108,6 +109,7 @@ class Api
             return [
                 'success' => true,
                 'data' => $data,
+                'timing' => +number_format(microtime(true) - $start, 3),
             ];
         } catch (Exception $e) {
             $error = [
