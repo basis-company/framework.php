@@ -8,6 +8,35 @@ use Basis\Test;
 
 class ExecutorTest extends Test
 {
+    public function testKeepContextsWhenJobExists()
+    {
+        $executor = $this->get(Executor::class);
+        $sent = $executor->send('actor', []);
+        $this->assertCount(1, $this->find('job_context'));
+        $this->assertCount(1, $this->find('job_queue'));
+        [ $context ] = $this->find('job_context');
+        $context->activity = 1;
+        $context->save();
+
+        $executor->cleanup();
+
+        $this->getRepository('job_context')->forget($context->id);
+        $this->assertCount(1, $this->find('job_context'));
+        [ $context ] = $this->find('job_context');
+        $this->assertNotEquals($context->activity, 1);
+
+        $this->getRepository('job_context')->flushCache();
+        $this->getRepository('job_queue')->flushCache();
+        $this->assertCount(1, $this->find('job_context'));
+        $this->assertCount(1, $this->find('job_queue'));
+
+        $this->getMapper()->getClient()->call('box.space.job_queue:truncate');
+        $context->activity = 1;
+        $context->save();
+        $executor->cleanup();
+        $this->assertCount(0, $this->find('job_context'));
+    }
+
     public function testHashParams()
     {
         $note = $this->create('note', []);

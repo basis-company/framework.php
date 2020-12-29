@@ -8,6 +8,7 @@ use Basis\Procedure\JobResult\Foreign;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Tarantool\Client\Schema\Criteria;
+use Tarantool\Client\Schema\Operations;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Plugin\Procedure;
 use Tarantool\Mapper\Repository;
@@ -124,11 +125,17 @@ class Executor
             ->andLeIterator()
             ->andLimit(100);
 
-        $contexts = $this->getMapper()->getClient()->getSpace('job_context');
+        $client = $this->getMapper()->getClient();
+        $contexts = $client->getSpace('job_context');
         $counter = 0;
         foreach ($contexts->select($criteria) as $tuple) {
-            $contexts->delete([ $tuple[0] ]);
-            $counter++;
+            [$jobs] = $client->call('box.space.job_queue.index.context:count', $tuple[0]);
+            if ($jobs > 0) {
+                $contexts->update([$tuple[0]], Operations::set('activity', time()));
+            } else {
+                $contexts->delete([ $tuple[0] ]);
+                $counter++;
+            }
         }
 
         // 1 minute expiration for result
@@ -137,7 +144,7 @@ class Executor
             ->andLeIterator()
             ->andLimit(100);
 
-        $results = $this->getMapper()->getClient()->getSpace('job_result');
+        $results = $client->getSpace('job_result');
         $counter = 0;
         foreach ($results->select($criteria) as $tuple) {
             $results->delete([ $tuple[0] ]);
