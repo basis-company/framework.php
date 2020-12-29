@@ -131,7 +131,7 @@ class Executor
         foreach ($contexts->select($criteria) as $tuple) {
             [$jobs] = $client->call('box.space.job_queue.index.context:count', $tuple[0]);
             if ($jobs > 0) {
-                $contexts->update([$tuple[0]], Operations::set('activity', time()));
+                $contexts->update([$tuple[0]], Operations::set(3, time()));
             } else {
                 $contexts->delete([ $tuple[0] ]);
                 $counter++;
