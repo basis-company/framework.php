@@ -171,4 +171,48 @@ trait Toolkit
     {
         return $this->dispatch('resolve.entity', compact('space'))->id;
     }
+
+    public function getAttributes(string $space, int $id, array $defaults = []): array
+    {
+        $result = $defaults;
+        $attributeValues = $this->find('entity.attribute_value', [
+            'entity' => $this->getEntityId($space),
+            'entityId' => $id,
+        ]);
+        foreach ($attributeValues as $attributeValue) {
+            $attribute = $this->findOrFail('entity.attribute', $attributeValue->attribute);
+            $result[$attribute->nick] = $attributeValue->value;
+        }
+        return $result;
+    }
+
+    public function setAttributes(string $space, int $id, array $values)
+    {
+        foreach ($values as $k => $v) {
+            $this->setAttribute($space, $id, $k, $v);
+        }
+    }
+
+    public function setAttribute(string $space, int $id, string $key, string $value)
+    {
+        $attribute = $this->findOrCreate('entity.attribute', [
+            'space' => $space,
+            'nick' => $key,
+        ], [
+            'space' => $space,
+            'nick' => $key,
+            'name' => $key,
+        ]);
+        $attributeValue = $this->findOrCreate('entity.attribute_value', [
+            'attribute' => $attribute->id,
+            'entityId' => $id,
+        ], [
+            'attribute' => $attribute->id,
+            'entity' => $this->getEntityId($space),
+            'entityId' => $id,
+            'value' => $value,
+        ]);
+        $attributeValue->value = $value;
+        $attributeValue->save();
+    }
 }
