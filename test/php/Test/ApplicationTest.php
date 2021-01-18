@@ -9,6 +9,17 @@ use Basis\Test;
 
 class ApplicationTest extends Test
 {
+    public function testConverterHousekeeping()
+    {
+        $now = $this->getDate('now');
+        $this->dispatch('module.sleep', [ 'seconds' => 0.001 ]);
+        $this->assertSame($now->milli, $this->getDate('now')->milli);
+
+        $this->get(Converter::class)->flushCache();
+        $this->dispatch('module.sleep', [ 'seconds' => 0.001 ]);
+        $this->assertNotSame($now->milli, $this->getDate('now')->milli);
+    }
+
     public function testApplication()
     {
         $this->assertNotNull($this->app);

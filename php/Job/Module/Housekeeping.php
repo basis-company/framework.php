@@ -26,6 +26,7 @@ class Housekeeping
         if ($container->hasInstance(Mapper::class)) {
             $this->flush($container->get(Mapper::class));
         }
+        $this->get(Converter::class)->flushCache();
     }
 
     private function flush(Mapper $mapper)

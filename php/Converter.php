@@ -186,4 +186,9 @@ class Converter
     {
         return implode('.', array_map('strtolower', explode('\\', $class)));
     }
+
+    public function flushCache()
+    {
+        $this->dates = [];
+    }
 }
