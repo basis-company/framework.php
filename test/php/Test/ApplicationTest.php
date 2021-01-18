@@ -15,7 +15,9 @@ class ApplicationTest extends Test
         $this->dispatch('module.sleep', [ 'seconds' => 0.001 ]);
         $this->assertSame($now->milli, $this->getDate('now')->milli);
 
-        $this->get(Converter::class)->flushCache();
+        // cache should be flushed
+        $this->dispatch('module.housekeeping');
+
         $this->dispatch('module.sleep', [ 'seconds' => 0.001 ]);
         $this->assertNotSame($now->milli, $this->getDate('now')->milli);
     }

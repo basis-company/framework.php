@@ -4,6 +4,7 @@ namespace Basis\Job\Module;
 
 use Basis\Lock;
 use Basis\Container;
+use Basis\Converter;
 use ReflectionProperty;
 use SplObjectStorage;
 use Tarantool\Mapper\Mapper;
@@ -26,7 +27,7 @@ class Housekeeping
         if ($container->hasInstance(Mapper::class)) {
             $this->flush($container->get(Mapper::class));
         }
-        $this->get(Converter::class)->flushCache();
+        $container->get(Converter::class)->flushCache();
     }
 
     private function flush(Mapper $mapper)
