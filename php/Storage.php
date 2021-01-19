@@ -12,9 +12,13 @@ class Storage
 
     public string $hostname = 'storage';
 
-    public function download(string $hash)
+    public function download(string $hash, int $retryCount = 10)
     {
-        return @file_get_contents($this->url($hash));
+        $result = @file_get_contents($this->url($hash);
+        if ($result === false && $retryCount) {
+            return $this->download($hash, $retryCount - 1);
+        }
+        return $result;
     }
 
     public function upload(string $filename, $contents): string
