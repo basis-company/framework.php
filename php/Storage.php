@@ -14,7 +14,7 @@ class Storage
 
     public function download(string $hash, int $retryCount = 10)
     {
-        $result = @file_get_contents($this->url($hash);
+        $result = @file_get_contents($this->url($hash));
         if ($result === false && $retryCount) {
             return $this->download($hash, $retryCount - 1);
         }
