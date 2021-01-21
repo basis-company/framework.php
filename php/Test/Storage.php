@@ -6,7 +6,7 @@ use Basis\Storage as BaseStorage;
 
 class Storage extends BaseStorage
 {
-    public function download(string $hash)
+    public function download(string $hash, int $retryCount = 10)
     {
         return $this->data[$hash];
     }
