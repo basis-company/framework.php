@@ -148,7 +148,8 @@ class Converter
                 [$year, $month, $day] = func_get_args();
                 $value = Carbon::createFromDate($year, $month, $day)->setTime(0, 0, 0);
             } else {
-                $value = Carbon::parse($string);
+                $value = Carbon::parse($string)
+                    ->setTimezone(date_default_timezone_get());
             }
             if (Carbon::hasTestNow()) {
                 return $value;
