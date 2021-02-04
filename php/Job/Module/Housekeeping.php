@@ -18,7 +18,7 @@ class Housekeeping
     {
         $registry = $container->get(Registry::class);
         foreach (scandir('php') as $ns) {
-            if (in_array($ns, [ '.', '..', 'Entity', 'Procedure', 'Repository' ])) {
+            if (in_array($ns, [ '.', '..', 'Entity', 'Metric', 'Procedure', 'Repository' ])) {
                 continue;
             }
             foreach ($registry->listClasses($ns) as $class) {
