@@ -2,9 +2,10 @@
 
 namespace Basis\Job\Module;
 
-use Basis\Lock;
 use Basis\Container;
 use Basis\Converter;
+use Basis\Lock;
+use Basis\Registry;
 use ReflectionProperty;
 use SplObjectStorage;
 use Tarantool\Mapper\Mapper;
@@ -15,6 +16,16 @@ class Housekeeping
 {
     public function run(Container $container)
     {
+        $registry = $container->get(Registry::class);
+        foreach (scandir('php') as $ns) {
+            if (in_array($ns, [ '.', '..', 'Entity', 'Procedure', 'Repository' ])) {
+                continue;
+            }
+            foreach ($registry->listClasses($ns) as $class) {
+                $container->drop($class);
+            }
+        }
+
         if ($container->hasInstance(Lock::class)) {
             $container->get(Lock::class)->releaseLocks();
         }

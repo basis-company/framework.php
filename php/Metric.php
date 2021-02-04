@@ -59,7 +59,7 @@ class Metric
 
         return $array;
     }
-    
+
     public function getType()
     {
         return $this->type;
