@@ -60,7 +60,8 @@ test-phpunit:
     SERVICE_NAME: $CI_PROJECT_NAME
     TARANTOOL_CONNECTION: tcp://localhost:3301
   script:
-    - composer require phpunit/phpunit
+    - wget https://getcomposer.org/composer-stable.phar && mv composer-stable.phar composer.phar && chmod +x composer.phar
+    - composer.phar require phpunit/phpunit
     - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 test-coverage:
@@ -81,7 +82,8 @@ test-coverage:
     TARANTOOL_CONNECTION: tcp://localhost:3301
     XDEBUG_MODE: coverage
   script:
-    - composer require phpunit/phpunit
+    - wget https://getcomposer.org/composer-stable.phar && mv composer-stable.phar composer.phar && chmod +x composer.phar
+    - composer.phar require phpunit/phpunit
     - docker-php-ext-enable xdebug
     - vendor/bin/phpunit --coverage-cobertura=$CI_PROJECT_DIR/cobertura-coverage.xml --log-junit=$CI_PROJECT_DIR/junit.xml --coverage-text --colors=never --whitelist php
   artifacts:
