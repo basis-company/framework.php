@@ -63,6 +63,63 @@ test-phpunit:
     - composer require phpunit/phpunit
     - vendor/bin/phpunit php
 
+test-coverage:
+  stage: test
+  image: $image_pipeline
+  allow_failure: true
+  interruptible: true
+  only:
+    - test
+    - master
+  services:
+    - tarantool/tarantool:2.6.2
+  variables:
+    BASIS_ENVIRONMENT: testing
+    SERVICE_ENVIRONMENT: testing
+    SERVICE_NAME: $CI_PROJECT_NAME
+    TARANTOOL_CONNECTION: tcp://localhost:3301
+    XDEBUG_MODE: coverage
+  script:
+    - cd /app
+    - composer require phpunit/phpunit
+    - docker-php-ext-enable xdebug
+    - |
+      cat > ./phpunit.xml << EOF
+      <?xml version="1.0" encoding="UTF-8"?>
+        <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         cacheResultFile=".phpunit.cache/test-results"
+         executionOrder="depends,defects"
+         forceCoversAnnotation="false"
+         beStrictAboutCoversAnnotation="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         failOnRisky="false"
+         failOnWarning="true"
+         verbose="true">
+         <testsuites>
+          <testsuite name="default">
+            <directory>test</directory>
+          </testsuite>
+         </testsuites>
+
+         <coverage cacheDirectory=".phpunit.cache/code-coverage"
+              processUncoveredFiles="true">
+          <include>
+            <directory suffix=".php">php</directory>
+          </include>
+         </coverage>
+        </phpunit>
+      EOF
+    - vendor/bin/phpunit --coverage-cobertura=$CI_PROJECT_DIR/cobertura-coverage.xml --log-junit=$CI_PROJECT_DIR/junit.xml --coverage-text --colors=never --whitelist php
+  artifacts:
+    expire_in: 1 week
+    reports:
+      cobertura: cobertura-coverage.xml
+      junit: junit.xml
+
+
 release-branch:
   stage: release
   services:
