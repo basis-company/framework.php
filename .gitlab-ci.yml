@@ -47,8 +47,10 @@ test-phpcs:
 
 test-phpunit:
   stage: test
+  image: php:7-cli
   services:
     - tarantool/tarantool:2.6.2
+    - yandex/clickhouse-server
   only:
     - test
     - master
@@ -63,6 +65,7 @@ test-phpunit:
 
 test-coverage:
   stage: test
+  image: php:7-cli
   allow_failure: true
   interruptible: true
   services:
@@ -79,6 +82,7 @@ test-coverage:
     XDEBUG_MODE: coverage
   script:
     - composer require phpunit/phpunit
+    - docker-php-ext-enable xdebug
     - vendor/bin/phpunit --coverage-cobertura=$CI_PROJECT_DIR/cobertura-coverage.xml --log-junit=$CI_PROJECT_DIR/junit.xml --coverage-text --colors=never --whitelist php
   artifacts:
     expire_in: 1 week
