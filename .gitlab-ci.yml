@@ -75,6 +75,7 @@ test-coverage:
     - master
   variables:
     TARANTOOL_CONNECTION: tcp://localhost:3301
+    XDEBUG_MODE: coverage
   script:
     - apt-get update && apt-get install zip git -y
     - pecl install xdebug
