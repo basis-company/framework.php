@@ -88,5 +88,5 @@ release-tag:
     - docker tag $image_pipeline $image_master
     - docker tag $image_pipeline $image_tag
     - docker push $image_latest
-    - docker push $image_mater
+    - docker push $image_master
     - docker push $image_tag
