@@ -92,6 +92,7 @@ if (getenv('SERVICE_EXECUTOR') !== 'false') {
             ->share(Registry::class, $registry);
 
         while (true) {
+            $executor->dispatch('module.recover');
             $executor->dispatch('module.process', [ 'job' => 'module.execute' ]);
             $executor->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
         }
