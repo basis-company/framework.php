@@ -3,19 +3,90 @@ image: docker:18.09.7
 variables:
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_DRIVER: overlay2
-  IMAGE_BRANCH: cr.yandex/crpf255p88b3bourvm4f/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
-  IMAGE_PIPELINE: cr.yandex/crpf255p88b3bourvm4f/$CI_PROJECT_NAME:$CI_PIPELINE_ID
+  image_branch: $registry/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
+  image_latest: $registry/$CI_PROJECT_NAME:latest
+  image_master: $registry/$CI_PROJECT_NAME:master
+  image_pipeline: $registry/$CI_PROJECT_NAME:$CI_PIPELINE_ID
+  image_tag: $registry/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 stages:
   - build
+  - test
+  - release
 
-build:
+build-image:
   stage: build
   services:
     - name: docker:18.09.7-dind
   script:
     - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
-    - docker pull $IMAGE_BRANCH || true
-    - docker build -f skeleton/Dockerfile --cache-from $IMAGE_BRANCH -t $IMAGE_PIPELINE .
-    - docker push $IMAGE_PIPELINE
+    - docker pull $image_branch || true
+    - docker build -f skeleton/Dockerfile --cache-from $image_branch -t $image_pipeline .
+    - docker push $image_pipeline
 
+test-phpsyntax:
+  stage: test
+  image: $image_pipeline
+  allow_failure: false
+  interruptible: true
+  script:
+    - cd /app/php
+    - find . -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+    - if [ "$?" -ne "0" ];then exit 1; fi
+
+test-phpcs:
+  stage: test
+  image: $registry/phpcs
+  allow_failure: false
+  interruptible: true
+  variables:
+    DOCKER_OPTS: ${DOCKER_OPTS} --registry-mirror=https://mirror.gcr.io
+  script:
+    - wget https://wfm.basis.services/linter/php -O phpcs.xml
+    - phpcs php --standard=phpcs.xml
+
+test-phpunit:
+  stage: test
+  image: $image_pipeline
+  services:
+    - tarantool/tarantool:2.6.2
+  only:
+    - test
+    - master
+  variables:
+    BASIS_ENVIRONMENT: testing
+    SERVICE_ENVIRONMENT: testing
+    SERVICE_NAME: $CI_PROJECT_NAME
+    TARANTOOL_CONNECTION: tcp://localhost:3301
+  script:
+    - cd /app
+    - composer require phpunit/phpunit
+    - vendor/bin/phpunit php
+
+release-branch:
+  stage: release
+  services:
+    - name: docker:18.09.7-dind
+  script:
+    - export
+    - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
+    - docker pull $image_pipeline
+    - docker tag $image_pipeline $image_branch
+    - docker push $image_branch
+
+release-tag:
+  stage: release
+  only:
+    - tags
+  services:
+    - name: docker:18.09.7-dind
+  script:
+    - export
+    - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
+    - docker pull $image_pipeline
+    - docker tag $image_pipeline $image_latest
+    - docker tag $image_pipeline $image_master
+    - docker tag $image_pipeline $image_tag
+    - docker push $image_latest
+    - docker push $image_mater
+    - docker push $image_tag
