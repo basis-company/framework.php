@@ -86,7 +86,7 @@ class Lock
         foreach ($this->locks as $name => $_) {
             $this->unlock($name);
         }
-        
+
         $this->locks = [];
     }
 

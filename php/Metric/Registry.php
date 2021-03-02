@@ -72,7 +72,7 @@ class Registry
             }
             $output[] = sprintf("%s %s", $nick, $v['value']);
         }
-        
+
         return implode(PHP_EOL, $output);
     }
 }
