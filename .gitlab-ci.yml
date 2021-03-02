@@ -75,17 +75,14 @@ test-coverage:
     - master
   variables:
     TARANTOOL_CONNECTION: tcp://localhost:3301
+    XDEBUG_MODE: coverage
   script:
     - apt-get update && apt-get install zip git -y
     - pecl install xdebug
+    - docker-php-ext-enable xdebug
     - curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar
     - ./composer.phar require phpunit/phpunit
     - vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-text --colors=never
-  artifacts:
-    expire_in: 1 week
-    reports:
-      cobertura: cobertura-coverage.xml
-      junit: junit.xml
 
 release-branch:
   stage: release

@@ -35,7 +35,7 @@
 
     <filter>
         <whitelist>
-            <directory>src</directory>
+            <directory>php</directory>
         </whitelist>
     </filter>
 </phpunit>
