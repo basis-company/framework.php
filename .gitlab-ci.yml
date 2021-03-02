@@ -100,7 +100,7 @@ test-coverage:
          verbose="true">
          <testsuites>
           <testsuite name="default">
-            <directory suffix="Test.php">php/Test</directory>
+            <directory>test</directory>
           </testsuite>
          </testsuites>
 
