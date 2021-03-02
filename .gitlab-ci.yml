@@ -65,8 +65,6 @@ test-phpunit:
 test-coverage:
   stage: test
   image: php:7-cli
-  allow_failure: true
-  interruptible: true
   services:
     - tarantool/tarantool:2.6.2
     - yandex/clickhouse-server
@@ -74,15 +72,12 @@ test-coverage:
     - test
     - master
   variables:
-    BASIS_ENVIRONMENT: testing
-    SERVICE_ENVIRONMENT: testing
-    SERVICE_NAME: $CI_PROJECT_NAME
     TARANTOOL_CONNECTION: tcp://localhost:3301
-    XDEBUG_MODE: coverage
   script:
-    - wget https://getcomposer.org/composer-stable.phar && mv composer-stable.phar composer.phar && chmod +x composer.phar
-    - composer.phar require phpunit/phpunit
-    - docker-php-ext-enable xdebug
+    - apt-get update && apt-get install zip git -y
+    - pecl install xdebug
+    - curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar
+    - ./composer.phar require phpunit/phpunit
     - vendor/bin/phpunit --coverage-cobertura=$CI_PROJECT_DIR/cobertura-coverage.xml --log-junit=$CI_PROJECT_DIR/junit.xml --coverage-text --colors=never --whitelist php
   artifacts:
     expire_in: 1 week
