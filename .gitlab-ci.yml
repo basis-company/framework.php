@@ -60,6 +60,7 @@ test-phpunit:
     SERVICE_NAME: $CI_PROJECT_NAME
     TARANTOOL_CONNECTION: tcp://localhost:3301
   script:
+    - apt-get install zip git -y \
     - curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar
     - ./composer.phar require phpunit/phpunit
     - vendor/bin/phpunit --coverage-clover=coverage.xml
