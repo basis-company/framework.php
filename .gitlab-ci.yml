@@ -1,0 +1,21 @@
+image: docker:18.09.7
+
+variables:
+  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_DRIVER: overlay2
+  IMAGE_BRANCH: cr.yandex/crpf255p88b3bourvm4f/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
+  IMAGE_PIPELINE: cr.yandex/crpf255p88b3bourvm4f/$CI_PROJECT_NAME:$CI_PIPELINE_ID
+
+stages:
+  - build
+
+build:
+  stage: build
+  services:
+    - name: docker:18.09.7-dind
+  script:
+    - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
+    - docker pull $IMAGE_BRANCH || true
+    - docker build -f skeleton/Dockerfile --cache-from $IMAGE_BRANCH -t $IMAGE_PIPELINE .
+    - docker push $IMAGE_PIPELINE
+
