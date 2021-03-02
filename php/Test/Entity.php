@@ -11,7 +11,7 @@ class Entity extends MapperEntity
 
     private Test $testReference;
     private string $entityKey;
-    
+
     public function __construct(Test $test, string $key)
     {
         $this->testReference = $test;

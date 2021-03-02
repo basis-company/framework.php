@@ -23,7 +23,7 @@ class Clear
                 end
             end
         ");
-        
+
         $data = $space->select(Criteria::key([]));
 
         foreach ($data as $row) {

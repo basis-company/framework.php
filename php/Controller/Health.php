@@ -14,7 +14,7 @@ class Health
 
         // 5 minutes default limit
         $threshold = getenv('BACKGROUND_HOLD_MAX') ?: 5 * 60;
-        
+
         // validate current hold value
         if ($hold->getValue() >= $threshold) {
             return $this->failure();
