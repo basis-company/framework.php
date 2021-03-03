@@ -26,7 +26,7 @@ class Swoole
                 'max_request' => getenv('SWOOLE_HTTP_SERVER_MAX_REQUEST') ?: 128,
                 'open_http2_protocol' => getenv('SWOOLE_HTTP_SERVER_HTTP2') == 'true',
                 'open_http_protocol' => true,
-                'package_max_length' => getenv('SWOOLE_PACKAGE_MAX_LENGTH') ?: 32 * 1024 * 1024,
+                'open_length_check' => false,
                 'reactor_num' => getenv('SWOOLE_HTTP_SERVER_REACTOR_NUM') ?: 1,
                 'worker_num' => getenv('SWOOLE_HTTP_SERVER_WORKER_NUM') ?: 8,
             ]);
