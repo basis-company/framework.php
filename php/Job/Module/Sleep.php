@@ -7,6 +7,7 @@ use Swoole\Coroutine;
 
 class Sleep extends Job
 {
+    public bool $coroutine = false;
     public float $seconds = 1;
 
     public function run()
@@ -15,7 +16,7 @@ class Sleep extends Job
             return;
         }
 
-        if (class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
+        if ($this->coroutine && class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
             return Coroutine::sleep($this->seconds);
         }
 
