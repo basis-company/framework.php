@@ -21,7 +21,7 @@ class Entity extends MapperEntity
     public function save(): MapperEntity
     {
         if (!$this->id) {
-            $max = 0;
+            $max = rand(10000, 100000);
             if (count($this->testReference->data[$this->entityKey])) {
                 $max = max(array_keys($this->testReference->data[$this->entityKey]));
             }
