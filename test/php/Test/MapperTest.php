@@ -30,13 +30,14 @@ class MapperTest extends Test
     public function testFakeMapper()
     {
         $this->assertCount(1, $this->find('flow.tracker'));
-        $this->assertSame(1, $this->findOrFail('flow.tracker')->id);
-        $this->assertNotNull($this->findOrFail('flow.tracker', 1));
+        [$first] = $this->find('flow.tracker');
+        $this->assertNotNull($this->findOrFail('flow.tracker', $first->id));
+        $this->assertNotNull($this->findOrFail('flow.tracker')->id);
         $this->assertNull($this->findOne('flow.tracker', 2));
 
-        $tracker = $this->create('flow.tracker', [ 'status' => 'ready', ]);
-        $this->assertSame($tracker->status, 'ready');
-        $this->assertSame($tracker->id, 2);
+        $second = $this->create('flow.tracker', [ 'status' => 'ready', ]);
+        $this->assertSame($second->status, 'ready');
+        $this->assertSame($second->id, $first->id + 1);
 
         $this->assertCount(2, $this->find('flow.tracker'));
         $this->assertCount(1, $this->find('flow.tracker', [ 'status' => 'ready' ]));
@@ -47,14 +48,14 @@ class MapperTest extends Test
         $this->assertInstanceOf(Mapper::class, $mapper);
         $this->assertNotNull($mapper);
 
-        $mapper->remove('tracker', [ 'id' => 1 ]);
+        $mapper->remove('tracker', [ 'id' => $first->id ]);
         $this->assertCount(1, $this->find('flow.tracker'));
-        $this->assertSame(2, $this->findOne('flow.tracker')->id);
-        $tracker = $this->create('flow.tracker', [ 'status' => 'ready', ]);
-        $this->assertSame($tracker->status, 'ready');
-        $this->assertSame($tracker->id, 3);
+        $this->assertSame($second->id, $this->findOne('flow.tracker')->id);
+        $third = $this->create('flow.tracker', [ 'status' => 'ready', ]);
+        $this->assertSame($third->status, 'ready');
+        $this->assertSame($third->id, $first->id + 2);
         $this->assertCount(2, $this->find('flow.tracker'));
-        $this->assertNotNull($this->findOrFail('flow.tracker', 3));
+        $this->assertNotNull($this->findOrFail('flow.tracker', $third->id));
 
         $this->create('flow.tracker', ['status' => 'draft']);
         $this->assertCount(3, $this->find('flow.tracker'));
@@ -65,10 +66,11 @@ class MapperTest extends Test
 
         $this->assertCount(0, $this->find('flow.tracker'));
 
-        $tracker = $this->create('flow.tracker', []);
-        $tracker->status = 'ready';
-        $tracker->save();
-        $this->assertSame($tracker->id, 1);
+        $fourth = $this->create('flow.tracker', []);
+        $fourth->status = 'ready';
+        $fourth->save();
+        // id should be started randomized
+        $this->assertNotSame($fourth->id, $third->id + 1);
 
         $tracker = $this->findOne('flow.tracker', [ 'status' => 'ready']);
         $this->assertSame($tracker->status, 'ready');
