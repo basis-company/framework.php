@@ -32,6 +32,21 @@ trait Toolkit
         return $this->getContainer()->call(...func_get_args());
     }
 
+    public function deprecate($message = null)
+    {
+        $parent = debug_backtrace()[0];
+        $log = [
+            'type' => 'deprecate',
+            'msg' => $message,
+            'file' => str_replace('/app/php/', '', $parent['file']),
+            'line' => $parent['line'],
+        ];
+        if (!$message) {
+            unset($log['msg']);
+        }
+        $this->get(LoggerInterface::class)->info($log);
+    }
+
     public function send(string $job, array $params = [], string $service = null)
     {
         return $this->get(Executor::class)->send($job, $params, $service);
