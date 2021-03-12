@@ -44,7 +44,7 @@ class RunnerTest extends Test
         $criteria = Criteria::key([$queue->id]);
         [$tuple] = $space->select($criteria);
 
-        $past = $tuple[8]['since'] - $this->get(Recover::class)->timeout + 1;
+        $past = $tuple[8]['since'] - $this->get(Recover::class)->timeout + 2;
         $space->update([$queue->id], Operations::set(8, [ 'since' => $past ]));
 
         // still no changes
@@ -76,7 +76,7 @@ class RunnerTest extends Test
         $this->assertNull($tuple[8]);
 
         $queue->status = 'processing';
-        $queue->save();        
+        $queue->save();
 
         // add timestamp
         $recover = $this->dispatch('module.recover');
