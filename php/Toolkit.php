@@ -32,11 +32,11 @@ trait Toolkit
         return $this->getContainer()->call(...func_get_args());
     }
 
-    public function deprecate($message = null)
+    public function deprecated($message = null)
     {
         $parent = debug_backtrace()[0];
         $log = [
-            'type' => 'deprecate',
+            'type' => 'deprecated',
             'msg' => $message,
             'file' => str_replace('/app/php/', '', $parent['file']),
             'line' => $parent['line'],
