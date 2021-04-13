@@ -72,12 +72,17 @@ if (file_exists('php/Job/Background.php')) {
             ->share(Registry::class, $registry);
 
         $process->name('background');
+        $iteration = 0;
 
         while (true) {
             $background->get(BackgroundStart::class)->update();
             $background->get(BackgroundHold::class)->update();
             $background->dispatch('module.process', [ 'job' => 'background' ]);
             $background->dispatch('module.sleep', [ 'seconds' => 1 ]);
+            if (++$iteration % (10 * 60) == 0) {
+                // housekeeping every 10 minutes
+                $executor->dispatch('module.housekeeping');
+            }
         }
     }));
 }
@@ -91,10 +96,16 @@ if (getenv('SERVICE_EXECUTOR') !== 'false') {
             ->share(Process::class, $process)
             ->share(Registry::class, $registry);
 
+        $iteration = 0;
+
         while (true) {
             $executor->dispatch('module.recover');
             $executor->dispatch('module.process', [ 'job' => 'module.execute' ]);
             $executor->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
+            if (++$iteration % (20 * 60) == 0) {
+                // housekeeping every 10 minutes
+                $executor->dispatch('module.housekeeping');
+            }
         }
     }));
 }
