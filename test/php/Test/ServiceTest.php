@@ -57,6 +57,9 @@ class ServiceTest extends Test
         $this->assertContains('dynamic/*', $routes);
         $this->assertContains('index/index', $routes);
         $this->assertContains('index/hello', $routes);
+
+        // exclude framework routes
+        $this->assertCount(5, $routes);
     }
 
     public function testName()

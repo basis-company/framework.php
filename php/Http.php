@@ -68,7 +68,15 @@ class Http
 
     public function getRoutes(): array
     {
-        return array_keys($this->getMapping());
+        $routes = [];
+
+        foreach ($this->getMapping() as $route => [ $class ]) {
+            if (strpos($class, 'Basis\\') === false) {
+                $routes[] = $route;
+            }
+        }
+
+        return $routes;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
