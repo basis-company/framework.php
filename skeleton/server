@@ -71,10 +71,10 @@ if (file_exists('php/Job/Background.php')) {
             ->share(Process::class, $process)
             ->share(Registry::class, $registry);
 
+        $iteration = 128;
         $process->name('background');
-        $iteration = 0;
 
-        while (true) {
+        while ($iteration--) {
             $background->get(BackgroundStart::class)->update();
             $background->get(BackgroundHold::class)->update();
             $background->dispatch('module.process', [ 'job' => 'background' ]);
@@ -85,16 +85,16 @@ if (file_exists('php/Job/Background.php')) {
 
 if (getenv('SERVICE_EXECUTOR') !== 'false') {
     $server->addProcess(new Process(function ($process) use ($registry, $logger) {
-        $process->name('executor');
         $executor = new Application();
         $executor->getContainer()
             ->share(LoggerInterface::class, $logger)
             ->share(Process::class, $process)
             ->share(Registry::class, $registry);
 
-        $iteration = 0;
+        $iteration = 128;
+        $process->name('executor');
 
-        while (true) {
+        while ($iteration--) {
             $executor->dispatch('module.recover');
             $executor->dispatch('module.process', [ 'job' => 'module.execute' ]);
             $executor->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
