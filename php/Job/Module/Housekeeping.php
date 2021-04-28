@@ -41,7 +41,7 @@ class Housekeeping
         $container->get(Converter::class)->flushCache();
     }
 
-    private function flush(Mapper $mapper)
+    public function flush(Mapper $mapper)
     {
         $keys = new ReflectionProperty(Repository::class, 'keys');
         $keys->setAccessible(true);
