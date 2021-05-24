@@ -1,4 +1,4 @@
-FROM php:7-cli as version
+FROM php:8-cli as version
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY .git composer.json skeleton/upgrade /app/
 RUN php upgrade $(git describe --tags)
 RUN cat /app/composer.json
 
-FROM php:7-cli
+FROM php:8-cli
 
 WORKDIR /app
 
@@ -21,6 +21,7 @@ RUN apt-get update \
     && docker-php-ext-enable \
         apcu \
         opcache \
+    && echo "error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED" > /usr/local/etc/php/conf.d/error_reporting.ini \
     && echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini \
     && echo "opcache.enable = 1" > /usr/local/etc/php/conf.d/opcache-enable.ini \
     && echo "opcache.enable_cli = 1" > /usr/local/etc/php/conf.d/opcache-enable-cli.ini \
