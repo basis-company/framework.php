@@ -145,6 +145,9 @@ class Dispatcher
 
             $result = json_decode($body);
             if (!$result || !$result->success) {
+                if (!$result) {
+                    throw new Exception("Invalid result from $service: $body");
+                }
                 $exception = new Exception($result->message ?: $body);
                 if ($result->trace) {
                     $exception->remoteService = $service;
