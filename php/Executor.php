@@ -37,22 +37,7 @@ class Executor
             $request['params'] = $this->get(Converter::class)->toArray($request['params']);
         }
 
-        $context = $this->get(Context::class)->toArray();
-        $hash = md5(json_encode($context));
-        $jobContext = $this->findOrCreate('job_context', [
-            'hash' => $hash
-        ], [
-            'activity' => time(),
-            'context' => $context,
-            'hash' => $hash,
-        ]);
-
-        if (!$jobContext->activity || $jobContext->activity < time() - 60) {
-            $jobContext->activity = time();
-            $jobContext->save();
-        }
-
-        $request['context'] = $jobContext->id;
+        $request['context'] = $this->getContextId();
         if (!array_key_exists('hash', $request)) {
             if (array_key_exists('job_queue_hash', $request['params'])) {
                 $request['hash'] = $request['params']['job_queue_hash'];
@@ -175,22 +160,8 @@ class Executor
 
     protected function transferRequest(Entity $request)
     {
-        $context = $request->getContext();
-        $remoteContext = $this->findOrCreate("$request->service.job_context", [
-            'hash' => $context->hash
-        ], [
-            'hash' => $context->hash,
-            'context' => $context->context,
-            'activity' => time(),
-        ]);
-
-        if (!$remoteContext->activity || $remoteContext->activity < time() - 60) {
-            $remoteContext->activity = time();
-            $remoteContext->save();
-        }
-
         $template = $this->get(Converter::class)->toArray($request);
-        $template['context'] = $remoteContext->id;
+        $template['context'] = $this->getContextId($request->service, $context->context);
         $template['status'] = 'new';
         unset($template['id']);
 
@@ -297,5 +268,33 @@ class Executor
     public function getServiceName()
     {
         return $this->app->getName();
+    }
+
+    public function getContextId(?string $service = null, ?array $context = null): int
+    {
+        $prefix = null;
+        if ($service) {
+            $prefix = $service . '.';
+        }
+
+        if ($context === null) {
+            $context = $this->get(Context::class)->toArray();
+        }
+
+        $hash = md5(json_encode($context));
+        $jobContext = $this->findOrCreate($prefix . 'job_context', [
+            'hash' => $hash
+        ], [
+            'activity' => time(),
+            'context' => $context,
+            'hash' => $hash,
+        ]);
+
+        if (!$jobContext->activity || $jobContext->activity < time() - 60) {
+            $jobContext->activity = time();
+            $jobContext->save();
+        }
+
+        return $jobContext->id;
     }
 }
