@@ -161,7 +161,7 @@ class Executor
     protected function transferRequest(Entity $request)
     {
         $template = $this->get(Converter::class)->toArray($request);
-        $template['context'] = $this->getContextId($request->service, $context->context);
+        $template['context'] = $this->getContextId($request->service, $request->getContext()->context);
         $template['status'] = 'new';
         unset($template['id']);
 
