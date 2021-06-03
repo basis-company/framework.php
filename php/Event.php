@@ -101,7 +101,7 @@ class Event
 
     public function fireChangesPart(string $producer, int $fraction = 10)
     {
-        if (++$this->counter % $fraction === 0) {
+        if (property_exists($this, 'counter') && ++$this->counter % $fraction === 0) {
             return $this->fireChanges($producer);
         }
         return false;
