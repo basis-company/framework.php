@@ -16,6 +16,7 @@ class Event
     use Toolkit;
 
     protected array $eventExistence = [];
+    protected int $counter = 0;
 
     public function exists(string $event): bool
     {

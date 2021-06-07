@@ -43,7 +43,13 @@ class Storage
         ]);
         $result = json_decode($response->getContent());
 
-        return $result->data ? $result->data : $result->hash[0];
+        if (property_exists($result, 'data') && $result->data) {
+            return $result->data;
+        }
+
+        if (property_exists($result, 'hash') && is_array($result->hash)) {
+            return $result->hash[0];
+        }
     }
 
     public function url(string $hash): string
