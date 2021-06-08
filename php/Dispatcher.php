@@ -148,7 +148,8 @@ class Dispatcher
                 if (!$result) {
                     throw new Exception("Invalid result from $service: $body");
                 }
-                $exception = new Exception($result->message ?: $body);
+                $message = property_exists($result, 'message') && $result->message ? $result->message : $body;
+                $exception = new Exception($message);
                 if ($result->trace) {
                     $exception->remoteService = $service;
                     $exception->remoteTrace = $result->trace;
