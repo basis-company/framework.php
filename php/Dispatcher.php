@@ -150,7 +150,7 @@ class Dispatcher
                 }
                 $message = property_exists($result, 'message') && $result->message ? $result->message : $body;
                 $exception = new Exception($message);
-                if ($result->trace) {
+                if (property_exists($result, 'trace') && $result->trace) {
                     $exception->remoteService = $service;
                     $exception->remoteTrace = $result->trace;
                 }
