@@ -49,7 +49,7 @@ test-phpcs:
 
 test-phpunit:
   stage: test
-  image: $image_pipeline
+  image: php:8-cli
   services:
     - tarantool/tarantool:2.6.2
     - yandex/clickhouse-server
@@ -59,12 +59,14 @@ test-phpunit:
   variables:
     TARANTOOL_CONNECTION: tcp://localhost:3301
   script:
+    - apt-get update && apt-get install zip git -y
+    - curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar
     - ./composer.phar require phpunit/phpunit
     - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 test-coverage:
   stage: test
-  image: php:7-cli
+  image: php:8-cli
   allow_failure: true
   interruptible: true
   services:
