@@ -21,7 +21,7 @@ class Logger extends AbstractLogger
         $this->log($level, $data);
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         $row = $message;
 
