@@ -6,6 +6,7 @@ use Basis\Metric\Registry;
 use OpenTelemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Tarantool\Mapper\Entity;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
@@ -36,7 +37,6 @@ trait Toolkit
     {
         $parent = debug_backtrace()[0];
         $log = [
-            'type' => 'deprecated',
             'msg' => $message,
             'file' => str_replace('/app/php/', '', $parent['file']),
             'line' => $parent['line'],
@@ -44,7 +44,44 @@ trait Toolkit
         if (!$message) {
             unset($log['msg']);
         }
-        $this->get(LoggerInterface::class)->info($log);
+        $this->warning('deprecated', $log);
+    }
+
+    public function exception(Throwable $e, string $level = LogLevel::ERROR)
+    {
+        $context = [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString(),
+        ];
+
+        return $this->log($level, $e->getMessage(), $context);
+    }
+
+    public function log($level, $message, array $context = [])
+    {
+        if (is_array($message)) {
+            $context = $message;
+            $message = 'no message';
+        }
+
+        return $this->get(LoggerInterface::class)
+            ->log($level, $message, $context);
+    }
+
+    public function info($message, $context = [])
+    {
+        return $this->log(LogLevel::INFO, ...func_get_args());
+    }
+
+    public function warning($message, $context = [])
+    {
+        return $this->log(LogLevel::WARNING, ...func_get_args());
+    }
+
+    public function error($message, $context = [])
+    {
+        return $this->log(LogLevel::ERROR, ...func_get_args());
     }
 
     public function send(string $job, array $params = [], string $service = null)

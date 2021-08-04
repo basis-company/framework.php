@@ -1,52 +1,44 @@
-FROM php:8-cli as version
+FROM php:8-apache as version
 
-WORKDIR /app
+WORKDIR /var/www/html
 
 RUN apt-get update && apt-get install -y git wget zip
-COPY .git composer.json skeleton/upgrade /app/
+COPY .git composer.json skeleton/upgrade /var/www/html/
 RUN php upgrade $(git describe --tags)
-RUN cat /app/composer.json
+RUN cat /var/www/html/composer.json
 
-FROM php:8-cli
+FROM php:8-apache
 
-WORKDIR /app
+WORKDIR /var/www/html
 
 RUN apt-get update \
     && apt-get install procps zip -y \
     && pecl install \
-        apcu \
         ast \
         xdebug \
     && docker-php-ext-install opcache \
     && docker-php-ext-enable \
-        apcu \
         opcache \
-    && echo "error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED" > /usr/local/etc/php/conf.d/error_reporting.ini \
+    && a2enmod rewrite \
     && echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini \
     && echo "opcache.enable = 1" > /usr/local/etc/php/conf.d/opcache-enable.ini \
     && echo "opcache.enable_cli = 1" > /usr/local/etc/php/conf.d/opcache-enable-cli.ini \
     && echo "post_max_size = 32M" > /usr/local/etc/php/conf.d/post-max-size.ini \
     && echo "upload_max_filesize = 32M" > /usr/local/etc/php/conf.d/upload-max-filesize.ini
 
-RUN cd /tmp \
-    && apt-get install git libssl-dev -y \
-    && git clone --depth 1 --branch v4.6.7 https://github.com/swoole/swoole-src.git \
-    && cd swoole-src \
-    && phpize \
-    && ./configure --enable-openssl --enable-http2 \
-    && make \
-    && make install \
-    && echo 'extension=swoole.so' > /usr/local/etc/php/conf.d/swoole.ini \
-    && cd /tmp \
-    && rm -rf swoole-src \
-    && apt-get remove git libssl-dev -y
+RUN echo "ServerName default" > /etc/apache2/conf-enabled/server-name.conf
+RUN sed -i 's~DocumentRoot.*$~DocumentRoot /var/www/html/public~' /etc/apache2/sites-enabled/000-default.conf
+RUN sed -i 's/AccessLog/#AccessLog/g' /etc/apache2/sites-enabled/000-default.conf
+RUN sed -i 's/ErrorLog/#ErrorLog/g' /etc/apache2/sites-enabled/000-default.conf
+
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-COPY skeleton /app
+COPY skeleton /var/www/html
 RUN ln /usr/bin/composer composer.phar \
     && composer update --no-dev --no-progress --optimize-autoloader
 
-COPY php /app/vendor/basis-company/framework/php
-COPY --from=version /app/composer.json /app/vendor/basis-company/framework
+COPY php /var/www/html/vendor/basis-company/framework/php
+
+COPY --from=version /var/www/html/composer.json /var/www/html/vendor/basis-company/framework
 
 CMD ./starter

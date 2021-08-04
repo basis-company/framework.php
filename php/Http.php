@@ -10,8 +10,6 @@ use Nyholm\Psr7\UploadedFile;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Swoole\Http\Request as SwooleRequest;
-use Swoole\Http\Response as SwooleResponse;
 use Throwable;
 
 class Http
@@ -100,6 +98,7 @@ class Http
         }
 
         ob_start();
+        $handleStart = microtime(true);
 
         if (array_key_exists($pattern, $mapping)) {
             [ $class, $method, $start ] = $mapping[$pattern];
@@ -120,6 +119,18 @@ class Http
             }
         } else {
             $result = "Page not found: $uri";
+        }
+
+        if ($this->logging) {
+            $message = $request->getMethod() . ' ' . $request->getUri();
+
+            $context = [];
+            $time = microtime(true) - $handleStart;
+            if ($time >= 0.001) {
+                $context['time'] = round($time, 3);
+            }
+
+            $this->get(LoggerInterface::class)->info($message, $context);
         }
 
         if ($result instanceof ResponseInterface) {
@@ -158,77 +169,6 @@ class Http
 
         $response = $this->handle($request);
         return (string) $response->getBody();
-    }
-
-    public function swoole(SwooleRequest $swooleRequest, SwooleResponse $swooleResponse)
-    {
-        $params = [];
-        $uri = $swooleRequest->server['request_uri'];
-
-        if (array_key_exists('query_string', $swooleRequest->server)) {
-            $query = $swooleRequest->server['query_string'];
-            parse_str($query, $params);
-            $uri .= '?' . $query;
-        }
-
-        $serverRequest = new ServerRequest(
-            $swooleRequest->server['request_method'],
-            $uri,
-            $swooleRequest->header,
-            property_exists($swooleRequest, 'rawContent') ? $swooleRequest->rawContent : null,
-            $swooleRequest->server['server_protocol'],
-            $swooleRequest->server,
-        );
-
-        if (count($params)) {
-            $serverRequest = $serverRequest->withQueryParams($params);
-        }
-
-        if (property_exists($swooleRequest, 'files') && $swooleRequest->files) {
-            $uploadedFiles = [];
-            foreach ($swooleRequest->files as $file) {
-                $uploadedFiles[] = new UploadedFile(
-                    $file['tmp_name'],
-                    $file['size'],
-                    $file['error'],
-                    $file['name'],
-                    $file['type'],
-                );
-            }
-            $serverRequest = $serverRequest->withUploadedFiles($uploadedFiles);
-        }
-        if (property_exists($swooleRequest, 'post')) {
-            if (is_array($swooleRequest->post)) {
-                if (count($swooleRequest->post)) {
-                    $serverRequest = $serverRequest->withParsedBody($swooleRequest->post);
-                }
-            }
-        }
-
-        $start = microtime(true);
-        $response = $this->handle($serverRequest);
-
-        $log = [
-            'method' => $swooleRequest->server['request_method'],
-            'uri' => $swooleRequest->server['request_uri'],
-        ];
-
-        $time = microtime(true) - $start;
-        if ($time >= 0.001) {
-            $log['time'] = round($time, 3);
-        }
-
-        if ($this->logging) {
-            $this->get(LoggerInterface::class)->info($log);
-        }
-
-        $swooleResponse->status($response->getStatusCode());
-        foreach ($response->getHeaders() as $k => $rows) {
-            foreach ($rows as $row) {
-                $swooleResponse->header($k, $row);
-            }
-        }
-        $swooleResponse->end($response->getBody());
     }
 
     public function error(string $url): string

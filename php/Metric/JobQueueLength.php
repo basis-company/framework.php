@@ -10,9 +10,10 @@ class JobQueueLength extends Metric
     public string $help = 'job queue length';
     public string $type = self::GAUGE;
 
-    public function update(Client $client)
+    public function update()
     {
-        [$value] = $client->call('box.space.job_queue:count');
+        [ $value ] = $this->get(Client::class)->call('box.space.job_queue:count');
+
         $this->setValue($value);
     }
 }

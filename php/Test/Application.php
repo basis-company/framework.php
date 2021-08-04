@@ -15,7 +15,7 @@ class Application extends Basis
 
         $container = $this->getContainer();
         $container->share(Test::class, $test);
-        $container->share(Metrics::class, new MetricRegistry());
+        $container->share(Metrics::class, new MetricRegistry($this->app));
 
         $classes = $this->get(Registry::class)->listClasses('Test');
         foreach ($classes as $class) {

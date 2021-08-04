@@ -2,6 +2,7 @@
 <?php
 
 use Basis\Application;
+use Basis\Configuration\Monolog;
 use Basis\Dispatcher;
 use Basis\Event;
 use Basis\Registry;
@@ -49,6 +50,12 @@ try {
             }
         }
     }
+
+    $application->get(Monolog::class)->name = $job;
+    if (strpos($job, 'module.') === 0) {
+        $application->get(Monolog::class)->name = explode('.', $job)[1];
+    }
+
 
     $result = $application->dispatch($job, $params);
     if ($result) {

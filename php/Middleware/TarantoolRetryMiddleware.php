@@ -3,7 +3,7 @@
 namespace Basis\Middleware;
 
 use Psr\Log\LoggerInterface;
-use Swoole\Coroutine;
+use ReflectionProperty;
 use Tarantool\Client\Connection\StreamConnection;
 use Tarantool\Client\Exception\CommunicationFailed;
 use Tarantool\Client\Exception\ConnectionFailed;
@@ -13,7 +13,6 @@ use Tarantool\Client\Handler\Handler;
 use Tarantool\Client\Middleware\Middleware;
 use Tarantool\Client\Request\Request;
 use Tarantool\Client\Response;
-use ReflectionProperty;
 
 class TarantoolRetryMiddleware implements Middleware
 {
@@ -87,13 +86,9 @@ class TarantoolRetryMiddleware implements Middleware
                 $data['uri'] = $uri;
             }
 
-            $this->logger->info($data);
+            $this->logger->info('connection failure', $data);
 
-            if (class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
-                Coroutine::sleep($sleep);
-            } else {
-                usleep($sleep * 1000000);
-            }
+            usleep($sleep * 1000000);
         }
 
         throw $e;
