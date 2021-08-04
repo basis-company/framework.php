@@ -1,6 +1,6 @@
 #!/bin/bash
 
-composer dump-autoload --optimize --apcu
+composer dump-autoload --classmap-authoritative
 
 mkfifo /var/application.log
 chmod go+rw /var/application.log
