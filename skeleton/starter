@@ -1,5 +1,9 @@
 #!/bin/bash
 
+cp -r /app/js/ /var/www/html/public
+cp -r /app/php /var/www/html
+cp -r /app/styl /var/www/html/public
+
 composer dump-autoload --classmap-authoritative
 
 mkfifo /var/application.log
