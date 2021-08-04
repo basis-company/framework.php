@@ -120,7 +120,11 @@ class Registry
             $value = $this->getValue($metric, $labels);
             unset($labels[$this->hostname]);
             if (count($labels)) {
-                $nick .= json_encode($labels);
+                $kv = [];
+                foreach ($labels as $k => $v) {
+                    $kv[] = $k . '="' . $v . '"';
+                }
+                $nick .= '{' . implode(',', $kv) . '}';
             }
 
             $output[] = sprintf("%s %s", $nick, $value);
