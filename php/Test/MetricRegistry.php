@@ -10,13 +10,13 @@ class MetricRegistry extends Registry
 {
     protected $data = [];
 
-    public function getValue(Metric $metric, array $labels = [])
+    public function getValue(Metric $metric, array $labels = []): float | int | null
     {
         $key = $this->getKey($metric, $labels);
         return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
 
-    public function setValue(Metric $metric, array $labels, $value)
+    public function setValue(Metric $metric, array $labels, $value): float | int | null
     {
         $key = $this->getKey($metric, $labels);
 
@@ -28,7 +28,7 @@ class MetricRegistry extends Registry
         return $this->data[$this->getKey($metric, $labels)] += $amount;
     }
 
-    protected function getMetrics()
+    protected function getMetrics(): array
     {
         return $this->data;
     }

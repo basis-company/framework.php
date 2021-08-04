@@ -16,7 +16,7 @@ class MetricTest extends Test
     public function testRendering()
     {
         $uptime = $this->get(Uptime::class);
-        $uptime->update(time() - 30);
+        $uptime->setValue(30);
         $result = $this->get(Registry::class)->render();
         $this->assertStringContainsString("uptime 30", $result);
     }
@@ -24,7 +24,7 @@ class MetricTest extends Test
     public function testBasics()
     {
         $uptime = $this->get(Uptime::class);
-        $uptime->update(time() - 30);
+        $uptime->setValue(30);
 
         $this->assertEquals($uptime->getValue(), 30);
     }

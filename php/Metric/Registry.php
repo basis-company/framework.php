@@ -112,7 +112,10 @@ class Registry
             } elseif ($output[count($output) - 1] == "$nick 0") {
                 array_pop($output);
             }
-            $labels = get_object_vars(json_decode($labels));
+            $labels = json_decode($labels);
+            if (is_object($labels)) {
+                $labels = get_object_vars($labels);
+            }
 
             $value = $this->getValue($metric, $labels);
             unset($labels[$this->hostname]);
