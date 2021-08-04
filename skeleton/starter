@@ -1,7 +1,5 @@
 #!/bin/bash
 
-su www-data
-
 mkfifo /var/application.log
 chmod go+rw /var/application.log
 
