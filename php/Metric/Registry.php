@@ -101,7 +101,7 @@ class Registry
         $output = [];
         $typed = [];
 
-        foreach ($set as [ $class, $labels ]) {
+        foreach ($set as $key => [ $class, $labels ]) {
             $metric = $this->get($class);
             $nick = $prefix . $metric->getNick();
 
@@ -117,7 +117,6 @@ class Registry
                 $labels = get_object_vars($labels);
             }
 
-            $value = $this->getValue($metric, $labels);
             unset($labels[$this->hostname]);
             if (count($labels)) {
                 $kv = [];
@@ -127,7 +126,7 @@ class Registry
                 $nick .= '{' . implode(',', $kv) . '}';
             }
 
-            $output[] = sprintf("%s %s", $nick, $value);
+            $output[] = sprintf("%s %s", $nick, $values[$key]);
         }
 
         return implode(PHP_EOL, $output);
