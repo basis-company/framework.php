@@ -35,10 +35,12 @@ RUN apt-get update \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY skeleton /var/www/html
 
+RUN rm -rf /var/www/html/vendor/basis-company/framework/php
+COPY php /var/www/html/vendor/basis-company/framework
+
 RUN ln /usr/bin/composer composer.phar \
     && composer update --no-dev --no-progress --optimize-autoloader
 
-COPY php /var/www/html/vendor/basis-company/framework/php
 COPY --from=version /var/www/html/composer.json /var/www/html/vendor/basis-company/framework
 
 CMD ./starter
