@@ -26,21 +26,19 @@ RUN apt-get update \
     && echo "opcache.enable = 1" > /usr/local/etc/php/conf.d/opcache-enable.ini \
     && echo "opcache.enable_cli = 1" > /usr/local/etc/php/conf.d/opcache-enable-cli.ini \
     && echo "post_max_size = 32M" > /usr/local/etc/php/conf.d/post-max-size.ini \
-    && echo "upload_max_filesize = 32M" > /usr/local/etc/php/conf.d/upload-max-filesize.ini
-
-RUN echo "ServerName default" > /etc/apache2/conf-enabled/server-name.conf
-RUN sed -i 's~DocumentRoot.*$~DocumentRoot /var/www/html/public~' /etc/apache2/sites-enabled/000-default.conf
-RUN sed -i 's/AccessLog/#AccessLog/g' /etc/apache2/sites-enabled/000-default.conf
-RUN sed -i 's/ErrorLog/#ErrorLog/g' /etc/apache2/sites-enabled/000-default.conf
-
+    && echo "upload_max_filesize = 32M" > /usr/local/etc/php/conf.d/upload-max-filesize.ini \
+    && echo "ServerName default" > /etc/apache2/conf-enabled/server-name.conf \
+    && sed -i 's~DocumentRoot.*$~DocumentRoot /var/www/html/public~' /etc/apache2/sites-enabled/000-default.conf \
+    && sed -i 's/AccessLog/#AccessLog/g' /etc/apache2/sites-enabled/000-default.conf \
+    && sed -i 's/ErrorLog/#ErrorLog/g' /etc/apache2/sites-enabled/000-default.conf
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY skeleton /var/www/html
+
 RUN ln /usr/bin/composer composer.phar \
     && composer update --no-dev --no-progress --optimize-autoloader
 
 COPY php /var/www/html/vendor/basis-company/framework/php
-
 COPY --from=version /var/www/html/composer.json /var/www/html/vendor/basis-company/framework
 
 CMD ./starter
