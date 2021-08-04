@@ -42,4 +42,6 @@ RUN rm -rf /var/www/html/vendor/basis-company/framework/php
 COPY php /var/www/html/vendor/basis-company/framework/php
 COPY --from=version /var/www/html/composer.json /var/www/html/vendor/basis-company/framework
 
+RUN composer dump-autoload --optimize --apcu
+
 CMD ./starter
