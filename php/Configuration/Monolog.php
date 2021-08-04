@@ -5,6 +5,7 @@ namespace Basis\Configuration;
 use Basis\Container;
 use Basis\Http;
 use Monolog\Formatter\JsonFormatter;
+use Monolog\Processor\ProcessorInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -20,6 +21,15 @@ class Monolog
 
             $handler = new StreamHandler("/var/application.log", Logger::INFO);
             $handler->setFormatter($formatter);
+
+            $handler->pushProcessor(new class implements ProcessorInterface {
+                public function __invoke(array $record)
+                {
+                    unset($record['level']);
+                    unset($record['datetime']);
+                    return $record;
+                }
+            });
 
             $log = new Logger($this->name);
             $log->pushHandler($handler);
