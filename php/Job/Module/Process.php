@@ -45,7 +45,6 @@ class Process extends Job
             ]);
 
             $this->dispatch('module.housekeeping');
-
         } catch (Throwable $e) {
             $this->get(LoggerInterface::class)->info([
                 'type' => 'exception',

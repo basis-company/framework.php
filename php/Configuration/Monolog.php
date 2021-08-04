@@ -15,7 +15,7 @@ class Monolog
 
     public function init(Container $container)
     {
-        $container->share(LoggerInterface::class, function() use ($container) {
+        $container->share(LoggerInterface::class, function () use ($container) {
             $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true, true);
 
             $handler = new StreamHandler("/var/application.log", Logger::INFO);

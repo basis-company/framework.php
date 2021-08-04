@@ -14,10 +14,12 @@ WORKDIR /var/www/html
 RUN apt-get update \
     && apt-get install procps zip -y \
     && pecl install \
+        apcu \
         ast \
         xdebug \
     && docker-php-ext-install opcache \
     && docker-php-ext-enable \
+        apcu \
         opcache \
     && a2enmod rewrite \
     && echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini \

@@ -15,7 +15,7 @@ class Registry
 
     private $hostname = '_hostname';
 
-    public function getValue(Metric $metric, array $labels = []): float|int|null
+    public function getValue(Metric $metric, array $labels = []): float | int | null
     {
         $labels[$this->hostname] = gethostname();
 
@@ -26,7 +26,7 @@ class Registry
         return $metric ? $metric->value : null;
     }
 
-    public function setValue(Metric $metric, array $labels, $value): float|int|null
+    public function setValue(Metric $metric, array $labels, $value): float | int | null
     {
         $labels[$this->hostname] = gethostname();
 
@@ -109,7 +109,7 @@ class Registry
                 $typed[$class] = true;
                 $output[] = sprintf('# HELP %s %s', $nick, $metric->getHelp());
                 $output[] = sprintf('# TYPE %s %s', $nick, $metric->getType());
-            } elseif ($output[count($output)-1] == "$nick 0") {
+            } elseif ($output[count($output) - 1] == "$nick 0") {
                 array_pop($output);
             }
             $labels = get_object_vars(json_decode($labels));
@@ -144,12 +144,11 @@ class Registry
                 continue;
             }
             $todo[] = $hostname;
-
         }
 
         foreach ($todo as $hostname) {
-            $start = $this->getValue($this->get(StartTime::class), [ $this->hostname => $hostname ] );
-            $uptime = $this->getValue($this->get(Uptime::class), [ $this->hostname => $hostname ] );
+            $start = $this->getValue($this->get(StartTime::class), [ $this->hostname => $hostname ]);
+            $uptime = $this->getValue($this->get(Uptime::class), [ $this->hostname => $hostname ]);
             $silent = time() - $start + $uptime;
             if ($silent < 60) {
                 continue;
