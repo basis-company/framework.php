@@ -30,10 +30,4 @@ abstract class Job
         return !!(new Confirm($message))
             ->process($this);
     }
-
-    protected function info(string $message): bool
-    {
-        return !!(new Info($message))
-            ->process($this);
-    }
 }

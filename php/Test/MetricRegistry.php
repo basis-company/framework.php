@@ -8,23 +8,28 @@ use Basis\Metric\Registry;
 
 class MetricRegistry extends Registry
 {
-    public function __construct()
+    protected $data = [];
+
+    public function getValue(Metric $metric, array $labels = []): float | int | null
     {
-        $this->table = new ArrayObject();
+        $key = $this->getKey($metric, $labels);
+        return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
 
-    public function getRow(Metric $metric, $labels = [])
+    public function setValue(Metric $metric, array $labels, $value): float | int | null
     {
-        $labels = count($labels) ? json_encode($labels) : '';
-        if (!$this->table->offsetExists($metric->getNick() . $labels)) {
-            $this->table[$metric->getNick() . $labels] = new ArrayObject([
-                'help' => $metric->getHelp(),
-                'nick' => $metric->getNick(),
-                'type' => $metric->getType(),
-                'labels' => $labels,
-            ]);
-        }
+        $key = $this->getKey($metric, $labels);
 
-        return $this->table[$metric->getNick() . $labels];
+        return $this->data[$key] = $value;
+    }
+
+    public function increment(Metric $metric, array $labels, $amount)
+    {
+        return $this->data[$this->getKey($metric, $labels)] += $amount;
+    }
+
+    protected function getMetrics(): array
+    {
+        return $this->data;
     }
 }

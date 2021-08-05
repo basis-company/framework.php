@@ -1,5 +1,29 @@
 #!/bin/bash
-classes=$(composer dump-autoload --optimize | grep -o -E '[0-9]+')
-echo "{\"message\":\"generated optimized autoload files containing ${classes} classes\"}"
-php console module.bootstrap&
-php server
+
+if [ -d "/app" ]; then
+    cp -r /app/js/ /var/www/html/public
+    cp -r /app/php /var/www/html
+    cp -r /app/styl /var/www/html/public
+    rm -rf /app
+fi
+
+composer dump-autoload --classmap-authoritative
+
+mkfifo /var/application.log
+chmod go+rw /var/application.log
+
+tail -f /var/application.log&
+
+php console module.bootstrap
+
+if [ -f "php/Job/Background.php" ]; then
+    ./loop php console module.process job=module.background&
+fi
+
+if [ "$SERVICE_EXECUTOR" != "false" ]; then
+    ./loop php console module.process job=module.execute&
+fi
+
+./loop php console module.tick&
+
+apache2-foreground > /dev/null

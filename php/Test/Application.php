@@ -3,9 +3,12 @@
 namespace Basis\Test;
 
 use Basis\Application as Basis;
-use Basis\Registry;
 use Basis\Metric\Registry as Metrics;
+use Basis\Registry;
 use Basis\Test;
+use Monolog\Handler\NullHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class Application extends Basis
 {
@@ -15,7 +18,12 @@ class Application extends Basis
 
         $container = $this->getContainer();
         $container->share(Test::class, $test);
-        $container->share(Metrics::class, new MetricRegistry());
+        $container->share(Metrics::class, new MetricRegistry($this->app));
+
+        $logger = new Logger('testing');
+        $logger->pushHandler(new NullHandler());
+
+        $container->share(LoggerInterface::class, $logger);
 
         $classes = $this->get(Registry::class)->listClasses('Test');
         foreach ($classes as $class) {

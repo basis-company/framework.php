@@ -5,6 +5,7 @@ namespace Test;
 use Basis\Test;
 use Basis\Metric\Uptime;
 use Basis\Metric\Registry;
+use Basis\Metric\BackgroundHold;
 
 class MetricTest extends Test
 {
@@ -16,15 +17,27 @@ class MetricTest extends Test
     public function testRendering()
     {
         $uptime = $this->get(Uptime::class);
-        $uptime->update(time() - 30);
+        $uptime->setValue(30);
         $result = $this->get(Registry::class)->render();
         $this->assertStringContainsString("uptime 30", $result);
+    }
+
+    public function testLabelRendering()
+    {
+        $uptime = $this->get(BackgroundHold::class);
+        $uptime->setValue(5, [ 'category' => 'executor' ]);
+        $uptime->setValue(8, [ 'category' => 'integration' ]);
+        $uptime->setValue(13, [ 'cat' => 'share', 'ns' => 'test' ]);
+        $result = $this->get(Registry::class)->render();
+        $this->assertStringContainsString('background_hold{category="executor"} 5', $result);
+        $this->assertStringContainsString('background_hold{category="integration"} 8', $result);
+        $this->assertStringContainsString('background_hold{cat="share",ns="test"} 13', $result);
     }
 
     public function testBasics()
     {
         $uptime = $this->get(Uptime::class);
-        $uptime->update(time() - 30);
+        $uptime->setValue(30);
 
         $this->assertEquals($uptime->getValue(), 30);
     }

@@ -2,8 +2,9 @@
 
 namespace Basis\Job\Module;
 
-use Basis\Job;
 use Basis\Executor;
+use Basis\Job;
+use Basis\Metric\JobQueueLength;
 
 class Execute extends Job
 {

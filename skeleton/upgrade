@@ -15,6 +15,6 @@ function compose($path, $callback) {
 if (strpos($version, '-') !== false) {
     $version = 'dev';
 }
-compose('/app/composer.json', function ($data) use ($version) {
+compose('/var/www/html/composer.json', function ($data) use ($version) {
     $data->version = $version;
 });

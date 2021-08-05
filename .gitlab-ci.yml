@@ -32,7 +32,7 @@ test-phpsyntax:
   allow_failure: false
   interruptible: true
   script:
-    - cd /app/php
+    - cd /var/www/html/php
     - find . -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
     - if [ "$?" -ne "0" ];then exit 1; fi
 

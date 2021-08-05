@@ -3,8 +3,6 @@
 namespace Basis\Job\Resolve;
 
 use Basis\Toolkit;
-use Swoole\Coroutine;
-use Swoole\Coroutine\System;
 
 class Address
 {
@@ -25,11 +23,7 @@ class Address
         $host = $this->name;
 
         if (getenv('BASIS_ENVIRONMENT') !== 'dev') {
-            if (class_exists(Coroutine::class) && Coroutine::getContext() !== null) {
-                $host = System::gethostbyname($this->name);
-            } else {
-                $host = gethostbyname($this->name);
-            }
+            $host = gethostbyname($this->name);
             if ($host === false) {
                 return [
                     'host' => $this->name,

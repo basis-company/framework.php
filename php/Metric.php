@@ -64,31 +64,24 @@ class Metric
     {
         return $this->type;
     }
+
     public function getHelp()
     {
         return $this->help;
     }
 
-    public function getRow($labels = [])
-    {
-        return $this->getContainer()
-            ->get(Registry::class)
-            ->getRow($this, $labels);
-    }
-
     public function getValue($labels = [])
     {
-        return $this->getRow($labels)->offsetExists('value') ? $this->getRow($labels)['value'] : null;
+        return $this->get(Registry::class)->getValue($this, $labels);
     }
 
     public function setValue($value, $labels = [])
     {
-        $this->getRow($labels)['value'] = $value;
+        return $this->get(Registry::class)->setValue($this, $labels, $value);
     }
 
     public function increment($amount = 1, $labels = [])
     {
-        $this->getRow($labels)['value'] = $this->getRow($labels)['value'] + $amount;
-        return $this->getRow($labels)['value'];
+        return $this->get(Registry::class)->increment($this, $labels, $amount);
     }
 }
