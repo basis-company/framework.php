@@ -23,6 +23,6 @@ class Tick
 
         $this->getMapper()->getPlugin(Spy::class)->reset();
 
-        $this->dispatch('module.sleep');
+        $this->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
     }
 }

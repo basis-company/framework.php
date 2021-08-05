@@ -7,6 +7,7 @@ use Basis\Metric\StartTime;
 use Basis\Metric\Uptime;
 use Basis\Registry as Meta;
 use Basis\Toolkit;
+use Tarantool\Client\Schema\Criteria;
 use Tarantool\Client\Schema\Operations;
 
 class Registry
@@ -18,50 +19,39 @@ class Registry
     public function getValue(Metric $metric, array $labels = []): float | int | null
     {
         $labels[$this->hostname] = gethostname();
+        $key = $this->getKey($metric, $labels);
+        $class = get_class($metric);
 
-        $metric = $this->findOne('metric', [
-            'key' => $this->getKey($metric, $labels),
-        ]);
+        $result = $this->getMapper()->getClient()->getSpace('metric')
+            ->select(Criteria::index('key')->andKey([$key]));
 
-        return $metric ? $metric->value : null;
+        if (count($result)) {
+            return $result[0][3];
+        }
+
+        return null;
     }
 
     public function setValue(Metric $metric, array $labels, $value): float | int | null
     {
         $labels[$this->hostname] = gethostname();
+        $key = $this->getKey($metric, $labels);
+        $class = get_class($metric);
 
-        $metric = $this->findOrCreate('metric', [
-            'key' => $this->getKey($metric, $labels),
-        ], [
-            'key' => $this->getKey($metric, $labels),
-            'class' => get_class($metric),
-            'labels' => $labels,
-            'value' => $value,
-        ]);
+        $this->getMapper()->getClient()->getSpace('metric')
+            ->upsert([$key, $class, $labels, $value], Operations::set(3, $value));
 
-        $metric->value = $value;
-        $metric->save();
-
-        return $metric->value;
+        return $value;
     }
 
     public function increment(Metric $metric, array $labels, $amount)
     {
         $labels[$this->hostname] = gethostname();
-
-        $instance = $this->findOrCreate('metric', [
-            'key' => $this->getKey($metric, $labels),
-        ], [
-            'key' => $this->getKey($metric, $labels),
-            'class' => get_class($metric),
-            'labels' => $labels,
-            'value' => 0,
-        ]);
+        $key = $this->getKey($metric, $labels);
+        $class = get_class($metric);
 
         $this->getMapper()->getClient()->getSpace('metric')
-            ->update([$instance->key], Operations::add('value', $amount));
-
-        $instance->getRepository()->forget($instance);
+            ->upsert([$key, $class, $labels, 0], Operations::add(3, $amount));
 
         return $this->getValue($metric, $labels);
     }
