@@ -5,12 +5,12 @@ use Basis\Http;
 use Basis\Metric\RequestCounter;
 use Basis\Metric\RequestTotalTime;
 
-$start = microtime(true);
+chdir(dirname(__DIR__));
 
-include dirname(__DIR__) . '/vendor/autoload.php';
+$start = microtime(true);
+include 'vendor/autoload.php';
 
 try {
-
     $app = new Application(dirname(__DIR__));
     $app->get(RequestCounter::class)
         ->increment();
@@ -19,7 +19,6 @@ try {
 
     $app->get(RequestTotalTime::class)
         ->increment((microtime(true) - $start) * 1000);
-
 } catch (Exception $e) {
     echo $e->getMessage();
 
