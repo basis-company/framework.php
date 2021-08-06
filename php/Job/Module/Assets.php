@@ -19,13 +19,18 @@ class Assets
 
     private function collect(string $type): array
     {
+        $location = $type;
+        if ($type !== 'php') {
+            $location = 'public/' . $type;
+        }
+
         $mapping = [];
-        if (is_dir($type)) {
-            exec('find ' . $type . ' -name "*.' . $type . '" -exec md5sum {} \; | sort', $contents);
+        if (is_dir($location)) {
+            exec('find ' . $location . ' -name "*.' . $type . '" -exec md5sum {} \; | sort', $contents);
             if ($contents !== null) {
                 foreach ($contents as $i => $row) {
                     list($hash, $file) = explode("  ", $row);
-                    $file = substr($file, strlen($type) + 1);
+                    $file = substr($file, strlen($location) + 1);
                     $mapping[$file] = $hash;
                 }
             }
