@@ -50,6 +50,10 @@ class Process extends Job
             } catch (Throwable $e) {
                 $this->exception($e);
             }
+
+            if ($this->iterations) {
+                $this->dispatch('module.sleep');
+            }
         }
     }
 }
