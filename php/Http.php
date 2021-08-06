@@ -4,9 +4,11 @@ namespace Basis;
 
 use Exception;
 use LogicException;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\UploadedFile;
+use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -156,15 +158,21 @@ class Http
 
     public function process(string $url): ?string
     {
-        $method = 'get';
-        if (array_key_exists('REQUEST_METHOD', $_SERVER)) {
-            $method = $_SERVER['REQUEST_METHOD'];
-        }
+        if (count(apache_request_headers())) {
+            $psr17Factory = new Psr17Factory();
+            $creator = new ServerRequestCreator($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
+            $request = $creator->fromGlobals();
+        } else {
+            $method = 'get';
+            if (array_key_exists('REQUEST_METHOD', $_SERVER)) {
+                $method = $_SERVER['REQUEST_METHOD'];
+            }
 
-        $request = new ServerRequest($method, $url, [], null, '1.1', $_SERVER);
+            $request = new ServerRequest($method, $url, [], null, '1.1', $_SERVER);
 
-        if (count($_REQUEST)) {
-            $request = $request->withParsedBody($_REQUEST);
+            if (count($_REQUEST)) {
+                $request = $request->withParsedBody($_REQUEST);
+            }
         }
 
         $response = $this->handle($request);
