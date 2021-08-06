@@ -158,7 +158,7 @@ class Http
 
     public function process(string $url): ?string
     {
-        if (count(apache_request_headers())) {
+        if (function_exists('apache_request_headers') && count(apache_request_headers())) {
             $psr17Factory = new Psr17Factory();
             $creator = new ServerRequestCreator($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
             $request = $creator->fromGlobals();
