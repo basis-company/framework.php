@@ -14,43 +14,42 @@ class Process extends Job
     public ?object $params = null;
     public bool $logging = true;
 
+    public int $iterations = 1;
+
     public function run(Converter $converter)
     {
-
-        $result = null;
-        $success = false;
-
         $this->get(Monolog::class)->name = $this->job;
         if (strpos($this->job, 'module.') === 0) {
             $this->get(Monolog::class)->name = explode('.', $this->job)[1];
         }
 
-        try {
-            $tracer = new Tracer();
-            $tracer->getActiveSpan()->setName($this->app->getName() . '.' . $this->job);
-            $this->getContainer()->share(Tracer::class, $tracer);
+        while ($this->iterations--) {
+            $result = null;
+            $success = false;
 
-            $params = $converter->toArray($this->params);
-            $result = $this->dispatch($this->job, $params);
-            $success = true;
+            try {
+                $tracer = new Tracer();
+                $tracer->getActiveSpan()->setName($this->app->getName() . '.' . $this->job);
+                $this->getContainer()->share(Tracer::class, $tracer);
 
-            if ($result && $this->logging) {
-                if (!is_object($result) || count(get_object_vars($result))) {
-                    $this->get(LoggerInterface::class)->info($result);
+                $params = $converter->toArray($this->params);
+                $result = $this->dispatch($this->job, $params);
+                $success = true;
+
+                if ($result && $this->logging) {
+                    if (!is_object($result) || count(get_object_vars($result))) {
+                        $this->info($this->job . ' success', $result);
+                    }
                 }
+
+                $this->dispatch('module.changes', [
+                    'producer' => $this->job,
+                ]);
+
+                $this->dispatch('module.housekeeping');
+            } catch (Throwable $e) {
+                $this->exception($e);
             }
-
-            $this->dispatch('module.changes', [
-                'producer' => $this->job,
-            ]);
-
-            $this->dispatch('module.housekeeping');
-        } catch (Throwable $e) {
-            $this->get(LoggerInterface::class)->info([
-                'type' => 'exception',
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
         }
     }
 }

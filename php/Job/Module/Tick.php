@@ -12,17 +12,21 @@ class Tick
 {
     use Toolkit;
 
+    public int $iterations = 1024;
+
     public function run()
     {
-        $this->get(BackgroundHold::class)->update();
-        $this->get(Uptime::class)->update();
+        while ($this->iterations--) {
+            $this->get(BackgroundHold::class)->update();
+            $this->get(Uptime::class)->update();
 
-        if (getenv('SERVICE_JOB_QUEUE_METRIC') !== 'false') {
-            $this->get(JobQueueLength::class)->update();
+            if (getenv('SERVICE_JOB_QUEUE_METRIC') !== 'false') {
+                $this->get(JobQueueLength::class)->update();
+            }
+
+            $this->getMapper()->getPlugin(Spy::class)->reset();
+
+            $this->dispatch('module.sleep');
         }
-
-        $this->getMapper()->getPlugin(Spy::class)->reset();
-
-        $this->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
     }
 }
