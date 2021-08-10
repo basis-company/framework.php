@@ -9,6 +9,7 @@ use Basis\Registry as Meta;
 use Basis\Toolkit;
 use Tarantool\Client\Schema\Criteria;
 use Tarantool\Client\Schema\Operations;
+use Throwable;
 
 class Registry
 {
@@ -149,21 +150,29 @@ class Registry
             $todo[] = $hostname;
         }
 
+        $parts = explode('-', gethostname());
+        array_pop($parts);
+        $prefix = implode('-', $parts);
+
+
         foreach ($todo as $hostname) {
-            $start = $this->getValue($this->get(StartTime::class), [ $this->hostname => $hostname ]);
-            $uptime = $this->getValue($this->get(Uptime::class), [ $this->hostname => $hostname ]);
-            $silent = time() - $start + $uptime;
-            if ($silent < 60) {
-                continue;
+            if (strpos($hostname, $prefix) !== false) {
+                if ($silent < 60) {
+                    continue;
+                }
             }
 
             $this->info('metric cleanup', [
                 'hostname' => $hostname,
                 'contact_ago' => intval($silent),
             ]);
+
             foreach ($this->find('metric') as $metric) {
                 if ($metric->labels[$this->hostname] == $hostname) {
-                    $this->getMapper()->remove($metric);
+                    try {
+                        $this->getMapper()->remove($metric);
+                    } catch (Throwable) {
+                    }
                 }
             }
         }
