@@ -28,6 +28,9 @@ class Version
             $framework = json_decode(file_get_contents($frameworkPath));
             if (is_object($framework) && property_exists($framework, 'version')) {
                 $version[$framework->name] = $framework->version;
+                if (strpos($framework->version, ':') !== false) {
+                    $version[$framework->name] = explode(':', $framework->version)[1]
+                }
             }
         }
 
