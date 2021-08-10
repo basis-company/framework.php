@@ -3,6 +3,8 @@
 
 $script = array_shift($argv);
 $version = array_shift($argv);
+$commit = array_shift($argv);
+$branch = array_shift($argv);
 
 function compose($path, $callback) {
     $json = file_get_contents($path);
@@ -10,10 +12,11 @@ function compose($path, $callback) {
     $callback($data);
     $json = json_encode($data, JSON_UNESCAPED_SLASHES);
     file_put_contents($path, $json);
+    echo 'framework version was set to ', $data->version, PHP_EOL;
 }
 
 if (strpos($version, '-') !== false) {
-    $version = 'dev';
+    $version = 'dev-' . $branch . ':' . $commit;
 }
 compose('/var/www/html/composer.json', function ($data) use ($version) {
     $data->version = $version;
