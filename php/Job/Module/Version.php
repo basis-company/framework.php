@@ -29,7 +29,7 @@ class Version
             if (is_object($framework) && property_exists($framework, 'version')) {
                 $version[$framework->name] = $framework->version;
                 if (strpos($framework->version, ':') !== false) {
-                    $version[$framework->name] = explode(':', $framework->version)[1]
+                    $version[$framework->name] = explode(':', $framework->version)[1];
                 }
             }
         }
