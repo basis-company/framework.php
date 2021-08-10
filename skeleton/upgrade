@@ -10,7 +10,7 @@ if (file_exists('version.php')) {
     $file = include('version.php');
     if (is_array($file)) {
         $branch = $file['ref_name'];
-        $compose = $file['short_sha'];
+        $commit = $file['short_sha'];
         $version = $file['version'] ?: 'dev-' . $branch;
     }
 }
