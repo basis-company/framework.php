@@ -2,9 +2,9 @@
 
 namespace Basis\Job\Module;
 
-use Basis\Metric\BackgroundHold;
 use Basis\Metric\BackgroundStart;
 use Basis\Toolkit;
+use Tarantool\Mapper\Plugin\Spy;
 use Throwable;
 
 class Background
@@ -19,13 +19,11 @@ class Background
             ];
         }
 
-        $this->get(BackgroundHold::class)->update();
         $this->get(BackgroundStart::class)->update();
+        $this->getMapper()->getPlugin(Spy::class)->reset();
 
         $this->dispatch('module.process', [
             'job' => 'background'
         ]);
-
-        $this->dispatch('module.sleep');
     }
 }

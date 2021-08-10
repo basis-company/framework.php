@@ -24,6 +24,4 @@ if [ "$SERVICE_EXECUTOR" != "false" ]; then
     ./loop php console module.process job=module.execute iterations=1024&
 fi
 
-./loop php console module.tick&
-
 apache2-foreground > /dev/null

@@ -42,7 +42,11 @@ class Bootstrap
 
         $this->get(Registry::class)->housekeeping();
 
-        $this->get(StartTime::class)->update();
+
+        if (!$this->get(StartTime::class)->getValue()) {
+            $this->get(StartTime::class)->update();
+        }
+
         $this->info('bootstrap complete');
 
         return compact('failure', 'success');

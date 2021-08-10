@@ -3,6 +3,8 @@
 namespace Basis\Metric;
 
 use Basis\Metric;
+use Basis\Metric\BackgroundHold;
+use Basis\Metric\BackgroundStart;
 use Basis\Metric\StartTime;
 use Basis\Metric\Uptime;
 use Basis\Registry as Meta;
@@ -92,6 +94,12 @@ class Registry
                 $set[$uptimeKey] = $uptimeSet;
                 $values[$uptimeKey] = time() - $value;
             }
+            if ($set[$key][0] == BackgroundStart::class) {
+                $holdSet = [ BackgroundHold::class, $set[$key][1] ];
+                $holdKey = implode(':', $holdSet);
+                $set[$holdKey] = $holdSet;
+                $values[$holdKey] = time() - $value;
+            }
         }
 
         ksort($set);
@@ -144,28 +152,30 @@ class Registry
             }
 
             $hostname = $metric->labels[$this->hostname];
+
+            if (in_array($hostname, $todo)) {
+                continue;
+            }
+
             if ($hostname == gethostname()) {
                 continue;
             }
+
             $todo[] = $hostname;
         }
 
         $parts = explode('-', gethostname());
-        array_pop($parts);
+        if (count($parts) > 1) {
+            array_pop($parts);
+        }
         $prefix = implode('-', $parts);
-
 
         foreach ($todo as $hostname) {
             if (strpos($hostname, $prefix) !== false) {
-                if ($silent < 60) {
-                    continue;
-                }
+                continue;
             }
 
-            $this->info('metric cleanup', [
-                'hostname' => $hostname,
-                'contact_ago' => intval($silent),
-            ]);
+            $this->info('metric cleanup', [ 'hostname' => $hostname ]);
 
             foreach ($this->find('metric') as $metric) {
                 if ($metric->labels[$this->hostname] == $hostname) {
