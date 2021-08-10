@@ -6,13 +6,13 @@ $version = array_shift($argv);
 $commit = array_shift($argv);
 $branch = array_shift($argv);
 
-function compose($path, $callback) {
-    $json = file_get_contents($path);
-    $data = json_decode($json);
-    $callback($data);
-    $json = json_encode($data, JSON_UNESCAPED_SLASHES);
-    file_put_contents($path, $json);
-    echo 'framework version was set to ', $data->version, PHP_EOL;
+if (file_exists('version.php')) {
+    $file = include('version.php');
+    if (is_array($file)) {
+        $branch = $file['ref_name'];
+        $compose = $file['short_sha'];
+        $version = $file['version'] ?: 'dev-' . $branch;
+    }
 }
 
 if (strpos($version, '-') !== false) {
@@ -21,3 +21,13 @@ if (strpos($version, '-') !== false) {
 compose('/var/www/html/composer.json', function ($data) use ($version) {
     $data->version = $version;
 });
+
+function compose($path, $callback) {
+    $json = file_get_contents($path);
+    $data = json_decode($json);
+    $callback($data);
+    $json = json_encode($data, JSON_UNESCAPED_SLASHES);
+    file_put_contents($path, $json);
+
+    echo 'version is ', $data->version, PHP_EOL;
+}
