@@ -124,7 +124,7 @@ class Http
         }
 
         if ($this->logging) {
-            $message = $request->getMethod() . ' ' . $request->getUri();
+            $message = $request->getMethod() . ' ' . $request->getUri()->getPath();
 
             $context = [];
             $time = microtime(true) - $handleStart;
