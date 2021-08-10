@@ -2,10 +2,11 @@
 
 namespace Test;
 
-use Basis\Test;
-use Basis\Metric\Uptime;
-use Basis\Metric\Registry;
 use Basis\Metric\BackgroundHold;
+use Basis\Metric\Registry;
+use Basis\Metric\StartTime;
+use Basis\Metric\Uptime;
+use Basis\Test;
 
 class MetricTest extends Test
 {
@@ -16,8 +17,8 @@ class MetricTest extends Test
 
     public function testRendering()
     {
-        $uptime = $this->get(Uptime::class);
-        $uptime->setValue(30);
+        $uptime = $this->get(StartTime::class);
+        $uptime->setValue(time() - 30);
         $result = $this->get(Registry::class)->render();
         $this->assertStringContainsString("uptime 30", $result);
     }
