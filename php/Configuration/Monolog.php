@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 
 class Monolog
 {
-    public string $name = 'web';
+    public string $name = 'http';
 
     public function init(Container $container)
     {

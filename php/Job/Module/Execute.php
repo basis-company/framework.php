@@ -10,6 +10,12 @@ class Execute extends Job
 {
     public function run(Executor $executor)
     {
+        $recover = $this->dispatch('module.recover');
+
+        if ($recover->new + $recover->recovered) {
+            $this->info('recover', get_object_vars($recover));
+        }
+
         $executor->process();
     }
 }
