@@ -24,12 +24,6 @@ class Tick
                 $this->get(JobQueueLength::class)->update();
             }
 
-            $recover = $this->dispatch('module.recover');
-
-            if ($recover->new + $recover->recovered) {
-                $this->info('recover', get_object_vars($recover));
-            }
-
             $this->getMapper()->getPlugin(Spy::class)->reset();
 
             $this->dispatch('module.sleep');
