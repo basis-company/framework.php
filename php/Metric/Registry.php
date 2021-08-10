@@ -165,7 +165,9 @@ class Registry
         }
 
         $parts = explode('-', gethostname());
-        array_pop($parts);
+        if (count($parts) > 1) {
+            array_pop($parts);
+        }
         $prefix = implode('-', $parts);
 
         foreach ($todo as $hostname) {
