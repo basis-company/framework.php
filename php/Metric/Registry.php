@@ -3,6 +3,8 @@
 namespace Basis\Metric;
 
 use Basis\Metric;
+use Basis\Metric\BackgroundHold;
+use Basis\Metric\BackgroundStart;
 use Basis\Metric\StartTime;
 use Basis\Metric\Uptime;
 use Basis\Registry as Meta;
@@ -91,6 +93,12 @@ class Registry
                 $uptimeKey = implode(':', $uptimeSet);
                 $set[$uptimeKey] = $uptimeSet;
                 $values[$uptimeKey] = time() - $value;
+            }
+            if ($set[$key][0] == BackgroundStart::class) {
+                $holdSet = [ BackgroundHold::class, $set[$key][1] ];
+                $holdKey = implode(':', $holdSet);
+                $set[$holdKey] = $holdSet;
+                $values[$holdKey] = time() - $value;
             }
         }
 

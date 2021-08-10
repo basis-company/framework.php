@@ -2,7 +2,6 @@
 
 namespace Basis\Job\Module;
 
-use Basis\Metric\BackgroundHold;
 use Basis\Metric\BackgroundStart;
 use Basis\Toolkit;
 use Throwable;
@@ -19,7 +18,6 @@ class Background
             ];
         }
 
-        $this->get(BackgroundHold::class)->update();
         $this->get(BackgroundStart::class)->update();
 
         $this->dispatch('module.process', [

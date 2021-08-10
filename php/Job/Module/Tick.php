@@ -16,14 +16,10 @@ class Tick
     public function run()
     {
         while ($this->iterations--) {
-            $this->get(BackgroundHold::class)->update();
-
             if (getenv('SERVICE_JOB_QUEUE_METRIC') !== 'false') {
                 $this->get(JobQueueLength::class)->update();
             }
-
             $this->getMapper()->getPlugin(Spy::class)->reset();
-
             $this->dispatch('module.sleep');
         }
     }
