@@ -144,9 +144,15 @@ class Registry
             }
 
             $hostname = $metric->labels[$this->hostname];
+
+            if (in_array($hostname, $todo)) {
+                continue;
+            }
+
             if ($hostname == gethostname()) {
                 continue;
             }
+
             $todo[] = $hostname;
         }
 
@@ -154,18 +160,12 @@ class Registry
         array_pop($parts);
         $prefix = implode('-', $parts);
 
-
         foreach ($todo as $hostname) {
             if (strpos($hostname, $prefix) !== false) {
-                if ($silent < 60) {
-                    continue;
-                }
+                continue;
             }
 
-            $this->info('metric cleanup', [
-                'hostname' => $hostname,
-                'contact_ago' => intval($silent),
-            ]);
+            $this->info('metric cleanup', [ 'hostname' => $hostname ]);
 
             foreach ($this->find('metric') as $metric) {
                 if ($metric->labels[$this->hostname] == $hostname) {
