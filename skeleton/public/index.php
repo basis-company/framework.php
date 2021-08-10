@@ -12,13 +12,12 @@ include 'vendor/autoload.php';
 
 try {
     $app = new Application(dirname(__DIR__));
-    $app->get(RequestCounter::class)
-        ->increment();
-
     echo $app->get(Http::class)->process($_SERVER['REQUEST_URI']);
 
-    $app->get(RequestTotalTime::class)
-        ->increment((microtime(true) - $start) * 1000);
+    if ($app->get(Http::class)->getLogging()) {
+        $app->get(RequestCounter::class)->increment();
+        $app->get(RequestTotalTime::class)->increment((microtime(true) - $start) * 1000);
+    }
 } catch (Exception $e) {
     echo $e->getMessage();
 

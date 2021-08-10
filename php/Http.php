@@ -21,6 +21,11 @@ class Http
     private ?array $mapping = null;
     private bool $logging = true;
 
+    public function getLogging(): bool
+    {
+        return $this->logging;
+    }
+
     public function setLogging(bool $logging): self
     {
         $this->logging = $logging;
