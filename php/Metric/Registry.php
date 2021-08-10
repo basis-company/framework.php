@@ -81,9 +81,16 @@ class Registry
     {
         $set = [];
         $values = [];
+
         foreach ($this->getMetrics() as $key => $value) {
             $set[$key] = explode(":", $key, 2);
             $values[$key] = $value;
+            if ($set[$key][0] == StartTime::class) {
+                $uptimeSet = [ Uptime::class, $set[$key][1] ];
+                $uptimeKey = implode(':', $uptimeSet);
+                $set[$uptimeKey] = $uptimeSet;
+                $values[$uptimeKey] = time() - $value;
+            }
         }
 
         ksort($set);
