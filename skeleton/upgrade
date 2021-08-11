@@ -9,7 +9,7 @@ $branch = array_shift($argv);
 if (file_exists('version.php')) {
     $file = include('version.php');
     if (is_array($file)) {
-        $version = $file['version'] ?: 'dev-' . $branch;
+        $version = $file['tag'] ?: 'dev-' . $branch;
         $commit = $file['short_sha'];
         $branch = $file['ref_name'];
     }
