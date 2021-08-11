@@ -21,6 +21,7 @@ RUN apt-get update \
         apcu \
         opcache \
     && a2enmod rewrite \
+    && echo "date.timezone = 'Europe/Moscow'" > /usr/local/etc/php/conf.d/timezone.ini \
     && echo "memory_limit = -1" > /usr/local/etc/php/conf.d/memory-limit.ini \
     && echo "opcache.enable = 1" > /usr/local/etc/php/conf.d/opcache-enable.ini \
     && echo "opcache.enable_cli = 1" > /usr/local/etc/php/conf.d/opcache-enable-cli.ini \
