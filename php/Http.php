@@ -182,9 +182,11 @@ class Http
 
         $response = $this->handle($request);
 
-        foreach ($response->getHeaders() as $k => $rows) {
-            foreach ($rows as $row) {
-                @header("$k: $row");
+        if (!headers_sent()) {
+            foreach ($response->getHeaders() as $k => $rows) {
+                foreach ($rows as $row) {
+                    header("$k: $row");
+                }
             }
         }
 
