@@ -184,7 +184,7 @@ class Http
 
         foreach ($response->getHeaders() as $k => $rows) {
             foreach ($rows as $row) {
-                header("$k: $row");
+                @header("$k: $row");
             }
         }
 
