@@ -16,11 +16,8 @@ use Tarantool\Client\Response;
 
 class TarantoolRetryMiddleware implements Middleware
 {
-    protected LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(protected LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     /**
@@ -86,7 +83,7 @@ class TarantoolRetryMiddleware implements Middleware
                 $data['uri'] = $uri;
             }
 
-            $this->logger->info('connection failure', $data);
+            $this->logger->alert('connection failure', $data);
 
             usleep($sleep * 1000000);
         }

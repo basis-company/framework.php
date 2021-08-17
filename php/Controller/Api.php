@@ -7,7 +7,7 @@ use Basis\Context;
 use Basis\Event;
 use Basis\Toolkit;
 use Exception;
-use OpenTelemetry\Tracing\Tracer;
+use Basis\Telemetry\Tracing\Tracer;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Api
@@ -46,11 +46,12 @@ class Api
             ];
         }
 
+        // recreate container with rpc context
         $span = $this->getContainer()
             ->drop(Tracer::class)
             ->get(Tracer::class)
             ->getActiveSpan()
-            ->setName($this->app->getName() . '.api');
+            ->setName('http');
 
         $context->reset();
 
@@ -79,7 +80,6 @@ class Api
         }
 
         $this->dispatch('module.changes', [ 'producer' => $request[0]->job ]);
-        $this->dispatch('module.trace');
 
         return is_array($data) ? $response : $response[0];
     }

@@ -6,6 +6,7 @@ use Basis\Configuration\Monolog;
 use Basis\Dispatcher;
 use Basis\Event;
 use Basis\Registry;
+use Basis\Telemetry\Tracing\Tracer;
 use Symfony\Component\Yaml\Yaml;
 
 include "vendor/autoload.php";
@@ -56,6 +57,7 @@ try {
         $application->get(Monolog::class)->name = explode('.', $job)[1];
     }
 
+    $application->get(Tracer::class)->getActiveSpan()->setName('console');
 
     $result = $application->dispatch($job, $params);
     if ($result) {
