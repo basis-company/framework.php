@@ -40,14 +40,16 @@ test-phpsyntax:
 
 test-phpcs:
   stage: test
-  image: $registry/phpcs
+  image: $image_pipeline
   allow_failure: false
   interruptible: true
   variables:
     DOCKER_OPTS: ${DOCKER_OPTS} --registry-mirror=https://mirror.gcr.io
   script:
+    - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+    - chmod +x /phpcs.phar
     - wget https://wfm.basis.services/linter/php -O phpcs.xml
-    - phpcs php --standard=phpcs.xml
+    - /phpcs.phar php --standard=phpcs.xml
 
 test-phpunit:
   stage: test
