@@ -3,7 +3,6 @@
 namespace Basis\Test;
 
 use Basis\Application as Basis;
-use Basis\Metric\Registry as Metrics;
 use Basis\Registry;
 use Basis\Test;
 use Monolog\Handler\NullHandler;
@@ -18,7 +17,6 @@ class Application extends Basis
 
         $container = $this->getContainer();
         $container->share(Test::class, $test);
-        $container->share(Metrics::class, new MetricRegistry($this->app));
 
         $logger = new Logger('testing');
         $logger->pushHandler(new NullHandler());

@@ -6,6 +6,6 @@ class Restart
 {
     public function index()
     {
-        exec('kill `pgrep starter`');
+        $this->dispatch('module.register');
     }
 }

@@ -9,6 +9,7 @@ use Monolog\Processor\ProcessorInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Basis\Telemetry\Tracing\Tracer;
 
 class Monolog
 {
@@ -19,14 +20,27 @@ class Monolog
         $container->share(LoggerInterface::class, function () use ($container) {
             $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true, true);
 
-            $handler = new StreamHandler("/var/application.log", Logger::INFO);
+            $level = Logger::INFO;
+            if (getenv('BASIS_ENVIRONMENT') == 'dev') {
+                $level = Logger::DEBUG;
+            }
+
+            $handler = new StreamHandler("var/log", $level);
             $handler->setFormatter($formatter);
 
-            $handler->pushProcessor(new class implements ProcessorInterface {
+            $handler->pushProcessor(new class ($container) implements ProcessorInterface {
+                public function __construct(private Container $container)
+                {
+                }
                 public function __invoke(array $record)
                 {
+                    $level = strtolower($record['level_name']);
+                    unset($record['level_name']);
                     unset($record['level']);
                     unset($record['datetime']);
+                    $span = $this->container->get(Tracer::class)->getActiveSpan();
+                    $record['level'] = $level;
+                    $record['traceId'] = $span->getSpanContext()->getTraceId();
                     return $record;
                 }
             });

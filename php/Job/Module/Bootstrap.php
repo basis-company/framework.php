@@ -4,7 +4,6 @@ namespace Basis\Job\Module;
 
 use Basis\Metric\StartTime;
 use Basis\Toolkit;
-use Basis\Metric\Registry;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -40,14 +39,13 @@ class Bootstrap
             }
         }
 
-        $this->get(Registry::class)->housekeeping();
-
-
         if (!$this->get(StartTime::class)->getValue()) {
             $this->get(StartTime::class)->update();
         }
 
         $this->info('bootstrap complete');
+
+        $this->dispatch('module.flush');
 
         return compact('failure', 'success');
     }

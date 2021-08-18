@@ -3,17 +3,22 @@
 namespace Basis\Job\Module;
 
 use Basis\Event;
-use Basis\Job;
-use Psr\Log\LoggerInterface;
+use Basis\Telemetry\Metrics\Operations;
+use Basis\Telemetry\Tracing\Tracer;
 
-class Changes extends Job
+class Changes
 {
     public string $producer;
 
-    public function run(Event $event)
+    public function __construct(
+        private Event $event,
+    ) {
+    }
+
+    public function run()
     {
-        if ($event->hasChanges()) {
-            $event->fireChanges($this->producer);
+        if ($this->event->hasChanges()) {
+            $this->event->fireChanges($this->producer);
         }
     }
 }

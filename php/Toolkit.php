@@ -3,7 +3,7 @@
 namespace Basis;
 
 use Basis\Metric\Registry;
-use OpenTelemetry\Tracing\Tracer;
+use Basis\Telemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;

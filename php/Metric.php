@@ -3,7 +3,8 @@
 namespace Basis;
 
 use Exception;
-use Basis\Metric\Registry;
+use Basis\Telemetry\Metrics\Registry;
+use Basis\Telemetry\Metrics\Operations;
 
 class Metric
 {
@@ -72,16 +73,16 @@ class Metric
 
     public function getValue($labels = [])
     {
-        return $this->get(Registry::class)->getValue($this, $labels);
+        return $this->get(Registry::class)->get($this->getNick(), $labels);
     }
 
     public function setValue($value, $labels = [])
     {
-        return $this->get(Registry::class)->setValue($this, $labels, $value);
+        $this->get(Operations::class)->set($this->getNick(), $value, $labels);
     }
 
     public function increment($amount = 1, $labels = [])
     {
-        return $this->get(Registry::class)->increment($this, $labels, $amount);
+        $this->get(Operations::class)->increment($this->getNick(), $amount, $labels);
     }
 }
