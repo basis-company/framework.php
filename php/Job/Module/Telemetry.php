@@ -59,7 +59,7 @@ class Telemetry
     private function getInstances(): array
     {
         $telemetry = fopen('var/telemetry', 'r');
-        $buffer = fgets($telemetry, 8192);
+        $buffer = fgets($telemetry, 131072);
         fclose($telemetry);
 
         if ($buffer) {
