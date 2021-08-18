@@ -160,21 +160,24 @@
     "packages-dev": [
         {
             "name": "basis-company/telemetry",
-            "version": "0.1.5",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/basis-company/telemetry.php.git",
-                "reference": "6a6c280c3bb895fb30345961268a5748c084439b"
+                "reference": "d376d9bb8fa5a451afe94a6b31dd3428fd495405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/6a6c280c3bb895fb30345961268a5748c084439b",
-                "reference": "6a6c280c3bb895fb30345961268a5748c084439b",
+                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/d376d9bb8fa5a451afe94a6b31dd3428fd495405",
+                "reference": "d376d9bb8fa5a451afe94a6b31dd3428fd495405",
                 "shasum": ""
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5",
                 "symfony/http-client": "^5.3.4"
+            },
+            "suggest": {
+                "symfony/http-client": "Zipkin integration transport"
             },
             "type": "library",
             "autoload": {
@@ -192,12 +195,12 @@
                     "email": "nekufa@gmail.com"
                 }
             ],
-            "description": "telemetry framework",
+            "description": "telemetry framework for php",
             "support": {
                 "issues": "https://github.com/basis-company/telemetry.php/issues",
-                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.5"
+                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.6"
             },
-            "time": "2021-08-17T17:55:37+00:00"
+            "time": "2021-08-18T15:01:18+00:00"
         },
         {
             "name": "doctrine/instantiator",
