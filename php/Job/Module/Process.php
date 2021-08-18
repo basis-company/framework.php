@@ -3,9 +3,10 @@
 namespace Basis\Job\Module;
 
 use Basis\Configuration\Monolog;
+use Basis\Configuration\Telemetry;
 use Basis\Converter;
 use Basis\Job;
-use Basis\Configuration\Telemetry;
+use Basis\Telemetry\Tracing\Tracer;
 use Psr\Log\LoggerInterface;
 
 class Process extends Job
@@ -16,7 +17,7 @@ class Process extends Job
 
     public int $iterations = 1;
 
-    public function run(Converter $converter)
+    public function run(Converter $converter, Tracer $tracer)
     {
         $this->get(Monolog::class)->setName($this->job);
         $this->get(Telemetry::class)->setName($this->job);
@@ -48,6 +49,7 @@ class Process extends Job
 
             if ($this->iterations) {
                 $this->dispatch('module.sleep');
+                $tracer->reset();
             }
         }
     }
