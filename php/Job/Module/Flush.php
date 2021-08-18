@@ -24,7 +24,7 @@ class Flush
         $this->converter->flushCache();
         $this->lock->releaseLocks();
 
-        if (!is_file('var/telemetry')) {
+        if (!file_exists('var/telemetry')) {
             return;
         }
 
