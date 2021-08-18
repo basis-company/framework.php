@@ -5,7 +5,7 @@ namespace Basis\Job\Module;
 use Basis\Configuration\Monolog;
 use Basis\Converter;
 use Basis\Job;
-use Basis\Telemetry\Tracing\Tracer;
+use Basis\Configuration\Telemetry;
 use Psr\Log\LoggerInterface;
 
 class Process extends Job
@@ -18,7 +18,8 @@ class Process extends Job
 
     public function run(Converter $converter)
     {
-        $this->get(Monolog::class)->name = $this->job;
+        $this->get(Monolog::class)->setName($this->job);
+        $this->get(Telemetry::class)->setName($this->job);
 
         if (strpos($this->job, 'module.') === 0) {
             $this->get(Monolog::class)->name = explode('.', $this->job)[1];
@@ -29,11 +30,6 @@ class Process extends Job
             $success = false;
 
             try {
-                // new tracer each iteration
-                $tracer = new Tracer();
-                $tracer->getActiveSpan()->setName($this->app->getName() . '.' . $this->job);
-                $this->getContainer()->share(Tracer::class, $tracer);
-
                 $params = $converter->toArray($this->params);
                 $result = $this->dispatch($this->job, $params);
                 $success = true;

@@ -13,7 +13,13 @@ use Basis\Telemetry\Tracing\Tracer;
 
 class Monolog
 {
-    public string $name = 'http';
+    private string $name = 'default';
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
 
     public function init(Container $container)
     {
