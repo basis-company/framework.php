@@ -22,7 +22,7 @@ class Process extends Job
         $this->get(Telemetry::class)->setName($this->job);
 
         if (strpos($this->job, 'module.') === 0) {
-            $this->get(Monolog::class)->name = explode('.', $this->job)[1];
+            $this->get(Monolog::class)->setName(explode('.', $this->job)[1]);
         }
 
         while ($this->iterations--) {
