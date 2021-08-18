@@ -21,8 +21,25 @@ use Symfony\Component\HttpClient\CurlHttpClient;
 
 class Telemetry
 {
+    private string $name = 'default';
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        if ($this->container->has(Tracer::class)) {
+            $this->container->get(Tracer::class)
+                ->getActiveSpan()
+                ->setName($name);
+        }
+
+        return $this;
+    }
+
     public function init(Container $container)
     {
+        $this->container = $container;
+
         $container->share(ZipkinExporter::class, function () use ($container) {
             return new ZipkinExporter([ 'serviceName' => $container->get(Application::class)->getName() ]);
         });
@@ -66,6 +83,8 @@ class Telemetry
         });
 
         $container->share(Tracer::class, function () use ($container) {
+            $tracer = null;
+
             if ($container->has(ServerRequestInterface::class)) {
                 $request = $container->get(ServerRequestInterface::class);
                 $body = $request->getParsedBody();
@@ -80,11 +99,16 @@ class Telemetry
                             $parentSpan = SpanContext::restore($traceId, $parentSpanId);
                             $tracer->getActiveSpan()->setParentSpanContext($parentSpan);
                         }
-                        return $tracer;
                     }
                 }
             }
-            return new Tracer();
+            if (!$tracer) {
+                $tracer = new Tracer();
+            }
+
+            $tracer->getActiveSpan()->setName($this->name);
+
+            return $tracer;
         });
     }
 }

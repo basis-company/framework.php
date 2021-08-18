@@ -3,11 +3,12 @@
 namespace Basis\Controller;
 
 use Basis\Application;
+use Basis\Configuration\Telemetry;
 use Basis\Context;
 use Basis\Event;
+use Basis\Telemetry\Tracing\Tracer;
 use Basis\Toolkit;
 use Exception;
-use Basis\Telemetry\Tracing\Tracer;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Api
@@ -49,8 +50,7 @@ class Api
         // recreate container with rpc context
         $span = $this->getContainer()
             ->drop(Tracer::class)
-            ->get(Tracer::class)
-            ->getActiveSpan()
+            ->get(Telemetry::class)
             ->setName('http');
 
         $context->reset();
