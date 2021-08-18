@@ -52,9 +52,9 @@ try {
         }
     }
 
-    $application->get(Monolog::class)->name = $job;
+    $application->get(Monolog::class)->setName($job);
     if (strpos($job, 'module.') === 0) {
-        $application->get(Monolog::class)->name = explode('.', $job)[1];
+        $application->get(Monolog::class)->setName(explode('.', $job)[1]);
     }
 
     $application->get(Telemetry::class)->setName('console');
