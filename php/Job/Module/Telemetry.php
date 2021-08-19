@@ -14,6 +14,7 @@ use SplFileObject;
 class Telemetry
 {
     public string $source = 'var/telemetry';
+    private $pipe;
 
     public function __construct(
         private LoggerInterface $logger,
@@ -26,9 +27,12 @@ class Telemetry
 
     public function run()
     {
+        $this->pipe = fopen('var/telemetry', 'r');
+
+        $dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL') ?: 0.5);
+
         $activity = null;
         $spans = [];
-        $telemetryInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL') ?: 0.5);
 
         while (true) {
             foreach ($this->getInstances() as $instance) {
@@ -38,6 +42,7 @@ class Telemetry
                     ]);
                     continue;
                 }
+
                 match (get_class($instance)) {
                     Operations::class => $instance->apply($this->registry),
                     Span::class => $spans[] = $instance,
@@ -45,31 +50,32 @@ class Telemetry
                         'class' => get_class($instance)
                     ]),
                 };
-            }
-            if (!$activity || ($activity + $telemetryInterval) < microtime(true)) {
-                $this->renderMetrics($this->registry);
-                if ($this->exportTraces($spans)) {
-                    $spans = [];
+
+                if (!$activity || ($activity + $dumpInterval) < microtime(true)) {
+                    $activity = microtime(true);
+                    $this->renderMetrics($this->registry);
+                    if ($this->exportTraces($spans)) {
+                        $spans = [];
+                    }
                 }
-                $activity = microtime(true);
             }
         }
+
+        fclose($this->pipe);
     }
 
     private function getInstances(): array
     {
-        $telemetry = fopen('var/telemetry', 'r');
-        $buffer = fgets($telemetry, 131072);
-        fclose($telemetry);
+        $buffer = fgets($this->pipe, 131072);
 
         if ($buffer) {
             $instances = unserialize($buffer);
-            if ($instances == false) {
-                $this->logger->info('invalid buffer', [
-                    'buffer' => $buffer,
-                ]);
+            if ($instances !== false) {
+                return is_array($instances) ? $instances : [ $instances ];
             }
-            return is_array($instances) ? $instances : [ $instances ];
+            $this->logger->info('invalid buffer', [
+                'buffer' => $buffer,
+            ]);
         }
         return [];
     }
