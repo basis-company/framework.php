@@ -27,10 +27,7 @@ class Telemetry
 
     public function run()
     {
-        $this->pipe = fopen('var/telemetry', 'r');
-
         $dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL') ?: 0.5);
-
         $activity = null;
         $spans = [];
 
@@ -50,13 +47,13 @@ class Telemetry
                         'class' => get_class($instance)
                     ]),
                 };
+            }
 
-                if (!$activity || ($activity + $dumpInterval) < microtime(true)) {
-                    $activity = microtime(true);
-                    $this->renderMetrics($this->registry);
-                    if ($this->exportTraces($spans)) {
-                        $spans = [];
-                    }
+            if (!$activity || ($activity + $dumpInterval) < microtime(true)) {
+                $activity = microtime(true);
+                $this->renderMetrics($this->registry);
+                if ($this->exportTraces($spans)) {
+                    $spans = [];
                 }
             }
         }
@@ -66,7 +63,15 @@ class Telemetry
 
     private function getInstances(): array
     {
-        $buffer = fgets($this->pipe, 131072);
+        if (!$this->pipe) {
+            $this->initPipeline();
+        }
+
+        $buffer = fgets($this->pipe, 1048576);
+
+        if ($buffer === false) {
+            $this->initPipeline();
+        }
 
         if ($buffer) {
             $instances = unserialize($buffer);
@@ -77,7 +82,17 @@ class Telemetry
                 'buffer' => $buffer,
             ]);
         }
+
         return [];
+    }
+
+    private function initPipeline()
+    {
+        if ($this->pipe) {
+            fclose($this->pipe);
+        }
+
+        $this->pipe = fopen('var/telemetry', 'r');
     }
 
     private function renderMetrics(Registry $registry): void
