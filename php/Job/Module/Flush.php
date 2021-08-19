@@ -49,7 +49,14 @@ class Flush
 
         if (count($instances)) {
             $telemetry = fopen('var/telemetry', 'w');
-            fwrite($telemetry, serialize($instances) . PHP_EOL);
+            ob_start();
+            $length = fwrite($telemetry, serialize($instances) . PHP_EOL);
+            if (!$length) {
+                $this->logger->error('telemetry dump failure', [
+                    'output' => ob_get_clean(),
+                ]);
+            }
+            ob_end_clean();
             fclose($telemetry);
         }
 
