@@ -51,8 +51,9 @@ class Flush
             $telemetry = fopen('var/telemetry', 'w');
             fwrite($telemetry, serialize($instances) . PHP_EOL);
             fclose($telemetry);
-            $this->tracer->reset();
-            $this->operations->reset();
         }
+
+        $this->tracer->reset();
+        $this->operations->reset();
     }
 }
