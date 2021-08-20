@@ -37,7 +37,7 @@ class Process extends Job
 
                 if ($result && $this->logging) {
                     if (!is_object($result) || count(get_object_vars($result))) {
-                        $this->info($this->job . ' success', $result);
+                        $this->info($this->job . ' success', get_object_vars($result));
                     }
                 }
 
