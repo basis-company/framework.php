@@ -49,6 +49,10 @@ class Flush
 
         if (count($instances)) {
             $telemetry = fopen('var/telemetry', 'w');
+            while (!flock($telemetry, LOCK_EX)) {
+                $this->logger->info('wait for telemetry lock');
+                usleep(1000);
+            }
             ob_start();
             $length = fwrite($telemetry, serialize($instances) . PHP_EOL);
             if (!$length) {
@@ -57,6 +61,7 @@ class Flush
                 ]);
             }
             ob_end_clean();
+            flock($telemetry, LOCK_UN);
             fclose($telemetry);
         }
 
