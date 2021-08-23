@@ -55,8 +55,8 @@ class Telemetry
 
             if (!$activity || ($activity + $this->dumpInterval) < microtime(true)) {
                 $activity = microtime(true);
-                $this->renderMetrics($this->registry);
                 $spans = $this->processSpans($spans);
+                $this->renderMetrics($this->registry);
             }
         }
 
