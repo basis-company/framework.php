@@ -5,8 +5,9 @@ namespace Basis;
 use Basis\Cache;
 use Basis\Converter;
 use Basis\Feedback\Feedback;
-use Exception;
+use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
+use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\CurlHttpClient;
@@ -57,8 +58,9 @@ class Dispatcher
                 'job'     => $job,
                 'params'  => $params,
                 'span'    => [
+                    'parentSpanId'  => $span->getSpanId(),
+                    'spanId' => SpanContext::generate()->getSpanId(),
                     'traceId' => $span->getTraceId(),
-                    'spanId'  => $span->getSpanId(),
                 ],
             ]),
         ];
@@ -74,13 +76,6 @@ class Dispatcher
     public function dispatch(string $job, array $params = [], string $service = null): object
     {
         return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service) {
-            $span = $this->get(Tracer::class)->createSpan($job);
-            foreach ($params as $k => $v) {
-                if (is_object($v) || is_array($v)) {
-                    continue;
-                }
-                $span->setAttribute($k, $v);
-            }
             $job = strtolower($job);
             $converter = $this->get(Converter::class);
 
@@ -94,6 +89,13 @@ class Dispatcher
                     throw new Exception("No class for job $job");
                 }
                 try {
+                    $span = $this->get(Tracer::class)->createSpan($job);
+                    foreach ($params as $k => $v) {
+                        if (is_object($v) || is_array($v)) {
+                            continue;
+                        }
+                        $span->setAttribute($k, $v);
+                    }
                     $instance = $this->container->create($class);
                     foreach ($converter->toObject($params) as $k => $v) {
                         $instance->$k = $v;
@@ -128,7 +130,6 @@ class Dispatcher
 
             if (!$body) {
                 $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
-                $span->end();
                 throw new Exception("Host $host ($service) is unreachable");
             }
 
@@ -143,11 +144,9 @@ class Dispatcher
                     $exception->remoteService = $service;
                     $exception->remoteTrace = $result->trace;
                 }
-                $span->end();
                 throw $exception;
             }
 
-            $span->end();
             return (object) $this->get(Converter::class)->toObject($result->data);
         });
     }
