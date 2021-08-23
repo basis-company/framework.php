@@ -115,32 +115,38 @@ class Telemetry
                 return -1 * ($a->getDuration() <=> $b->getDuration());
             });
 
-            // sorted parts
-            $parts = [];
+            $packages = [];
             foreach ($spans as $span) {
                 $traceId = $span->getSpanContext()->getTraceId();
-                foreach ([0, 1] as $index) {
-                    if (!array_key_exists($index, $parts)) {
-                        $parts[$index] = [];
+                foreach ([0, 1] as $priority) {
+                    if (!array_key_exists($priority, $packages)) {
+                        $packages[$priority] = [
+                            'spans' => [],
+                            'traces' => [],
+                        ];
                     }
-                    if (!array_key_exists($traceId, $parts[$index])) {
-                        if (count($parts[$index]) < $this->traceCountLimit) {
-                            $parts[$index][$traceId] = [];
+                    if (!array_key_exists($traceId, $packages[$priority]['traces'])) {
+                        if (count($packages[$priority]['traces']) < $this->traceCountLimit) {
+                            $packages[$priority]['traces'][$traceId] = $traceId;
                         }
                     }
-                    if (array_key_exists($traceId, $parts[$index])) {
-                        $parts[$index][$traceId][] = $span;
-                        break;
+                    if (array_key_exists($traceId, $packages[$priority]['traces'])) {
+                        $packages[$priority]['spans'][] = $span;
                     }
                 }
             }
 
-            $data = array_map([$this->zipkinExporter, 'convertSpan'], array_merge(...array_values($parts[0])));
+            $data = array_map([$this->zipkinExporter, 'convertSpan'], $packages[0]['spans']);
+
             if ($this->zipkinTransport->write($data)) {
-                return count($parts) > 1 ? array_merge(...array_values($parts[1])) : [];
+                return count($packages) > 1 ? $packages[1]['spans'] : [];
             }
 
-            return array_merge(...array_values(array_merge(...$parts)));
+            if (count($packages) == 1) {
+                return $packages[0]['spans'];
+            }
+
+            return array_merge($packages[0]['spans'], $packages[1]['spans']);
         }
 
         return $spans;
