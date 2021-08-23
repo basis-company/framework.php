@@ -9,12 +9,11 @@ use Basis\Telemetry\Tracing\Exporter\ZipkinExporter;
 use Basis\Telemetry\Tracing\Span;
 use Basis\Telemetry\Tracing\Transport\ZipkinTransport;
 use Psr\Log\LoggerInterface;
-use SplFileObject;
 
 class Telemetry
 {
     private float $dumpInterval = 0.5;
-    private int $spanCountLimit = 8;
+    private int $traceCountLimit = 2;
     private string $pipePath = 'var/telemetry';
 
     private $pipe;
@@ -28,7 +27,7 @@ class Telemetry
     ) {
         $this->dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL')) ?: $this->dumpInterval;
         $this->pipePath = floatval(getenv('TELEMETRY_PIPE_PATH')) ?: $this->pipePath;
-        $this->spanCountLimit = floatval(getenv('TELEMETRY_SPAN_COUNT_LIMIT')) ?: $this->spanCountLimit;
+        $this->traceCountLimit = floatval(getenv('TELEMETRY_TRACE_COUNT_LIMIT')) ?: $this->traceCountLimit;
     }
 
     public function run()
@@ -56,10 +55,8 @@ class Telemetry
 
             if (!$activity || ($activity + $this->dumpInterval) < microtime(true)) {
                 $activity = microtime(true);
+                $spans = $this->processSpans($spans);
                 $this->renderMetrics($this->registry);
-                if ($this->exportTraces($spans)) {
-                    $spans = [];
-                }
             }
         }
 
@@ -111,24 +108,47 @@ class Telemetry
         $this->prometheusExporter->toFile('public/metrics', 'svc_');
     }
 
-    private function exportTraces(array $spans): bool
+    private function processSpans(array $spans): array
     {
-        if (!count($spans)) {
-            return false;
-        }
+        if (count($spans)) {
+            usort($spans, function ($a, $b) {
+                return -1 * ($a->getDuration() <=> $b->getDuration());
+            });
 
-        usort($spans, function ($a, $b) {
-            return -1 * ( $a->getDuration() <=> $b->getDuration() );
-        });
-
-        $data = [];
-        foreach ($spans as $span) {
-            $data[] = $this->zipkinExporter->convertSpan($span);
-            if (count($data) >= $this->spanCountLimit) {
-                break;
+            $packages = [];
+            foreach ($spans as $span) {
+                $traceId = $span->getSpanContext()->getTraceId();
+                foreach ([0, 1] as $priority) {
+                    if (!array_key_exists($priority, $packages)) {
+                        $packages[$priority] = [
+                            'spans' => [],
+                            'traces' => [],
+                        ];
+                    }
+                    if (!array_key_exists($traceId, $packages[$priority]['traces'])) {
+                        if (count($packages[$priority]['traces']) < $this->traceCountLimit) {
+                            $packages[$priority]['traces'][$traceId] = $traceId;
+                        }
+                    }
+                    if (array_key_exists($traceId, $packages[$priority]['traces'])) {
+                        $packages[$priority]['spans'][] = $span;
+                    }
+                }
             }
+
+            $data = array_map([$this->zipkinExporter, 'convertSpan'], $packages[0]['spans']);
+
+            if ($this->zipkinTransport->write($data)) {
+                return count($packages) > 1 ? $packages[1]['spans'] : [];
+            }
+
+            if (count($packages) == 1) {
+                return $packages[0]['spans'];
+            }
+
+            return array_merge($packages[0]['spans'], $packages[1]['spans']);
         }
 
-        return $this->zipkinTransport->write($data);
+        return $spans;
     }
 }
