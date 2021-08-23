@@ -13,7 +13,10 @@ use SplFileObject;
 
 class Telemetry
 {
-    public string $source = 'var/telemetry';
+    private float $dumpInterval = 0.5;
+    private int $spanCountLimit = 8;
+    private string $pipePath = 'var/telemetry';
+
     private $pipe;
 
     public function __construct(
@@ -23,11 +26,13 @@ class Telemetry
         private ZipkinExporter $zipkinExporter,
         private ZipkinTransport $zipkinTransport,
     ) {
+        $this->dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL')) ?: $this->dumpInterval;
+        $this->pipePath = floatval(getenv('TELEMETRY_PIPE_PATH')) ?: $this->pipePath;
+        $this->spanCountLimit = floatval(getenv('TELEMETRY_SPAN_COUNT_LIMIT')) ?: $this->spanCountLimit;
     }
 
     public function run()
     {
-        $dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL') ?: 0.5);
         $activity = null;
         $spans = [];
 
@@ -49,7 +54,7 @@ class Telemetry
                 };
             }
 
-            if (!$activity || ($activity + $dumpInterval) < microtime(true)) {
+            if (!$activity || ($activity + $this->dumpInterval) < microtime(true)) {
                 $activity = microtime(true);
                 $this->renderMetrics($this->registry);
                 if ($this->exportTraces($spans)) {
@@ -92,7 +97,7 @@ class Telemetry
             fclose($this->pipe);
         }
 
-        $this->pipe = fopen('var/telemetry', 'r');
+        $this->pipe = fopen($this->pipePath, 'r');
     }
 
     private function renderMetrics(Registry $registry): void
@@ -112,9 +117,16 @@ class Telemetry
             return false;
         }
 
+        usort($spans, function ($a, $b) {
+            return -1 * ( $a->getDuration() <=> $b->getDuration() );
+        });
+
         $data = [];
         foreach ($spans as $span) {
             $data[] = $this->zipkinExporter->convertSpan($span);
+            if (count($data) >= $this->spanCountLimit) {
+                break;
+            }
         }
 
         return $this->zipkinTransport->write($data);
