@@ -26,8 +26,8 @@ class Telemetry
         private ZipkinTransport $zipkinTransport,
     ) {
         $this->dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL')) ?: $this->dumpInterval;
-        $this->pipePath = floatval(getenv('TELEMETRY_PIPE_PATH')) ?: $this->pipePath;
-        $this->traceCountLimit = floatval(getenv('TELEMETRY_TRACE_COUNT_LIMIT')) ?: $this->traceCountLimit;
+        $this->pipePath = getenv('TELEMETRY_PIPE_PATH') ?: $this->pipePath;
+        $this->traceCountLimit = intval(getenv('TELEMETRY_TRACE_COUNT_LIMIT')) ?: $this->traceCountLimit;
     }
 
     public function run()
@@ -115,38 +115,37 @@ class Telemetry
                 return -1 * ($a->getDuration() <=> $b->getDuration());
             });
 
-            $packages = [];
+            $packages = [
+                (object) ['spans' => [], 'traces' => []],
+                (object) ['spans' => [], 'traces' => []],
+            ];
+
             foreach ($spans as $span) {
                 $traceId = $span->getSpanContext()->getTraceId();
-                foreach ([0, 1] as $priority) {
-                    if (!array_key_exists($priority, $packages)) {
-                        $packages[$priority] = [
-                            'spans' => [],
-                            'traces' => [],
-                        ];
-                    }
-                    if (!array_key_exists($traceId, $packages[$priority]['traces'])) {
-                        if (count($packages[$priority]['traces']) < $this->traceCountLimit) {
-                            $packages[$priority]['traces'][$traceId] = $traceId;
+                foreach ($packages as $package) {
+                    if (!array_key_exists($traceId, $package->traces)) {
+                        if (count($package->traces) < $this->traceCountLimit) {
+                            $package->traces[$traceId] = $traceId;
                         }
                     }
-                    if (array_key_exists($traceId, $packages[$priority]['traces'])) {
-                        $packages[$priority]['spans'][] = $span;
+                    if (array_key_exists($traceId, $package->traces)) {
+                        $package->spans[] = $span;
+                        break;
                     }
                 }
             }
 
-            $data = array_map([$this->zipkinExporter, 'convertSpan'], $packages[0]['spans']);
+            $data = array_map([$this->zipkinExporter, 'convertSpan'], $packages[0]->spans);
 
             if ($this->zipkinTransport->write($data)) {
-                return count($packages) > 1 ? $packages[1]['spans'] : [];
+                return count($packages) > 1 ? $packages[1]->spans : [];
             }
 
             if (count($packages) == 1) {
-                return $packages[0]['spans'];
+                return $packages[0]->spans;
             }
 
-            return array_merge($packages[0]['spans'], $packages[1]['spans']);
+            return array_merge($packages[0]->spans, $packages[1]->spans);
         }
 
         return $spans;
