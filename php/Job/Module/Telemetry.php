@@ -26,8 +26,8 @@ class Telemetry
         private ZipkinTransport $zipkinTransport,
     ) {
         $this->dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL')) ?: $this->dumpInterval;
-        $this->pipePath = floatval(getenv('TELEMETRY_PIPE_PATH')) ?: $this->pipePath;
-        $this->traceCountLimit = floatval(getenv('TELEMETRY_TRACE_COUNT_LIMIT')) ?: $this->traceCountLimit;
+        $this->pipePath = getenv('TELEMETRY_PIPE_PATH') ?: $this->pipePath;
+        $this->traceCountLimit = intval(getenv('TELEMETRY_TRACE_COUNT_LIMIT')) ?: $this->traceCountLimit;
     }
 
     public function run()
