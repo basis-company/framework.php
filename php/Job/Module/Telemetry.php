@@ -9,6 +9,7 @@ use Basis\Telemetry\Tracing\Exporter\ZipkinExporter;
 use Basis\Telemetry\Tracing\Span;
 use Basis\Telemetry\Tracing\Transport\ZipkinTransport;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpClient\CurlHttpClient;
 
 class Telemetry
 {
@@ -120,8 +121,13 @@ class Telemetry
                     $spans = array_merge(...$chunks);
                     $this->logger->info('span write failure', [
                         'buffer' => count($spans),
+                        'data' => $data,
                     ]);
-                    // keep rest
+
+                    // reset client
+                    $this->zipkinTransport->setClient(new CurlHttpClient());
+
+                    // try again
                     return $spans;
                 }
             }
