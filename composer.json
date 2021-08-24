@@ -18,7 +18,7 @@
         "psr/http-message": "^1.0"
     },
     "require-dev": {
-        "basis-company/telemetry": "^0.1.5",
+        "basis-company/telemetry": "^0.1.8",
         "monolog/monolog": "^2.3.2",
         "nesbot/carbon": "^2.51",
         "nyholm/psr7": "^1.4.0",

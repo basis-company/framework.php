@@ -5,8 +5,8 @@
         }
     },
     "require": {
-        "basis-company/framework": "^5.0.0",
-        "basis-company/telemetry": "^0.1.7",
+        "basis-company/framework": "^5.1.5",
+        "basis-company/telemetry": "^0.1.8",
         "monolog/monolog": "^2.3.2",
         "nesbot/carbon": "^2.51",
         "nyholm/psr7": "^1.3.2",
