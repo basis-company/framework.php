@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 class Telemetry
 {
     private float $dumpInterval = 0.5;
-    private int $traceCountLimit = 2;
+    private int $spanCountLimit = 16;
     private string $pipePath = 'var/telemetry';
 
     private $pipe;
@@ -27,7 +27,7 @@ class Telemetry
     ) {
         $this->dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL')) ?: $this->dumpInterval;
         $this->pipePath = getenv('TELEMETRY_PIPE_PATH') ?: $this->pipePath;
-        $this->traceCountLimit = intval(getenv('TELEMETRY_TRACE_COUNT_LIMIT')) ?: $this->traceCountLimit;
+        $this->spanCountLimit = intval(getenv('TELEMETRY_SPAN_COUNT_LIMIT')) ?: $this->spanCountLimit;
     }
 
     public function run()
@@ -111,41 +111,19 @@ class Telemetry
     private function processSpans(array $spans): array
     {
         if (count($spans)) {
-            usort($spans, function ($a, $b) {
-                return -1 * ($a->getDuration() <=> $b->getDuration());
-            });
-
-            $packages = [
-                (object) ['spans' => [], 'traces' => []],
-                (object) ['spans' => [], 'traces' => []],
-            ];
-
-            foreach ($spans as $span) {
-                $traceId = $span->getSpanContext()->getTraceId();
-                foreach ($packages as $package) {
-                    if (!array_key_exists($traceId, $package->traces)) {
-                        if (count($package->traces) < $this->traceCountLimit) {
-                            $package->traces[$traceId] = $traceId;
-                        }
-                    }
-                    if (array_key_exists($traceId, $package->traces)) {
-                        $package->spans[] = $span;
-                        break;
-                    }
+            $chunks = array_chunk($spans, $this->spanCountLimit);
+            foreach ($chunks as $i => $chunk) {
+                $data = array_map([$this->zipkinExporter, 'convertSpan'], $chunk);
+                if ($this->zipkinTransport->write($data)) {
+                    unset($chunks[$i]);
+                } else {
+                    $spans = array_merge(...$chunks);
+                    $this->logger->info('span write failure', [
+                        'buffer' => count($spans),
+                    ]);
+                    return $spans;
                 }
             }
-
-            $data = array_map([$this->zipkinExporter, 'convertSpan'], $packages[0]->spans);
-
-            if ($this->zipkinTransport->write($data)) {
-                return count($packages) > 1 ? $packages[1]->spans : [];
-            }
-
-            if (count($packages) == 1) {
-                return $packages[0]->spans;
-            }
-
-            return array_merge($packages[0]->spans, $packages[1]->spans);
         }
 
         return $spans;
