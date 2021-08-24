@@ -10,6 +10,8 @@ use Psr\Log\LoggerInterface;
 
 class Flush
 {
+    private float $spanDurationThreshold = 0.1;
+
     public function __construct(
         private Converter $converter,
         private Lock $lock,
@@ -17,6 +19,8 @@ class Flush
         private Operations $operations,
         private Tracer $tracer,
     ) {
+        $spanDurationThreshold = floatval(getenv('TELEMETRY_SPAN_DURATION_THRESHOLD'));
+        $this->spanDurationThreshold = $spanDurationThreshold ?: $this->spanDurationThreshold;
     }
 
     public function run()
@@ -35,9 +39,8 @@ class Flush
         $instances = [];
 
         if (count($this->tracer->getSpans())) {
-            $spanDurationThreshold = floatval(getenv('TELEMETRY_SPAN_DURATION_THRESHOLD') ?: '0.1');
             foreach ($this->tracer->getSpans() as $span) {
-                if ($span->getDuration() >= $spanDurationThreshold) {
+                if ($span->getDuration() >= $this->spanDurationThreshold) {
                     $instances[] = $span;
                 }
             }
