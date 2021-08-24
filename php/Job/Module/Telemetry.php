@@ -121,9 +121,13 @@ class Telemetry
                     $this->logger->info('span write failure', [
                         'buffer' => count($spans),
                     ]);
+                    // keep rest
                     return $spans;
                 }
             }
+
+            // all chunks were exported
+            return [];
         }
 
         return $spans;
