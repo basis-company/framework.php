@@ -59,8 +59,9 @@ class Flush
                 $this->logger->error('telemetry dump failure', [
                     'output' => ob_get_clean(),
                 ]);
+            } else {
+                ob_end_clean();
             }
-            ob_end_clean();
             flock($telemetry, LOCK_UN);
             fclose($telemetry);
         }
