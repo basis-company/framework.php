@@ -46,7 +46,7 @@ class Telemetry
 
         $container->share(ZipkinTransport::class, function () {
             $schema = getenv('TELEMETRY_ZIPKIN_SCHEMA') ?: 'http';
-            $hostname = getenv('TELEMETRY_ZIPKIN_HOSTNAME') ?: 'audit-zipkin';
+            $hostname = getenv('TELEMETRY_ZIPKIN_HOSTNAME') ?: 'tempo.monitoring';
             $path = getenv('TELEMETRY_ZIPKIN_PATH') ?: '/api/v2/spans';
             $port = getenv('TELEMETRY_ZIPKIN_PORT') ?: 9411;
             return new ZipkinTransport(new CurlHttpClient(), $hostname, $port, $path, $schema);
