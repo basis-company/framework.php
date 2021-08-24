@@ -16,6 +16,7 @@ class Telemetry
     private float $dumpInterval = 0.5;
     private int $spanCountLimit = 16;
     private string $pipePath = 'var/telemetry';
+    private bool $disableTracing = false;
 
     private $pipe;
 
@@ -29,6 +30,10 @@ class Telemetry
         $this->dumpInterval = floatval(getenv('TELEMETRY_DUMP_INTERVAL')) ?: $this->dumpInterval;
         $this->pipePath = getenv('TELEMETRY_PIPE_PATH') ?: $this->pipePath;
         $this->spanCountLimit = intval(getenv('TELEMETRY_SPAN_COUNT_LIMIT')) ?: $this->spanCountLimit;
+
+        if (getenv('TELEMETRY_TRACING_DISABLE')) {
+            $this->disableTracing = getenv('TELEMETRY_TRACING_DISABLE') == 'true';
+        }
     }
 
     public function run()
@@ -111,6 +116,11 @@ class Telemetry
 
     private function processSpans(array $spans): array
     {
+        if ($this->disableTracing) {
+            // drop spans
+            return [];
+        }
+
         if (count($spans)) {
             $chunks = array_chunk($spans, $this->spanCountLimit);
             foreach ($chunks as $i => $chunk) {
