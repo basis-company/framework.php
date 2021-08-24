@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f94bc7388ab20a54b1bdb76b16adeafd",
+    "content-hash": "6fd45d62da718fcab74512aea782539d",
     "packages": [
         {
             "name": "psr/cache",
@@ -160,16 +160,16 @@
     "packages-dev": [
         {
             "name": "basis-company/telemetry",
-            "version": "0.1.6",
+            "version": "0.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/basis-company/telemetry.php.git",
-                "reference": "d376d9bb8fa5a451afe94a6b31dd3428fd495405"
+                "reference": "931a28006be5d3cef08df4cb592d42c5517fe6d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/d376d9bb8fa5a451afe94a6b31dd3428fd495405",
-                "reference": "d376d9bb8fa5a451afe94a6b31dd3428fd495405",
+                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/931a28006be5d3cef08df4cb592d42c5517fe6d9",
+                "reference": "931a28006be5d3cef08df4cb592d42c5517fe6d9",
                 "shasum": ""
             },
             "require-dev": {
@@ -198,9 +198,9 @@
             "description": "telemetry framework for php",
             "support": {
                 "issues": "https://github.com/basis-company/telemetry.php/issues",
-                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.6"
+                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.8"
             },
-            "time": "2021-08-18T15:01:18+00:00"
+            "time": "2021-08-24T17:31:01+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -427,16 +427,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.51.1",
+            "version": "2.52.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922"
+                "reference": "369c0e2737c56a0f39c946dd261855255a6fccbe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
-                "reference": "8619c299d1e0d4b344e1f98ca07a1ce2cfbf1922",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/369c0e2737c56a0f39c946dd261855255a6fccbe",
+                "reference": "369c0e2737c56a0f39c946dd261855255a6fccbe",
                 "shasum": ""
             },
             "require": {
@@ -517,7 +517,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-28T13:16:28+00:00"
+            "time": "2021-08-14T19:10:52+00:00"
         },
         {
             "name": "nikic/php-parser",
