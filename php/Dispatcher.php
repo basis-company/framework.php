@@ -94,6 +94,9 @@ class Dispatcher
                         if (is_object($v) || is_array($v)) {
                             continue;
                         }
+                        if (stripos($k, 'password') !== false) {
+                            $v = str_repeat('*', strlen($v));
+                        }
                         $span->setAttribute($k, $v);
                     }
                     $instance = $this->container->create($class);
