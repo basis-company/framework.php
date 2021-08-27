@@ -14,7 +14,7 @@ use Symfony\Component\HttpClient\CurlHttpClient;
 class Telemetry
 {
     private float $dumpInterval = 0.5;
-    private int $spanCountLimit = 16;
+    private int $spanCountLimit = 64;
     private string $pipePath = 'var/telemetry';
     private bool $disableTracing = false;
 
