@@ -6,10 +6,12 @@ use Basis\Application;
 use Basis\Configuration\Telemetry;
 use Basis\Context;
 use Basis\Event;
+use Basis\Http;
 use Basis\Telemetry\Tracing\Tracer;
 use Basis\Toolkit;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class Api
 {
@@ -105,6 +107,19 @@ class Api
             $params = is_object($rpc->params) ? get_object_vars($rpc->params) : [];
             $data = $this->dispatch(strtolower($rpc->job), $params);
             $data = $this->removeSystemObjects($data);
+
+            $context = [
+                'time' => round(microtime(true) - $start, 3),
+            ];
+
+            foreach ($params as $k => $v) {
+                if (is_string($v) || is_numeric($v)) {
+                    $context[$k] = $v;
+                }
+            }
+
+            $this->get(LoggerInterface::class)->info($rpc->job, $context);
+            $this->get(Http::class)->setLogging(false);
 
             return [
                 'success' => true,
