@@ -119,7 +119,7 @@ class Api
             }
 
             $this->get(LoggerInterface::class)->info($rpc->job, $context);
-            $this->get(Http::class)->->setLogging(false);
+            $this->get(Http::class)->setLogging(false);
 
             return [
                 'success' => true,
