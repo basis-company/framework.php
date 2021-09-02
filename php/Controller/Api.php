@@ -127,19 +127,12 @@ class Api
                 'timing' => +number_format(microtime(true) - $start, 3),
             ];
         } catch (Exception $e) {
-            $error = [
+            $this->exception($e);
+            return [
                 'success' => false,
                 'message' => $e->getMessage(),
                 'service' => $this->app->getName(),
-                'trace' => explode(PHP_EOL, $e->getTraceAsString()),
             ];
-            if (property_exists($e, 'remoteTrace')) {
-                $error['remoteTrace'] = $e->remoteTrace;
-                if (property_exists($e, 'remoteService')) {
-                    $error['remoteService'] = $e->remoteService;
-                }
-            }
-            return $error;
         }
     }
 

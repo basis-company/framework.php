@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Basis\Feedback\Feedback;
 use Basis\Metric\Registry;
 use Basis\Telemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
@@ -49,6 +50,10 @@ trait Toolkit
 
     public function exception(Throwable $e, string $level = LogLevel::ERROR)
     {
+        if ($e instanceof Feedback) {
+            return;
+        }
+
         $context = [
             'file' => $e->getFile(),
             'line' => $e->getLine(),
