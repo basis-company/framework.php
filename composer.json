@@ -31,7 +31,7 @@
         "symfony/lock": "^5.3.4",
         "symfony/service-contracts": "^2.4.0",
         "tarantool/client": "^0.9.0",
-        "tarantool/mapper": "^4.6.16",
+        "tarantool/mapper": "^4.6.19",
         "tarantool/queue": "v0.9.0",
         "tarantool/symfony-lock": "^0.2.5"
     }
