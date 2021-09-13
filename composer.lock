@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c16e07da8675a6c6b56fbc8cbcdb2abe",
+    "content-hash": "32bb0a7751860a848a6c07ca867da3d7",
     "packages": [
         {
             "name": "psr/cache",
@@ -160,16 +160,16 @@
     "packages-dev": [
         {
             "name": "basis-company/telemetry",
-            "version": "0.1.8",
+            "version": "0.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/basis-company/telemetry.php.git",
-                "reference": "931a28006be5d3cef08df4cb592d42c5517fe6d9"
+                "reference": "23b39d56a29f3030be933ba4a54de8633f05b67b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/931a28006be5d3cef08df4cb592d42c5517fe6d9",
-                "reference": "931a28006be5d3cef08df4cb592d42c5517fe6d9",
+                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/23b39d56a29f3030be933ba4a54de8633f05b67b",
+                "reference": "23b39d56a29f3030be933ba4a54de8633f05b67b",
                 "shasum": ""
             },
             "require-dev": {
@@ -198,9 +198,9 @@
             "description": "telemetry framework for php",
             "support": {
                 "issues": "https://github.com/basis-company/telemetry.php/issues",
-                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.8"
+                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.9"
             },
-            "time": "2021-08-24T17:31:01+00:00"
+            "time": "2021-09-13T09:28:55+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -977,33 +977,33 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.13.0",
+            "version": "1.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "be1996ed8adc35c3fd795488a653f4b518be70ea"
+                "reference": "d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/be1996ed8adc35c3fd795488a653f4b518be70ea",
-                "reference": "be1996ed8adc35c3fd795488a653f4b518be70ea",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e",
+                "reference": "d86dfc2e2a3cd366cee475e52c6bb3bbc371aa0e",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.2",
-                "php": "^7.2 || ~8.0, <8.1",
+                "php": "^7.2 || ~8.0, <8.2",
                 "phpdocumentor/reflection-docblock": "^5.2",
                 "sebastian/comparator": "^3.0 || ^4.0",
                 "sebastian/recursion-context": "^3.0 || ^4.0"
             },
             "require-dev": {
-                "phpspec/phpspec": "^6.0",
+                "phpspec/phpspec": "^6.0 || ^7.0",
                 "phpunit/phpunit": "^8.0 || ^9.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.11.x-dev"
+                    "dev-master": "1.x-dev"
                 }
             },
             "autoload": {
@@ -1038,9 +1038,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy/issues",
-                "source": "https://github.com/phpspec/prophecy/tree/1.13.0"
+                "source": "https://github.com/phpspec/prophecy/tree/1.14.0"
             },
-            "time": "2021-03-17T13:42:18+00:00"
+            "time": "2021-09-10T09:02:12+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
