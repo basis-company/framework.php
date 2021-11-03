@@ -14,7 +14,7 @@ class ActorTest extends Test
         $this->assertSame($context, $this->actAs(1));
         $this->assertSame($context->person, 1);
         $this->assertSame($context->module, null);
-        
+
         $this->assertSame($context, $this->actAs(2));
         $this->assertSame($context->person, 2);
         $this->assertSame($context->module, null);
