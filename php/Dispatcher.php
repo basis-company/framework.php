@@ -202,7 +202,7 @@ class Dispatcher
         return $this->jobs;
     }
 
-    protected function getServiceName()
+    public function getServiceName()
     {
         return $this->get(Application::class)->getName();
     }
