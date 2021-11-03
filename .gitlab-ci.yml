@@ -3,9 +3,11 @@ image: docker:18.09.7
 variables:
   CARTRIDGE_MODE: single
   CLUSTER_COOKIE: password
+  DATA_CONNECTION: tcp://test-data:3301
   DATA_PASSWORD: password
   DOCKER_DRIVER: overlay2
   DOCKER_HOST: tcp://localhost:2375
+  TARANTOOL_CONNECTION: tcp://test-db:3301
   image_branch: $registry/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
   image_latest: $registry/$CI_PROJECT_NAME:latest
   image_master: $registry/$CI_PROJECT_NAME:master
@@ -68,10 +70,6 @@ test-phpunit:
     - test
     - master
 
-  variables:
-    TARANTOOL_CONNECTION: tcp://test-db:3301
-    DATA_CONNECTION: tcp://test-data:3301
-
   script:
     - apt-get update && apt-get install zip git -y
     - curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar
@@ -96,8 +94,6 @@ test-coverage:
     - master
 
   variables:
-    TARANTOOL_CONNECTION: tcp://test-db:3301
-    DATA_CONNECTION: tcp://test-data:3301
     XDEBUG_MODE: coverage
 
   script:
