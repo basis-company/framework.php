@@ -67,6 +67,7 @@ test-phpunit:
 
   variables:
     CARTRIDGE_MODE: single
+    CLUSTER_COOKIE: password
     TARANTOOL_CONNECTION: tcp://test-db:3301
     DATA_CONNECTION: tcp://test-data:3301
 
@@ -95,6 +96,7 @@ test-coverage:
 
   variables:
     CARTRIDGE_MODE: single
+    CLUSTER_COOKIE: password
     TARANTOOL_CONNECTION: tcp://test-db:3301
     DATA_CONNECTION: tcp://test-data:3301
     XDEBUG_MODE: coverage
