@@ -58,6 +58,9 @@ test-phpunit:
       alias: test-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
       alias: test-data
+      variables:
+        CARTRIDGE_MODE: single
+        CLUSTER_COOKIE: password
     - name: yandex/clickhouse-server
       alias: test-ch
 
@@ -66,8 +69,6 @@ test-phpunit:
     - master
 
   variables:
-    CARTRIDGE_MODE: single
-    CLUSTER_COOKIE: password
     TARANTOOL_CONNECTION: tcp://test-db:3301
     DATA_CONNECTION: tcp://test-data:3301
 
@@ -85,8 +86,14 @@ test-coverage:
   services:
     - name: tarantool/tarantool:2.6.2
       alias: test-db
+  services:
+    - name: tarantool/tarantool:2.6.2
+      alias: test-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
       alias: test-data
+      variables:
+        CARTRIDGE_MODE: single
+        CLUSTER_COOKIE: password
     - name: yandex/clickhouse-server
       alias: test-ch
 
@@ -95,8 +102,6 @@ test-coverage:
     - master
 
   variables:
-    CARTRIDGE_MODE: single
-    CLUSTER_COOKIE: password
     TARANTOOL_CONNECTION: tcp://test-db:3301
     DATA_CONNECTION: tcp://test-data:3301
     XDEBUG_MODE: coverage
