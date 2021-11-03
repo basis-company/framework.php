@@ -7,7 +7,6 @@ variables:
   DATA_PASSWORD: password
   DOCKER_DRIVER: overlay2
   DOCKER_HOST: tcp://localhost:2375
-  TARANTOOL_CONNECTION: tcp://test-db:3301
   image_branch: $registry/$CI_PROJECT_NAME:$CI_BUILD_REF_NAME
   image_latest: $registry/$CI_PROJECT_NAME:latest
   image_master: $registry/$CI_PROJECT_NAME:master
@@ -15,6 +14,8 @@ variables:
   image_quay_latest: quay.io/basis-company/skeleton:latest
   image_quay_tag: quay.io/basis-company/skeleton:$CI_COMMIT_TAG
   image_tag: $registry/$CI_PROJECT_NAME:$CI_COMMIT_TAG
+  TARANTOOL_CONNECTION: tcp://test-db:3302
+  TARANTOOL_PORT: 3302
 
 stages:
   - build
