@@ -74,6 +74,7 @@ test-phpunit:
     - apt-get update && apt-get install zip git -y
     - curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar
     - ./composer.phar require phpunit/phpunit
+    - export
     - vendor/bin/phpunit --coverage-clover=coverage.xml
 
 test-coverage:
