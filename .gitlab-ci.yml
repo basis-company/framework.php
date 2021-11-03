@@ -10,6 +10,8 @@ variables:
   image_tag: $registry/$CI_PROJECT_NAME:$CI_COMMIT_TAG
   image_quay_tag: quay.io/basis-company/skeleton:$CI_COMMIT_TAG
   image_quay_latest: quay.io/basis-company/skeleton:latest
+  CARTRIDGE_MODE: single
+  CLUSTER_COOKIE: password
 
 stages:
   - build
@@ -58,9 +60,6 @@ test-phpunit:
       alias: test-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
       alias: test-data
-      variables:
-        CARTRIDGE_MODE: single
-        CLUSTER_COOKIE: password
     - name: yandex/clickhouse-server
       alias: test-ch
 
@@ -88,9 +87,6 @@ test-coverage:
       alias: test-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
       alias: test-data
-      variables:
-        CARTRIDGE_MODE: single
-        CLUSTER_COOKIE: password
     - name: yandex/clickhouse-server
       alias: test-ch
 
