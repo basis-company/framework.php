@@ -12,7 +12,7 @@
         "nyholm/psr7": "^1.4.0",
         "nyholm/psr7-server": "^1.0.2",
         "phpdocumentor/reflection-docblock": "^5.2.2",
-        "rybakit/msgpack": "^0.9.0",
+        "rybakit/msgpack": "0.8.0",
         "smi2/phpclickhouse": "1.4.1",
         "symfony/cache": "^5.3.10",
         "symfony/http-client": "^5.3.10",

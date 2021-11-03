@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b8a0818bfea7453afd448b644c38bff",
+    "content-hash": "6883f002a8d2ce6b5630d3fd06a516ec",
     "packages": [
         {
             "name": "psr/cache",
@@ -430,16 +430,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.53.1",
+            "version": "2.54.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "f4655858a784988f880c1b8c7feabbf02dfdf045"
+                "reference": "eed83939f1aed3eee517d03a33f5ec587ac529b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/f4655858a784988f880c1b8c7feabbf02dfdf045",
-                "reference": "f4655858a784988f880c1b8c7feabbf02dfdf045",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/eed83939f1aed3eee517d03a33f5ec587ac529b5",
+                "reference": "eed83939f1aed3eee517d03a33f5ec587ac529b5",
                 "shasum": ""
             },
             "require": {
@@ -450,6 +450,7 @@
                 "symfony/translation": "^3.4 || ^4.0 || ^5.0"
             },
             "require-dev": {
+                "doctrine/dbal": "^2.0 || ^3.0",
                 "doctrine/orm": "^2.7",
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "kylekatarnls/multi-tester": "^2.0",
@@ -520,7 +521,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-06T09:29:23+00:00"
+            "time": "2021-11-01T21:22:20+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -1641,16 +1642,16 @@
         },
         {
             "name": "rybakit/msgpack",
-            "version": "v0.9.0",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rybakit/msgpack.php.git",
-                "reference": "c780f21d8340681100988dda78f7b950f443fb8b"
+                "reference": "d4776c10493df1dd76f9d4d4b79ec5edffebfae9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rybakit/msgpack.php/zipball/c780f21d8340681100988dda78f7b950f443fb8b",
-                "reference": "c780f21d8340681100988dda78f7b950f443fb8b",
+                "url": "https://api.github.com/repos/rybakit/msgpack.php/zipball/d4776c10493df1dd76f9d4d4b79ec5edffebfae9",
+                "reference": "d4776c10493df1dd76f9d4d4b79ec5edffebfae9",
                 "shasum": ""
             },
             "require": {
@@ -1659,8 +1660,7 @@
             "require-dev": {
                 "ext-gmp": "*",
                 "friendsofphp/php-cs-fixer": "^2.14",
-                "phpunit/phpunit": "^7.1|^8|^9",
-                "vimeo/psalm": "^3.9|^4"
+                "phpunit/phpunit": "^7.1|^8|^9"
             },
             "suggest": {
                 "ext-decimal": "For converting overflowed integers to Decimal objects",
@@ -1691,7 +1691,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rybakit/msgpack.php/issues",
-                "source": "https://github.com/rybakit/msgpack.php/tree/v0.9.0"
+                "source": "https://github.com/rybakit/msgpack.php/tree/v0.8.0"
             },
             "funding": [
                 {
@@ -1699,7 +1699,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-10-25T20:12:31+00:00"
+            "time": "2021-03-18T07:41:20+00:00"
         },
         {
             "name": "sebastian/cli-parser",
