@@ -86,9 +86,6 @@ test-coverage:
   services:
     - name: tarantool/tarantool:2.6.2
       alias: test-db
-  services:
-    - name: tarantool/tarantool:2.6.2
-      alias: test-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
       alias: test-data
       variables:
