@@ -8,39 +8,55 @@ class Crud
     {
     }
 
+    public function getWrapper(): Wrapper
+    {
+        return $this->wrapper;
+    }
+
+    public function getSpace(): string
+    {
+        return $this->space;
+    }
+
     public function delete(array|int|string $key, array $opts = []): ?array
     {
-        return $this->unflatten('crud.delete', $this->space, $key, $opts);
+        return $this->unflatten('crud.delete', $this->getSpace(), $key, $opts);
     }
 
     public function get(array|int|string $key, array $opts = []): ?array
     {
-        return $this->unflatten('crud.get', $this->space, $key, $opts);
+        return $this->unflatten('crud.get', $this->getSpace(), $key, $opts);
     }
 
     public function insert(array $data): array
     {
-        return $this->unflatten('crud.insert_object', $this->space, $data);
+        return $this->unflatten('crud.insert_object', $this->getSpace(), $data);
     }
 
     public function replace(array $data): array
     {
-        return $this->unflatten('crud.replace_object', $this->space, $data);
+        return $this->unflatten('crud.replace_object', $this->getSpace(), $data);
     }
 
     public function update(array|int|string $key, array $operations = []): ?array
     {
-        return $this->unflatten('crud.update', $this->space, $key, $operations);
+        return $this->unflatten('crud.update', $this->getSpace(), $key, $operations);
     }
 
     public function upsert(array $data, array $operations = []): ?array
     {
-        return $this->unflatten('crud.upsert_object', $this->space, $data, $operations);
+        return $this->unflatten('crud.upsert_object', $this->getSpace(), $data, $operations);
     }
 
     protected function unflatten($function, ...$args): ?array
     {
-        $result = $this->wrapper->call($function, ...$args);
+        $response = $this->getWrapper()->getClient()->call($function, ...$args);
+
+        [$result, $err] = $response;
+
+        if ($err) {
+            throw new Exception($err);
+        }
 
         if (!array_key_exists('rows', $result)) {
             throw new Exception("Invalid result");

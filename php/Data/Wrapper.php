@@ -12,19 +12,6 @@ class Wrapper
     {
     }
 
-    public function call($function, ...$args)
-    {
-        $response = $this->getClient()->call($function, ...$args);
-
-        [$result, $err] = $response;
-
-        if ($err) {
-            throw new Exception($err);
-        }
-
-        return $result;
-    }
-
     public function getClient(): Client
     {
         return $this->client;
