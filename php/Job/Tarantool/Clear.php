@@ -3,14 +3,21 @@
 namespace Basis\Job\Tarantool;
 
 use Basis\Cache;
+use Basis\Toolkit;
 use Tarantool\Client\Client;
 use Tarantool\Client\Schema\Criteria;
 use Tarantool\Client\Schema\IndexIds;
 
 class Clear
 {
+    use Toolkit;
+
     public function run(Client $client, Cache $cache)
     {
+        if (!$this->dispatch('tarantool.analyze')->present) {
+            return ['msg' => 'not present'];
+        }
+
         $space = $client->getSpace('_vspace');
 
         $client->evaluate("

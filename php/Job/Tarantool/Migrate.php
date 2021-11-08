@@ -16,6 +16,10 @@ class Migrate
 
     public function run(Bootstrap $bootstrap, Registry $registry)
     {
+        if (!$this->dispatch('tarantool.analyze')->present) {
+            return ['msg' => 'not present'];
+        }
+
         $mapper = $this->get(Mapper::class);
 
         // entities

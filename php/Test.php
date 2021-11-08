@@ -75,11 +75,13 @@ abstract class Test extends TestCase
     public function setUp(): void
     {
         Carbon::setTestNow(null);
+        $this->dispatch('data.migrate');
         $this->dispatch('tarantool.migrate');
     }
 
     public function tearDown(): void
     {
+        $this->dispatch('data.clear');
         $this->dispatch('tarantool.clear');
     }
 
