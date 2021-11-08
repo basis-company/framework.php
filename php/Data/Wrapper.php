@@ -6,23 +6,27 @@ use Tarantool\Client\Client;
 
 class Wrapper
 {
+    private array $instances = [];
+
     private array $crud = [];
+    private array $procedure = [];
+    private array $queue = [];
 
     public function __construct(private string $service, private Client $client)
     {
     }
 
-    public function call($function, ...$args)
+    public function get($class, string $name)
     {
-        $response = $this->getClient()->call($function, ...$args);
-
-        [$result, $err] = $response;
-
-        if ($err) {
-            throw new Exception($err);
+        if (!array_key_exists($class, $this->instances)) {
+            $this->instances[$class] = [];
         }
 
-        return $result;
+        if (!array_key_exists($name, $this->instances[$class])) {
+            $this->instances[$class][$name] = new $class($this, $name);
+        }
+
+        return $this->instances[$class][$name];
     }
 
     public function getClient(): Client
@@ -32,11 +36,17 @@ class Wrapper
 
     public function getCrud(string $space): Crud
     {
-        if (!array_key_exists($space, $this->crud)) {
-            $this->crud[$space] = new Crud($this, $space);
-        }
+        return $this->get(Crud::class, $space);
+    }
 
-        return $this->crud[$space];
+    public function getProcedure(string $name): Procedure
+    {
+        return $this->get(Procedure::class, $name);
+    }
+
+    public function getQueue(string $name): Queue
+    {
+        return $this->get(Queue::class, $name);
     }
 
     public function getService(): string

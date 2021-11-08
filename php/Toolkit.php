@@ -3,7 +3,9 @@
 namespace Basis;
 
 use Basis\Data\Crud;
+use Basis\Data\Procedure;
 use Basis\Data\Master;
+use Basis\Data\Queue as ShardedQueue;
 use Basis\Feedback\Feedback;
 use Basis\Telemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
@@ -37,7 +39,17 @@ trait Toolkit
 
     public function getCrud(string $space): Crud
     {
-        return $this->get(Master::class)->getCrud($space);
+        return $this->get(Master::class)->get(Crud::class, $space);
+    }
+
+    public function getProcedure(string $name): Procedure
+    {
+        return $this->get(Master::class)->get(Procedure::class, $name);
+    }
+
+    public function getShardedQueue(string $space): ShardedQueue
+    {
+        return $this->get(Master::class)->get(ShardedQueue::class, $space);
     }
 
     public function deprecated($message = null)
