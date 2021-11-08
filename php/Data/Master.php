@@ -29,12 +29,27 @@ class Master
         return $this->context[$space];
     }
 
-    public function getCrud(string $space): Crud
+    public function get(string $class, string $space)
     {
         $context = $this->getContext($space);
 
         return $this->getWrapper($context->getService())
-                    ->getCrud($context->getName());
+                    ->get($class, $context->getName());
+    }
+
+    public function getCrud(string $space): Crud
+    {
+        return $this->get(Crud::class, $space);
+    }
+
+    public function getProcedure(string $name): Procedure
+    {
+        return $this->get(Procedure::class, $name);
+    }
+
+    public function getQueue(string $name): Queue
+    {
+        return $this->get(Queue::class, $name);
     }
 
     public function getWrapper(string $service = ''): Wrapper

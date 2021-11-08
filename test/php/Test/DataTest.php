@@ -9,6 +9,13 @@ use Tarantool\Mapper\Mapper;
 
 class DataTest extends Test
 {
+    public function testProcedures()
+    {
+        $greet = $this->getProcedure('greet');
+        $this->assertSame($greet(), 'hello, world!');
+        $this->assertSame($greet('nekufa'), 'hello, nekufa!');
+    }
+
     public function testCrud()
     {
         // get local crud instance
@@ -83,5 +90,28 @@ class DataTest extends Test
     {
         $mapper = new Mapper($this->get(Master::class)->getWrapper()->getClient());
         $this->assertTrue($mapper->getSchema()->hasSpace('my_sharded_space'));
+    }
+
+    public function testShardedQueue()
+    {
+        $queue = $this->getShardedQueue('tester');
+
+        $task = $queue->put('zzzz');
+
+        $this->assertTrue($task->isReady());
+
+        $task = $queue->take();
+
+        // no duplicate takes
+        $this->assertSame($task->getData(), 'zzzz');
+
+        // no duplicate takes
+        $this->assertNull($queue->take());
+
+        $this->assertTrue($task->isTaken());
+
+        $task->ack();
+
+        $this->assertTrue($task->isDone());
     }
 }
