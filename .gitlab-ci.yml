@@ -112,6 +112,7 @@ test-coverage:
     - docker-php-ext-enable xdebug
     - curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar
     - ./composer.phar require phpunit/phpunit
+    - export
     - vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-text --colors=never
 
 release-branch:
