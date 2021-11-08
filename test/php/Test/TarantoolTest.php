@@ -290,8 +290,9 @@ class TarantoolTest extends Test
         $client = $mapper->getClient();
 
         $selectUsingNetBox = function ($values) use ($client) {
+            $connection = getenv('TARANTOOL_CONNECTION') ?: 'tcp://localhost:3301';
             return $client->evaluate("
-                return require('net.box').connect('tcp://localhost:3301')
+                return require('net.box').connect('$connection')
                     :call('basis_select', {
                         'sector', 'id', ...
                     })
@@ -306,8 +307,9 @@ class TarantoolTest extends Test
         $indexId = $client->evaluate("return box.space.sector.index.id.id")[0];
 
         $selectUsingNetBoxWithoutNames = function ($values) use ($client, $spaceId, $indexId) {
+            $connection = getenv('TARANTOOL_CONNECTION') ?: 'tcp://localhost:3301';
             return $client->evaluate("
-                return require('net.box').connect('tcp://localhost:3301')
+                return require('net.box').connect('$connection')
                     :call('basis_select', {
                         $spaceId, $indexId, ...
                     })
