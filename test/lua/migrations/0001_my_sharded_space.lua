@@ -1,7 +1,10 @@
 return {
     down = function()
-        box.space.my_sharded_space:drop()
-        box.space._ddl_sharding_key:delete('my_sharded_space')
+        if box.space.my_sharded_space ~= nil then
+            box.space.my_sharded_space:drop()
+            box.space._ddl_sharding_key:delete('my_sharded_space')
+        end
+
         return true
     end,
     up = function()
