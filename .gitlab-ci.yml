@@ -57,7 +57,8 @@ test-phpunit:
   image: php:8-cli
 
   variables:
-    TARANTOOL_CONNECTION: tcp://test-phpunit-db:3301
+    TARANTOOL_CONNECTION: tcp://test-phpunit-db:3302
+    TARANTOOL_PORT: 3302
     DATA_CONNECTION: tcp://test-phpunit-data:3301
 
   services:
@@ -86,7 +87,8 @@ test-coverage:
   interruptible: true
 
   variables:
-    TARANTOOL_CONNECTION: tcp://test-coverage-db:3301
+    TARANTOOL_CONNECTION: tcp://test-coverage-db:3302
+    TARANTOOL_PORT: 3302
     DATA_CONNECTION: tcp://test-coverage-data:3301
     XDEBUG_MODE: coverage
 
