@@ -57,8 +57,7 @@ test-phpunit:
   image: php:8-cli
 
   variables:
-    TARANTOOL_CONNECTION: tcp://test-phpunit-db:3302
-    TARANTOOL_PORT: 3302
+    TARANTOOL_CONNECTION: tcp://test-phpunit-db:3301
     DATA_CONNECTION: tcp://test-phpunit-data:3301
 
   services:
@@ -87,9 +86,9 @@ test-coverage:
   interruptible: true
 
   variables:
-    TARANTOOL_CONNECTION: tcp://test-coverage-db:3302
-    TARANTOOL_PORT: 3302
+    TARANTOOL_CONNECTION: tcp://test-coverage-db:3301
     DATA_CONNECTION: tcp://test-coverage-data:3301
+    XDEBUG_MODE: coverage
 
   services:
     - name: tarantool/tarantool:2.6.2
@@ -102,9 +101,6 @@ test-coverage:
   only:
     - test
     - master
-
-  variables:
-    XDEBUG_MODE: coverage
 
   script:
     - apt-get update && apt-get install zip git -y
