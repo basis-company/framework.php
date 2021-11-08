@@ -2,7 +2,8 @@
 
 namespace Test;
 
-use Basis\Data;
+use Basis\Data\Master;
+use Basis\Data\Wrapper;
 use Basis\Test;
 use Tarantool\Mapper\Mapper;
 
@@ -10,7 +11,8 @@ class DataTest extends Test
 {
     public function testCrud()
     {
-        $crud = $this->get(Data::class)->getCrud('my_sharded_space');
+        // get local crud instance
+        $crud = $this->getCrud('my_sharded_space');
 
         // bucket_id was set using ddl_sharding_key
         $instance = $crud->insert(['key' => 'username', 'value' => 'nekufa']);
@@ -62,9 +64,24 @@ class DataTest extends Test
         $this->assertSame($instance['key'], 'username');
     }
 
+    public function testDefaultWrapper()
+    {
+        // default wrapper for current service
+        $this->assertSame($this->get(Master::class)->getWrapper()->getService(), 'test');
+
+        // default wrapper container registration
+        $this->assertSame($this->get(Master::class)->getWrapper(), $this->get(Wrapper::class));
+    }
+
+    public function testIdentityMap()
+    {
+        // same instances with prefix
+        $this->assertSame($this->getCrud('my_sharded_space'), $this->getCrud('test.my_sharded_space'));
+    }
+
     public function testMigrationsAreApplied()
     {
-        $mapper = new Mapper($this->get(Data::class)->getClient());
+        $mapper = new Mapper($this->get(Master::class)->getWrapper()->getClient());
         $this->assertTrue($mapper->getSchema()->hasSpace('my_sharded_space'));
     }
 }

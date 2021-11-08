@@ -2,7 +2,7 @@
 
 namespace Basis\Job\Data;
 
-use Basis\Data;
+use Basis\Data\Master;
 use Basis\Registry;
 use Basis\Toolkit;
 
@@ -10,7 +10,7 @@ class Clear
 {
     use Toolkit;
 
-    public function run(Data $data, Registry $registry)
+    public function run(Master $master, Registry $registry)
     {
         if (!$this->dispatch('data.analyze')->present) {
             return ['msg' => 'not present'];
@@ -22,10 +22,10 @@ class Clear
             $script = self::ROLLBACK_MIGRATION;
             $script = str_replace('BODY', $contents, $script);
 
-            $data->getClient()->evaluate($script);
+            $master->getWrapper()->getClient()->evaluate($script);
         }
 
-        $data->getClient()->evaluate(self::ROLLBACK_APPLIED_MIGRATIONS);
+        $master->getWrapper()->getClient()->evaluate(self::ROLLBACK_APPLIED_MIGRATIONS);
     }
 
     private const ROLLBACK_MIGRATION = <<<LUA

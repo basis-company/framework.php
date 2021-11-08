@@ -2,8 +2,9 @@
 
 namespace Basis;
 
+use Basis\Data\Crud;
+use Basis\Data\Master;
 use Basis\Feedback\Feedback;
-use Basis\Metric\Registry;
 use Basis\Telemetry\Tracing\Tracer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -32,6 +33,11 @@ trait Toolkit
     public function call()
     {
         return $this->getContainer()->call(...func_get_args());
+    }
+
+    public function getCrud(string $space): Crud
+    {
+        return $this->get(Master::class)->getCrud($space);
     }
 
     public function deprecated($message = null)

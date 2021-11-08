@@ -2,7 +2,7 @@
 
 namespace Basis\Job\Data;
 
-use Basis\Data;
+use Basis\Data\Master;
 use Basis\Registry;
 use Basis\Toolkit;
 
@@ -10,7 +10,7 @@ class Migrate
 {
     use Toolkit;
 
-    public function run(Data $data, Registry $registry)
+    public function run(Master $master, Registry $registry)
     {
         if (!$this->dispatch('data.analyze')->present) {
             return ['msg' => 'not present'];
@@ -30,7 +30,7 @@ class Migrate
         $script = self::APPLY_MIGRATIONS;
         $script = str_replace('MIGRATIONS', implode("\n\r", $migrations), $script);
 
-        $data->getClient()->evaluate($script);
+        $master->getWrapper()->getClient()->evaluate($script);
     }
 
     private const APPLY_MIGRATIONS = <<<LUA

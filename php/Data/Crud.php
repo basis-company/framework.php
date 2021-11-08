@@ -2,11 +2,9 @@
 
 namespace Basis\Data;
 
-use Basis\Data;
-
 class Crud
 {
-    public function __construct(private Data $data, private string $space)
+    public function __construct(private Wrapper $wrapper, private string $space)
     {
     }
 
@@ -42,7 +40,7 @@ class Crud
 
     protected function unflatten($function, ...$args): ?array
     {
-        $result = $this->data->call($function, ...$args);
+        $result = $this->wrapper->call($function, ...$args);
 
         if (!array_key_exists('rows', $result)) {
             throw new Exception("Invalid result");
