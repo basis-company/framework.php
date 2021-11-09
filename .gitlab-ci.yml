@@ -21,6 +21,7 @@ stages:
 
 build-image:
   stage: build
+  retry: 2
   services:
     - name: docker:18.09.7-dind
   script:
