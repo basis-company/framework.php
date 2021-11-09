@@ -109,8 +109,8 @@ class Api
             $data = $this->removeSystemObjects($data);
 
             $context = [
-                'time' => round(microtime(true) - $start, 3),
                 'memory' => memory_get_peak_usage(true),
+                'time' => round(microtime(true) - $start, 3),
             ];
 
             foreach ($params as $k => $v) {
