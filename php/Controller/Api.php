@@ -109,6 +109,7 @@ class Api
             $data = $this->removeSystemObjects($data);
 
             $context = [
+                'memory' => memory_get_peak_usage(true),
                 'time' => round(microtime(true) - $start, 3),
             ];
 
