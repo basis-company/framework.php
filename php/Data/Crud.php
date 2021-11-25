@@ -2,6 +2,8 @@
 
 namespace Basis\Data;
 
+use Exception;
+
 class Crud
 {
     public function __construct(private Wrapper $wrapper, private string $space)
