@@ -69,6 +69,10 @@ class DataTest extends Test
         // delete row
         $instance = $crud->delete('username');
         $this->assertSame($instance['key'], 'username');
+
+        // valid expection should be thrown
+        $this->expectExceptionMessage("Unknown field");
+        $crud->insert(['mail' => 'nekufa@gmail.com']);
     }
 
     public function testDefaultWrapper()

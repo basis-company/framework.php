@@ -57,6 +57,10 @@ class Crud
         [$result, $err] = $response;
 
         if ($err) {
+            if (is_array($err) && array_key_exists('str', $err)) {
+                throw new Exception($err['str']);
+            }
+
             throw new Exception($err);
         }
 
