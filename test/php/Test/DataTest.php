@@ -9,6 +9,13 @@ use Tarantool\Mapper\Mapper;
 
 class DataTest extends Test
 {
+    public function testMultipleCrud()
+    {
+        $crud1 = $this->getCrud('my_sharded_space');
+        $crud2 = $this->getCrud('another_one');
+        $this->assertNotSame($crud1, $crud2);
+    }
+
     public function testProcedures()
     {
         $greet = $this->getProcedure('greet');
