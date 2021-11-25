@@ -66,6 +66,10 @@ class DataTest extends Test
         $instance = $crud->get('domain');
         $this->assertNull($instance);
 
+        $instances = $crud->select([['==', 'key', 'username']]);
+        $this->assertCount(1, $instances);
+        $this->assertSame($instances[0]['value'], 'Dmitry');
+
         // delete row
         $instance = $crud->delete('username');
         $this->assertSame($instance['key'], 'username');
