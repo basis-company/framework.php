@@ -40,6 +40,11 @@ class Crud
         return $this->unflatten('crud.replace_object', $this->getSpace(), $data);
     }
 
+    public function select(array $conditions, array $opts = []): array
+    {
+        return $this->unflattenRows('crud.select', $this->getSpace(), $conditions, $opts);
+    }
+
     public function update(array|int|string $key, array $operations = []): ?array
     {
         return $this->unflatten('crud.update', $this->getSpace(), $key, $operations);
@@ -52,7 +57,25 @@ class Crud
 
     protected function unflatten($function, ...$args): ?array
     {
+        $instances = $this->unflattenRows($function, ...$args);
+
+        switch (count($instances)) {
+            case 0:
+                return null;
+            case 1:
+                return $instances[0];
+            default:
+                return $instances;
+        }
+    }
+
+    protected function unflattenRows($function, ...$args): ?array
+    {
         $response = $this->getWrapper()->getClient()->call($function, ...$args);
+
+        if (count($response) == 1) {
+            $response[] = null;
+        }
 
         [$result, $err] = $response;
 
@@ -69,7 +92,7 @@ class Crud
         }
 
         if (count($result['rows']) == 0) {
-            return null;
+            return [];
         }
 
         $keys = [];
@@ -80,10 +103,6 @@ class Crud
         $instances = [];
         foreach ($result['rows'] as $tuple) {
             $instances[] = array_combine($keys, $tuple);
-        }
-
-        if (count($instances) == 1) {
-            return $instances[0];
         }
 
         return $instances;
