@@ -47,11 +47,6 @@ class Master
         return $this->get(Procedure::class, $name);
     }
 
-    public function getQueue(string $name): Queue
-    {
-        return $this->get(Queue::class, $name);
-    }
-
     public function getWrapper(string $service = ''): Wrapper
     {
         if (!$service) {
