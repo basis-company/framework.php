@@ -46,13 +46,9 @@ class Migrate
     }
 
     private const APPLY_MIGRATIONS = <<<LUA
-        local net_box = require 'net.box'
-        local username = box.session.user()
-        local password = os.getenv('CLUSTER_COOKIE')
         local servers = require('cartridge').config_get_readonly('topology').servers
         for i, server in pairs(servers) do
-            local uri =  username .. ':' .. password .. '@' .. server.uri
-            net_box.connect(uri):eval([[
+            require('cartridge.pool').connect(server.uri):eval([[
                 local migrator = require('migrator')
                 migrator.set_loader({
                     list = function(_)
@@ -70,13 +66,9 @@ class Migrate
     LUA;
 
     private const CREATE_FUNCTION = <<<LUA
-        local net_box = require 'net.box'
-        local username = box.session.user()
-        local password = os.getenv('CLUSTER_COOKIE')
-        local servers = require('cartridge').config_get_readonly('topology').servers
-        for i, server in pairs(servers) do
-            local uri =  username .. ':' .. password .. '@' .. server.uri
-            local connection = net_box.connect(uri)
+        local topology = require('cartridge').config_get_readonly('topology')
+        for i, replicaset in pairs(topology.replicasets) do
+            local connection = require('cartridge.pool').connect(topology.servers[replicaset.master[1]].uri)
             local version = connection.space._schema:get('NAME')
             if version and version.value == 'HASH' then
                 return
