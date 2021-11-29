@@ -26,11 +26,47 @@ class Clear
         }
 
         $master->getWrapper()->getClient()->evaluate(self::ROLLBACK_APPLIED_MIGRATIONS);
+
+        foreach ($registry->listFiles('lua/procedures') as $procedure) {
+            $contents = file_get_contents('lua/procedures/' . $procedure);
+            $name = pathinfo($procedure)['filename'];
+
+            $script = self::DROP_FUNCTION;
+            $script = str_replace('NAME', $name, $script);
+            $script = str_replace('HASH', md5($contents), $script);
+
+            $master->getWrapper()->getClient()->evaluate($script);
+        }
     }
 
+    private const DROP_FUNCTION = <<<LUA
+        local net_box = require 'net.box'
+        local username = box.session.user()
+        local password = os.getenv('CLUSTER_COOKIE')
+        local servers = require('cartridge').config_get_readonly('topology').servers
+        for i, server in pairs(servers) do
+            local uri =  username .. ':' .. password .. '@' .. server.uri
+            local connection = net_box.connect(uri)
+            if connection:call('box.schema.func.exists', {'NAME'}) then
+                connection:call('box.schema.func.drop', {'NAME'})
+            end
+            connection.space._schema:delete('NAME')
+        end
+
+    LUA;
+
     private const ROLLBACK_MIGRATION = <<<LUA
-        local source = function() BODY end
-        source().down()
+        local net_box = require 'net.box'
+        local username = box.session.user()
+        local password = os.getenv('CLUSTER_COOKIE')
+        local servers = require('cartridge').config_get_readonly('topology').servers
+        for i, server in pairs(servers) do
+            local uri =  username .. ':' .. password .. '@' .. server.uri
+            net_box.connect(uri):eval([[
+                local source = function() BODY end
+                source().down()
+            ]])
+        end
     LUA;
 
     private const ROLLBACK_APPLIED_MIGRATIONS = <<<LUA
