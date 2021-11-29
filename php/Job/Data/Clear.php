@@ -40,13 +40,9 @@ class Clear
     }
 
     private const DROP_FUNCTION = <<<LUA
-        local net_box = require 'net.box'
-        local username = box.session.user()
-        local password = os.getenv('CLUSTER_COOKIE')
-        local servers = require('cartridge').config_get_readonly('topology').servers
-        for i, server in pairs(servers) do
-            local uri =  username .. ':' .. password .. '@' .. server.uri
-            local connection = net_box.connect(uri)
+        local topology = require('cartridge').config_get_readonly('topology')
+        for i, replicaset in pairs(topology.replicasets) do
+            local connection = require('cartridge.pool').connect(topology.servers[replicaset.master[1]].uri)
             if connection:call('box.schema.func.exists', {'NAME'}) then
                 connection:call('box.schema.func.drop', {'NAME'})
             end
@@ -56,13 +52,9 @@ class Clear
     LUA;
 
     private const ROLLBACK_MIGRATION = <<<LUA
-        local net_box = require 'net.box'
-        local username = box.session.user()
-        local password = os.getenv('CLUSTER_COOKIE')
         local servers = require('cartridge').config_get_readonly('topology').servers
         for i, server in pairs(servers) do
-            local uri =  username .. ':' .. password .. '@' .. server.uri
-            net_box.connect(uri):eval([[
+            require('cartridge.pool').connect(server.uri):eval([[
                 local source = function() BODY end
                 source().down()
             ]])
