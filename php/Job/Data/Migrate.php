@@ -46,34 +46,53 @@ class Migrate
     }
 
     private const APPLY_MIGRATIONS = <<<LUA
+        local net_box = require 'net.box'
+        local username = box.session.user()
+        local password = os.getenv('CLUSTER_COOKIE')
+        local servers = require('cartridge').config_get_readonly('topology').servers
+        for i, server in pairs(servers) do
+            local uri =  username .. ':' .. password .. '@' .. server.uri
+            net_box.connect(uri):eval([[
+                local migrator = require('migrator')
+                migrator.set_loader({
+                    list = function(_)
+                        return {
+                            MIGRATIONS
+                        }
+                    end
+                })
+            ]])
+        end
+
         local migrator = require('migrator')
-        migrator.set_loader({
-            list = function(_)
-                return {
-                    MIGRATIONS
-                }
-            end
-        })
         migrator.set_use_cartridge_ddl(false)
         migrator.up()
     LUA;
 
     private const CREATE_FUNCTION = <<<LUA
-        local version = box.space._schema:get('NAME')
-        if version and version.value == 'HASH' then
-            return
+        local net_box = require 'net.box'
+        local username = box.session.user()
+        local password = os.getenv('CLUSTER_COOKIE')
+        local servers = require('cartridge').config_get_readonly('topology').servers
+        for i, server in pairs(servers) do
+            local uri =  username .. ':' .. password .. '@' .. server.uri
+            local connection = net_box.connect(uri)
+            local version = connection.space._schema:get('NAME')
+            if version and version.value == 'HASH' then
+                return
+            end
+
+            if connection:call('box.schema.func.exists', {'NAME'}) then
+                connection:call('box.schema.func.drop', {'NAME'})
+            end
+
+            connection:call('box.schema.func.create', { 'NAME', {
+                if_not_exists = true,
+                body = [[BODY]]
+            }})
+
+            connection.space._schema:replace({'NAME', 'HASH'})
         end
-
-        if box.schema.func.exists('NAME') then
-            box.schema.func.drop('NAME')
-        end
-
-        box.schema.func.create('NAME', {
-            if_not_exists = true,
-            body = [[BODY]]
-        })
-
-        box.space._schema:replace({'NAME', 'HASH'})
     LUA;
 
     private const MIGRATION_ROW = <<<LUA
