@@ -19,7 +19,7 @@
         <env name="SERVICE_ENVIRONMENT" value="testing" />
         <env name="SERVICE_NAME" value="test" />
         <env name="TARANTOOL_CONNECTION" value="tcp://127.0.0.1:3301" />
-        <env name="DATA_CONNECTION" value="tcp://127.0.0.1:3310" />
+        <env name="DATA_CONNECTION" value="tcp://admin:password@127.0.0.1:3310" />
         <env name="CLICKHOUSE_HOST" value="127.0.0.1" />
         <env name="TNT_MIGRATION" value="migrate" />
     </php>
