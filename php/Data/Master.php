@@ -9,6 +9,7 @@ class Master
 {
     private array $context = [];
     private array $wrappers = [];
+    private array $serviceWrappers = [];
     private string $service;
 
     public function __construct(private Dispatcher $dispatcher)
@@ -53,7 +54,7 @@ class Master
             $service = $this->service;
         }
 
-        if (!array_key_exists($service, $this->wrappers)) {
+        if (!array_key_exists($service, $this->serviceWrappers)) {
             $dsn = false;
 
             if ($service == $this->service) {
@@ -69,11 +70,18 @@ class Master
                 $dsn = 'tcp://' . $username . ':' . $password . '@' . $resolve->host . ':' . $port;
             }
 
-            $client = Client::fromDsn($dsn);
-
-            $this->wrappers[$service] = new Wrapper($service, $client);
+            $this->serviceWrappers[$service] = $this->getWrapperByDsn($dsn, $service);
         }
 
-        return $this->wrappers[$service];
+        return $this->serviceWrappers[$service];
+    }
+
+    public function getWrapperByDsn(string $dsn, string $service = ''): Wrapper
+    {
+        if (!array_key_exists($dsn, $this->wrappers)) {
+            $this->wrappers[$dsn] = new Wrapper($service ?: $this->service, Client::fromDsn($dsn));
+        }
+
+        return $this->wrappers[$dsn];
     }
 }
