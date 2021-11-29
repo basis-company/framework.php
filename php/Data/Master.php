@@ -54,24 +54,22 @@ class Master
         }
 
         if (!array_key_exists($service, $this->wrappers)) {
-            $uri = false;
+            $dsn = false;
 
             if ($service == $this->service) {
-                $uri = getenv('DATA_CONNECTION');
+                $dsn = getenv('DATA_CONNECTION');
             }
 
-            if (!$uri) {
+            if (!$dsn) {
                 $hostname = $this->dispatcher->getServiceName() . '-data';
-                $resolve = $this->dispatcher->dispatch('resolve.address', [ 'name' => $hostname ]);
+                $password = getenv('DATA_PASSWORD') ?: 'password';
                 $port = getenv('DATA_PORT') ?: 3301;
-                $uri = 'tcp://' . $resolve->host . ':' . $port;
+                $resolve = $this->dispatcher->dispatch('resolve.address', [ 'name' => $hostname ]);
+                $username = getenv('DATA_USERNAME') ?: 'admin';
+                $dsn = 'tcp://' . $username . ':' . $password . '@' . $resolve->host . ':' . $port;
             }
 
-            $client = Client::fromOptions([
-                'uri' => $uri,
-                'username' => getenv('DATA_USERNAME') ?: 'admin',
-                'password' => getenv('DATA_PASSWORD') ?: 'password',
-            ]);
+            $client = Client::fromDsn($dsn);
 
             $this->wrappers[$service] = new Wrapper($service, $client);
         }
