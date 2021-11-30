@@ -21,6 +21,11 @@ class DataTest extends Test
         $greet = $this->getProcedure('greet');
         $this->assertSame($greet(), 'hello, world!');
         $this->assertSame($greet('nekufa'), 'hello, nekufa!');
+
+        // service prefixed alias
+        $greet = $this->getProcedure('test.greet');
+        $this->assertSame($greet(), 'hello, world!');
+        $this->assertSame($greet('nekufa'), 'hello, nekufa!');
     }
 
     public function testCrud()

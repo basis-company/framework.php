@@ -20,11 +20,12 @@ class Master
     public function getContext(string $space): Context
     {
         if (!array_key_exists($space, $this->context)) {
-            if (strpos($space, '.') === false) {
-                $this->context[$space] = new Context($this->service, $space);
-            } else {
-                $this->context[$space] = new Context(...explode('.', $space, 2));
+            if (strpos($space, '.') !== false) {
+                if (!in_array(explode('.', $space)[0], ['vshard', 'crud'])) {
+                    return $this->context[$space] = new Context(...explode('.', $space, 2));
+                }
             }
+            return $this->context[$space] = new Context($this->service, $space);
         }
 
         return $this->context[$space];
@@ -62,7 +63,7 @@ class Master
             }
 
             if (!$dsn) {
-                $hostname = $this->dispatcher->getServiceName() . '-data';
+                $hostname = $service . '-data';
                 $password = getenv('DATA_PASSWORD') ?: 'password';
                 $port = getenv('DATA_PORT') ?: 3301;
                 $resolve = $this->dispatcher->dispatch('resolve.address', [ 'name' => $hostname ]);
