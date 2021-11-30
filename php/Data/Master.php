@@ -63,7 +63,7 @@ class Master
             }
 
             if (!$dsn) {
-                $hostname = $service . '-data';
+                $hostname = $service . '-data-instance';
                 $password = getenv('DATA_PASSWORD') ?: 'password';
                 $port = getenv('DATA_PORT') ?: 3301;
                 $resolve = $this->dispatcher->dispatch('resolve.address', [ 'name' => $hostname ]);
