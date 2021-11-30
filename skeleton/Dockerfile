@@ -1,4 +1,4 @@
-FROM php:8-apache as version
+FROM php:8.0-apache as version
 
 WORKDIR /var/www/html
 
