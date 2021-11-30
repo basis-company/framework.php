@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y git wget zip
 COPY . skeleton/upgrade /var/www/html/
 RUN php upgrade $(git describe --tags) $(git rev-parse --short HEAD) $(git rev-parse --abbrev-ref HEAD)
 
-FROM php:8-apache
+FROM php:8.0-apache
 
 WORKDIR /var/www/html
 
