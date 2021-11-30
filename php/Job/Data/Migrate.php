@@ -67,6 +67,12 @@ class Migrate
 
     private const CREATE_FUNCTION = <<<LUA
         local topology = require('cartridge').config_get_readonly('topology')
+        for i, server in pairs(topology.servers) do
+            require('cartridge.pool').connect(server.uri):eval([[
+                NAME = BODY
+            ]])
+        end
+
         for i, replicaset in pairs(topology.replicasets) do
             local connection = require('cartridge.pool').connect(topology.servers[replicaset.master[1]].uri)
             local version = connection.space._schema:get('NAME')
@@ -79,8 +85,7 @@ class Migrate
             end
 
             connection:call('box.schema.func.create', { 'NAME', {
-                if_not_exists = true,
-                body = [[BODY]]
+                if_not_exists = true
             }})
 
             connection.space._schema:replace({'NAME', 'HASH'})
