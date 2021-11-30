@@ -41,6 +41,11 @@ class Clear
 
     private const DROP_FUNCTION = <<<LUA
         local topology = require('cartridge').config_get_readonly('topology')
+        for i, server in pairs(topology.servers) do
+            require('cartridge.pool').connect(server.uri):eval([[
+                _G.NAME = nil
+            ]])
+        end
         for i, replicaset in pairs(topology.replicasets) do
             local connection = require('cartridge.pool').connect(topology.servers[replicaset.master[1]].uri)
             if connection:call('box.schema.func.exists', {'NAME'}) then

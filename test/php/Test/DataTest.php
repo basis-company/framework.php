@@ -26,6 +26,18 @@ class DataTest extends Test
         $greet = $this->getProcedure('test.greet');
         $this->assertSame($greet(), 'hello, world!');
         $this->assertSame($greet('nekufa'), 'hello, nekufa!');
+
+        // function should be registered at runtime
+        [$result] = $this->get(Master::class)
+            ->getWrapper()
+            ->getClient()
+            ->evaluate('return greet()');
+
+        $this->assertSame($result, 'hello, world!');
+
+        // so vshard router can call it
+        $result = $this->getProcedure('vshard.router.callrw')(1, 'greet');
+        $this->assertSame($result, 'hello, world!');
     }
 
     public function testCrud()
