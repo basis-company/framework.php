@@ -6,6 +6,7 @@
     },
     "require": {
         "basis-company/framework": "^5.1.5",
+        "basis-company/nats": "^0.1.0",
         "basis-company/telemetry": "^0.1.10",
         "monolog/monolog": "^2.3.5",
         "nesbot/carbon": "^2.51",
@@ -15,8 +16,8 @@
         "rybakit/msgpack": "0.8.0",
         "smi2/phpclickhouse": "1.4.1",
         "symfony/cache": "^5.3.10",
-        "symfony/http-client": "^5.3.10",
-        "symfony/lock": "^5.3.10",
+        "symfony/http-client": "^5.4.1",
+        "symfony/lock": "^5.4.1",
         "symfony/mime": "^5.3.8",
         "symfony/process": "^5.3.7",
         "symfony/service-contracts": "^2.4.0",
