@@ -18,20 +18,19 @@ class Metric
     public string $help;
 
     public array $labels = [];
+    private ?string $nick = null;
 
     public function getNick(): string
     {
-        static $nick;
-
-        if ($nick === null) {
+        if ($this->nick === null) {
             $converter = $this->get(Converter::class);
             $xtype = $converter->toUnderscore(get_class($this));
             $position = strpos($xtype, 'metric_');
             $length = strlen('metric_');
-            $nick = substr($xtype, $position + $length);
+            $this->nick = substr($xtype, $position + $length);
         }
 
-        return $nick;
+        return $this->nick;
     }
 
     public function toArray(): array
