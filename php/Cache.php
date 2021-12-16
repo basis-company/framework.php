@@ -44,7 +44,7 @@ class Cache
         $item = $this->getItem($key);
 
         if ($expire) {
-            $item->expiresAt(DateTime::createFromFormat('U', $expire));
+            $item->expiresAt(DateTime::createFromFormat('U', (int) $expire));
         }
 
         $item->set($value);
