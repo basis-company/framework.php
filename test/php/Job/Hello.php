@@ -18,6 +18,8 @@ class Hello extends Job
         }
 
         $message = "hello $this->name!";
-        return compact('message');
+        $expire = microtime(1) + 1;
+
+        return compact('message', 'expire');
     }
 }
