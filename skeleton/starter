@@ -14,24 +14,13 @@ if [ ! -f "var/telemetry" ]; then
     chmod go+rw var/telemetry
 fi
 
-tail -f var/log&
-
 if [ "$BASIS_ENVIRONMENT" != "dev" ]; then
     ./composer.phar dump-autoload --classmap-authoritative
 else
     ./composer.phar dump-autoload
 fi
 
-./loop php console module.process job=module.telemetry iterations=1024&
+tail -f var/log&
+apache2-foreground& > /dev/null
 
-php console module.bootstrap
-
-if [ -f "php/Job/Background.php" ]; then
-    ./loop php console module.process job=module.background iterations=1024&
-fi
-
-if [ "$SERVICE_EXECUTOR" != "false" ]; then
-    ./loop php console module.process job=module.execute iterations=1024&
-fi
-
-apache2-foreground > /dev/null
+php console module.starter
