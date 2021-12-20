@@ -4,62 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ced6c4513a95ecff757c5ae91f58c13",
+    "content-hash": "8aeca06d912c9095da72dfb9e6254af4",
     "packages": [
-        {
-            "name": "basis-company/nats",
-            "version": "0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/basis-company/nats.php.git",
-                "reference": "0cbbb4ab5eb32e6f1dbbfdf264695213a565d136"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/basis-company/nats.php/zipball/0cbbb4ab5eb32e6f1dbbfdf264695213a565d136",
-                "reference": "0cbbb4ab5eb32e6f1dbbfdf264695213a565d136",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8"
-            },
-            "require-dev": {
-                "monolog/monolog": "^2.3.5",
-                "phpunit/phpunit": "^9.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Basis\\Nats\\Tests\\": "tests/",
-                    "Basis\\Nats\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "mit"
-            ],
-            "authors": [
-                {
-                    "name": "dmitry krokhin",
-                    "email": "nekufa@gmail.com"
-                }
-            ],
-            "description": "nats jetstream client for php",
-            "keywords": [
-                "client",
-                "jetstream",
-                "messaging",
-                "nats",
-                "php",
-                "queue",
-                "streaming"
-            ],
-            "support": {
-                "issues": "https://github.com/basis-company/nats.php/issues",
-                "source": "https://github.com/basis-company/nats.php/tree/0.1.0"
-            },
-            "time": "2021-12-14T20:24:55+00:00"
-        },
         {
             "name": "psr/cache",
             "version": "2.0.0",
@@ -213,18 +159,75 @@
     ],
     "packages-dev": [
         {
-            "name": "basis-company/telemetry",
-            "version": "0.1.10",
+            "name": "basis-company/nats",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/basis-company/telemetry.php.git",
-                "reference": "267ab03663159bbcc025138c64cae8ad39dfde05"
+                "url": "https://github.com/basis-company/nats.php.git",
+                "reference": "0cbbb4ab5eb32e6f1dbbfdf264695213a565d136"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/267ab03663159bbcc025138c64cae8ad39dfde05",
-                "reference": "267ab03663159bbcc025138c64cae8ad39dfde05",
+                "url": "https://api.github.com/repos/basis-company/nats.php/zipball/0cbbb4ab5eb32e6f1dbbfdf264695213a565d136",
+                "reference": "0cbbb4ab5eb32e6f1dbbfdf264695213a565d136",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=8"
+            },
+            "require-dev": {
+                "monolog/monolog": "^2.3.5",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Basis\\Nats\\Tests\\": "tests/",
+                    "Basis\\Nats\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "mit"
+            ],
+            "authors": [
+                {
+                    "name": "dmitry krokhin",
+                    "email": "nekufa@gmail.com"
+                }
+            ],
+            "description": "nats jetstream client for php",
+            "keywords": [
+                "client",
+                "jetstream",
+                "messaging",
+                "nats",
+                "php",
+                "queue",
+                "streaming"
+            ],
+            "support": {
+                "issues": "https://github.com/basis-company/nats.php/issues",
+                "source": "https://github.com/basis-company/nats.php/tree/0.1.0"
+            },
+            "time": "2021-12-14T20:24:55+00:00"
+        },
+        {
+            "name": "basis-company/telemetry",
+            "version": "0.1.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/basis-company/telemetry.php.git",
+                "reference": "471923ea52758c5dd8cb86755e3ab439ed4eaf18"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/471923ea52758c5dd8cb86755e3ab439ed4eaf18",
+                "reference": "471923ea52758c5dd8cb86755e3ab439ed4eaf18",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5",
@@ -250,11 +253,20 @@
                 }
             ],
             "description": "telemetry framework for php",
+            "keywords": [
+                "Metrics",
+                "opentelemetry",
+                "prometheus",
+                "span",
+                "telemetry",
+                "tracing",
+                "zipkin"
+            ],
             "support": {
                 "issues": "https://github.com/basis-company/telemetry.php/issues",
-                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.10"
+                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.11"
             },
-            "time": "2021-11-16T13:58:47+00:00"
+            "time": "2021-12-15T10:17:57+00:00"
         },
         {
             "name": "doctrine/instantiator",
