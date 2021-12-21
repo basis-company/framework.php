@@ -20,7 +20,7 @@ else
     ./composer.phar dump-autoload
 fi
 
-tail -f var/log&
 apache2-foreground& > /dev/null
 
+tail -f var/log&
 php console module.starter
