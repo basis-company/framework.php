@@ -22,6 +22,6 @@ else
     ./composer.phar dump-autoload
 fi
 
-apache2-foreground& > /dev/null
+php console module.starter&
 
-php console module.starter
+apache2-foreground > /dev/null
