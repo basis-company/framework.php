@@ -15,18 +15,22 @@ class Migrate
         $api = $client->getApi();
         foreach ($dispatcher->dispatch('nats.streams')->streams as $info) {
             $stream = $api->getStream($info->name);
-            $stream->getConfiguration()
-                   ->setDiscardPolicy(DiscardPolicy::NEW)
-                   ->setRetentionPolicy(RetentionPolicy::WORK_QUEUE)
-                   ->setStorageBackend(StorageBackend::FILE)
-                   ->setSubjects([$info->name])
-                   ->setMaxConsumers(1);
+            if (!$stream->exists()) {
+                $stream->getConfiguration()
+                       ->setDiscardPolicy(DiscardPolicy::NEW)
+                       ->setRetentionPolicy(RetentionPolicy::WORK_QUEUE)
+                       ->setStorageBackend(StorageBackend::FILE)
+                       ->setSubjects([$info->name])
+                       ->setMaxConsumers(1);
+
+                $stream->create();
+            }
 
             $consumer = $stream->getConsumer($info->name);
-            $consumer->getConfiguration()->setSubjectFilter($info->name);
-
-            $stream->create();
-            $consumer->create();
+            if (!$consumer->exists()) {
+                $consumer->getConfiguration()->setSubjectFilter($info->name);
+                $consumer->create();
+            }
         }
     }
 }
