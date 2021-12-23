@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba747c0389e4654976482f41dc74ccf2",
+    "content-hash": "2ca12399b06f1a86e382976109ed3eb1",
     "packages": [
         {
             "name": "psr/cache",
@@ -160,16 +160,16 @@
     "packages-dev": [
         {
             "name": "basis-company/nats",
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/basis-company/nats.php.git",
-                "reference": "c61cc5bc49c1187664b270b207542809ce9285e8"
+                "reference": "700775de43c2b8be7430245c205b3c281c2ffc90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/basis-company/nats.php/zipball/c61cc5bc49c1187664b270b207542809ce9285e8",
-                "reference": "c61cc5bc49c1187664b270b207542809ce9285e8",
+                "url": "https://api.github.com/repos/basis-company/nats.php/zipball/700775de43c2b8be7430245c205b3c281c2ffc90",
+                "reference": "700775de43c2b8be7430245c205b3c281c2ffc90",
                 "shasum": ""
             },
             "require": {
@@ -211,9 +211,9 @@
             ],
             "support": {
                 "issues": "https://github.com/basis-company/nats.php/issues",
-                "source": "https://github.com/basis-company/nats.php/tree/0.2.0"
+                "source": "https://github.com/basis-company/nats.php/tree/0.2.1"
             },
-            "time": "2021-12-23T12:53:15+00:00"
+            "time": "2021-12-23T16:54:35+00:00"
         },
         {
             "name": "basis-company/telemetry",
