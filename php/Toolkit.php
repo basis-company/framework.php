@@ -103,7 +103,7 @@ trait Toolkit
 
     public function send(string $job, array $params = [], string $service = null)
     {
-        return $this->get(Executor::class)->send($job, $params, $service);
+        return $this->get(Dispatcher::class)->send($job, $params, $service);
     }
 
     public function dispatch(string $job, array $params = [], string $service = null): object

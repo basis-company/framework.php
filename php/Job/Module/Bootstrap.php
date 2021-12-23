@@ -4,7 +4,6 @@ namespace Basis\Job\Module;
 
 use Basis\Metric\StartTime;
 use Basis\Toolkit;
-use Psr\Log\LoggerInterface;
 use Throwable;
 
 class Bootstrap
@@ -15,6 +14,7 @@ class Bootstrap
         'data.migrate',
         'module.recover',
         'module.register',
+        'nats.migrate',
         'tarantool.migrate',
     ];
 
@@ -37,6 +37,11 @@ class Bootstrap
                 $success[$job] = $this->dispatch($job);
             } catch (Throwable $e) {
                 $failure[$job] = $e->getMessage();
+                $this->info('bootstrap failure', [
+                    'job' => $job,
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTrace(),
+                ]);
             }
         }
 

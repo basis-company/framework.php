@@ -5,6 +5,7 @@ namespace Basis;
 use Basis\Cache;
 use Basis\Converter;
 use Basis\Feedback\Feedback;
+use Basis\Nats\Client;
 use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
 use Exception;
@@ -205,6 +206,40 @@ class Dispatcher
     public function getServiceName()
     {
         return $this->get(Application::class)->getName();
+    }
+
+    public function send(string $job, array $params = [], string $service = null)
+    {
+        $subject = $this->get(Cache::class)
+            ->wrap("$job.subject", function () use ($job, $service) {
+                $subject = null;
+                $api = $this->get(Client::class)->getApi();
+                $name = str_replace('.', '_', $job);
+                if ($api->getStream($name)->exists()) {
+                    $subject = $name;
+                } else {
+                    if ($service == null) {
+                        $service = $this->getJobService($job);
+                    }
+                    if ($api->getStream($service)->exists()) {
+                        $subject = $service;
+                    }
+                }
+
+                return (object) ['subject' => $subject, 'expire' => PHP_INT_MAX];
+            })
+            ->subject;
+
+        if ($subject) {
+            return $this->get(Client::class)
+                ->publish($subject, [
+                    'job' => $job,
+                    'params' => $this->get(Converter::class)->toArray($params),
+                    'context' => $this->get(Context::class)->toArray(),
+                ]);
+        }
+
+        return $this->get(Executor::class)->send($job, $params, $service);
     }
 
     protected function get($class)
