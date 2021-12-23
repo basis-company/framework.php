@@ -65,6 +65,7 @@ test-phpunit:
 
   services:
     - name: nats
+      command: ['--js']
     - name: tarantool/tarantool:2.6.2
       alias: test-phpunit-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
@@ -98,6 +99,7 @@ test-coverage:
 
   services:
     - name: nats
+      command: ['--js']
     - name: tarantool/tarantool:2.6.2
       alias: test-coverage-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
