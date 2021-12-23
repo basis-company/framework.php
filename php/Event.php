@@ -162,6 +162,17 @@ class Event
                         'service'   => $mapper->serviceName,
                         'timestamp' => $timestamp,
                     ]);
+
+                    foreach ($data['changes'] as $action => $set) {
+                        foreach ($set as $space => $rows) {
+                            foreach ($rows as $i => $row) {
+                                if (array_key_exists('app', $row)) {
+                                    unset($data['changes'][$action][$space][$i]['app']);
+                                }
+                            }
+                        }
+                    }
+
                     $this->send('event.changes', $data);
                 }
 
