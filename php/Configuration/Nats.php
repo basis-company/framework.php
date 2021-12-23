@@ -13,7 +13,7 @@ class Nats
     {
         $container->share(Configuration::class, function () use ($container) {
             return new Configuration([
-                'host' => $container->get(Dispatcher::class)
+                'host' => getenv('NATS_HOST') ?: $container->get(Dispatcher::class)
                     ->dispatch('resolve.address', ['name' => 'nats-service'])
                     ->host,
             ]);

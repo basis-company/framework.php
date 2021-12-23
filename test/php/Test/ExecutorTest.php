@@ -56,14 +56,14 @@ class ExecutorTest extends Test
     {
         $note = $this->create('note', []);
         $this->send('actor', ['note' => $note->id]);
-        $this->get(Executor::class)->process();
+        $this->dispatch('nats.consume', [ 'stream' => $this->app->getName(), 'limit' => 1 ]);
         $this->assertSame($note->message, '');
 
         $this->actAs(1);
         $this->send('actor', ['note' => $note->id]);
 
         $this->actAs(2);
-        $this->get(Executor::class)->process();
+        $this->dispatch('nats.consume', [ 'stream' => $this->app->getName(), 'limit' => 1 ]);
 
         $this->assertSame($note->message, '1');
         $this->assertSame($this->get(Context::class)->getPerson(), 2);
@@ -76,14 +76,14 @@ class ExecutorTest extends Test
         $this->send('increment', ['note' => $note->id]);
         $this->assertEquals($note->message, 5);
 
-        $this->assertCount(1, $this->find('job_queue'));
-        $request = $this->findOne('job_queue');
-
-        $this->get(Executor::class)->process();
-
         $this->assertCount(0, $this->find('job_queue'));
-        $this->assertCount(0, $this->find('job_result'));
+
+        $this->dispatch('nats.consume', [ 'stream' => $this->app->getName(), 'limit' => 1 ]);
         $this->assertEquals($note->message, 6);
+
+        // register changes
+        $this->mock('event.changes');
+        $this->get(Executor::class)->process();
 
         $request = $this->get(Executor::class)->initRequest([
             'job' => 'increment',
