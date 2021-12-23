@@ -55,7 +55,7 @@ test-phpcs:
 
 test-phpunit:
   stage: test
-  image: php:8-cli
+  image: php:8.1-cli
 
   variables:
     TARANTOOL_CONNECTION: tcp://test-phpunit-db:3302
@@ -83,7 +83,7 @@ test-phpunit:
 
 test-coverage:
   stage: test
-  image: php:8-cli
+  image: php:8.1-cli
   allow_failure: true
   interruptible: true
 
