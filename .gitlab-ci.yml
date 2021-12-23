@@ -61,8 +61,10 @@ test-phpunit:
     TARANTOOL_CONNECTION: tcp://test-phpunit-db:3302
     TARANTOOL_PORT: 3302
     DATA_CONNECTION: tcp://admin:password@test-phpunit-data:3301
+    NATS_HOST: nats
 
   services:
+    - name: nats
     - name: tarantool/tarantool:2.6.2
       alias: test-phpunit-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
@@ -92,8 +94,10 @@ test-coverage:
     TARANTOOL_PORT: 3302
     DATA_CONNECTION: tcp://admin:password@test-coverage-data:3301
     XDEBUG_MODE: coverage
+    NATS_HOST: nats
 
   services:
+    - name: nats
     - name: tarantool/tarantool:2.6.2
       alias: test-coverage-db
     - name: cr.yandex/crpf255p88b3bourvm4f/data
