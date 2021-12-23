@@ -213,19 +213,20 @@ class Dispatcher
         $subject = $this->get(Cache::class)
             ->wrap("$job.subject", function () use ($job, $service) {
                 $subject = null;
-                $api = $this->get(Client::class)->getApi();
-                $name = str_replace('.', '_', $job);
-                if ($api->getStream($name)->exists()) {
-                    $subject = $name;
-                } else {
-                    if ($service == null) {
-                        $service = $this->getJobService($job);
-                    }
-                    if ($api->getStream($service)->exists()) {
-                        $subject = $service;
+                if (getenv('BASIS_ENVIRONMENT') !== 'testing') {
+                    $api = $this->get(Client::class)->getApi();
+                    $name = str_replace('.', '_', $job);
+                    if ($api->getStream($name)->exists()) {
+                        $subject = $name;
+                    } else {
+                        if ($service == null) {
+                            $service = $this->getJobService($job);
+                        }
+                        if ($api->getStream($service)->exists()) {
+                            $subject = $service;
+                        }
                     }
                 }
-
                 return (object) ['subject' => $subject, 'expire' => PHP_INT_MAX];
             })
             ->subject;
