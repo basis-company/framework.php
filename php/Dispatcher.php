@@ -208,7 +208,7 @@ class Dispatcher
         return $this->get(Application::class)->getName();
     }
 
-    public function send(string $job, array $params = [], string $service = null)
+    public function send(string $job, array $params = [], string $service = null): void
     {
         $subject = $this->get(Cache::class)
             ->wrap("$job.subject", function () use ($job, $service) {
@@ -232,15 +232,15 @@ class Dispatcher
             ->subject;
 
         if ($subject) {
-            return $this->get(Client::class)
+            $this->get(Client::class)
                 ->publish($subject, [
                     'job' => $job,
                     'params' => $this->get(Converter::class)->toArray($params),
                     'context' => $this->get(Context::class)->toArray(),
                 ]);
+        } else {
+            $this->get(Executor::class)->send($job, $params, $service);
         }
-
-        return $this->get(Executor::class)->send($job, $params, $service);
     }
 
     protected function get($class)
