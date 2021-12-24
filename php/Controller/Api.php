@@ -113,6 +113,10 @@ class Api
                 'time' => round(microtime(true) - $start, 3),
             ];
 
+            if ($context['memory'] <= 2097152) {
+                unset($context['memory']);
+            }
+
             foreach ($params as $k => $v) {
                 if (is_string($v) || is_numeric($v)) {
                     $context[$k] = $v;
