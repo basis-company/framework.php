@@ -113,7 +113,7 @@ class Api
                 'time' => round(microtime(true) - $start, 3),
             ];
 
-            if ($context['memory'] <= 2097152) {
+            if ($context['memory'] <= 4194304) {
                 unset($context['memory']);
             }
 
