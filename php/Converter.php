@@ -164,9 +164,9 @@ class Converter
         return $this->getDate($string)->timestamp;
     }
 
-    public function getPluralForm(int $n, array $forms): string
+    public function getPluralForm(float $n, array $forms): string
     {
-        if (is_float($n)) {
+        if (is_float($n) && floatval(round($n)) !== $n) {
             return $forms[1];
         }
         if ($n % 10 == 1 && $n % 100 != 11) {
