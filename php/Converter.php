@@ -136,6 +136,10 @@ class Converter
 
     public function getDate($string)
     {
+        if (!is_string($string)) {
+            $string = "$string";
+        }
+
         $key = $string;
         if (func_num_args() == 3) {
             $key = implode('.', func_get_args());
