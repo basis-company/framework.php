@@ -136,8 +136,8 @@ class Converter
 
     public function getDate($string)
     {
-        if (!is_string($string)) {
-            $string = "$string";
+        if ($string == null) {
+            $string = "";
         }
 
         $key = $string;
