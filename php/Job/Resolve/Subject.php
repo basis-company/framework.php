@@ -2,6 +2,7 @@
 
 namespace Basis\Job\Resolve;
 
+use Basis\Container;
 use Basis\Nats\Client;
 
 class Subject
@@ -10,7 +11,7 @@ class Subject
     public string $service;
 
     public function __construct(
-        public readonly Client $client,
+        public readonly Container $container,
     ) {
     }
 
@@ -25,7 +26,7 @@ class Subject
     private function getSubject(): ?string
     {
         if (getenv('BASIS_ENVIRONMENT') !== 'testing') {
-            $api = $this->client->getApi();
+            $api = $this->container->get(Client::class)->getApi();
             $subject = str_replace('.', '_', $this->job);
 
             foreach ([$subject, $this->service] as $name) {
