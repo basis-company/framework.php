@@ -13,7 +13,7 @@ class Process extends Job
 {
     public string $job;
     public ?object $params = null;
-    public bool $logging = true;
+    public bool $logging = false;
 
     public int $iterations = 1;
 

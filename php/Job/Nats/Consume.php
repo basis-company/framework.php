@@ -36,6 +36,7 @@ class Consume
                 return $this->dispatcher->dispatch('module.process', [
                     'job' => $request->job,
                     'params' => $request->params,
+                    'logging' => true,
                 ]);
             });
     }
