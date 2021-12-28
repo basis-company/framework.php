@@ -32,15 +32,12 @@ class Process extends Job
 
             try {
                 $params = $converter->toArray($this->params);
-                $result = $this->dispatch($this->job, $params);
-                $success = true;
-
-                if ($result && $this->logging) {
-                    if (!is_object($result) || count(get_object_vars($result))) {
-                        $this->info($this->job . ' success', get_object_vars($result));
-                    }
+                if ($this->logging) {
+                    $this->info($this->job, $params);
                 }
 
+                $result = $this->dispatch($this->job, $params);
+                $success = true;
                 $this->dispatch('module.changes', [ 'producer' => $this->job ]);
                 $this->dispatch('module.flush');
             } catch (Throwable $e) {
