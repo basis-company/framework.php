@@ -26,7 +26,7 @@ class Subject
     {
         if (getenv('BASIS_ENVIRONMENT') !== 'testing') {
             $api = $this->client->getApi();
-            $subject = str_replace('.', '_', $job);
+            $subject = str_replace('.', '_', $this->job);
 
             foreach ([$subject, $this->service] as $name) {
                 if ($api->getStream($name)->exists()) {
