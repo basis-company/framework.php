@@ -188,6 +188,8 @@ class Executor
         $backup = $context->toArray();
         $context->reset($request->getContext()->context);
 
+        $this->get(LoggerInterface::class)->info($request->job, $request->params);
+
         $result = $this->get(Dispatcher::class)->dispatch($request->job, $request->params, $request->service);
 
         $context->reset($backup);
