@@ -39,7 +39,10 @@ class Starter
         }
 
         foreach ($this->dispatcher->dispatch('nats.streams')->streams as $info) {
-            $task = $this->register('nats.consume', ['stream' => $info->name]);
+            $threads = $info->threads ?: 4;
+            foreach (range(1, $threads) as $_) {
+                $this->register('nats.consume', ['stream' => $info->name]);
+            }
         }
 
         $this->loop();
