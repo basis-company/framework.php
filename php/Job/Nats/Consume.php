@@ -26,6 +26,7 @@ class Consume
             ->getApi()
             ->getStream($this->stream)
             ->getConsumer($this->stream)
+            ->setBatching(16)
             ->handle($this->handle(...), $this->limit);
     }
 
