@@ -153,7 +153,7 @@ class Executor
             'service' => $request->service,
         ]);
 
-        if ($resolver->subject) {
+        if ($resolver->subject && !$request->recipient) {
             $this->get(Client::class)
                 ->publish($resolver->subject, [
                     'job' => $request->job,
@@ -273,9 +273,9 @@ class Executor
         if (!$result) {
             if (!$this->processQueue()) {
                 $logger = $this->get(LoggerInterface::class);
-                $logger->info([ 'msg' => 'executor result wait', 'from' => $service ]);
+                $logger->info('executor result wait', ['from' => $service]);
                 $dispatcher = $this->get(Dispatcher::class);
-                $dispatcher->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
+                $dispatcher->dispatch('module.sleep', ['seconds' => 0.5]);
             }
             $this->getRepository('job_result')->flushCache();
             return $this->getResult($hash, $service);
