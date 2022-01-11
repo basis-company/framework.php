@@ -74,6 +74,11 @@ class Dispatcher
         return $response->getContent();
     }
 
+    public function flush(string $job, array $params = [], string $service = null)
+    {
+        return $this->get(Cache::class)->delete(func_get_args());
+    }
+
     public function dispatch(string $job, array $params = [], string $service = null): object
     {
         return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service) {
