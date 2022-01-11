@@ -8,6 +8,7 @@ use Basis\Converter;
 use Basis\Job;
 use Basis\Telemetry\Tracing\Tracer;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class Process extends Job
 {
