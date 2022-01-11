@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Basis\Nats\Client;
 use Basis\Procedure\JobQueue\Cleanup;
 use Basis\Procedure\JobQueue\Take;
 use Basis\Procedure\JobResult\Foreign;
@@ -146,6 +147,21 @@ class Executor
             return;
         }
         $request = $this->getRepository('job_queue')->getInstance($tuple);
+
+        $resolver = $this->get(Dispatcher::class)->dispatch('resolve.subject', [
+            'job' => $request->job,
+            'service' => $request->service,
+        ]);
+
+        if ($resolver->subject) {
+            $this->get(Client::class)
+                ->publish($resolver->subject, [
+                    'job' => $request->job,
+                    'params' => $request->params,
+                    'context' => $request->getContext()->context,
+                ]);
+            return $this->getMapper()->remove($request);
+        }
 
         if ($request->service != $this->getServiceName()) {
             try {
