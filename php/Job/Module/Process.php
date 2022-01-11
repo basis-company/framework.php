@@ -27,7 +27,10 @@ class Process extends Job
             $this->get(Monolog::class)->setName(explode('.', $this->job)[1]);
         }
 
-        while ($this->iterations--) {
+        $iterations = $this->iterations;
+        $data = [];
+
+        while ($iterations--) {
             $result = null;
             $success = false;
 
@@ -42,13 +45,24 @@ class Process extends Job
                 $this->dispatch('module.changes', [ 'producer' => $this->job ]);
                 $this->dispatch('module.flush');
             } catch (Throwable $e) {
-                $this->exception($e);
+                if ($this->logging) {
+                    $this->exception($e);
+                }
+                $result = [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ];
             }
 
-            if ($this->iterations) {
+            $data[] = compact('result', 'success');
+
+            if ($iterations) {
                 $this->dispatch('module.sleep');
                 $tracer->reset();
             }
         }
+
+        return $this->iterations == 1 ? $data[0] : ['success' => true, 'data' => $data];
     }
 }
