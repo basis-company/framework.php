@@ -218,14 +218,23 @@ class Dispatcher
         $service = $service ?: $this->getJobService($job);
         $subject = $this->dispatch('resolve.subject', compact('job', 'service'))->subject;
 
-        if ($subject) {
+        try {
+            if (!$subject) {
+                throw new Exception("No subject for $job");
+            }
             $this->get(Client::class)
                 ->publish($subject, [
                     'job' => $job,
                     'params' => $this->get(Converter::class)->toArray($params),
                     'context' => $this->get(Context::class)->toArray(),
                 ]);
-        } else {
+        } catch (Throwable $e) {
+            $this->get(LoggerInterface::class)->error($e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             $this->get(Executor::class)->send($job, $params, $service);
         }
     }
