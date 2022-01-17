@@ -22,6 +22,7 @@
         <env name="DATA_CONNECTION" value="tcp://admin:password@127.0.0.1:3310" />
         <env name="CLICKHOUSE_HOST" value="127.0.0.1" />
         <env name="TNT_MIGRATION" value="migrate" />
+        <env name="NATS_HOST" value="localhost" />
     </php>
 
     <testsuites>

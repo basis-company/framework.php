@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Basis\Nats\Client;
 use Basis\Procedure\JobQueue\Cleanup;
 use Basis\Procedure\JobQueue\Take;
 use Basis\Procedure\JobResult\Foreign;
@@ -147,6 +148,21 @@ class Executor
         }
         $request = $this->getRepository('job_queue')->getInstance($tuple);
 
+        $resolver = $this->get(Dispatcher::class)->dispatch('resolve.subject', [
+            'job' => $request->job,
+            'service' => $request->service,
+        ]);
+
+        if ($resolver->subject && !$request->recipient) {
+            $this->get(Client::class)
+                ->publish($resolver->subject, [
+                    'job' => $request->job,
+                    'params' => $request->params,
+                    'context' => $request->getContext()->context,
+                ]);
+            return $this->getMapper()->remove($request);
+        }
+
         if ($request->service != $this->getServiceName()) {
             try {
                 return $this->transferRequest($request);
@@ -187,6 +203,8 @@ class Executor
         $context = $this->get(Context::class);
         $backup = $context->toArray();
         $context->reset($request->getContext()->context);
+
+        $this->get(LoggerInterface::class)->info($request->job, $request->params);
 
         $result = $this->get(Dispatcher::class)->dispatch($request->job, $request->params, $request->service);
 
@@ -255,9 +273,9 @@ class Executor
         if (!$result) {
             if (!$this->processQueue()) {
                 $logger = $this->get(LoggerInterface::class);
-                $logger->info([ 'msg' => 'executor result wait', 'from' => $service ]);
+                $logger->info('executor result wait', ['from' => $service]);
                 $dispatcher = $this->get(Dispatcher::class);
-                $dispatcher->dispatch('module.sleep', [ 'seconds' => 0.5 ]);
+                $dispatcher->dispatch('module.sleep', ['seconds' => 0.5]);
             }
             $this->getRepository('job_result')->flushCache();
             return $this->getResult($hash, $service);

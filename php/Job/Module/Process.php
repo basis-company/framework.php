@@ -8,12 +8,13 @@ use Basis\Converter;
 use Basis\Job;
 use Basis\Telemetry\Tracing\Tracer;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class Process extends Job
 {
     public string $job;
     public ?object $params = null;
-    public bool $logging = true;
+    public bool $logging = false;
 
     public int $iterations = 1;
 
@@ -26,31 +27,42 @@ class Process extends Job
             $this->get(Monolog::class)->setName(explode('.', $this->job)[1]);
         }
 
-        while ($this->iterations--) {
+        $iterations = $this->iterations;
+        $data = [];
+
+        while ($iterations--) {
             $result = null;
             $success = false;
 
             try {
                 $params = $converter->toArray($this->params);
-                $result = $this->dispatch($this->job, $params);
-                $success = true;
-
-                if ($result && $this->logging) {
-                    if (!is_object($result) || count(get_object_vars($result))) {
-                        $this->info($this->job . ' success', get_object_vars($result));
-                    }
+                if ($this->logging) {
+                    $this->info($this->job, $params);
                 }
 
+                $result = $this->dispatch($this->job, $params);
+                $success = true;
                 $this->dispatch('module.changes', [ 'producer' => $this->job ]);
                 $this->dispatch('module.flush');
             } catch (Throwable $e) {
-                $this->exception($e);
+                if ($this->logging) {
+                    $this->exception($e);
+                }
+                $result = [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString(),
+                ];
             }
 
-            if ($this->iterations) {
+            $data[] = compact('result', 'success');
+
+            if ($iterations) {
                 $this->dispatch('module.sleep');
                 $tracer->reset();
             }
         }
+
+        return $this->iterations == 1 ? $data[0] : ['success' => true, 'data' => $data];
     }
 }

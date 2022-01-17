@@ -2,13 +2,18 @@
 
 namespace Basis\Job\Module;
 
+use Basis\Dispatcher;
 use Basis\Task;
 use Job\Background;
-use LogicException;
 
 class Starter
 {
     private array $tasks = [];
+
+    public function __construct(
+        public readonly Dispatcher $dispatcher,
+    ) {
+    }
 
     public function run()
     {
@@ -31,6 +36,13 @@ class Starter
                 'job' => 'module.execute',
                 'iterations' => 1024,
             ]);
+        }
+
+        foreach ($this->dispatcher->dispatch('nats.streams')->streams as $info) {
+            $threads = $info->threads ?: 4;
+            foreach (range(1, $threads) as $_) {
+                $this->register('nats.consume', ['stream' => $info->name]);
+            }
         }
 
         $this->loop();

@@ -5,6 +5,7 @@ namespace Basis;
 use Basis\Cache;
 use Basis\Converter;
 use Basis\Feedback\Feedback;
+use Basis\Nats\Client;
 use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
 use Exception;
@@ -71,6 +72,11 @@ class Dispatcher
         ]);
 
         return $response->getContent();
+    }
+
+    public function flush(string $job, array $params = [], string $service = null)
+    {
+        return $this->get(Cache::class)->delete(func_get_args());
     }
 
     public function dispatch(string $job, array $params = [], string $service = null): object
@@ -205,6 +211,32 @@ class Dispatcher
     public function getServiceName()
     {
         return $this->get(Application::class)->getName();
+    }
+
+    public function send(string $job, array $params = [], string $service = null): void
+    {
+        $service = $service ?: $this->getJobService($job);
+        $subject = $this->dispatch('resolve.subject', compact('job', 'service'))->subject;
+
+        try {
+            if (!$subject) {
+                throw new Exception("No subject for $job");
+            }
+            $this->get(Client::class)
+                ->publish($subject, [
+                    'job' => $job,
+                    'params' => $this->get(Converter::class)->toArray($params),
+                    'context' => $this->get(Context::class)->toArray(),
+                ]);
+        } catch (Throwable $e) {
+            $this->get(LoggerInterface::class)->error($e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            $this->get(Executor::class)->send($job, $params, $service);
+        }
     }
 
     protected function get($class)

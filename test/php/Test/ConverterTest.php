@@ -20,6 +20,7 @@ class ConverterTest extends Test
         $this->assertSame($converter->getPluralForm(21, $forms), 'яблоко');
         $this->assertSame($converter->getPluralForm(23, $forms), 'яблока');
         $this->assertSame($converter->getPluralForm(25, $forms), 'яблок');
+        $this->assertSame($converter->getPluralForm(1.25, $forms), 'яблока');
     }
 
     public function testDates()
