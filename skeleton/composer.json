@@ -6,7 +6,7 @@
     },
     "require": {
         "basis-company/framework": "^5.1.5",
-        "basis-company/nats": "^0.4.1",
+        "basis-company/nats": "^0.4.2",
         "basis-company/telemetry": "^0.1.10",
         "monolog/monolog": "^2.3.5",
         "nesbot/carbon": "^2.51",
