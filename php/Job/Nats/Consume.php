@@ -28,7 +28,8 @@ class Consume
             ->getStream($this->stream)
             ->getConsumer($this->stream)
             ->setBatching($this->batch)
-            ->handle($this->handle(...), $this->limit);
+            ->setLimit($this->limit)
+            ->handle($this->handle(...));
     }
 
     public function handle($request)
