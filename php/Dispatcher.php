@@ -229,7 +229,7 @@ class Dispatcher
                     'context' => $this->get(Context::class)->toArray(),
                 ]);
         } catch (Throwable $e) {
-            $this->get(LoggerInterface::class)->error($e->getMessage(), [
+            $this->get(LoggerInterface::class)->debug($e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
