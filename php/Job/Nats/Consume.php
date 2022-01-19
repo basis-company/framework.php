@@ -11,7 +11,7 @@ class Consume
 {
     public string $stream;
     public int $limit = 1024;
-    public int $batch = 32;
+    public int $batch = 8;
 
     public function __construct(
         public readonly Client $client,
