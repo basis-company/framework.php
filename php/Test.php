@@ -4,7 +4,10 @@ namespace Basis;
 
 use Basis\Converter;
 use Carbon\Carbon;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use ReflectionProperty;
 use Tarantool\Mapper\Mapper;
 use Tarantool\Mapper\Pool;
@@ -34,6 +37,10 @@ abstract class Test extends TestCase
         parent::__construct();
 
         $this->app = new Test\Application($this);
+
+        $this->logger = new Logger(get_called_class());
+        $this->logger->pushHandler(new StreamHandler('php://stdout', Logger::ERROR));
+        $this->app->getContainer()->share(LoggerInterface::class, $this->logger);
 
         foreach ($this->mocks as [$method, $params, $result]) {
             $this->mock($method, $params)->willReturn($result);

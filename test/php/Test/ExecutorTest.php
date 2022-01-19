@@ -78,7 +78,11 @@ class ExecutorTest extends Test
 
         $this->assertCount(0, $this->find('job_queue'));
 
-        $this->dispatch('nats.consume', [ 'stream' => $this->app->getName(), 'limit' => 1 ]);
+        $this->dispatch('nats.consume', [
+            'stream' => $this->app->getName(),
+            'batch' => 1,
+            'limit' => 1,
+        ]);
         $this->assertEquals($note->message, 6);
 
         // register changes

@@ -16,6 +16,7 @@ class Nats
                 'host' => getenv('NATS_HOST') ?: $container->get(Dispatcher::class)
                     ->dispatch('resolve.address', ['name' => 'nats-service'])
                     ->host,
+                'timeout' => 0.5,
             ]);
         });
 
