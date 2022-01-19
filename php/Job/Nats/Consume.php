@@ -24,11 +24,12 @@ class Consume
     public function run()
     {
         $this->client
+            ->setLogger($this->logger)
             ->getApi()
             ->getStream($this->stream)
             ->getConsumer($this->stream)
             ->setBatching($this->batch)
-            ->setLimit($this->limit)
+            ->setIterations($this->limit)
             ->handle($this->handle(...));
     }
 
