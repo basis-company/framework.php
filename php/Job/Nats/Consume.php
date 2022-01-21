@@ -19,6 +19,7 @@ class Consume
         public readonly Context $context,
         public readonly Dispatcher $dispatcher,
         public readonly LoggerInterface $logger,
+        public readonly Tracer $tracer,
     ) {
     }
 
@@ -46,7 +47,7 @@ class Consume
                     'params' => $request->params,
                     'logging' => true,
                 ]);
-                $this->get(Tracer::class)->reset();
+                $this->tracer->reset();
             });
     }
 }
