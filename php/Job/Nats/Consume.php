@@ -5,6 +5,7 @@ namespace Basis\Job\Nats;
 use Basis\Context;
 use Basis\Dispatcher;
 use Basis\Nats\Client;
+use Basis\Telemetry\Tracing\Tracer;
 use Psr\Log\LoggerInterface;
 
 class Consume
@@ -18,6 +19,7 @@ class Consume
         public readonly Context $context,
         public readonly Dispatcher $dispatcher,
         public readonly LoggerInterface $logger,
+        public readonly Tracer $tracer,
     ) {
     }
 
@@ -40,11 +42,12 @@ class Consume
     {
         return $this->context
             ->execute($request->context, function () use ($request) {
-                return $this->dispatcher->dispatch('module.process', [
+                $this->dispatcher->dispatch('module.process', [
                     'job' => $request->job,
                     'params' => $request->params,
                     'logging' => true,
                 ]);
+                $this->tracer->reset();
             });
     }
 }
