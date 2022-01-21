@@ -25,7 +25,7 @@ class Consume
     {
         $this->client
             ->setLogger($this->logger)
-            ->setName($this->stream . ' consumer')
+            ->setName($this->stream . '.consume')
             ->getApi()
             ->getStream($this->stream)
             ->getConsumer($this->stream)
