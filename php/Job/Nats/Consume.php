@@ -11,7 +11,7 @@ class Consume
 {
     public string $stream;
     public int $limit = 1024;
-    public int $batch = 8;
+    public int $batch = 1;
 
     public function __construct(
         public readonly Client $client,
@@ -30,6 +30,8 @@ class Consume
             ->getStream($this->stream)
             ->getConsumer($this->stream)
             ->setBatching($this->batch)
+            ->setDelay(0)
+            ->setExpires(30)
             ->setIterations($this->limit)
             ->handle($this->handle(...));
     }
