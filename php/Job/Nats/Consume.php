@@ -13,6 +13,7 @@ class Consume
     public string $stream;
     public int $limit = 1024;
     public int $batch = 1;
+    public int $debug = 0;
 
     public function __construct(
         public readonly Client $client,
@@ -26,7 +27,7 @@ class Consume
     public function run()
     {
         $this->client
-            ->setLogger($this->logger)
+            ->setLogger($this->debug ? $this->logger : null)
             ->setName($this->stream . '.consume')
             ->getApi()
             ->getStream($this->stream)
