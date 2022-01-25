@@ -17,12 +17,12 @@ class Starter
 
     public function run()
     {
-        $this->register('module.bootstrap')->limit(1);
-
         $this->register('module.process', [
             'job' => 'module.telemetry',
             'iterations' => 1024,
         ]);
+
+        $this->register('module.bootstrap')->limit(1);
 
         if (class_exists(Background::class)) {
             $this->register('module.process', [
