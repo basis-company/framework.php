@@ -193,15 +193,14 @@ class Dispatcher
             $converter = $this->get(Converter::class);
             foreach ($registry->listClasses('job') as $class) {
                 $start = strpos($class, 'Job\\') + 4;
-                $xtype = $converter->classToXtype(substr($class, $start));
-                if (array_key_exists($xtype, $this->jobs)) {
-                    continue;
-                }
-                $this->jobs[$xtype] = $class;
+                $nick = $converter->classToXtype(substr($class, $start));
                 if ($this->getServiceName() && strpos($class, 'Basis\\') !== 0) {
-                    $xtype = $this->getServiceName() . '.' . $xtype;
-                    $this->jobs[$xtype] = $class;
+                    // add service prefix when job is not override
+                    if (!array_key_exists($nick, $this->jobs)) {
+                        $nick = $this->getServiceName() . '.' . $nick;
+                    }
                 }
+                $this->jobs[$nick] = $class;
             }
         }
 

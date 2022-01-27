@@ -23,8 +23,8 @@ class Reflection implements Registry
 
         $this->converter = $converter;
         $this->prefixes = [
-            '' => $app->getRoot(),
             "Basis\\" => dirname(dirname(__DIR__)),
+            '' => $app->getRoot(),
         ];
     }
 

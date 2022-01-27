@@ -40,7 +40,7 @@ class ExecutorTest extends Test
     public function testHashParams()
     {
         $note = $this->create('note', []);
-        $result = $this->get(Executor::class)->send('actor', ['note' => $note->id, 'job_queue_hash' => 'bazyaba']);
+        $result = $this->get(Executor::class)->send('test.actor', ['note' => $note->id, 'job_queue_hash' => 'bazyaba']);
         $request = $this->findOrFail('job_queue');
         $this->assertSame($request->hash, 'bazyaba');
     }
@@ -49,18 +49,18 @@ class ExecutorTest extends Test
     {
         $note = $this->create('note', []);
         // REALLY NEED PREFIX FOR ANY LOCAL JOB?
-        $result = $this->get(Executor::class)->dispatch('actor', ['note' => $note->id]);
+        $result = $this->get(Executor::class)->dispatch('test.actor', ['note' => $note->id]);
         $this->assertNotNull($result);
     }
     public function testContext()
     {
         $note = $this->create('note', []);
-        $this->send('actor', ['note' => $note->id]);
+        $this->send('test.actor', ['note' => $note->id]);
         $this->dispatch('nats.consume', [ 'stream' => $this->app->getName(), 'limit' => 1 ]);
         $this->assertSame($note->message, '');
 
         $this->actAs(1);
-        $this->send('actor', ['note' => $note->id]);
+        $this->send('test.actor', ['note' => $note->id]);
 
         $this->actAs(2);
         $this->dispatch('nats.consume', [ 'stream' => $this->app->getName(), 'limit' => 1 ]);
@@ -73,7 +73,7 @@ class ExecutorTest extends Test
     {
         $note = $this->create('note', ['message' => 5]);
         $this->actAs(1);
-        $this->send('increment', ['note' => $note->id]);
+        $this->send('test.increment', ['note' => $note->id]);
         $this->assertEquals($note->message, 5);
 
         $this->assertCount(0, $this->find('job_queue'));
@@ -90,7 +90,7 @@ class ExecutorTest extends Test
         $this->get(Executor::class)->process();
 
         $request = $this->get(Executor::class)->initRequest([
-            'job' => 'increment',
+            'job' => 'test.increment',
             'recipient' => 'test',
             'params' => [
                 'note' => $note->id,

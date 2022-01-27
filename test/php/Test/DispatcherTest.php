@@ -10,6 +10,23 @@ class DispatcherTest extends Test
 {
     public $disableRemote = false;
 
+    public function testMeta()
+    {
+        $meta = $this->dispatch('module.meta');
+        $this->assertNotContains('hello', $meta->jobs);
+        $this->assertContains('test.hello', $meta->jobs);
+        $this->assertNotContains('module.bootstrap', $meta->jobs);
+        // overrides should not present too
+        $this->assertNotContains('module.contents', $meta->jobs);
+
+        // meta not filtering framework jobs
+        $meta = $this->dispatch('module.meta', ['filter' => false]);
+        $this->assertNotContains('hello', $meta->jobs);
+        $this->assertContains('test.hello', $meta->jobs);
+        $this->assertContains('module.bootstrap', $meta->jobs);
+        $this->assertContains('module.contents', $meta->jobs);
+    }
+
     public function testCaching()
     {
         $this->mock('say.hello')->willReturn(function ($params) {

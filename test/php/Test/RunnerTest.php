@@ -87,7 +87,6 @@ class RunnerTest extends Test
         [$tuple] = $space->select($criteria);
 
         $this->assertNotNull($tuple[8]);
-
     }
 
 
@@ -114,15 +113,9 @@ class RunnerTest extends Test
         $result = $this->dispatch('test.hellosomebody', ['name' => 'nekufa']);
         $this->assertSame($result->message, 'hello nekufa!');
 
-        $result = $this->dispatch('hello');
-        $this->assertSame($result->message, 'hello world!');
-
-        $result = $this->dispatch('hello', ['name' => 'nekufa']);
-        $this->assertSame($result->message, 'hello nekufa!');
-
         $jobs = $this->dispatch('module.meta')->jobs;
         $this->assertNotNull($jobs);
-        $this->assertCount(6, $jobs);
+        $this->assertCount(5, $jobs);
         $this->assertContains('test.hello', $jobs);
     }
 
