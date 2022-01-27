@@ -23,7 +23,7 @@ class Background
         $this->getMapper()->getPlugin(Spy::class)->reset();
 
         $this->dispatch('module.process', [
-            'job' => 'background'
+            'job' => $this->app->getName() . '.background'
         ]);
     }
 }
