@@ -21,6 +21,10 @@ class Subject
 
     public function run()
     {
+        if (getenv('BASIS_ENVIRONMENT') === 'testing') {
+            return ['subject' => null];
+        }
+
         // default service subject
         [$subject] = explode('.', $this->job);
 
