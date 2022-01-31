@@ -213,7 +213,7 @@ class Dispatcher
                     }
                 }
                 $this->jobs[$nick] = $class;
-                if (method_exists($class, 'getHandlers')) {
+                if (method_exists($class, 'getHandlers') && getenv('BASIS_ENVIRONMENT') !== 'testing') {
                     $handlers = $this->call($class, 'getHandlers');
                     if (!$converter->isTuple($handlers)) {
                         $handlers = [$handlers];
