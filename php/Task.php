@@ -10,7 +10,7 @@ class Task
     public readonly string $job;
     public array $params;
 
-    public int $delay = 1;
+    public int|Closure $delay = 1;
     public int $limit = PHP_INT_MAX;
     public int $timeout = PHP_INT_MAX;
 
@@ -36,7 +36,8 @@ class Task
             return;
         }
 
-        if (!$this->limit || ($this->stoppedAt + $this->delay) > microtime(true)) {
+        $delay = is_callable($this->delay) ? $this->delay() : $this->delay;
+        if (!$this->limit || ($this->stoppedAt + $delay) > microtime(true)) {
             return;
         }
 
