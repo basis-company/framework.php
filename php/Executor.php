@@ -148,7 +148,7 @@ class Executor
         }
         $request = $this->getRepository('job_queue')->getInstance($tuple);
 
-        $resolver = $this->get(Dispatcher::class)->dispatch('resolve.subject', [
+        $resolver = $this->get(Dispatcher::class)->dispatch('nats.subject', [
             'job' => $request->job,
             'service' => $request->service,
         ]);

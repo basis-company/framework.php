@@ -54,23 +54,26 @@ class ExecutorTest extends Test
     }
     public function testContext()
     {
+        putenv('BASIS_ENVIRONMENT=use-nats');
         $note = $this->create('note', []);
         $this->send('test.actor', ['note' => $note->id]);
-        $this->dispatch('nats.consume', [ 'stream' => $this->app->getName(), 'limit' => 1 ]);
+        $this->dispatch('nats.consume', [ 'subject' => $this->app->getName(), 'limit' => 1 ]);
         $this->assertSame($note->message, '');
 
         $this->actAs(1);
         $this->send('test.actor', ['note' => $note->id]);
 
         $this->actAs(2);
-        $this->dispatch('nats.consume', [ 'stream' => $this->app->getName(), 'limit' => 1 ]);
+        $this->dispatch('nats.consume', [ 'subject' => $this->app->getName(), 'limit' => 1 ]);
 
         $this->assertSame($note->message, '1');
         $this->assertSame($this->get(Context::class)->getPerson(), 2);
+        putenv('BASIS_ENVIRONMENT=testing');
     }
 
     public function testBasics()
     {
+        putenv('BASIS_ENVIRONMENT=use-nats');
         $note = $this->create('note', ['message' => 5]);
         $this->actAs(1);
         $this->send('test.increment', ['note' => $note->id]);
@@ -79,7 +82,7 @@ class ExecutorTest extends Test
         $this->assertCount(0, $this->find('job_queue'));
 
         $this->dispatch('nats.consume', [
-            'stream' => $this->app->getName(),
+            'subject' => $this->app->getName(),
             'batch' => 1,
             'limit' => 1,
         ]);
@@ -107,5 +110,6 @@ class ExecutorTest extends Test
 
         $result = $this->get(Executor::class)->getResult($request->hash, $request->service);
         $this->assertEquals($result->note->message, 7);
+        putenv('BASIS_ENVIRONMENT=testing');
     }
 }

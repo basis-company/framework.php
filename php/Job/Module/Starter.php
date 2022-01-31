@@ -3,6 +3,7 @@
 namespace Basis\Job\Module;
 
 use Basis\Dispatcher;
+use Basis\Nats\Client;
 use Basis\Task;
 use Job\Background;
 
@@ -38,8 +39,8 @@ class Starter
             ]);
         }
 
-        foreach ($this->dispatcher->dispatch('nats.streams')->streams as $info) {
-            $this->register('nats.consume', ['stream' => $info->name]);
+        foreach ($this->dispatcher->getHandlers() as $handler) {
+            $this->register('nats.consume', ['subject' => $handler['subject']]);
         }
 
         $this->loop();

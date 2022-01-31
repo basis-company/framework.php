@@ -25,7 +25,7 @@ class Cache
             return new FilesystemAdapter();
         });
 
-        if (getenv('SERVICE_ENVIRONMENT') === 'testing') {
+        if (getenv('BASIS_ENVIRONMENT') === 'testing') {
             $container->share(AdapterInterface::class, ArrayAdapter::class);
         } elseif (in_array('apcu', get_loaded_extensions())) {
             $container->share(AdapterInterface::class, function () use ($container) {

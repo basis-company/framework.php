@@ -81,6 +81,15 @@ class Lock
         return false;
     }
 
+    public function refresh($name)
+    {
+        if (!array_key_exists($name, $this->locks)) {
+            throw new Exception("Lock $name not found");
+        }
+
+        $this->locks[$name]->refresh();
+    }
+
     public function releaseLocks()
     {
         foreach ($this->locks as $name => $_) {

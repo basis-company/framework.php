@@ -12,25 +12,52 @@ class Migrate
 {
     public function run(Dispatcher $dispatcher, Client $client)
     {
-        $api = $client->getApi();
-        foreach ($dispatcher->dispatch('nats.streams')->streams as $info) {
-            $stream = $api->getStream($info->name);
-            if (!$stream->exists()) {
-                $stream->getConfiguration()
-                       ->setDiscardPolicy(DiscardPolicy::NEW)
-                       ->setRetentionPolicy(RetentionPolicy::WORK_QUEUE)
-                       ->setStorageBackend(StorageBackend::FILE)
-                       ->setSubjects([$info->name])
-                       ->setMaxConsumers(1);
+        $subjects = [];
 
-                $stream->create();
-            }
+        $handlers = $dispatcher->getHandlers();
+        foreach ($handlers as $handler) {
+            $subjects[] = $handler['subject'];
+        }
 
-            $consumer = $stream->getConsumer($info->name);
+        $stream = $client->getApi()->getStream($dispatcher->getServiceName());
+        $stream->getConfiguration()
+               ->setDiscardPolicy(DiscardPolicy::NEW)
+               ->setRetentionPolicy(RetentionPolicy::WORK_QUEUE)
+               ->setStorageBackend(StorageBackend::FILE)
+               ->setSubjects($subjects)
+               ->setMaxConsumers(count($subjects));
+
+        if (!$stream->exists()) {
+            $stream->create();
+        } else {
+            $stream->update();
+        }
+
+        foreach ($handlers as $handler) {
+            $consumer = $stream->getConsumer($handler['subject']);
             if (!$consumer->exists()) {
-                $consumer->getConfiguration()->setSubjectFilter($info->name);
+                $consumer->getConfiguration()->setSubjectFilter($handler['subject']);
                 $consumer->create();
             }
+        }
+
+        $bucket = $client->getApi()->getBucket('service_handlers');
+        $bucket->put('stream_' . $stream->getName(), json_encode($handlers));
+
+        $jobs = [];
+        foreach ($handlers as $config) {
+            $bucket->put('subject_' . $config['subject'], json_encode($config));
+            if (array_key_exists('job', $config)) {
+                if (!array_key_exists($config['job'], $jobs)) {
+                    $jobs[$config['job']] = [];
+                }
+                $jobs[$config['job']][] = $config;
+            }
+        }
+
+
+        foreach ($jobs as $job => $config) {
+            $bucket->put('job_' . str_replace('.', '_', $job), json_encode($config));
         }
     }
 }
