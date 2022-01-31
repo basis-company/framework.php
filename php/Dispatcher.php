@@ -17,6 +17,7 @@ use Throwable;
 class Dispatcher
 {
     private ?array $jobs = null;
+    private array $handlers = [];
     private Container $container;
     private CurlHttpClient $client;
 
@@ -173,6 +174,17 @@ class Dispatcher
         return null;
     }
 
+    public function getHandlers(): array
+    {
+        $this->getJobs();
+
+        return array_merge($this->handlers, [
+            [
+                'subject' => $this->getServiceName(),
+            ]
+        ]);
+    }
+
     public function getJobService(string $job): string
     {
         $key = 'getJobService-' . $job;
@@ -201,6 +213,23 @@ class Dispatcher
                     }
                 }
                 $this->jobs[$nick] = $class;
+                if (method_exists($class, 'getHandlers')) {
+                    $handlers = $this->call($class, 'getHandlers');
+                    if (!$converter->isTuple($handlers)) {
+                        $handlers = [$handlers];
+                    }
+                    foreach ($handlers as $handler) {
+                        if (!is_array($handler)) {
+                            throw new Exception("Invalid handler configuration for $nick");
+                        }
+                        $default = [
+                            'threads' => 1,
+                            'subject' => str_replace('.', '_', $nick),
+                            'job' => $nick,
+                        ];
+                        $this->handlers[] = array_merge($default, $handler);
+                    }
+                }
             }
         }
 
@@ -215,7 +244,7 @@ class Dispatcher
     public function send(string $job, array $params = [], string $service = null): void
     {
         $service = $service ?: $this->getJobService($job);
-        $subject = $this->dispatch('resolve.subject', compact('job', 'service'))->subject;
+        $subject = $this->dispatch('nats.subject', compact('job', 'service', 'params'))->subject;
 
         try {
             if (!$subject) {
