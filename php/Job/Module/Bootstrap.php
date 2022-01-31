@@ -14,8 +14,8 @@ class Bootstrap
         'data.migrate',
         'module.recover',
         'module.register',
-        'nats.migrate',
         'tarantool.migrate',
+        'nats.migrate',
     ];
 
     public function run()
