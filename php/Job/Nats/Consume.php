@@ -13,11 +13,12 @@ use Throwable;
 
 class Consume
 {
-    public string $subject;
-    public int $limit = 1024;
     public int $batch = 1;
     public int $debug = 0;
+    public int $delay = 1;
     public int $expires = 30;
+    public int $limit = 1024;
+    public string $subject;
 
     public function __construct(
         public readonly Client $client,
@@ -54,31 +55,9 @@ class Consume
             ->getStream($this->dispatcher->getServiceName())
             ->getConsumer($this->subject);
 
-        if (property_exists($handler, 'threads') && $handler->threads) {
-            $values = $consumer->info()->getValues();
-            if ($values->num_ack_pending + $values->num_waiting >= $handler->threads) {
-                $this->logger->debug('stop', [
-                    'subject' => $this->subject,
-                    'num_ack_pending' => $values->num_ack_pending,
-                    'num_waiting' => $values->num_waiting,
-                    'threads' => $handler->threads,
-                ]);
-                $this->dispatcher->dispatch('module.sleep', [
-                    'seconds' => $this->expires,
-                ]);
-                return;
-            }
-            $this->logger->debug('start', [
-                'subject' => $this->subject,
-                'num_ack_pending' => $values->num_ack_pending,
-                'num_waiting' => $values->num_waiting,
-                'threads' => $handler->threads,
-            ]);
-        }
-
         $consumer
             ->setBatching($this->batch)
-            ->setDelay(0)
+            ->setDelay($this->delay)
             ->setExpires($this->expires)
             ->setIterations($this->limit)
             ->handle($this->handle(...));
