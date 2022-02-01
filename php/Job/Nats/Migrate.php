@@ -24,8 +24,7 @@ class Migrate
                ->setDiscardPolicy(DiscardPolicy::NEW)
                ->setRetentionPolicy(RetentionPolicy::WORK_QUEUE)
                ->setStorageBackend(StorageBackend::FILE)
-               ->setSubjects($subjects)
-               ->setMaxConsumers(count($subjects));
+               ->setSubjects($subjects);
 
         if (!$stream->exists()) {
             $stream->create();
