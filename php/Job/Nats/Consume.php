@@ -56,11 +56,11 @@ class Consume
 
         if (property_exists($handler, 'threads') && $handler->threads) {
             $values = $consumer->info()->getValues();
-            if ($values->num_ack_pending + $values->num_pending >= $handler->threads) {
+            if ($values->num_ack_pending + $values->num_waiting >= $handler->threads) {
                 $this->logger->debug('stop', [
                     'subject' => $this->subject,
                     'num_ack_pending' => $values->num_ack_pending,
-                    'num_pending' => $values->num_pending,
+                    'num_waiting' => $values->num_waiting,
                     'threads' => $handler->threads,
                 ]);
                 $this->dispatcher->dispatch('module.sleep', [
@@ -71,7 +71,7 @@ class Consume
             $this->logger->debug('start', [
                 'subject' => $this->subject,
                 'num_ack_pending' => $values->num_ack_pending,
-                'num_pending' => $values->num_pending,
+                'num_waiting' => $values->num_waiting,
                 'threads' => $handler->threads,
             ]);
         }
