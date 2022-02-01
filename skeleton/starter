@@ -22,4 +22,4 @@ fi
 
 php console module.starter&
 apache2-foreground > /dev/null&
-tail -f var/log
+tail -f -c+1 var/log
