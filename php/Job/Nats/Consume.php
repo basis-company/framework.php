@@ -24,7 +24,6 @@ class Consume
         public readonly Client $client,
         public readonly Context $context,
         public readonly Dispatcher $dispatcher,
-        public readonly Lock $lock,
         public readonly LoggerInterface $logger,
         public readonly Tracer $tracer,
     ) {
@@ -32,30 +31,12 @@ class Consume
 
     public function run()
     {
-        $bucket = $this->client
-            ->getApi()
-            ->getBucket('service_handlers');
-
-        $json = $bucket->get('subject_' . $this->subject);
-
-        if (!$json) {
-            throw new Exception("No configuration for $this->subject");
-        }
-
-        $handler = json_decode($json);
-
-        if (!$handler) {
-            throw new Exception("Invalid configuration for $this->subject");
-        }
-
-        $consumer = $this->client
+        $this->client
             ->setLogger($this->debug ? $this->logger : null)
             ->setName($this->subject . '.consume')
             ->getApi()
-            ->getStream($this->dispatcher->getServiceName())
+            ->getStream($this->subject)
             ->getConsumer($this->subject);
-
-        $consumer
             ->setBatching($this->batch)
             ->setDelay($this->delay)
             ->setExpires($this->expires)
