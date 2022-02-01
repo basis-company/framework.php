@@ -15,7 +15,7 @@ class Consume
 {
     public string $subject;
     public int $limit = 1024;
-    public int $batch = 4;
+    public int $batch = 1;
     public int $debug = 0;
     public int $expires = 30;
 
