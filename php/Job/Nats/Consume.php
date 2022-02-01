@@ -15,11 +15,9 @@ class Consume
 {
     public string $subject;
     public int $limit = 1024;
-    public int $batch = 1;
+    public int $batch = 4;
     public int $debug = 0;
-
-    private ?string $key = null;
-    private int $refreshed = 0;
+    public int $expires = 30;
 
     public function __construct(
         public readonly Client $client,
@@ -49,67 +47,41 @@ class Consume
             throw new Exception("Invalid configuration for $this->subject");
         }
 
-        if (property_exists($handler, 'threads')) {
-            foreach (range(1, $handler->threads) as $i) {
-                $candidate = 'consumer_' . $i . '_' . $this->subject;
-                if ($this->lock->lock($candidate, 300)) {
-                    // 1 minute timeout lock for consumer thread
-                    $this->key = $candidate;
-                }
-            }
-
-            if (!$this->key) {
-                return;
-                return $this->dispatcher
-                    ->dispatch('module.sleep', ['seconds' => 60]);
-            }
-        }
-
-        $this->client
+        $consumer = $this->client
             ->setLogger($this->debug ? $this->logger : null)
             ->setName($this->subject . '.consume')
             ->getApi()
             ->getStream($this->dispatcher->getServiceName())
-            ->getConsumer($this->subject)
+            ->getConsumer($this->subject);
+
+        if (property_exists($handler, 'threads') && $handler->threads) {
+            $values = $consumer->info()->getValues();
+            if ($values->num_ack_pending + $values->num_pending >= $handler->threads) {
+                $this->logger->debug('stop', [
+                    'subject' => $this->subject,
+                    'num_ack_pending' => $values->num_ack_pending,
+                    'num_pending' => $values->num_pending,
+                    'threads' => $handler->threads,
+                ]);
+                $this->dispatcher->dispatch('module.sleep', [
+                    'seconds' => $this->expires,
+                ]);
+                return;
+            }
+            $this->logger->debug('start', [
+                'subject' => $this->subject,
+                'num_ack_pending' => $values->num_ack_pending,
+                'num_pending' => $values->num_pending,
+                'threads' => $handler->threads,
+            ]);
+        }
+
+        $consumer
             ->setBatching($this->batch)
             ->setDelay(0)
-            ->setExpires(30)
+            ->setExpires($this->expires)
             ->setIterations($this->limit)
-            ->handle($this->handle(...), $this->actualize(...));
-
-        if ($this->key) {
-            $this->lock->unlock($this->key);
-        }
-    }
-
-    public function actualize($exit = true)
-    {
-        if (!$this->key) {
-            return true;
-        }
-
-        if ($this->refreshed + 15 > time()) {
-            return true;
-        }
-
-        try {
-            $this->lock->refresh($this->key);
-            $this->refreshed = time();
-        } catch (Throwable $e) {
-            $this->logger->info($e->getMessage(), [
-                'pid' => getmypid(),
-            ]);
-
-            if ($exit) {
-                throw $e;
-            }
-
-            $this->client
-                ->getApi()
-                ->getStream($this->dispatcher->getServiceName())
-                ->getConsumer($this->subject)
-                ->interrupt();
-        }
+            ->handle($this->handle(...));
     }
 
     public function handle($request)
@@ -122,7 +94,6 @@ class Consume
                     'logging' => true,
                 ]);
                 $this->tracer->reset();
-                $this->actualize(false);
             });
     }
 }
