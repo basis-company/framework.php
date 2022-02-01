@@ -36,7 +36,7 @@ class Consume
             ->setName($this->subject . '.consume')
             ->getApi()
             ->getStream($this->subject)
-            ->getConsumer($this->subject);
+            ->getConsumer($this->subject)
             ->setBatching($this->batch)
             ->setDelay($this->delay)
             ->setExpires($this->expires)
