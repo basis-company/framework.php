@@ -40,7 +40,13 @@ class Starter
         }
 
         foreach ($this->dispatcher->getHandlers() as $handler) {
-            $this->register('nats.consume', ['subject' => $handler['subject']]);
+            $max = 1;
+            if (array_key_exists('threads', $handler) && $handler['threads']) {
+                $max = $handler['threads'];
+            }
+            foreach (range(1, $max) as $_) {
+                $this->register('nats.consume', ['subject' => $handler['subject']]);
+            }
         }
 
         $this->loop();
