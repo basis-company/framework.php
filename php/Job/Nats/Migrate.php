@@ -39,8 +39,6 @@ class Migrate
                 ->setSubjectFilter($handler['subject']);
 
             if (array_key_exists('threads', $handler)) {
-                $consumer->getConfiguration()
-                    ->setMaxAckPending($handler['threads']);
             }
 
             if (!$consumer->exists()) {
