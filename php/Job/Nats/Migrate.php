@@ -35,8 +35,15 @@ class Migrate
 
         foreach ($handlers as $handler) {
             $consumer = $stream->getConsumer($handler['subject']);
+            $consumer->getConfiguration()
+                ->setSubjectFilter($handler['subject']);
+
+            if (array_key_exists('threads', $handler)) {
+                $consumer->getConfiguration()
+                    ->setMaxAckPending($handler['threads']);
+            }
+
             if (!$consumer->exists()) {
-                $consumer->getConfiguration()->setSubjectFilter($handler['subject']);
                 $consumer->create();
             }
         }
