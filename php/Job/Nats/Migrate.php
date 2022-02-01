@@ -41,17 +41,17 @@ class Migrate
                 $consumer->create();
             }
 
-            if (array_key_exists('job', $config)) {
-                if (!array_key_exists($config['job'], $jobs)) {
-                    $jobs[$config['job']] = [];
+            if (array_key_exists('job', $handler)) {
+                if (!array_key_exists($handler['job'], $jobs)) {
+                    $jobs[$handler['job']] = [];
                 }
-                $jobs[$config['job']][] = $config;
+                $jobs[$handler['job']][] = $handler;
             }
         }
 
         $bucket = $client->getApi()->getBucket('service_handlers');
-        foreach ($jobs as $job => $config) {
-            $bucket->put('job_' . str_replace('.', '_', $job), json_encode($config));
+        foreach ($jobs as $job => $handler) {
+            $bucket->put('job_' . str_replace('.', '_', $job), json_encode($handler));
         }
     }
 }
