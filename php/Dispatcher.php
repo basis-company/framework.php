@@ -178,6 +178,7 @@ class Dispatcher
     {
         if ($this->handlers == null) {
             $this->handlers = [];
+            $converter = $this->get(Converter::class);
             foreach ($this->getJobs() as $nick => $class) {
                 if (method_exists($class, 'getHandlers') && getenv('BASIS_ENVIRONMENT') !== 'testing') {
                     $handlers = $this->call($class, 'getHandlers');
