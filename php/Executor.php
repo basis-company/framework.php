@@ -155,20 +155,24 @@ class Executor
         ]);
 
         if ($resolver->subject && !$request->recipient) {
-            $this->get(Client::class)
-                ->publish($resolver->subject, [
-                    'job' => $request->job,
-                    'params' => $request->params,
-                    'context' => $request->getContext()->context,
-                ]);
-            return $this->getMapper()->remove($request);
+            try {
+                $this->get(Client::class)
+                    ->publish($resolver->subject, [
+                        'job' => $request->job,
+                        'params' => $request->params,
+                        'context' => $request->getContext()->context,
+                    ]);
+                return $this->getMapper()->remove($request);
+            } catch (Exception $e) {
+                $this->exception($e);
+            }
         }
 
         if ($request->service != $this->getServiceName()) {
             try {
                 return $this->transferRequest($request);
             } catch (Exception $e) {
-                return $this->processRequest($request);
+                $this->exception($e);
             }
         }
 
