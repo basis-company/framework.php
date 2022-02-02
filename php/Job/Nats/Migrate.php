@@ -33,8 +33,9 @@ class Migrate
                 ->setSubjectFilter($handler['subject']);
 
             if (array_key_exists('threads', $handler)) {
-                $consumer->getConfiguration()
-                    ->setMaxAckPending($handler['threads']);
+                // i'm not sure we really want to control how many parallel executions are performed
+                // $consumer->getConfiguration()
+                //     ->setMaxAckPending($handler['threads']);
             }
 
             if (!$consumer->exists()) {
