@@ -200,37 +200,45 @@ class Dispatcher
     public function getJobs(): array
     {
         if ($this->jobs === null) {
-            $this->jobs = [];
-            $registry = $this->get(Registry::class);
-            $converter = $this->get(Converter::class);
-            foreach ($registry->listClasses('job') as $class) {
-                $start = strpos($class, 'Job\\') + 4;
-                $nick = $converter->classToXtype(substr($class, $start));
-                if ($this->getServiceName() && strpos($class, 'Basis\\') !== 0) {
-                    // add service prefix when job is not override
-                    if (!array_key_exists($nick, $this->jobs)) {
-                        $nick = $this->getServiceName() . '.' . $nick;
-                    }
-                }
-                $this->jobs[$nick] = $class;
-                if (method_exists($class, 'getHandlers') && getenv('BASIS_ENVIRONMENT') !== 'testing') {
-                    $handlers = $this->call($class, 'getHandlers');
-                    if (!$converter->isTuple($handlers)) {
-                        $handlers = [$handlers];
-                    }
-                    foreach ($handlers as $handler) {
-                        if (!is_array($handler)) {
-                            throw new Exception("Invalid handler configuration for $nick");
+            $cached = $this->get(Cache::class)->wrap('dispatcher-jobs', function () {
+                $jobs = [];
+                $handlers = [];
+                $registry = $this->get(Registry::class);
+                $converter = $this->get(Converter::class);
+                foreach ($registry->listClasses('job') as $class) {
+                    $start = strpos($class, 'Job\\') + 4;
+                    $nick = $converter->classToXtype(substr($class, $start));
+                    if ($this->getServiceName() && strpos($class, 'Basis\\') !== 0) {
+                        // add service prefix when job is not override
+                        if (!array_key_exists($nick, $jobs)) {
+                            $nick = $this->getServiceName() . '.' . $nick;
                         }
-                        $default = [
-                            'threads' => 1,
-                            'subject' => str_replace('.', '_', $nick),
-                            'job' => $nick,
-                        ];
-                        $this->handlers[] = array_merge($default, $handler);
+                    }
+                    $jobs[$nick] = $class;
+                    if (method_exists($class, 'getHandlers') && getenv('BASIS_ENVIRONMENT') !== 'testing') {
+                        $classHandlers = $this->call($class, 'getHandlers');
+                        if (!$converter->isTuple($classHandlers)) {
+                            $classHandlers = [$classHandlers];
+                        }
+                        foreach ($classHandlers as $handler) {
+                            if (!is_array($handler)) {
+                                throw new Exception("Invalid handler configuration for $nick");
+                            }
+                            $default = [
+                                'threads' => 1,
+                                'subject' => str_replace('.', '_', $nick),
+                                'job' => $nick,
+                            ];
+                            $handlers[] = array_merge($default, $handler);
+                        }
                     }
                 }
-            }
+
+                $expire = PHP_INT_MAX;
+                return (object) compact('jobs', 'handlers', 'expire');
+            });
+            $this->jobs = $cached->jobs;
+            $this->handlers = $cached->handlers;
         }
 
         return $this->jobs;
