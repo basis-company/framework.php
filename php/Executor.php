@@ -151,6 +151,7 @@ class Executor
         $resolver = $this->get(Dispatcher::class)->dispatch('nats.subject', [
             'job' => $request->job,
             'service' => $request->service,
+            'params' => $request->params,
         ]);
 
         if ($resolver->subject && !$request->recipient) {
