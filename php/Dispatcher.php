@@ -200,6 +200,7 @@ class Dispatcher
             }
             $this->handlers[] = [
                 'subject' => $this->getServiceName(),
+                'threads' => intval(getenv('DEFAULT_CONSUMER_COUNT') ?: 2),
             ];
         }
 
