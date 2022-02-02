@@ -20,6 +20,9 @@ class Converter
         if (!count($array)) {
             return true;
         }
+        if (function_exists('array_is_list')) {
+            return array_is_list($array);
+        }
         if (version_compare(PHP_VERSION, '7.3.0') >= 0) {
             return array_key_last($array) === count($array) - 1;
         }
