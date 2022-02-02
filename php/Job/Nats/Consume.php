@@ -2,6 +2,8 @@
 
 namespace Basis\Job\Nats;
 
+use Basis\Configuration\Monolog;
+use Basis\Container;
 use Basis\Context;
 use Basis\Dispatcher;
 use Basis\Lock;
@@ -20,20 +22,30 @@ class Consume
     public int $limit = 1024;
     public string $subject;
 
+    public readonly LoggerInterface $logger;
+
     public function __construct(
+        public readonly Container $container,
+        public readonly Monolog $monolog,
         public readonly Client $client,
         public readonly Context $context,
         public readonly Dispatcher $dispatcher,
-        public readonly LoggerInterface $logger,
         public readonly Tracer $tracer,
     ) {
     }
 
     public function run()
     {
+        $this->monolog->setName($this->subject);
+
+        $logger = null;
+        if ($this->debug) {
+            $logger = $this->container->get(LoggerInterface::class);
+        }
+
         $this->client
-            ->setLogger($this->debug ? $this->logger : null)
-            ->setName($this->subject . '.consume')
+            ->setLogger($logger)
+            ->setName($this->subject)
             ->getApi()
             ->getStream($this->subject)
             ->getConsumer($this->subject)
