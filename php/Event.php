@@ -148,7 +148,9 @@ class Event
                             unset($collection[$space]);
                         }
                     }
-                    if (!count($collection)) {
+                    if (count($collection)) {
+                        $changes->$action = $collection;
+                    } else {
                         unset($changes->$action);
                     }
                 }
