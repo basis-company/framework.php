@@ -57,7 +57,7 @@ class Subject
     {
         $cached = $this->cache->wrap($this->job, function () {
             $result = (object) [
-                'expire' => time() - $this->ttl,
+                'expire' => time() + $this->ttl,
                 'config' => [],
             ];
 
