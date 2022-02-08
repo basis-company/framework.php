@@ -6,6 +6,7 @@ use Basis\Cache;
 use Basis\Converter;
 use Basis\Feedback\Feedback;
 use Basis\Nats\Client;
+use Basis\Nats\Message\Payload;
 use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
 use Exception;
@@ -250,18 +251,29 @@ class Dispatcher
     public function send(string $job, array $params = [], string $service = null): void
     {
         $service = $service ?: $this->getJobService($job);
-        $subject = $this->dispatch('nats.subject', compact('job', 'service', 'params'))->subject;
+
+        $natsMessageId = null;
+        // normalize params so job_queue will not failure on assist
+        if (array_key_exists('nats-message-id', $params)) {
+            $natsMessageId = $params['nats-message-id'];
+            unset($params['nats-message-id']);
+        }
 
         try {
+            $subject = $this->dispatch('nats.subject', compact('job', 'service', 'params'))->subject;
             if (!$subject) {
                 throw new Exception("No subject for $job");
             }
+            $payload = [
+                'job' => $job,
+                'params' => $this->get(Converter::class)->toArray($params),
+                'context' => $this->get(Context::class)->toArray(),
+            ];
+            if ($natsMessageId) {
+                $payload = new Payload($payload, ['Nats-Msg-Id' => $natsMessageId]);
+            }
             $this->get(Client::class)
-                ->publish($subject, [
-                    'job' => $job,
-                    'params' => $this->get(Converter::class)->toArray($params),
-                    'context' => $this->get(Context::class)->toArray(),
-                ]);
+                ->publish($subject, $payload);
         } catch (Throwable $e) {
             $this->get(LoggerInterface::class)->debug($e->getMessage(), [
                 'file' => $e->getFile(),

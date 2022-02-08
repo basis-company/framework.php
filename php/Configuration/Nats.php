@@ -28,7 +28,7 @@ class Nats
                 $client->setLogger($container->get(LoggerInterface::class));
             }
 
-            $delay = floatval(getenv('NATS_CLIENT_TIMEOUT') ?: 0.01);
+            $delay = floatval(getenv('NATS_CLIENT_TIMEOUT') ?: 0.1);
             $client->setDelay($delay);
 
             return $client;
