@@ -250,9 +250,9 @@ class Dispatcher
     public function send(string $job, array $params = [], string $service = null): void
     {
         $service = $service ?: $this->getJobService($job);
-        $subject = $this->dispatch('nats.subject', compact('job', 'service', 'params'))->subject;
 
         try {
+            $subject = $this->dispatch('nats.subject', compact('job', 'service', 'params'))->subject;
             if (!$subject) {
                 throw new Exception("No subject for $job");
             }
