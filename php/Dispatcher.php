@@ -270,7 +270,7 @@ class Dispatcher
                 'context' => $this->get(Context::class)->toArray(),
             ];
             if ($natsMessageId) {
-                $payload = new Payload($payload, ['Nats-Msg-Id' => $natsMessageId]);
+                $payload = new Payload(json_encode($payload), ['Nats-Msg-Id' => $natsMessageId]);
             }
             $this->get(Client::class)
                 ->publish($subject, $payload);
