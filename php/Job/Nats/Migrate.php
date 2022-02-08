@@ -17,6 +17,7 @@ class Migrate
         foreach ($dispatcher->getHandlers() as $handler) {
             $stream = $client->getApi()->getStream($handler['subject']);
             $stream->getConfiguration()
+                    ->setAllowRollupHeaders(true)
                    ->setDenyDelete(false)
                    ->setDiscardPolicy(DiscardPolicy::NEW)
                    ->setRetentionPolicy(RetentionPolicy::WORK_QUEUE)
