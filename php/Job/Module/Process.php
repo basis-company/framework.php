@@ -45,11 +45,11 @@ class Process extends Job
                 $result = $this->dispatch($this->job, $params);
                 $success = true;
                 $this->dispatch('module.changes', [ 'producer' => $this->job ]);
-                $this->dispatch('module.flush');
                 if ($this->logging) {
                     $params['time'] = number_format(microtime(true) - $start, 3);
                     $this->info($this->job, $params);
                 }
+                $this->dispatch('module.flush');
             } catch (Throwable $e) {
                 if ($this->logging) {
                     $this->exception($e);
