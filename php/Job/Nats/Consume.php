@@ -17,7 +17,7 @@ class Consume
 {
     public int $batch = 1;
     public int $debug = 0;
-    public int $delay = 1;
+    public int $delay = 0;
     public int $expires = 30;
     public int $limit = PHP_INT_MAX;
     public string $subject;
@@ -36,7 +36,7 @@ class Consume
 
     public function run()
     {
-        $this->monolog->setName($this->subject);
+        $this->monolog->setName('nats.consume');
 
         $logger = null;
         if ($this->debug) {
