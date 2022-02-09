@@ -44,7 +44,7 @@ class Process extends Job
                 $start = microtime(true);
                 $result = $this->dispatch($this->job, $params);
                 if ($this->logging) {
-                    $params['time'] = number_format(microtime(true) - $start, 3)
+                    $params['time'] = number_format(microtime(true) - $start, 3);
                     $this->info($this->job, $params);
                 }
                 $success = true;
