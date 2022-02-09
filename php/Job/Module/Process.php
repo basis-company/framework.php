@@ -16,20 +16,23 @@ class Process extends Job
     public string $job;
     public ?object $params = null;
     public bool $logging = false;
+    public bool $loggerSetup = true;
 
     public int $iterations = 1;
 
     public function run(Converter $converter, Tracer $tracer)
     {
-        $this->get(Client::class)->setName($this->job);
-        $this->get(Monolog::class)->setName($this->job);
-        $this->get(Telemetry::class)->setName($this->job);
+        if ($this->loggerSetup) {
+            $this->get(Client::class)->setName($this->job);
+            $this->get(Monolog::class)->setName($this->job);
+            $this->get(Telemetry::class)->setName($this->job);
 
-        if (strpos($this->job, 'module.') === 0) {
-            $thread = explode('.', $this->job)[1];
-            $this->get(Monolog::class)->setName($thread);
-            // nats connection name prefixed with service name
-            $this->get(Client::class)->setName($this->app->getName() . '.' . $thread);
+            if (strpos($this->job, 'module.') === 0) {
+                $thread = explode('.', $this->job)[1];
+                $this->get(Monolog::class)->setName($thread);
+                // nats connection name prefixed with service name
+                $this->get(Client::class)->setName($this->app->getName() . '.' . $thread);
+            }
         }
 
         $iterations = $this->iterations;
