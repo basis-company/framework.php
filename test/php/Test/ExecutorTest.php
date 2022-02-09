@@ -4,6 +4,7 @@ namespace Test;
 
 use Basis\Context;
 use Basis\Executor;
+use Basis\Nats\Client;
 use Basis\Test;
 
 class ExecutorTest extends Test
@@ -52,11 +53,15 @@ class ExecutorTest extends Test
         $result = $this->get(Executor::class)->dispatch('test.actor', ['note' => $note->id]);
         $this->assertNotNull($result);
     }
+
     public function testContext()
     {
         putenv('BASIS_ENVIRONMENT=use-nats');
         $note = $this->create('note', []);
         $this->send('test.actor', ['note' => $note->id]);
+        $info = $this->get(Client::class)->getApi()->getStream('test')->info();
+        $this->assertSame(1, $info->getValue('state.messages'));
+
         $this->dispatch('nats.consume', [ 'subject' => $this->app->getName(), 'limit' => 1 ]);
         $this->assertSame($note->message, '');
 
