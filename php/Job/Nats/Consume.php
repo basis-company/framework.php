@@ -64,6 +64,7 @@ class Consume
                     'job' => $request->job,
                     'params' => $request->params,
                     'logging' => true,
+                    'loggerSetup' => false,
                 ]);
                 $this->tracer->reset();
             });
