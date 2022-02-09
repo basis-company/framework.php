@@ -36,7 +36,7 @@ class Consume
 
     public function run()
     {
-        $this->monolog->setName($this->subject);
+        $this->monolog->setName('nats.consume');
 
         $logger = null;
         if ($this->debug) {
