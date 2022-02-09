@@ -19,7 +19,7 @@ class Consume
     public int $debug = 0;
     public int $delay = 1;
     public int $expires = 30;
-    public int $limit = 1024;
+    public int $limit = PHP_INT_MAX;
     public string $subject;
 
     public readonly LoggerInterface $logger;
