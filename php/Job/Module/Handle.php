@@ -12,8 +12,10 @@ use Exception;
 class Handle extends Job
 {
     public $context;
-    public $event;
-    public $eventId;
+    public string $event;
+    public int $eventId;
+
+    public bool $feedback = false;
 
     public function run(Application $app, Dispatcher $dispatcher, Event $event)
     {
@@ -39,6 +41,15 @@ class Handle extends Job
                         'service' => $app->getName(),
                     ]);
                 }
+            }
+            if ($this->feedback) {
+                $this->send('event.feedback', [
+                    'event' => $this->eventId,
+                    'service' => $dispatcher->getServiceName(),
+                    'result' => [
+                        'msg' => 'no subscription',
+                    ],
+                ]);
             }
             return [
                 'msg' => 'no subscription',
@@ -78,6 +89,17 @@ class Handle extends Job
                     'trace' => explode(PHP_EOL, $e->getTraceAsString()),
                 ];
             }
+        }
+
+        if ($this->feedback) {
+            $this->send('event.feedback', [
+                'event' => $this->eventId,
+                'service' => $dispatcher->getServiceName(),
+                'result' => [
+                    'data' => $data,
+                    'issues' => $issues,
+                ]
+            ]);
         }
 
         return [
