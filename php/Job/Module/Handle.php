@@ -15,6 +15,8 @@ class Handle extends Job
     public $event;
     public $eventId;
 
+    public bool $feedback = false;
+
     public function run(Application $app, Dispatcher $dispatcher, Event $event)
     {
         $start = microtime(1);
@@ -39,6 +41,15 @@ class Handle extends Job
                         'service' => $app->getName(),
                     ]);
                 }
+            }
+            if ($this->feedback) {
+                $this->send('event.feedback', [
+                    'event' => $this->eventId,
+                    'service' => $dispatcher->getServiceName(),
+                    'result' => [
+                        'msg' => 'no subscription',
+                    ],
+                ]);
             }
             return [
                 'msg' => 'no subscription',
@@ -78,6 +89,17 @@ class Handle extends Job
                     'trace' => explode(PHP_EOL, $e->getTraceAsString()),
                 ];
             }
+        }
+
+        if ($this->feedback) {
+            $this->send('event.feedback', [
+                'event' => $this->eventId,
+                'service' => $dispatcher->getServiceName(),
+                'result' => [
+                    'data' => $data,
+                    'issues' => $issues,
+                ]
+            ]);
         }
 
         return [
