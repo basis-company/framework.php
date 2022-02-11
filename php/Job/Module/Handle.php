@@ -12,8 +12,8 @@ use Exception;
 class Handle extends Job
 {
     public $context;
-    public string $event;
-    public int $eventId;
+    public $event;
+    public $eventId;
 
     public bool $feedback = false;
 
