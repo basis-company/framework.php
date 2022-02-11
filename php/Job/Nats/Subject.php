@@ -26,7 +26,7 @@ class Subject
         }
 
         // default service subject
-        [$subject] = explode('.', $this->job);
+        $subject = $this->service;
 
         $params = [];
         if (is_object($this->params)) {
