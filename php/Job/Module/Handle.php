@@ -19,7 +19,7 @@ class Handle extends Job
 
     public function run(Application $app, Dispatcher $dispatcher, Event $event)
     {
-        $start = microtime(1);
+        $start = microtime(true);
         $subscription = $event->getSubscription();
 
         $patterns = [];
@@ -95,6 +95,8 @@ class Handle extends Job
             $this->send('event.feedback', [
                 'event' => $this->eventId,
                 'service' => $dispatcher->getServiceName(),
+                'time' => round(microtime(true) - $start, 3),
+                'timestamp' => microtime(true),
                 'result' => [
                     'data' => $data,
                     'issues' => $issues,
@@ -105,7 +107,7 @@ class Handle extends Job
         return [
             'data' => $data,
             'issues' => $issues,
-            'time' => round(microtime(1) - $start, 3),
+            'time' => round(microtime(true) - $start, 3),
         ];
     }
 }
