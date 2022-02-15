@@ -96,6 +96,7 @@ class Handle extends Job
                 'event' => $this->eventId,
                 'service' => $dispatcher->getServiceName(),
                 'time' => round(microtime(true) - $start, 3),
+                'timestamp' => microtime(true),
                 'result' => [
                     'data' => $data,
                     'issues' => $issues,
