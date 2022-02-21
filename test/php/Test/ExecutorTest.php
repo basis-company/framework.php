@@ -71,6 +71,7 @@ class ExecutorTest extends Test
         $this->actAs(2);
         $this->dispatch('nats.consume', [ 'subject' => $this->app->getName(), 'limit' => 1 ]);
 
+        $note = $this->findOrFail('note', $note->id);
         $this->assertSame($note->message, '1');
         $this->assertSame($this->get(Context::class)->getPerson(), 2);
         putenv('BASIS_ENVIRONMENT=testing');
