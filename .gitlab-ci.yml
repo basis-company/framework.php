@@ -148,7 +148,7 @@ release-tag:
     - docker push $image_master
     - docker push $image_tag
 
-release-skeleton:
+release-latest:
   stage: release
   only:
     - tags
