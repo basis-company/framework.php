@@ -155,27 +155,26 @@ class Event
                     }
                 }
 
+                // fire events
                 if (count(get_object_vars($changes))) {
                     $changed = true;
-                    $data = $this->get(Converter::class)->toArray([
-                        'changes'   => $changes,
-                        'context'   => $this->get(Context::class),
-                        'producer'  => $producer,
-                        'service'   => $mapper->serviceName,
-                        'timestamp' => $timestamp,
-                    ]);
-
-                    foreach ($data['changes'] as $action => $set) {
+                    foreach ($changes as $action => $set) {
                         foreach ($set as $space => $rows) {
                             foreach ($rows as $i => $row) {
+                                $row = $this->app->get(Converter::class)->toArray($row);
                                 if (array_key_exists('app', $row)) {
-                                    unset($data['changes'][$action][$space][$i]['app']);
+                                    unset($row['app']);
                                 }
+
+                                $this->send('event.fire', [
+                                    'producer' => $producer,
+                                    'event' => "$mapper->serviceName.$space.$action",
+                                    'context' => $row,
+                                    'timestamp' => $timestamp,
+                                ]);
                             }
                         }
                     }
-
-                    $this->send('event.changes', $data);
                 }
 
                 $spy->reset();
