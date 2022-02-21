@@ -15,7 +15,7 @@ class Handle extends Job
     public $event;
     public $eventId;
 
-    public bool $feedback = false;
+    public bool $feedback = true;
 
     public function run(Application $app, Dispatcher $dispatcher, Event $event)
     {
