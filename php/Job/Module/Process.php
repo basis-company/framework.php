@@ -68,8 +68,8 @@ class Process extends Job
 
             if ($iterations) {
                 $this->dispatch('module.sleep');
-                $tracer->reset();
                 $this->dispatch('module.housekeeping');
+                $tracer->reset();
             }
         }
 

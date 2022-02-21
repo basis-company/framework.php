@@ -66,8 +66,8 @@ class Consume
                     'logging' => true,
                     'loggerSetup' => false,
                 ]);
-                $this->tracer->reset();
                 $this->dispatcher->dispatch('module.housekeeping');
+                $this->tracer->reset();
             });
     }
 }
