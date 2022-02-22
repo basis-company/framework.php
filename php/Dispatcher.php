@@ -120,7 +120,7 @@ class Dispatcher
                     throw $e;
                 }
                 $span->end();
-                return (object) $converter->toObject($result);
+                return (object) $converter->toObject($converter->toArray($result));
             }
 
             $body = null;

@@ -11,6 +11,7 @@ class Random extends Job
         return [
             'expire' => PHP_INT_MAX,
             'value' => bin2hex(random_bytes(8)),
+            'actor' => $this->findOrFail('_space'),
         ];
     }
 }
