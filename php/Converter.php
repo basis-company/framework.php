@@ -78,7 +78,7 @@ class Converter
         return $result;
     }
 
-    public function toArray($data): array
+    public function toArray($data, $dropApplication = false): array
     {
         if (!$data) {
             return [];
@@ -86,11 +86,14 @@ class Converter
 
         if (is_object($data)) {
             $data = get_object_vars($data);
+            if ($dropApplication && array_key_exists('app', $data)) {
+                unset($data['app']);
+            }
         }
 
         foreach ($data as $k => $v) {
             if (is_array($v) || is_object($v)) {
-                $data[$k] = $this->toArray($v);
+                $data[$k] = $this->toArray($v, $dropApplication);
             }
         }
 
