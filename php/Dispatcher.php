@@ -120,7 +120,12 @@ class Dispatcher
                     throw $e;
                 }
                 $span->end();
-                return (object) $converter->toObject($converter->toArray($result));
+
+                if (is_array($result) && array_key_exists('expire', $result)) {
+                    // force entity convertion to array with app cleanup
+                    $result = $converter->toArray($result, true);
+                }
+                return (object) $converter->toObject($result);
             }
 
             $body = null;
