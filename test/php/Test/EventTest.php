@@ -21,6 +21,14 @@ class EventTest extends Test
         $this->firedEvents[] = $params;
     }
 
+    public function testChangesCall()
+    {
+        $this->dispatch('module.changes', [
+            'producer' => 'tester',
+        ]);
+        $this->assertTrue(true);
+    }
+
     public function testEventFire()
     {
         $this->get(Event::class)->fire('person.authorized', ['name' => 'nekufa']);
