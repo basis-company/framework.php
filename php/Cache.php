@@ -19,9 +19,6 @@ class Cache
     {
         if ($this->exists($key)) {
             return $this->get($key);
-        } else {
-            // unset ids [key]
-            $this->adapter->reset(false);
         }
 
         $result = $callback();
