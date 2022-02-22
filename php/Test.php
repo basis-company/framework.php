@@ -37,6 +37,7 @@ abstract class Test extends TestCase
         parent::__construct();
 
         $this->app = new Test\Application($this);
+        $this->app->get(Cache::class)->clear();
 
         $this->logger = new Logger(get_called_class());
         $this->logger->pushHandler(new StreamHandler('php://stdout', Logger::ERROR));
