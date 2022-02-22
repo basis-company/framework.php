@@ -46,6 +46,7 @@ abstract class Test extends TestCase
         foreach ($this->mocks as [$method, $params, $result]) {
             $this->mock($method, $params)->willReturn($result);
         }
+        $this->mock('event.subscription')->willReturn(['skip' => true]);
 
         $serviceData = [];
         foreach ($this->data as $space => $data) {
