@@ -45,7 +45,7 @@ class Cache
 
         if ($expire) {
             if ($expire == PHP_INT_MAX) {
-                $expire = time() + 365 * 12 * 31 * 24 * 60 * 60;
+                $expire = time() + 365 * 24 * 60 * 60;
             }
             $item->expiresAt(DateTime::createFromFormat('U', (int) $expire));
         }
