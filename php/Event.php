@@ -23,7 +23,7 @@ class Event
         if (array_key_exists($event, $this->eventExistence)) {
             return $this->eventExistence[$event];
         }
-        $types = $this->app->get(Pool::class)->get('event')->find('type');
+        $types = $this->get(Pool::class)->get('event')->find('type');
 
         foreach ($types as $type) {
             if (!$type->ignore && $this->match($event, $type->nick)) {
@@ -134,7 +134,8 @@ class Event
             $this->get(Pool::class)->get($serviceName);
         }
 
-        $dispatcher = $this->app->get(Dispatcher::class);
+        $converter = $this->get(Converter::class);
+        $dispatcher = $this->get(Dispatcher::class);
         $changed = false;
 
         foreach ($this->get(Pool::class)->getMappers() as $mapper) {
@@ -143,7 +144,7 @@ class Event
                 // reduce changes list
                 $changes = $spy->getChanges();
                 foreach ($changes as $action => $collection) {
-                    foreach (['job_context', 'job_queue', 'job_result'] as $space) {
+                    foreach (['job_context', 'job_queue', 'job_result', '_procedure'] as $space) {
                         if (array_key_exists($space, $collection)) {
                             unset($collection[$space]);
                         }
@@ -157,26 +158,32 @@ class Event
 
                 // fire events
                 if (count(get_object_vars($changes))) {
-                    $changed = true;
                     foreach ($changes as $action => $set) {
                         foreach ($set as $space => $rows) {
-                            foreach ($rows as $i => $row) {
-                                $row = $this->app->get(Converter::class)->toArray($row);
+                            $event = "$mapper->serviceName.$space.$action";
+                            $subscription = $this->dispatch('event.subscription', [
+                                'event' => $event,
+                            ]);
+                            if ($subscription->skip) {
+                                continue;
+                            }
+                            foreach ($rows as $row) {
+                                $row = $converter->toArray($row);
                                 if (array_key_exists('app', $row)) {
                                     unset($row['app']);
                                 }
 
                                 $this->send('event.fire', [
                                     'producer' => $producer,
-                                    'event' => "$mapper->serviceName.$space.$action",
+                                    'event' => $subscription->type->id,
                                     'context' => $row,
                                     'timestamp' => $timestamp,
                                 ]);
+                                $changed = true;
                             }
                         }
                     }
                 }
-
                 $spy->reset();
             }
         }
