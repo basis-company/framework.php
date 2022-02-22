@@ -27,7 +27,7 @@ class Monolog
             $formatter = new JsonFormatter(JsonFormatter::BATCH_MODE_JSON, true, true);
 
             $level = Logger::INFO;
-            if (getenv('BASIS_ENVIRONMENT') == 'dev') {
+            if (in_array(getenv('BASIS_ENVIRONMENT'), ['dev', 'testing'])) {
                 $level = Logger::DEBUG;
             }
 
