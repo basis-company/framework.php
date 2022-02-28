@@ -12,6 +12,8 @@ use Tarantool\Mapper\Repository;
 
 class Housekeeping
 {
+    public bool $schema = false;
+
     public function run(Container $container)
     {
         if ($container->hasInstance(Lock::class)) {
@@ -30,8 +32,10 @@ class Housekeeping
 
     private function flush(Mapper $mapper)
     {
-        $mapper->getSchema()->reset();
-        $mapper->getClient()->flushSpaces();
+        if ($this->schema) {
+            $mapper->getSchema()->reset();
+            $mapper->getClient()->flushSpaces();
+        }
         $keys = new ReflectionProperty(Repository::class, 'keys');
         $keys->setAccessible(true);
         $original = new ReflectionProperty(Repository::class, 'original');
@@ -40,16 +44,20 @@ class Housekeeping
         $persisted->setAccessible(true);
         $results = new ReflectionProperty(Repository::class, 'results');
         $results->setAccessible(true);
-        $space = new ReflectionProperty(Repository::class, 'space');
-        $space->setAccessible(true);
+        if ($this->schema) {
+            $space = new ReflectionProperty(Repository::class, 'space');
+            $space->setAccessible(true);
+        }
 
         foreach ($mapper->getRepositories() as $repository) {
             $keys->setValue($repository, new SplObjectStorage());
             $original->setValue($repository, []);
             $persisted->setValue($repository, []);
             $results->setValue($repository, []);
-            $name = $space->getValue($repository)->getName();
-            $space->setValue($repository, $mapper->getSchema()->getSpace($name));
+            if ($this->schema) {
+                $name = $space->getValue($repository)->getName();
+                $space->setValue($repository, $mapper->getSchema()->getSpace($name));
+            }
         }
     }
 }
