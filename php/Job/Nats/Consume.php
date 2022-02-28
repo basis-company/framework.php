@@ -21,6 +21,7 @@ class Consume
     public int $expires = 30;
     public int $limit = PHP_INT_MAX;
     public string $subject;
+    public bool $housekeeping = true;
 
     public readonly LoggerInterface $logger;
 
@@ -66,7 +67,9 @@ class Consume
                     'logging' => true,
                     'loggerSetup' => false,
                 ]);
-                $this->dispatcher->dispatch('module.housekeeping');
+                if ($this->housekeeping) {
+                    $this->dispatcher->dispatch('module.housekeeping');
+                }
                 $this->tracer->reset();
             });
     }
