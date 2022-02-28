@@ -45,8 +45,8 @@ class Starter
             if (array_key_exists('threads', $handler) && $handler['threads']) {
                 $max = $handler['threads'];
             }
-            if (array_key_exists('params', $handler) && $handler['params']) {
-                $params = array_merge($params, $handler['params']);
+            if (array_key_exists('consumer', $handler) && $handler['consumer']) {
+                $params = array_merge($params, $handler['consumer']);
             }
             foreach (range(1, $max) as $_) {
                 $this->register('nats.consume', $params);
