@@ -23,7 +23,10 @@ class Address
         $host = $this->name;
 
         if (getenv('BASIS_ENVIRONMENT') !== 'dev') {
-            $host = gethostbyname($this->name);
+            $host = getenv(strtoupper(str_replace('-', '_', $this->name)) . '_SERVICE_HOST');
+            if (!$host) {
+                $host = gethostbyname($this->name);
+            }
             if ($host === false) {
                 return [
                     'host' => $this->name,
