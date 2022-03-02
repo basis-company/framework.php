@@ -11,7 +11,6 @@ class Bootstrap
     use Toolkit;
 
     public array $jobs = [
-        'data.migrate',
         'module.recover',
         'module.register',
         'tarantool.migrate',
