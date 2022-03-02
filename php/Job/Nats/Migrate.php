@@ -10,8 +10,17 @@ use Basis\Nats\Stream\StorageBackend;
 
 class Migrate
 {
+    public bool $dropConsumer = false;
+    public bool $dropStream = false;
+    public bool $drop = false;
+
     public function run(Dispatcher $dispatcher, Client $client)
     {
+        if ($this->drop) {
+            $this->dropConsumer = true;
+            $this->dropStream = true;
+        }
+
         $jobs = [];
 
         foreach ($dispatcher->getHandlers() as $handler) {
@@ -35,6 +44,10 @@ class Migrate
                 }
             }
 
+            if ($this->dropStream && $stream->exists()) {
+                $stream->delete();
+            }
+
             if (!$stream->exists()) {
                 $stream->create();
             } else {
@@ -49,6 +62,10 @@ class Migrate
                 // i'm not sure we really want to control how many parallel executions are performed
                 // $consumer->getConfiguration()
                 //     ->setMaxAckPending($handler['threads']);
+            }
+
+            if ($this->dropConsumer && $consumer->exists()) {
+                $consumer->delete();
             }
 
             if (!$consumer->exists()) {
