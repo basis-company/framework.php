@@ -2,10 +2,13 @@
 
 namespace Basis\Controller;
 
+use Basis\Dispatcher;
+
 class Restart
 {
-    public function index()
+    public function index(Dispatcher $dispatcher)
     {
-        $this->dispatch('module.register');
+        touch('var/restart');
+        $dispatcher->dispatch('module.register');
     }
 }

@@ -18,6 +18,8 @@ class Starter
 
     public function run()
     {
+        chmod('var', 0777);
+
         $this->register('module.process', [
             'job' => 'module.telemetry',
             'iterations' => 1024,
@@ -65,11 +67,17 @@ class Starter
     private function loop(): void
     {
         while (true) {
-            foreach ($this->tasks as $task) {
-                $task->start();
+            if (file_exists('var/restart')) {
+                unlink('var/restart');
+                foreach ($this->tasks as $task) {
+                    $task->stop();
+                }
             }
             foreach ($this->tasks as $task) {
                 $task->finalize();
+            }
+            foreach ($this->tasks as $task) {
+                $task->start();
             }
             sleep(1);
         }

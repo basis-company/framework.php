@@ -57,6 +57,15 @@ class Task
         $this->startedAt = microtime(true);
     }
 
+    public function stop()
+    {
+        if (!$this->process) {
+            return;
+        }
+
+        $this->process->stop();
+    }
+
     public function finalize()
     {
         if (!$this->process) {
