@@ -4,11 +4,6 @@ if [ ! -d "var" ]; then
     mkdir var
 fi
 
-if [ ! -p "var/log" ]; then
-    mkfifo var/log
-    chmod go+rw var/log
-fi
-
 if [ ! -p "var/telemetry" ]; then
     mkfifo var/telemetry
     chmod go+rw var/telemetry
@@ -22,4 +17,5 @@ fi
 
 php console module.starter&
 apache2-foreground > /dev/null&
-tail -f -c+1 var/log
+
+php console module.logs
