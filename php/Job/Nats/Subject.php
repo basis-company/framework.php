@@ -11,7 +11,7 @@ class Subject
     public string $job;
     public string $service;
 
-    public int $ttl = 600; // 10 minutes
+    public int $ttl = 365 * 24 * 60 * 60;
 
     public function __construct(
         public readonly Cache $cache,
