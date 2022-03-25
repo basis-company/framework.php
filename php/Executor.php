@@ -59,7 +59,16 @@ class Executor
             'hash' => $request['hash'],
         ];
 
-        return $this->findOrCreate('job_queue', $params, $request);
+        $request = $this->findOrCreate('job_queue', $params, $request);
+
+        $this->get(LoggerInterface::class)->info('initialized', [
+            'id' => $request->id,
+            'job' => $request->job,
+            'params' => $request->params,
+            'space' => $this->getServiceName() . ".job_queue",
+        ]);
+
+        return $request;
     }
 
     public function send(string $job, array $params = [], string $service = null)
@@ -199,6 +208,13 @@ class Executor
         } else {
             $this->getMapper()->remove($request);
         }
+
+        $this->get(LoggerInterface::class)->info('transfered', [
+            'id' => $request->id,
+            'job' => $request->job,
+            'params' => $request->params,
+            'space' => "$request->service.job_queue",
+        ]);
 
         return $request;
     }
