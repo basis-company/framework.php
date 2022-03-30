@@ -21,6 +21,7 @@ class Background
 
         $this->get(BackgroundStart::class)->update();
         $this->getMapper()->getPlugin(Spy::class)->reset();
+        $this->dispatch('module.flush');
 
         $this->dispatch('module.process', [
             'job' => $this->app->getName() . '.background'
