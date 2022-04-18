@@ -25,5 +25,12 @@
         "tarantool/mapper": "^4.6.19",
         "tarantool/queue": "v0.9.0",
         "tarantool/symfony-lock": "^0.2.5"
+    },
+    "repositories": {
+        "packagist": false,
+        "basis": {
+            "type": "composer",
+            "url": "https://nexus.nx.basis.services/repository/composer/"
+        }
     }
 }
