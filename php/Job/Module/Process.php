@@ -47,12 +47,10 @@ class Process extends Job
                 $start = microtime(true);
                 $result = $this->dispatch($this->job, $params);
                 $success = true;
-                $this->dispatch('module.changes', [ 'producer' => $this->job ]);
                 if ($this->logging) {
                     $params['time'] = number_format(microtime(true) - $start, 3);
                     $this->info($this->job, $params);
                 }
-                $this->dispatch('module.flush');
             } catch (Throwable $e) {
                 if ($this->logging) {
                     $this->exception($e);
@@ -63,6 +61,9 @@ class Process extends Job
                     'trace' => $e->getTraceAsString(),
                 ];
             }
+
+            $this->dispatch('module.changes', ['producer' => $this->job]);
+            $this->dispatch('module.flush');
 
             $data[] = compact('result', 'success');
 
