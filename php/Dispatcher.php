@@ -280,7 +280,7 @@ class Dispatcher
             $this->get(Client::class)
                 ->publish($subject, $payload);
         } catch (Throwable $e) {
-            $this->get(LoggerInterface::class)->debug($e->getMessage(), [
+            $this->get(LoggerInterface::class)->info($e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
