@@ -61,15 +61,31 @@ class Consume
     {
         return $this->context
             ->execute($request->context, function () use ($request) {
-                $this->dispatcher->dispatch('module.process', [
+                $processing = $this->dispatcher->dispatch('module.process', [
                     'job' => $request->job,
                     'params' => $request->params,
                     'logging' => true,
                     'loggerSetup' => false,
                 ]);
+
+                if (!$processing->success) {
+                    if (explode('.', $request->job)[0] == $this->dispatcher->getServiceName()) {
+                        // domain jobs can be replayed via queue
+                        $this->dispatcher->send('queue.put', [
+                            'job' => $request->job,
+                            'params' => $request->params,
+                            'key' => microtime(true),
+                        ]);
+                    } else {
+                        // system jobs should be replayed as is
+                        $this->dispatcher->send($request->job, $request->params);
+                    }
+                }
+
                 if ($this->housekeeping) {
                     $this->dispatcher->dispatch('module.housekeeping');
                 }
+
                 $this->tracer->reset();
             });
     }
