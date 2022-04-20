@@ -24,6 +24,7 @@ build-image:
   retry: 2
   services:
     - name: docker:18.09.7-dind
+      command: ["--registry-mirror", "https://registry-proxy.nx.basis.services"]
   script:
     - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
     - docker pull $image_branch || true
@@ -124,6 +125,7 @@ release-branch:
   stage: release
   services:
     - name: docker:18.09.7-dind
+      command: ["--registry-mirror", "https://registry-proxy.nx.basis.services"]
   script:
     - export
     - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
@@ -137,6 +139,7 @@ release-tag:
     - tags
   services:
     - name: docker:18.09.7-dind
+      command: ["--registry-mirror", "https://registry-proxy.nx.basis.services"]
   script:
     - export
     - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
@@ -154,6 +157,7 @@ release-latest:
     - tags
   services:
     - name: docker:18.09.7-dind
+      command: ["--registry-mirror", "https://registry-proxy.nx.basis.services"]
   script:
     - export
     - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
