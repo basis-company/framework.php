@@ -13,12 +13,10 @@ WORKDIR /var/www/html
 RUN apt-get update \
     && apt-get install procps zip -y \
     && pecl install \
-        apcu \
         ast \
         xdebug \
     && docker-php-ext-install opcache \
     && docker-php-ext-enable \
-        apcu \
         opcache \
     && a2enmod rewrite \
     && echo "date.timezone = 'Europe/Moscow'" > /usr/local/etc/php/conf.d/timezone.ini \
