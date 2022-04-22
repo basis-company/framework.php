@@ -59,34 +59,43 @@ class Consume
 
     public function handle($request)
     {
-        return $this->context
-            ->execute($request->context, function () use ($request) {
-                $processing = $this->dispatcher->dispatch('module.process', [
-                    'job' => $request->job,
-                    'params' => $request->params,
-                    'logging' => true,
-                    'loggerSetup' => false,
-                ]);
+        try {
+            return $this->context
+                ->execute($request->context, function () use ($request) {
+                    $processing = $this->dispatcher->dispatch('module.process', [
+                        'job' => $request->job,
+                        'params' => $request->params,
+                        'logging' => true,
+                        'loggerSetup' => false,
+                    ]);
 
-                if (!$processing->success) {
-                    if (explode('.', $request->job)[0] == $this->dispatcher->getServiceName()) {
-                        // domain jobs can be replayed via queue
-                        $this->dispatcher->send('queue.put', [
-                            'job' => $request->job,
-                            'params' => $request->params,
-                            'key' => microtime(true),
-                        ]);
-                    } else {
-                        // system jobs should be replayed as is
-                        $this->dispatcher->send($request->job, $request->params);
+                    if (!$processing->success) {
+                        $this->schedule($request);
                     }
-                }
 
-                if ($this->housekeeping) {
-                    $this->dispatcher->dispatch('module.housekeeping');
-                }
+                    if ($this->housekeeping) {
+                        $this->dispatcher->dispatch('module.housekeeping');
+                    }
 
-                $this->tracer->reset();
-            });
+                    $this->tracer->reset();
+                });
+        } catch (Throwable $e) {
+            return $this->schedule($request);
+        }
+    }
+
+    private function schedule($request)
+    {
+        if (explode('.', $request->job)[0] == $this->dispatcher->getServiceName()) {
+            // domain jobs can be replayed via queue
+            $this->dispatcher->send('queue.put', [
+                'job' => $request->job,
+                'params' => $request->params,
+                'key' => microtime(true),
+            ]);
+        } else {
+            // system jobs should be replayed as is
+            $this->dispatcher->send($request->job, $request->params);
+        }
     }
 }
