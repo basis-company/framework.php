@@ -111,7 +111,7 @@ class Dispatcher
                     foreach ($converter->toObject($params) as $k => $v) {
                         $instance->$k = $v;
                     }
-                    $result = $this->call($instance, 'run');
+                    $result = $this->call($instance, 'run') ?: [];
                 } catch (Feedback $feedback) {
                     $span->end();
                     throw new Exception(json_encode($feedback->serialize()));
