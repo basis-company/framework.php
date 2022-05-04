@@ -15,6 +15,15 @@ class MapperTest extends Test
         'flow.status' => [],
     ];
 
+    public function testVirtialEntiyRepositoryGetter()
+    {
+        $tracker = $this->create('flow.tracker', [
+            'status' => $this->findOrCreate('flow.status'),
+        ]);
+
+        $this->assertSame($tracker->status, $this->findOne('flow.status')->id);
+    }
+
     public function testApplicationInstance()
     {
         $vspace = $this->findOrFail('_vspace');
