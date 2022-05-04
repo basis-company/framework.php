@@ -21,13 +21,10 @@ class ExecutorTest extends Test
 
         $executor->cleanup();
 
-        $this->getRepository('job_context')->forget($context->id);
         $this->assertCount(1, $this->find('job_context'));
         [ $context ] = $this->find('job_context');
         $this->assertNotEquals($context->activity, 1);
 
-        $this->getRepository('job_context')->flushCache();
-        $this->getRepository('job_queue')->flushCache();
         $this->assertCount(1, $this->find('job_context'));
         $this->assertCount(1, $this->find('job_queue'));
 
@@ -63,13 +60,16 @@ class ExecutorTest extends Test
         $this->assertSame(1, $info->getValue('state.messages'));
 
         $this->dispatch('nats.consume', [ 'subject' => $this->app->getName(), 'limit' => 1 ]);
+        $note = $this->findOrFail('note', $note->id);
         $this->assertSame($note->message, '');
 
         $this->actAs(1);
         $this->send('test.actor', ['note' => $note->id]);
 
         $this->actAs(2);
+        $this->assertSame($this->get(Context::class)->getPerson(), 2);
         $this->dispatch('nats.consume', [ 'subject' => $this->app->getName(), 'limit' => 1 ]);
+        $this->assertSame($this->get(Context::class)->getPerson(), 2);
 
         $note = $this->findOrFail('note', $note->id);
         $this->assertSame($note->message, '1');
@@ -92,6 +92,8 @@ class ExecutorTest extends Test
             'batch' => 1,
             'limit' => 1,
         ]);
+
+        $note = $this->findOrFail('note', $note->id);
         $this->assertEquals($note->message, 6);
 
         // register changes

@@ -107,8 +107,8 @@ class ServiceTest extends Test
     {
         $bazyaba = $this->create('post', ['text' => 'bazyaba']);
 
-        // afterCreate was triggered
-        $this->assertSame($bazyaba->text, 'bazyaba!');
+        // afterCreate + afterUpdate was triggered
+        $this->assertSame($bazyaba->text, 'bazyaba!.');
 
         $this->dispatch('module.trigger', [
             'space' => 'post',
@@ -116,8 +116,9 @@ class ServiceTest extends Test
             'type' => 'create',
         ]);
 
-        // afterCreate + afterUpdate
-        $this->assertSame($bazyaba->text, 'bazyaba!!.');
+        // afterCreate + afterCreate is persisted
+        $bazyaba = $this->findOrFail('post');
+        $this->assertSame($bazyaba->text, 'bazyaba!!');
 
         $bazyaba->text = 'test';
         $bazyaba->save();
@@ -130,6 +131,8 @@ class ServiceTest extends Test
             'type' => 'update',
         ]);
 
-        $this->assertSame($bazyaba->text, 'test..');
+        $bazyaba = $this->findOrFail('post');
+        // adterUpdate + afterUpdate persisted
+        $this->assertSame($bazyaba->text, 'test');
     }
 }

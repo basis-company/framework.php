@@ -3,6 +3,7 @@
 namespace Basis;
 
 use Carbon\Carbon;
+use Throwable;
 
 class Context
 {
@@ -23,9 +24,14 @@ class Context
     {
         $origin = $this->toArray();
 
-        $this->reset($context);
-        $result = call_user_func($callback);
-        $this->reset($origin);
+        try {
+            $this->reset($context);
+            $result = call_user_func($callback);
+            $this->reset($origin);
+        } catch (Throwable $e) {
+            $this->reset($origin);
+            throw $e;
+        }
 
         return $result;
     }
