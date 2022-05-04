@@ -110,11 +110,11 @@ class TarantoolTest extends Test
                 $test->assertCount(1, $this->find('note'));
                 // find one shortcut
                 $test->assertNotNull($this->findOne('note', ['id' => $note->id]));
-                $test->assertSame([$note], $this->find('note'));
+                $test->assertSame($note->toArray(), $this->find('note')[0]->toArray());
 
                 // find or create shortcut
                 $testing = $this->findOrCreate('note', ['id' => $note->id]);
-                $test->assertSame($note, $testing);
+                $test->assertSame($note->toArray(), $testing->toArray());
 
                 $testing = $this->findOrCreate('note', ['id' => $note->id + 1]);
                 $test->assertCount(2, $this->find('note'));

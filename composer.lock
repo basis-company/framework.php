@@ -4,19 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34c53c55ad1de2e827f466b77941fa3a",
+    "content-hash": "f44a8073eeb37e044d0c8fa91dc43baa",
     "packages": [
         {
             "name": "psr/cache",
             "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/cache.git",
-                "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/cache/zipball/213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
+                "url": "https://nexus.nx.basis.services/repository/composer/psr/cache/2.0.0/psr-cache-2.0.0.zip",
                 "reference": "213f9dbc5b9bfbc4f8db86d2838dc968752ce13b",
                 "shasum": ""
             },
@@ -34,7 +29,6 @@
                     "Psr\\Cache\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -50,22 +44,14 @@
                 "psr",
                 "psr-6"
             ],
-            "support": {
-                "source": "https://github.com/php-fig/cache/tree/2.0.0"
-            },
             "time": "2021-02-03T23:23:37+00:00"
         },
         {
             "name": "psr/container",
             "version": "1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/container.git",
-                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/513e0666f7216c7459170d56df27dfcefe1689ea",
+                "url": "https://nexus.nx.basis.services/repository/composer/psr/container/1.1.2/psr-container-1.1.2.zip",
                 "reference": "513e0666f7216c7459170d56df27dfcefe1689ea",
                 "shasum": ""
             },
@@ -78,7 +64,6 @@
                     "Psr\\Container\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -97,23 +82,14 @@
                 "container-interop",
                 "psr"
             ],
-            "support": {
-                "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/1.1.2"
-            },
             "time": "2021-11-05T16:50:12+00:00"
         },
         {
             "name": "psr/http-message",
             "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-message.git",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "url": "https://nexus.nx.basis.services/repository/composer/psr/http-message/1.0.1/psr-http-message-1.0.1.zip",
                 "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
                 "shasum": ""
             },
@@ -131,7 +107,6 @@
                     "Psr\\Http\\Message\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -151,25 +126,17 @@
                 "request",
                 "response"
             ],
-            "support": {
-                "source": "https://github.com/php-fig/http-message/tree/master"
-            },
             "time": "2016-08-06T14:39:51+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "basis-company/nats",
-            "version": "0.6.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/basis-company/nats.php.git",
-                "reference": "f335faf502725620cfaadb5d1d49a09101a92002"
-            },
+            "version": "0.6.3",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/basis-company/nats.php/zipball/f335faf502725620cfaadb5d1d49a09101a92002",
-                "reference": "f335faf502725620cfaadb5d1d49a09101a92002",
+                "url": "https://nexus.nx.basis.services/repository/composer/basis-company/nats/0.6.3/basis-company-nats-0.6.3.zip",
+                "reference": "aa0d9307cce3c48d79533ffe593a422d7c8fa91a",
                 "shasum": ""
             },
             "require": {
@@ -186,7 +153,6 @@
                     "Basis\\Nats\\Tests\\": "tests/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "mit"
             ],
@@ -212,23 +178,14 @@
                 "streaming",
                 "subscribe"
             ],
-            "support": {
-                "issues": "https://github.com/basis-company/nats.php/issues",
-                "source": "https://github.com/basis-company/nats.php/tree/0.6.1"
-            },
-            "time": "2022-02-15T16:43:04+00:00"
+            "time": "2022-05-04T09:15:10+00:00"
         },
         {
             "name": "basis-company/telemetry",
             "version": "0.1.11",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/basis-company/telemetry.php.git",
-                "reference": "471923ea52758c5dd8cb86755e3ab439ed4eaf18"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/basis-company/telemetry.php/zipball/471923ea52758c5dd8cb86755e3ab439ed4eaf18",
+                "url": "https://nexus.nx.basis.services/repository/composer/basis-company/telemetry/0.1.11/basis-company-telemetry-0.1.11.zip",
                 "reference": "471923ea52758c5dd8cb86755e3ab439ed4eaf18",
                 "shasum": ""
             },
@@ -248,7 +205,6 @@
                     "Basis\\Telemetry\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "mit"
             ],
@@ -268,37 +224,29 @@
                 "tracing",
                 "zipkin"
             ],
-            "support": {
-                "issues": "https://github.com/basis-company/telemetry.php/issues",
-                "source": "https://github.com/basis-company/telemetry.php/tree/0.1.11"
-            },
             "time": "2021-12-15T10:17:57+00:00"
         },
         {
             "name": "doctrine/instantiator",
-            "version": "1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "d56bf6102915de5702778fe20f2de3b2fe570b5b"
-            },
+            "version": "1.4.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/d56bf6102915de5702778fe20f2de3b2fe570b5b",
-                "reference": "d56bf6102915de5702778fe20f2de3b2fe570b5b",
+                "url": "https://nexus.nx.basis.services/repository/composer/doctrine/instantiator/1.4.1/doctrine-instantiator-1.4.1.zip",
+                "reference": "10dcfce151b967d20fde1b34ae6640712c3891bc",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^8.0",
+                "doctrine/coding-standard": "^9",
                 "ext-pdo": "*",
                 "ext-phar": "*",
-                "phpbench/phpbench": "^0.13 || 1.0.0-alpha2",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-phpunit": "^0.12",
-                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
+                "phpbench/phpbench": "^0.16 || ^1",
+                "phpstan/phpstan": "^1.4",
+                "phpstan/phpstan-phpunit": "^1",
+                "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
+                "vimeo/psalm": "^4.22"
             },
             "type": "library",
             "autoload": {
@@ -306,7 +254,6 @@
                     "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -323,10 +270,6 @@
                 "constructor",
                 "instantiate"
             ],
-            "support": {
-                "issues": "https://github.com/doctrine/instantiator/issues",
-                "source": "https://github.com/doctrine/instantiator/tree/1.4.0"
-            },
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -341,20 +284,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-10T18:47:58+00:00"
+            "time": "2022-03-03T08:28:38+00:00"
         },
         {
             "name": "monolog/monolog",
-            "version": "2.3.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "fd4380d6fc37626e2f799f29d91195040137eba9"
-            },
+            "version": "2.5.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fd4380d6fc37626e2f799f29d91195040137eba9",
-                "reference": "fd4380d6fc37626e2f799f29d91195040137eba9",
+                "url": "https://nexus.nx.basis.services/repository/composer/monolog/monolog/2.5.0/monolog-monolog-2.5.0.zip",
+                "reference": "4192345e260f1d51b365536199744b987e160edc",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +314,7 @@
                 "phpstan/phpstan": "^0.12.91",
                 "phpunit/phpunit": "^8.5",
                 "predis/predis": "^1.1",
-                "rollbar/rollbar": "^1.3",
+                "rollbar/rollbar": "^1.3 || ^2 || ^3",
                 "ruflin/elastica": ">=0.90@dev",
                 "swiftmailer/swiftmailer": "^5.3|^6.0"
             },
@@ -408,7 +346,6 @@
                     "Monolog\\": "src/Monolog"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -426,10 +363,6 @@
                 "logging",
                 "psr-3"
             ],
-            "support": {
-                "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.3.5"
-            },
             "funding": [
                 {
                     "url": "https://github.com/Seldaek",
@@ -440,32 +373,28 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-01T21:08:31+00:00"
+            "time": "2022-04-08T15:43:54+00:00"
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.10.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220"
-            },
+            "version": "1.11.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/776f831124e9c62e1a2c601ecc52e776d8bb7220",
-                "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220",
+                "url": "https://nexus.nx.basis.services/repository/composer/myclabs/deep-copy/1.11.0/myclabs-deep-copy-1.11.0.zip",
+                "reference": "14daed4296fae74d9e3201d2c4925d1acb7aa614",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0"
             },
-            "replace": {
-                "myclabs/deep-copy": "self.version"
+            "conflict": {
+                "doctrine/collections": "<1.6.8",
+                "doctrine/common": "<2.13.3 || >=3,<3.2.2"
             },
             "require-dev": {
-                "doctrine/collections": "^1.0",
-                "doctrine/common": "^2.6",
-                "phpunit/phpunit": "^7.1"
+                "doctrine/collections": "^1.6.8",
+                "doctrine/common": "^2.13.3 || ^3.2.2",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.23 || ^9.5.13"
             },
             "type": "library",
             "autoload": {
@@ -476,7 +405,6 @@
                     "DeepCopy\\": "src/DeepCopy/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -488,30 +416,21 @@
                 "object",
                 "object graph"
             ],
-            "support": {
-                "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.10.2"
-            },
             "funding": [
                 {
                     "url": "https://tidelift.com/funding/github/packagist/myclabs/deep-copy",
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-13T09:40:50+00:00"
+            "time": "2022-03-03T13:19:32+00:00"
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.57.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "4a54375c21eea4811dbd1149fe6b246517554e78"
-            },
+            "version": "2.58.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/4a54375c21eea4811dbd1149fe6b246517554e78",
-                "reference": "4a54375c21eea4811dbd1149fe6b246517554e78",
+                "url": "https://nexus.nx.basis.services/repository/composer/nesbot/carbon/2.58.0/nesbot-carbon-2.58.0.zip",
+                "reference": "97a34af22bde8d0ac20ab34b29d7bfe360902055",
                 "shasum": ""
             },
             "require": {
@@ -529,7 +448,8 @@
                 "phpmd/phpmd": "^2.9",
                 "phpstan/extension-installer": "^1.0",
                 "phpstan/phpstan": "^0.12.54 || ^1.0",
-                "phpunit/phpunit": "^7.5.20 || ^8.5.14",
+                "phpunit/php-file-iterator": "^2.0.5",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.23",
                 "squizlabs/php_codesniffer": "^3.4"
             },
             "bin": [
@@ -557,7 +477,6 @@
                     "Carbon\\": "src/Carbon/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -579,11 +498,6 @@
                 "datetime",
                 "time"
             ],
-            "support": {
-                "docs": "https://carbon.nesbot.com/docs",
-                "issues": "https://github.com/briannesbitt/Carbon/issues",
-                "source": "https://github.com/briannesbitt/Carbon"
-            },
             "funding": [
                 {
                     "url": "https://opencollective.com/Carbon",
@@ -594,19 +508,14 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-02-13T18:13:33+00:00"
+            "time": "2022-04-25T19:31:17+00:00"
         },
         {
             "name": "nikic/php-parser",
             "version": "v4.13.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "210577fe3cf7badcc5814d99455df46564f3c077"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/210577fe3cf7badcc5814d99455df46564f3c077",
+                "url": "https://nexus.nx.basis.services/repository/composer/nikic/php-parser/v4.13.2/nikic-php-parser-v4.13.2.zip",
                 "reference": "210577fe3cf7badcc5814d99455df46564f3c077",
                 "shasum": ""
             },
@@ -632,7 +541,6 @@
                     "PhpParser\\": "lib/PhpParser"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -646,23 +554,14 @@
                 "parser",
                 "php"
             ],
-            "support": {
-                "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v4.13.2"
-            },
             "time": "2021-11-30T19:35:32+00:00"
         },
         {
             "name": "nyholm/psr7",
             "version": "1.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nyholm/psr7.git",
-                "reference": "1461e07a0f2a975a52082ca3b769ca912b816226"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7/zipball/1461e07a0f2a975a52082ca3b769ca912b816226",
+                "url": "https://nexus.nx.basis.services/repository/composer/nyholm/psr7/1.5.0/nyholm-psr7-1.5.0.zip",
                 "reference": "1461e07a0f2a975a52082ca3b769ca912b816226",
                 "shasum": ""
             },
@@ -693,7 +592,6 @@
                     "Nyholm\\Psr7\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -713,10 +611,6 @@
                 "psr-17",
                 "psr-7"
             ],
-            "support": {
-                "issues": "https://github.com/Nyholm/psr7/issues",
-                "source": "https://github.com/Nyholm/psr7/tree/1.5.0"
-            },
             "funding": [
                 {
                     "url": "https://github.com/Zegnat",
@@ -732,14 +626,9 @@
         {
             "name": "nyholm/psr7-server",
             "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Nyholm/psr7-server.git",
-                "reference": "b846a689844cef114e8079d8c80f0afd96745ae3"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nyholm/psr7-server/zipball/b846a689844cef114e8079d8c80f0afd96745ae3",
+                "url": "https://nexus.nx.basis.services/repository/composer/nyholm/psr7-server/1.0.2/nyholm-psr7-server-1.0.2.zip",
                 "reference": "b846a689844cef114e8079d8c80f0afd96745ae3",
                 "shasum": ""
             },
@@ -759,7 +648,6 @@
                     "Nyholm\\Psr7Server\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -779,10 +667,6 @@
                 "psr-17",
                 "psr-7"
             ],
-            "support": {
-                "issues": "https://github.com/Nyholm/psr7-server/issues",
-                "source": "https://github.com/Nyholm/psr7-server/tree/1.0.2"
-            },
             "funding": [
                 {
                     "url": "https://github.com/Zegnat",
@@ -798,14 +682,9 @@
         {
             "name": "phar-io/manifest",
             "version": "2.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phar-io/manifest.git",
-                "reference": "97803eca37d319dfa7826cc2437fc020857acb53"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/manifest/zipball/97803eca37d319dfa7826cc2437fc020857acb53",
+                "url": "https://nexus.nx.basis.services/repository/composer/phar-io/manifest/2.0.3/phar-io-manifest-2.0.3.zip",
                 "reference": "97803eca37d319dfa7826cc2437fc020857acb53",
                 "shasum": ""
             },
@@ -827,7 +706,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -849,23 +727,14 @@
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
-            "support": {
-                "issues": "https://github.com/phar-io/manifest/issues",
-                "source": "https://github.com/phar-io/manifest/tree/2.0.3"
-            },
             "time": "2021-07-20T11:28:43+00:00"
         },
         {
             "name": "phar-io/version",
             "version": "3.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phar-io/version.git",
-                "reference": "4f7fd7836c6f332bb2933569e566a0d6c4cbed74"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/version/zipball/4f7fd7836c6f332bb2933569e566a0d6c4cbed74",
+                "url": "https://nexus.nx.basis.services/repository/composer/phar-io/version/3.2.1/phar-io-version-3.2.1.zip",
                 "reference": "4f7fd7836c6f332bb2933569e566a0d6c4cbed74",
                 "shasum": ""
             },
@@ -878,7 +747,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -900,23 +768,14 @@
                 }
             ],
             "description": "Library for handling version information and constraints",
-            "support": {
-                "issues": "https://github.com/phar-io/version/issues",
-                "source": "https://github.com/phar-io/version/tree/3.2.1"
-            },
             "time": "2022-02-21T01:04:05+00:00"
         },
         {
             "name": "php-http/message-factory",
             "version": "v1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/message-factory.git",
-                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/message-factory/zipball/a478cb11f66a6ac48d8954216cfed9aa06a501a1",
+                "url": "https://nexus.nx.basis.services/repository/composer/php-http/message-factory/v1.0.2/php-http-message-factory-v1.0.2.zip",
                 "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1",
                 "shasum": ""
             },
@@ -935,7 +794,6 @@
                     "Http\\Message\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -954,23 +812,14 @@
                 "stream",
                 "uri"
             ],
-            "support": {
-                "issues": "https://github.com/php-http/message-factory/issues",
-                "source": "https://github.com/php-http/message-factory/tree/master"
-            },
             "time": "2015-12-19T14:08:53+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
             "version": "2.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
-                "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/1d01c49d4ed62f25aa84a747ad35d5a16924662b",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpdocumentor/reflection-common/2.2.0/phpdocumentor-reflection-common-2.2.0.zip",
                 "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b",
                 "shasum": ""
             },
@@ -988,7 +837,6 @@
                     "phpDocumentor\\Reflection\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1007,23 +855,14 @@
                 "reflection",
                 "static analysis"
             ],
-            "support": {
-                "issues": "https://github.com/phpDocumentor/ReflectionCommon/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionCommon/tree/2.x"
-            },
             "time": "2020-06-27T09:03:43+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
             "version": "5.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "622548b623e81ca6d78b721c5e029f4ce664f170"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/622548b623e81ca6d78b721c5e029f4ce664f170",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpdocumentor/reflection-docblock/5.3.0/phpdocumentor-reflection-docblock-5.3.0.zip",
                 "reference": "622548b623e81ca6d78b721c5e029f4ce664f170",
                 "shasum": ""
             },
@@ -1049,7 +888,6 @@
                     "phpDocumentor\\Reflection\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1064,24 +902,15 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "support": {
-                "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.3.0"
-            },
             "time": "2021-10-19T17:43:47+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "93ebd0014cab80c4ea9f5e297ea48672f1b87706"
-            },
+            "version": "1.6.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/93ebd0014cab80c4ea9f5e297ea48672f1b87706",
-                "reference": "93ebd0014cab80c4ea9f5e297ea48672f1b87706",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpdocumentor/type-resolver/1.6.1/phpdocumentor-type-resolver-1.6.1.zip",
+                "reference": "77a32518733312af16a44300404e945338981de3",
                 "shasum": ""
             },
             "require": {
@@ -1103,7 +932,6 @@
                     "phpDocumentor\\Reflection\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1114,23 +942,14 @@
                 }
             ],
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
-            "support": {
-                "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.6.0"
-            },
-            "time": "2022-01-04T19:58:01+00:00"
+            "time": "2022-03-15T21:29:03+00:00"
         },
         {
             "name": "phpspec/prophecy",
             "version": "v1.15.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "bbcd7380b0ebf3961ee21409db7b38bc31d69a13"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/bbcd7380b0ebf3961ee21409db7b38bc31d69a13",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpspec/prophecy/v1.15.0/phpspec-prophecy-v1.15.0.zip",
                 "reference": "bbcd7380b0ebf3961ee21409db7b38bc31d69a13",
                 "shasum": ""
             },
@@ -1156,7 +975,6 @@
                     "Prophecy\\": "src/Prophecy"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1181,24 +999,15 @@
                 "spy",
                 "stub"
             ],
-            "support": {
-                "issues": "https://github.com/phpspec/prophecy/issues",
-                "source": "https://github.com/phpspec/prophecy/tree/v1.15.0"
-            },
             "time": "2021-12-08T12:19:24+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.11",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "665a1ac0a763c51afc30d6d130dac0813092b17f"
-            },
+            "version": "9.2.15",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/665a1ac0a763c51afc30d6d130dac0813092b17f",
-                "reference": "665a1ac0a763c51afc30d6d130dac0813092b17f",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/php-code-coverage/9.2.15/phpunit-php-code-coverage-9.2.15.zip",
+                "reference": "2e9da11878c4202f97915c1cb4bb1ca318a63f5f",
                 "shasum": ""
             },
             "require": {
@@ -1234,7 +1043,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1252,29 +1060,20 @@
                 "testing",
                 "xunit"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.11"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
                     "type": "github"
                 }
             ],
-            "time": "2022-02-18T12:46:09+00:00"
+            "time": "2022-03-07T09:28:20+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
             "version": "3.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
-                "reference": "cf1c2e7c203ac650e352f4cc675a7021e7d1b3cf"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/cf1c2e7c203ac650e352f4cc675a7021e7d1b3cf",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/php-file-iterator/3.0.6/phpunit-php-file-iterator-3.0.6.zip",
                 "reference": "cf1c2e7c203ac650e352f4cc675a7021e7d1b3cf",
                 "shasum": ""
             },
@@ -1295,7 +1094,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1312,10 +1110,6 @@
                 "filesystem",
                 "iterator"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-file-iterator/issues",
-                "source": "https://github.com/sebastianbergmann/php-file-iterator/tree/3.0.6"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -1327,14 +1121,9 @@
         {
             "name": "phpunit/php-invoker",
             "version": "3.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-invoker.git",
-                "reference": "5a10147d0aaf65b58940a0b72f71c9ac0423cc67"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-invoker/zipball/5a10147d0aaf65b58940a0b72f71c9ac0423cc67",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/php-invoker/3.1.1/phpunit-php-invoker-3.1.1.zip",
                 "reference": "5a10147d0aaf65b58940a0b72f71c9ac0423cc67",
                 "shasum": ""
             },
@@ -1359,7 +1148,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1375,10 +1163,6 @@
             "keywords": [
                 "process"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-invoker/issues",
-                "source": "https://github.com/sebastianbergmann/php-invoker/tree/3.1.1"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -1390,14 +1174,9 @@
         {
             "name": "phpunit/php-text-template",
             "version": "2.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-text-template.git",
-                "reference": "5da5f67fc95621df9ff4c4e5a84d6a8a2acf7c28"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/5da5f67fc95621df9ff4c4e5a84d6a8a2acf7c28",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/php-text-template/2.0.4/phpunit-php-text-template-2.0.4.zip",
                 "reference": "5da5f67fc95621df9ff4c4e5a84d6a8a2acf7c28",
                 "shasum": ""
             },
@@ -1418,7 +1197,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1434,10 +1212,6 @@
             "keywords": [
                 "template"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-text-template/issues",
-                "source": "https://github.com/sebastianbergmann/php-text-template/tree/2.0.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -1449,14 +1223,9 @@
         {
             "name": "phpunit/php-timer",
             "version": "5.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "5a63ce20ed1b5bf577850e2c4e87f4aa902afbd2"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/5a63ce20ed1b5bf577850e2c4e87f4aa902afbd2",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/php-timer/5.0.3/phpunit-php-timer-5.0.3.zip",
                 "reference": "5a63ce20ed1b5bf577850e2c4e87f4aa902afbd2",
                 "shasum": ""
             },
@@ -1477,7 +1246,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1493,10 +1261,6 @@
             "keywords": [
                 "timer"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/php-timer/issues",
-                "source": "https://github.com/sebastianbergmann/php-timer/tree/5.0.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -1507,16 +1271,11 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.14",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1883687169c017d6ae37c58883ca3994cfc34189"
-            },
+            "version": "9.5.20",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1883687169c017d6ae37c58883ca3994cfc34189",
-                "reference": "1883687169c017d6ae37c58883ca3994cfc34189",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/phpunit/9.5.20/phpunit-phpunit-9.5.20.zip",
+                "reference": "12bc8879fb65aef2138b26fc633cb1e3620cffba",
                 "shasum": ""
             },
             "require": {
@@ -1532,7 +1291,7 @@
                 "phar-io/version": "^3.0.2",
                 "php": ">=7.3",
                 "phpspec/prophecy": "^1.12.1",
-                "phpunit/php-code-coverage": "^9.2.7",
+                "phpunit/php-code-coverage": "^9.2.13",
                 "phpunit/php-file-iterator": "^3.0.5",
                 "phpunit/php-invoker": "^3.1.1",
                 "phpunit/php-text-template": "^2.0.3",
@@ -1546,7 +1305,7 @@
                 "sebastian/global-state": "^5.0.1",
                 "sebastian/object-enumerator": "^4.0.3",
                 "sebastian/resource-operations": "^3.0.3",
-                "sebastian/type": "^2.3.4",
+                "sebastian/type": "^3.0",
                 "sebastian/version": "^3.0.2"
             },
             "require-dev": {
@@ -1574,7 +1333,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1592,10 +1350,6 @@
                 "testing",
                 "xunit"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.14"
-            },
             "funding": [
                 {
                     "url": "https://phpunit.de/sponsors.html",
@@ -1606,19 +1360,14 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-18T12:54:07+00:00"
+            "time": "2022-04-01T12:37:26+00:00"
         },
         {
             "name": "psr/http-factory",
             "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "url": "https://nexus.nx.basis.services/repository/composer/psr/http-factory/1.0.1/psr-http-factory-1.0.1.zip",
                 "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
                 "shasum": ""
             },
@@ -1637,7 +1386,6 @@
                     "Psr\\Http\\Message\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1658,22 +1406,14 @@
                 "request",
                 "response"
             ],
-            "support": {
-                "source": "https://github.com/php-fig/http-factory/tree/master"
-            },
             "time": "2019-04-30T12:38:16+00:00"
         },
         {
             "name": "psr/log",
             "version": "3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe5ea303b0887d5caefd3d431c3e61ad47037001",
+                "url": "https://nexus.nx.basis.services/repository/composer/psr/log/3.0.0/psr-log-3.0.0.zip",
                 "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001",
                 "shasum": ""
             },
@@ -1691,7 +1431,6 @@
                     "Psr\\Log\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1708,22 +1447,14 @@
                 "psr",
                 "psr-3"
             ],
-            "support": {
-                "source": "https://github.com/php-fig/log/tree/3.0.0"
-            },
             "time": "2021-07-14T16:46:02+00:00"
         },
         {
             "name": "rybakit/msgpack",
             "version": "v0.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rybakit/msgpack.php.git",
-                "reference": "d4776c10493df1dd76f9d4d4b79ec5edffebfae9"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rybakit/msgpack.php/zipball/d4776c10493df1dd76f9d4d4b79ec5edffebfae9",
+                "url": "https://nexus.nx.basis.services/repository/composer/rybakit/msgpack/v0.8.0/rybakit-msgpack-v0.8.0.zip",
                 "reference": "d4776c10493df1dd76f9d4d4b79ec5edffebfae9",
                 "shasum": ""
             },
@@ -1745,7 +1476,6 @@
                     "MessagePack\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1762,10 +1492,6 @@
                 "pure",
                 "streaming"
             ],
-            "support": {
-                "issues": "https://github.com/rybakit/msgpack.php/issues",
-                "source": "https://github.com/rybakit/msgpack.php/tree/v0.8.0"
-            },
             "funding": [
                 {
                     "url": "https://github.com/rybakit",
@@ -1777,14 +1503,9 @@
         {
             "name": "sebastian/cli-parser",
             "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/cli-parser.git",
-                "reference": "442e7c7e687e42adc03470c7b668bc4b2402c0b2"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/cli-parser/zipball/442e7c7e687e42adc03470c7b668bc4b2402c0b2",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/cli-parser/1.0.1/sebastian-cli-parser-1.0.1.zip",
                 "reference": "442e7c7e687e42adc03470c7b668bc4b2402c0b2",
                 "shasum": ""
             },
@@ -1805,7 +1526,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1818,10 +1538,6 @@
             ],
             "description": "Library for parsing CLI options",
             "homepage": "https://github.com/sebastianbergmann/cli-parser",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/cli-parser/issues",
-                "source": "https://github.com/sebastianbergmann/cli-parser/tree/1.0.1"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -1833,14 +1549,9 @@
         {
             "name": "sebastian/code-unit",
             "version": "1.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/code-unit.git",
-                "reference": "1fc9f64c0927627ef78ba436c9b17d967e68e120"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/code-unit/zipball/1fc9f64c0927627ef78ba436c9b17d967e68e120",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/code-unit/1.0.8/sebastian-code-unit-1.0.8.zip",
                 "reference": "1fc9f64c0927627ef78ba436c9b17d967e68e120",
                 "shasum": ""
             },
@@ -1861,7 +1572,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1874,10 +1584,6 @@
             ],
             "description": "Collection of value objects that represent the PHP code units",
             "homepage": "https://github.com/sebastianbergmann/code-unit",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/code-unit/issues",
-                "source": "https://github.com/sebastianbergmann/code-unit/tree/1.0.8"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -1889,14 +1595,9 @@
         {
             "name": "sebastian/code-unit-reverse-lookup",
             "version": "2.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/code-unit-reverse-lookup.git",
-                "reference": "ac91f01ccec49fb77bdc6fd1e548bc70f7faa3e5"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/code-unit-reverse-lookup/zipball/ac91f01ccec49fb77bdc6fd1e548bc70f7faa3e5",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/code-unit-reverse-lookup/2.0.3/sebastian-code-unit-reverse-lookup-2.0.3.zip",
                 "reference": "ac91f01ccec49fb77bdc6fd1e548bc70f7faa3e5",
                 "shasum": ""
             },
@@ -1917,7 +1618,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -1929,10 +1629,6 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/issues",
-                "source": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/tree/2.0.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -1944,14 +1640,9 @@
         {
             "name": "sebastian/comparator",
             "version": "4.0.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "55f4261989e546dc112258c7a75935a81a7ce382"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/55f4261989e546dc112258c7a75935a81a7ce382",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/comparator/4.0.6/sebastian-comparator-4.0.6.zip",
                 "reference": "55f4261989e546dc112258c7a75935a81a7ce382",
                 "shasum": ""
             },
@@ -1974,7 +1665,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2003,10 +1693,6 @@
                 "compare",
                 "equality"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/comparator/issues",
-                "source": "https://github.com/sebastianbergmann/comparator/tree/4.0.6"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2018,14 +1704,9 @@
         {
             "name": "sebastian/complexity",
             "version": "2.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/complexity.git",
-                "reference": "739b35e53379900cc9ac327b2147867b8b6efd88"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/complexity/zipball/739b35e53379900cc9ac327b2147867b8b6efd88",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/complexity/2.0.2/sebastian-complexity-2.0.2.zip",
                 "reference": "739b35e53379900cc9ac327b2147867b8b6efd88",
                 "shasum": ""
             },
@@ -2047,7 +1728,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2060,10 +1740,6 @@
             ],
             "description": "Library for calculating the complexity of PHP code units",
             "homepage": "https://github.com/sebastianbergmann/complexity",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/complexity/issues",
-                "source": "https://github.com/sebastianbergmann/complexity/tree/2.0.2"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2075,14 +1751,9 @@
         {
             "name": "sebastian/diff",
             "version": "4.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "3461e3fccc7cfdfc2720be910d3bd73c69be590d"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/3461e3fccc7cfdfc2720be910d3bd73c69be590d",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/diff/4.0.4/sebastian-diff-4.0.4.zip",
                 "reference": "3461e3fccc7cfdfc2720be910d3bd73c69be590d",
                 "shasum": ""
             },
@@ -2104,7 +1775,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2126,10 +1796,6 @@
                 "unidiff",
                 "unified diff"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/diff/issues",
-                "source": "https://github.com/sebastianbergmann/diff/tree/4.0.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2140,16 +1806,11 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "5.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "388b6ced16caa751030f6a69e588299fa09200ac"
-            },
+            "version": "5.1.4",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/388b6ced16caa751030f6a69e588299fa09200ac",
-                "reference": "388b6ced16caa751030f6a69e588299fa09200ac",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/environment/5.1.4/sebastian-environment-5.1.4.zip",
+                "reference": "1b5dff7bb151a4db11d49d90e5408e4e938270f7",
                 "shasum": ""
             },
             "require": {
@@ -2172,7 +1833,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2189,29 +1849,20 @@
                 "environment",
                 "hhvm"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/environment/issues",
-                "source": "https://github.com/sebastianbergmann/environment/tree/5.1.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
                     "type": "github"
                 }
             ],
-            "time": "2020-09-28T05:52:38+00:00"
+            "time": "2022-04-03T09:37:03+00:00"
         },
         {
             "name": "sebastian/exporter",
             "version": "4.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "65e8b7db476c5dd267e65eea9cab77584d3cfff9"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/65e8b7db476c5dd267e65eea9cab77584d3cfff9",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/exporter/4.0.4/sebastian-exporter-4.0.4.zip",
                 "reference": "65e8b7db476c5dd267e65eea9cab77584d3cfff9",
                 "shasum": ""
             },
@@ -2234,7 +1885,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2266,10 +1916,6 @@
                 "export",
                 "exporter"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/exporter/issues",
-                "source": "https://github.com/sebastianbergmann/exporter/tree/4.0.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2281,14 +1927,9 @@
         {
             "name": "sebastian/global-state",
             "version": "5.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "0ca8db5a5fc9c8646244e629625ac486fa286bf2"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/0ca8db5a5fc9c8646244e629625ac486fa286bf2",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/global-state/5.0.5/sebastian-global-state-5.0.5.zip",
                 "reference": "0ca8db5a5fc9c8646244e629625ac486fa286bf2",
                 "shasum": ""
             },
@@ -2315,7 +1956,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2330,10 +1970,6 @@
             "keywords": [
                 "global state"
             ],
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/global-state/issues",
-                "source": "https://github.com/sebastianbergmann/global-state/tree/5.0.5"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2345,14 +1981,9 @@
         {
             "name": "sebastian/lines-of-code",
             "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/lines-of-code.git",
-                "reference": "c1c2e997aa3146983ed888ad08b15470a2e22ecc"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/lines-of-code/zipball/c1c2e997aa3146983ed888ad08b15470a2e22ecc",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/lines-of-code/1.0.3/sebastian-lines-of-code-1.0.3.zip",
                 "reference": "c1c2e997aa3146983ed888ad08b15470a2e22ecc",
                 "shasum": ""
             },
@@ -2374,7 +2005,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2387,10 +2017,6 @@
             ],
             "description": "Library for counting the lines of code in PHP source code",
             "homepage": "https://github.com/sebastianbergmann/lines-of-code",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/lines-of-code/issues",
-                "source": "https://github.com/sebastianbergmann/lines-of-code/tree/1.0.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2402,14 +2028,9 @@
         {
             "name": "sebastian/object-enumerator",
             "version": "4.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/object-enumerator.git",
-                "reference": "5c9eeac41b290a3712d88851518825ad78f45c71"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/object-enumerator/zipball/5c9eeac41b290a3712d88851518825ad78f45c71",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/object-enumerator/4.0.4/sebastian-object-enumerator-4.0.4.zip",
                 "reference": "5c9eeac41b290a3712d88851518825ad78f45c71",
                 "shasum": ""
             },
@@ -2432,7 +2053,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2444,10 +2064,6 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/object-enumerator/issues",
-                "source": "https://github.com/sebastianbergmann/object-enumerator/tree/4.0.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2459,14 +2075,9 @@
         {
             "name": "sebastian/object-reflector",
             "version": "2.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/object-reflector.git",
-                "reference": "b4f479ebdbf63ac605d183ece17d8d7fe49c15c7"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/object-reflector/zipball/b4f479ebdbf63ac605d183ece17d8d7fe49c15c7",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/object-reflector/2.0.4/sebastian-object-reflector-2.0.4.zip",
                 "reference": "b4f479ebdbf63ac605d183ece17d8d7fe49c15c7",
                 "shasum": ""
             },
@@ -2487,7 +2098,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2499,10 +2109,6 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/object-reflector/issues",
-                "source": "https://github.com/sebastianbergmann/object-reflector/tree/2.0.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2514,14 +2120,9 @@
         {
             "name": "sebastian/recursion-context",
             "version": "4.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/recursion-context.git",
-                "reference": "cd9d8cf3c5804de4341c283ed787f099f5506172"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/cd9d8cf3c5804de4341c283ed787f099f5506172",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/recursion-context/4.0.4/sebastian-recursion-context-4.0.4.zip",
                 "reference": "cd9d8cf3c5804de4341c283ed787f099f5506172",
                 "shasum": ""
             },
@@ -2542,7 +2143,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2562,10 +2162,6 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/recursion-context/issues",
-                "source": "https://github.com/sebastianbergmann/recursion-context/tree/4.0.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2577,14 +2173,9 @@
         {
             "name": "sebastian/resource-operations",
             "version": "3.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/resource-operations.git",
-                "reference": "0f4443cb3a1d92ce809899753bc0d5d5a8dd19a8"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/resource-operations/zipball/0f4443cb3a1d92ce809899753bc0d5d5a8dd19a8",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/resource-operations/3.0.3/sebastian-resource-operations-3.0.3.zip",
                 "reference": "0f4443cb3a1d92ce809899753bc0d5d5a8dd19a8",
                 "shasum": ""
             },
@@ -2605,7 +2196,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2617,10 +2207,6 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/resource-operations/issues",
-                "source": "https://github.com/sebastianbergmann/resource-operations/tree/3.0.3"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2631,28 +2217,23 @@
         },
         {
             "name": "sebastian/type",
-            "version": "2.3.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/type.git",
-                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914"
-            },
+            "version": "3.0.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/b8cd8a1c753c90bc1a0f5372170e3e489136f914",
-                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/type/3.0.0/sebastian-type-3.0.0.zip",
+                "reference": "b233b84bc4465aff7b57cf1c4bc75c86d00d6dad",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.3"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2660,7 +2241,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2673,29 +2253,20 @@
             ],
             "description": "Collection of value objects that represent the types of the PHP type system",
             "homepage": "https://github.com/sebastianbergmann/type",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/type/issues",
-                "source": "https://github.com/sebastianbergmann/type/tree/2.3.4"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
                     "type": "github"
                 }
             ],
-            "time": "2021-06-15T12:49:02+00:00"
+            "time": "2022-03-15T09:54:48+00:00"
         },
         {
             "name": "sebastian/version",
             "version": "3.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/version.git",
-                "reference": "c6c1022351a901512170118436c764e473f6de8c"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/version/zipball/c6c1022351a901512170118436c764e473f6de8c",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/version/3.0.2/sebastian-version-3.0.2.zip",
                 "reference": "c6c1022351a901512170118436c764e473f6de8c",
                 "shasum": ""
             },
@@ -2713,7 +2284,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -2726,10 +2296,6 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/version/issues",
-                "source": "https://github.com/sebastianbergmann/version/tree/3.0.2"
-            },
             "funding": [
                 {
                     "url": "https://github.com/sebastianbergmann",
@@ -2741,14 +2307,9 @@
         {
             "name": "smi2/phpclickhouse",
             "version": "1.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/smi2/phpClickHouse.git",
-                "reference": "17aea5a0c90f7aa9541d74f7567849938eccfcce"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smi2/phpClickHouse/zipball/17aea5a0c90f7aa9541d74f7567849938eccfcce",
+                "url": "https://nexus.nx.basis.services/repository/composer/smi2/phpclickhouse/1.4.1/smi2-phpclickhouse-1.4.1.zip",
                 "reference": "17aea5a0c90f7aa9541d74f7567849938eccfcce",
                 "shasum": ""
             },
@@ -2769,7 +2330,6 @@
                     "ClickHouseDB\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2791,24 +2351,15 @@
                 "http client",
                 "php"
             ],
-            "support": {
-                "issues": "https://github.com/smi2/phpClickHouse/issues",
-                "source": "https://github.com/smi2/phpClickHouse/tree/1.4.1"
-            },
             "time": "2021-01-20T05:31:30+00:00"
         },
         {
             "name": "symfony/cache",
-            "version": "v5.4.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/cache.git",
-                "reference": "4178f0a19ec3f1f76e7f1a07b8187cbe3d94b825"
-            },
+            "version": "v5.4.8",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/4178f0a19ec3f1f76e7f1a07b8187cbe3d94b825",
-                "reference": "4178f0a19ec3f1f76e7f1a07b8187cbe3d94b825",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/cache/v5.4.8/symfony-cache-v5.4.8.zip",
+                "reference": "4c6747cf7e56c6b8e3094dd24852bd3e364375b1",
                 "shasum": ""
             },
             "require": {
@@ -2855,7 +2406,6 @@
                     "/Tests/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2875,9 +2425,6 @@
                 "caching",
                 "psr6"
             ],
-            "support": {
-                "source": "https://github.com/symfony/cache/tree/v5.4.3"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2892,20 +2439,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-26T16:28:35+00:00"
+            "time": "2022-04-26T13:19:20+00:00"
         },
         {
             "name": "symfony/cache-contracts",
-            "version": "v2.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/cache-contracts.git",
-                "reference": "ac2e168102a2e06a2624f0379bde94cd5854ced2"
-            },
+            "version": "v2.5.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache-contracts/zipball/ac2e168102a2e06a2624f0379bde94cd5854ced2",
-                "reference": "ac2e168102a2e06a2624f0379bde94cd5854ced2",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/cache-contracts/v2.5.1/symfony-cache-contracts-v2.5.1.zip",
+                "reference": "64be4a7acb83b6f2bf6de9a02cee6dad41277ebc",
                 "shasum": ""
             },
             "require": {
@@ -2930,7 +2472,6 @@
                     "Symfony\\Contracts\\Cache\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2954,9 +2495,6 @@
                 "interoperability",
                 "standards"
             ],
-            "support": {
-                "source": "https://github.com/symfony/cache-contracts/tree/v2.5.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2971,29 +2509,24 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-08-17T14:20:01+00:00"
+            "time": "2022-01-02T09:53:40+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "6f981ee24cf69ee7ce9736146d1c57c2780598a8"
-            },
+            "version": "v3.0.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/6f981ee24cf69ee7ce9736146d1c57c2780598a8",
-                "reference": "6f981ee24cf69ee7ce9736146d1c57c2780598a8",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/deprecation-contracts/v3.0.1/symfony-deprecation-contracts-v3.0.1.zip",
+                "reference": "26954b3d62a6c5fd0ea8a2a00c0353a14978d05c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=8.0.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.5-dev"
+                    "dev-main": "3.0-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -3005,7 +2538,6 @@
                     "function.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3021,9 +2553,6 @@
             ],
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3038,20 +2567,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-12T14:48:14+00:00"
+            "time": "2022-01-02T09:55:41+00:00"
         },
         {
             "name": "symfony/http-client",
-            "version": "v5.4.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-client.git",
-                "reference": "a5a467b62dc91eb253db51a91a2c1977f611f60c"
-            },
+            "version": "v5.4.8",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/a5a467b62dc91eb253db51a91a2c1977f611f60c",
-                "reference": "a5a467b62dc91eb253db51a91a2c1977f611f60c",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/http-client/v5.4.8/symfony-http-client-v5.4.8.zip",
+                "reference": "0dabec4e3898d3e00451dd47b5ef839168f9bbf5",
                 "shasum": ""
             },
             "require": {
@@ -3092,7 +2616,6 @@
                     "/Tests/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3108,9 +2631,6 @@
             ],
             "description": "Provides powerful methods to fetch HTTP resources synchronously or asynchronously",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/http-client/tree/v5.4.3"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3125,20 +2645,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-22T06:53:01+00:00"
+            "time": "2022-04-12T16:02:29+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
-            "version": "v2.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/http-client-contracts.git",
-                "reference": "ec82e57b5b714dbb69300d348bd840b345e24166"
-            },
+            "version": "v2.5.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client-contracts/zipball/ec82e57b5b714dbb69300d348bd840b345e24166",
-                "reference": "ec82e57b5b714dbb69300d348bd840b345e24166",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/http-client-contracts/v2.5.1/symfony-http-client-contracts-v2.5.1.zip",
+                "reference": "1a4f708e4e87f335d1b1be6148060739152f0bd5",
                 "shasum": ""
             },
             "require": {
@@ -3162,7 +2677,6 @@
                     "Symfony\\Contracts\\HttpClient\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3186,9 +2700,6 @@
                 "interoperability",
                 "standards"
             ],
-            "support": {
-                "source": "https://github.com/symfony/http-client-contracts/tree/v2.5.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3203,20 +2714,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-03T09:24:47+00:00"
+            "time": "2022-03-13T20:07:29+00:00"
         },
         {
             "name": "symfony/lock",
-            "version": "v5.4.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/lock.git",
-                "reference": "a0cc3e6af48b3ede03e607a15336f1cda7c0db7e"
-            },
+            "version": "v5.4.7",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/lock/zipball/a0cc3e6af48b3ede03e607a15336f1cda7c0db7e",
-                "reference": "a0cc3e6af48b3ede03e607a15336f1cda7c0db7e",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/lock/v5.4.7/symfony-lock-v5.4.7.zip",
+                "reference": "a16279554621453840eb8af14d12cfa24c10b8d3",
                 "shasum": ""
             },
             "require": {
@@ -3241,7 +2747,6 @@
                     "/Tests/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3265,9 +2770,6 @@
                 "redlock",
                 "semaphore"
             ],
-            "support": {
-                "source": "https://github.com/symfony/lock/tree/v5.4.3"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3282,20 +2784,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-27T13:12:43+00:00"
+            "time": "2022-03-22T15:31:03+00:00"
         },
         {
             "name": "symfony/mime",
-            "version": "v5.4.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/mime.git",
-                "reference": "e1503cfb5c9a225350f549d3bb99296f4abfb80f"
-            },
+            "version": "v5.4.8",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/e1503cfb5c9a225350f549d3bb99296f4abfb80f",
-                "reference": "e1503cfb5c9a225350f549d3bb99296f4abfb80f",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/mime/v5.4.8/symfony-mime-v5.4.8.zip",
+                "reference": "af49bc163ec3272f677bde3bc44c0d766c1fd662",
                 "shasum": ""
             },
             "require": {
@@ -3328,7 +2825,6 @@
                     "/Tests/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3348,9 +2844,6 @@
                 "mime",
                 "mime-type"
             ],
-            "support": {
-                "source": "https://github.com/symfony/mime/tree/v5.4.3"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3365,19 +2858,14 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T09:53:40+00:00"
+            "time": "2022-04-12T15:48:08+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.24.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "30885182c981ab175d4d034db0f6f469898070ab"
-            },
+            "version": "v1.25.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/30885182c981ab175d4d034db0f6f469898070ab",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-ctype/v1.25.0/symfony-polyfill-ctype-v1.25.0.zip",
                 "reference": "30885182c981ab175d4d034db0f6f469898070ab",
                 "shasum": ""
             },
@@ -3401,14 +2889,13 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3430,9 +2917,6 @@
                 "polyfill",
                 "portable"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.24.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3451,15 +2935,10 @@
         },
         {
             "name": "symfony/polyfill-intl-idn",
-            "version": "v1.24.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-intl-idn.git",
-                "reference": "749045c69efb97c70d25d7463abba812e91f3a44"
-            },
+            "version": "v1.25.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/749045c69efb97c70d25d7463abba812e91f3a44",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-intl-idn/v1.25.0/symfony-polyfill-intl-idn-v1.25.0.zip",
                 "reference": "749045c69efb97c70d25d7463abba812e91f3a44",
                 "shasum": ""
             },
@@ -3489,7 +2968,6 @@
                     "Symfony\\Polyfill\\Intl\\Idn\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3517,9 +2995,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-intl-idn/tree/v1.24.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3538,15 +3013,10 @@
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.24.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
-                "reference": "8590a5f561694770bdcd3f9b5c69dde6945028e8"
-            },
+            "version": "v1.25.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/8590a5f561694770bdcd3f9b5c69dde6945028e8",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-intl-normalizer/v1.25.0/symfony-polyfill-intl-normalizer-v1.25.0.zip",
                 "reference": "8590a5f561694770bdcd3f9b5c69dde6945028e8",
                 "shasum": ""
             },
@@ -3577,7 +3047,6 @@
                     "Resources/stubs"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3601,9 +3070,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.24.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3622,15 +3088,10 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.24.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "0abb51d2f102e00a4eefcf46ba7fec406d245825"
-            },
+            "version": "v1.25.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/0abb51d2f102e00a4eefcf46ba7fec406d245825",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-mbstring/v1.25.0/symfony-polyfill-mbstring-v1.25.0.zip",
                 "reference": "0abb51d2f102e00a4eefcf46ba7fec406d245825",
                 "shasum": ""
             },
@@ -3661,7 +3122,6 @@
                     "Symfony\\Polyfill\\Mbstring\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3684,9 +3144,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.24.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3705,15 +3162,10 @@
         },
         {
             "name": "symfony/polyfill-php72",
-            "version": "v1.24.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php72.git",
-                "reference": "9a142215a36a3888e30d0a9eeea9766764e96976"
-            },
+            "version": "v1.25.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/9a142215a36a3888e30d0a9eeea9766764e96976",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php72/v1.25.0/symfony-polyfill-php72-v1.25.0.zip",
                 "reference": "9a142215a36a3888e30d0a9eeea9766764e96976",
                 "shasum": ""
             },
@@ -3738,7 +3190,6 @@
                     "Symfony\\Polyfill\\Php72\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3760,9 +3211,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php72/tree/v1.24.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3781,15 +3229,10 @@
         },
         {
             "name": "symfony/polyfill-php73",
-            "version": "v1.24.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php73.git",
-                "reference": "cc5db0e22b3cb4111010e48785a97f670b350ca5"
-            },
+            "version": "v1.25.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/cc5db0e22b3cb4111010e48785a97f670b350ca5",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php73/v1.25.0/symfony-polyfill-php73-v1.25.0.zip",
                 "reference": "cc5db0e22b3cb4111010e48785a97f670b350ca5",
                 "shasum": ""
             },
@@ -3817,7 +3260,6 @@
                     "Resources/stubs"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3839,9 +3281,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php73/tree/v1.24.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3860,16 +3299,11 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.24.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9"
-            },
+            "version": "v1.25.0",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/57b712b08eddb97c762a8caa32c84e037892d2e9",
-                "reference": "57b712b08eddb97c762a8caa32c84e037892d2e9",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php80/v1.25.0/symfony-polyfill-php80-v1.25.0.zip",
+                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c",
                 "shasum": ""
             },
             "require": {
@@ -3896,7 +3330,6 @@
                     "Resources/stubs"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3922,9 +3355,6 @@
                 "portable",
                 "shim"
             ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.24.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3939,20 +3369,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-13T13:58:33+00:00"
+            "time": "2022-03-04T08:16:47+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "553f50487389a977eb31cf6b37faae56da00f753"
-            },
+            "version": "v5.4.8",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/553f50487389a977eb31cf6b37faae56da00f753",
-                "reference": "553f50487389a977eb31cf6b37faae56da00f753",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/process/v5.4.8/symfony-process-v5.4.8.zip",
+                "reference": "597f3fff8e3e91836bb0bd38f5718b56ddbde2f3",
                 "shasum": ""
             },
             "require": {
@@ -3968,7 +3393,6 @@
                     "/Tests/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3984,9 +3408,6 @@
             ],
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/process/tree/v5.4.3"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -4001,26 +3422,21 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-26T16:28:35+00:00"
+            "time": "2022-04-08T05:07:18+00:00"
         },
         {
             "name": "symfony/service-contracts",
-            "version": "v2.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "1ab11b933cd6bc5464b08e81e2c5b07dec58b0fc"
-            },
+            "version": "v2.5.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/1ab11b933cd6bc5464b08e81e2c5b07dec58b0fc",
-                "reference": "1ab11b933cd6bc5464b08e81e2c5b07dec58b0fc",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/service-contracts/v2.5.1/symfony-service-contracts-v2.5.1.zip",
+                "reference": "24d9dc654b83e91aa59f9d167b131bc3b5bea24c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.5",
                 "psr/container": "^1.1",
-                "symfony/deprecation-contracts": "^2.1"
+                "symfony/deprecation-contracts": "^2.1|^3"
             },
             "conflict": {
                 "ext-psr": "<1.1|>=2"
@@ -4043,7 +3459,6 @@
                     "Symfony\\Contracts\\Service\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4067,9 +3482,6 @@
                 "interoperability",
                 "standards"
             ],
-            "support": {
-                "source": "https://github.com/symfony/service-contracts/tree/v2.5.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -4084,20 +3496,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-04T16:48:04+00:00"
+            "time": "2022-03-13T20:07:29+00:00"
         },
         {
             "name": "symfony/translation",
-            "version": "v6.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/translation.git",
-                "reference": "71bb15335798f8c4da110911bcf2d2fead7a430d"
-            },
+            "version": "v6.0.8",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/71bb15335798f8c4da110911bcf2d2fead7a430d",
-                "reference": "71bb15335798f8c4da110911bcf2d2fead7a430d",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/translation/v6.0.8/symfony-translation-v6.0.8.zip",
+                "reference": "3d38cf8f8834148c4457681d539bc204de701501",
                 "shasum": ""
             },
             "require": {
@@ -4146,7 +3553,6 @@
                     "/Tests/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4162,9 +3568,6 @@
             ],
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/translation/tree/v6.0.3"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -4179,20 +3582,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-07T00:29:03+00:00"
+            "time": "2022-04-22T08:18:02+00:00"
         },
         {
             "name": "symfony/translation-contracts",
-            "version": "v3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/translation-contracts.git",
-                "reference": "1b6ea5a7442af5a12dba3dbd6d71034b5b234e77"
-            },
+            "version": "v3.0.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/1b6ea5a7442af5a12dba3dbd6d71034b5b234e77",
-                "reference": "1b6ea5a7442af5a12dba3dbd6d71034b5b234e77",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/translation-contracts/v3.0.1/symfony-translation-contracts-v3.0.1.zip",
+                "reference": "c4183fc3ef0f0510893cbeedc7718fb5cafc9ac9",
                 "shasum": ""
             },
             "require": {
@@ -4216,7 +3614,6 @@
                     "Symfony\\Contracts\\Translation\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4240,9 +3637,6 @@
                 "interoperability",
                 "standards"
             ],
-            "support": {
-                "source": "https://github.com/symfony/translation-contracts/tree/v3.0.0"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -4257,20 +3651,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-07T12:43:40+00:00"
+            "time": "2022-01-02T09:55:41+00:00"
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v6.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "1261b2d4a23081cb2b59a4caa311a5ac43b845b6"
-            },
+            "version": "v6.0.8",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/1261b2d4a23081cb2b59a4caa311a5ac43b845b6",
-                "reference": "1261b2d4a23081cb2b59a4caa311a5ac43b845b6",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/var-exporter/v6.0.8/symfony-var-exporter-v6.0.8.zip",
+                "reference": "74b272979a490747c6775b0228d06cf246306a99",
                 "shasum": ""
             },
             "require": {
@@ -4288,7 +3677,6 @@
                     "/Tests/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4312,9 +3700,6 @@
                 "instantiate",
                 "serialize"
             ],
-            "support": {
-                "source": "https://github.com/symfony/var-exporter/tree/v6.0.3"
-            },
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -4329,19 +3714,14 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T09:55:41+00:00"
+            "time": "2022-04-26T13:22:23+00:00"
         },
         {
             "name": "tarantool/client",
             "version": "v0.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tarantool-php/client.git",
-                "reference": "17b6b38daf250abfac8a5e7b89efcf6d9899ad88"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/client/zipball/17b6b38daf250abfac8a5e7b89efcf6d9899ad88",
+                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/client/v0.9.0/tarantool-client-v0.9.0.zip",
                 "reference": "17b6b38daf250abfac8a5e7b89efcf6d9899ad88",
                 "shasum": ""
             },
@@ -4378,7 +3758,6 @@
                     "Tarantool\\Client\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4395,10 +3774,6 @@
                 "pure",
                 "tarantool"
             ],
-            "support": {
-                "issues": "https://github.com/tarantool-php/client/issues",
-                "source": "https://github.com/tarantool-php/client/tree/v0.9.0"
-            },
             "funding": [
                 {
                     "url": "https://github.com/rybakit",
@@ -4409,20 +3784,15 @@
         },
         {
             "name": "tarantool/mapper",
-            "version": "4.6.19",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tarantool-php/mapper.git",
-                "reference": "34beb4ca95b4be0e6f54ae52e166f064d77e7b65"
-            },
+            "version": "5.0.2",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/mapper/zipball/34beb4ca95b4be0e6f54ae52e166f064d77e7b65",
-                "reference": "34beb4ca95b4be0e6f54ae52e166f064d77e7b65",
+                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.2/tarantool-mapper-5.0.2.zip",
+                "reference": "63748efdff213139b278901eb3aa28f575fd5d81",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.3",
+                "php": ">=8.0",
                 "tarantool/client": ">=0.9.0"
             },
             "require-dev": {
@@ -4441,10 +3811,10 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Tarantool\\Mapper\\": "src/"
+                    "Tarantool\\Mapper\\": "src/",
+                    "Tarantool\\Mapper\\Tests\\": "tests/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4462,23 +3832,14 @@
                 "pure",
                 "tarantool"
             ],
-            "support": {
-                "issues": "https://github.com/tarantool-php/mapper/issues",
-                "source": "https://github.com/tarantool-php/mapper/tree/4.6.19"
-            },
-            "time": "2021-09-08T15:08:57+00:00"
+            "time": "2022-05-04T09:37:13+00:00"
         },
         {
             "name": "tarantool/queue",
             "version": "v0.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tarantool-php/queue.git",
-                "reference": "a1801e5aef101586faea4f4b59b7cf3f96517525"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/queue/zipball/a1801e5aef101586faea4f4b59b7cf3f96517525",
+                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/queue/v0.9.0/tarantool-queue-v0.9.0.zip",
                 "reference": "a1801e5aef101586faea4f4b59b7cf3f96517525",
                 "shasum": ""
             },
@@ -4498,7 +3859,6 @@
                     "Tarantool\\Queue\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4522,10 +3882,6 @@
                 "ttr",
                 "worker"
             ],
-            "support": {
-                "issues": "https://github.com/tarantool-php/queue/issues",
-                "source": "https://github.com/tarantool-php/queue/tree/v0.9.0"
-            },
             "funding": [
                 {
                     "url": "https://github.com/rybakit",
@@ -4537,14 +3893,9 @@
         {
             "name": "tarantool/symfony-lock",
             "version": "0.2.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tarantool-php/symfony-lock.git",
-                "reference": "e319df8c42e1a78324ea648ace9a7f5909808783"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tarantool-php/symfony-lock/zipball/e319df8c42e1a78324ea648ace9a7f5909808783",
+                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/symfony-lock/0.2.6/tarantool-symfony-lock-0.2.6.zip",
                 "reference": "e319df8c42e1a78324ea648ace9a7f5909808783",
                 "shasum": ""
             },
@@ -4567,7 +3918,6 @@
                     "Tarantool\\SymfonyLock\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4585,23 +3935,14 @@
                 "pure",
                 "tarantool"
             ],
-            "support": {
-                "issues": "https://github.com/tarantool-php/symfony-lock/issues",
-                "source": "https://github.com/tarantool-php/symfony-lock/tree/0.2.6"
-            },
             "time": "2021-12-08T13:24:28+00:00"
         },
         {
             "name": "theseer/tokenizer",
             "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/34a41e998c2183e22995f158c581e7b5e755ab9e",
+                "url": "https://nexus.nx.basis.services/repository/composer/theseer/tokenizer/1.2.1/theseer-tokenizer-1.2.1.zip",
                 "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e",
                 "shasum": ""
             },
@@ -4617,7 +3958,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -4629,10 +3969,6 @@
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
-            "support": {
-                "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/1.2.1"
-            },
             "funding": [
                 {
                     "url": "https://github.com/theseer",
@@ -4644,14 +3980,9 @@
         {
             "name": "webmozart/assert",
             "version": "1.10.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webmozarts/assert.git",
-                "reference": "6964c76c7804814a842473e0c8fd15bab0f18e25"
-            },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/6964c76c7804814a842473e0c8fd15bab0f18e25",
+                "url": "https://nexus.nx.basis.services/repository/composer/webmozart/assert/1.10.0/webmozart-assert-1.10.0.zip",
                 "reference": "6964c76c7804814a842473e0c8fd15bab0f18e25",
                 "shasum": ""
             },
@@ -4677,7 +4008,6 @@
                     "Webmozart\\Assert\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4693,10 +4023,6 @@
                 "check",
                 "validate"
             ],
-            "support": {
-                "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.10.0"
-            },
             "time": "2021-03-09T10:59:23+00:00"
         }
     ],

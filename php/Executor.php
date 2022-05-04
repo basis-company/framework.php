@@ -155,7 +155,7 @@ class Executor
         if (!$tuple) {
             return;
         }
-        $request = $this->getRepository('job_queue')->getInstance($tuple);
+        $request = $this->getRepository('job_queue')->createInstance($tuple);
 
         $resolver = $this->get(Dispatcher::class)->dispatch('nats.subject', [
             'job' => $request->job,
@@ -252,7 +252,7 @@ class Executor
         if (count($remote)) {
             $group = [];
             foreach ($remote as $tuple) {
-                $result = $this->getRepository('job_result')->getInstance($tuple);
+                $result = $this->getRepository('job_result')->createInstance($tuple);
                 if (!array_key_exists($result->service, $group)) {
                     $group[$result->service] = [];
                 }
@@ -298,7 +298,6 @@ class Executor
                 $dispatcher = $this->get(Dispatcher::class);
                 $dispatcher->dispatch('module.sleep', ['seconds' => 0.5]);
             }
-            $this->getRepository('job_result')->flushCache();
             return $this->getResult($hash, $service);
         }
         return $this->get(Converter::class)->toObject($result->data);

@@ -62,7 +62,8 @@ class RunnerTest extends Test
 
         [$tuple] = $space->select($criteria);
         $this->assertCount(9, $tuple);
-        $this->getRepository('job_queue')->sync($queue->id);
+
+        $queue = $this->findOrFail('job_queue', $queue->id);
         $this->assertSame($queue->status, 'new');
 
         // no more changes

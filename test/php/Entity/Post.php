@@ -19,6 +19,7 @@ class Post extends Entity
     public function afterCreate()
     {
         $this->text .= '!';
+        $this->save();
     }
 
     public function afterUpdate()
