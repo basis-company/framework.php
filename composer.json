@@ -35,7 +35,7 @@
         "symfony/process": "^5.3.7",
         "symfony/service-contracts": "^2.4.0",
         "tarantool/client": "^0.9.0",
-        "tarantool/mapper": "^5.0.3",
+        "tarantool/mapper": "^5.0.4",
         "tarantool/queue": "v0.9.0",
         "tarantool/symfony-lock": "^0.2.5"
     },

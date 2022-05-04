@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bed1e4a0838cbbffdd36b87b518ee6b",
+    "content-hash": "de0a38f81fba8e62679c9e9aa9489b3b",
     "packages": [
         {
             "name": "psr/cache",
@@ -3784,11 +3784,11 @@
         },
         {
             "name": "tarantool/mapper",
-            "version": "5.0.3",
+            "version": "5.0.4",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.3/tarantool-mapper-5.0.3.zip",
-                "reference": "ee4b8640d06ffe5258c549a8b92a8204b8704293",
+                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.4/tarantool-mapper-5.0.4.zip",
+                "reference": "05d7ce569acaaa6ab9fbb4607e86a39f1f03c4a9",
                 "shasum": ""
             },
             "require": {
@@ -3798,7 +3798,7 @@
             "require-dev": {
                 "nesbot/carbon": "^2.51.1",
                 "phpdocumentor/reflection-docblock": "^5.2.2",
-                "phpunit/phpunit": "^9.2.5",
+                "phpunit/phpunit": "^9.5",
                 "psr/log": "^1.1.4",
                 "rybakit/msgpack": "^0.8.0",
                 "symfony/uid": "^v5.3.3"
@@ -3832,7 +3832,7 @@
                 "pure",
                 "tarantool"
             ],
-            "time": "2022-05-04T10:55:04+00:00"
+            "time": "2022-05-04T13:39:16+00:00"
         },
         {
             "name": "tarantool/queue",
