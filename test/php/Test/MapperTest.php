@@ -15,6 +15,12 @@ class MapperTest extends Test
         'flow.status' => [],
     ];
 
+    public function testApplicationInstance()
+    {
+        $vspace = $this->findOrFail('_vspace');
+        $this->assertSame($vspace->app, $this->app);
+    }
+
     public function testEntityInheritance()
     {
         $status = $this->create('flow.status', []);
