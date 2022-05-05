@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de0a38f81fba8e62679c9e9aa9489b3b",
+    "content-hash": "f21ee2f44621f700573ca31667a47266",
     "packages": [
         {
             "name": "psr/cache",
@@ -3784,11 +3784,11 @@
         },
         {
             "name": "tarantool/mapper",
-            "version": "5.0.4",
+            "version": "5.0.5",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.4/tarantool-mapper-5.0.4.zip",
-                "reference": "05d7ce569acaaa6ab9fbb4607e86a39f1f03c4a9",
+                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.5/tarantool-mapper-5.0.5.zip",
+                "reference": "6cb860c051c8868c7f2181ee0a2b35d226cbc2b3",
                 "shasum": ""
             },
             "require": {
@@ -3832,7 +3832,7 @@
                 "pure",
                 "tarantool"
             ],
-            "time": "2022-05-04T13:39:16+00:00"
+            "time": "2022-05-04T14:31:21+00:00"
         },
         {
             "name": "tarantool/queue",
