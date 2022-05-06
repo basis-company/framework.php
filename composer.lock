@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f21ee2f44621f700573ca31667a47266",
+    "content-hash": "75591bf9af40848aae81c04135fd8eb2",
     "packages": [
         {
             "name": "psr/cache",
@@ -132,11 +132,11 @@
     "packages-dev": [
         {
             "name": "basis-company/nats",
-            "version": "0.6.3",
+            "version": "0.6.4",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/basis-company/nats/0.6.3/basis-company-nats-0.6.3.zip",
-                "reference": "aa0d9307cce3c48d79533ffe593a422d7c8fa91a",
+                "url": "https://nexus.nx.basis.services/repository/composer/basis-company/nats/0.6.4/basis-company-nats-0.6.4.zip",
+                "reference": "b22d88270876db9622c1ab326112dec9406d655d",
                 "shasum": ""
             },
             "require": {
@@ -178,7 +178,7 @@
                 "streaming",
                 "subscribe"
             ],
-            "time": "2022-05-04T09:15:10+00:00"
+            "time": "2022-05-05T09:31:52+00:00"
         },
         {
             "name": "basis-company/telemetry",
