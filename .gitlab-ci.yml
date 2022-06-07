@@ -51,7 +51,7 @@ test-phpcs:
   script:
     - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
     - chmod +x phpcs.phar
-    - curl -o phpcs.xml https://wfm.basis.services/linter/php
+    - curl -o phpcs.xml https://basiswfm.cetelem.ru/linter/php
     - ./phpcs.phar php --standard=phpcs.xml
 
 test-phpunit:
