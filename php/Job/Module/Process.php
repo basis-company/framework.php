@@ -56,6 +56,7 @@ class Process extends Job
                     $this->exception($e);
                 }
                 $result = [
+                    'exception' => $e->getMessage(),
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
                     'trace' => $e->getTraceAsString(),
