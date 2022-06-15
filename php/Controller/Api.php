@@ -9,9 +9,9 @@ use Basis\Event;
 use Basis\Http;
 use Basis\Telemetry\Tracing\Tracer;
 use Basis\Toolkit;
-use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class Api
 {
@@ -131,7 +131,7 @@ class Api
                 'data' => $data,
                 'timing' => +number_format(microtime(true) - $start, 3),
             ];
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->exception($e);
             return [
                 'success' => false,
