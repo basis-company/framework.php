@@ -86,7 +86,7 @@ class Select extends Procedure
 
         for i, value in pairs(values) do
             selector(index, value)
-            if i % 10000 == 0 then
+            if i % 5000 == 0 then
                 fiber.yield()
             end
         end
