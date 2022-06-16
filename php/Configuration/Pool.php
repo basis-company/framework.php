@@ -7,7 +7,9 @@ use Basis\Container;
 use Basis\Configuration\Mapper as MapperConfiguration;
 use Basis\Configuration\Tarantool as TarantoolConfiguration;
 use Basis\Middleware\TarantoolRetryMiddleware;
+use Basis\Middleware\TarantoolProcMiddleware;
 use Basis\Toolkit;
+use Basis\Dispatcher;
 use Exception;
 use Tarantool\Client\Client;
 use Tarantool\Mapper\Mapper;
@@ -42,7 +44,10 @@ class Pool
                     ];
 
                     $client = Client::fromOptions($options)
-                        ->withMiddleware($this->get(TarantoolRetryMiddleware::class));
+                        ->withMiddleware(
+                            $this->get(TarantoolRetryMiddleware::class),
+                            new TarantoolProcMiddleware($name, $this->get(Dispatcher::class))
+                        );
 
                     try {
                         $client->evaluate("box.session.su('admin')");
