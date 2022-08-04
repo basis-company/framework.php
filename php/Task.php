@@ -47,7 +47,7 @@ class Task
             foreach ($this->params as $k => $v) {
                 $arguments[] = "$k=$v";
             }
-            $this->command = ['php', 'console', $this->job, ...$arguments];
+            $this->command = ['php', 'console', '--silent', $this->job, ...$arguments];
         }
 
         $callback = null;
