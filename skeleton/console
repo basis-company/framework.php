@@ -18,6 +18,12 @@ $application = new Application();
 try {
     array_shift($argv);
     $job = $argv ? array_shift($argv) : 'module.meta';
+    $silent = false;
+
+    if ($job == '--silent') {
+        $job = $argv ? array_shift($argv) : 'module.meta';
+        $silent = true;
+    }
 
     $params = [];
     if (count($argv)) {
@@ -60,7 +66,7 @@ try {
     $application->get(Telemetry::class)->setName('console');
 
     $result = $application->dispatch($job, $params);
-    if ($result) {
+    if ($result && !$silent) {
         if (!is_object($result) || count(get_object_vars($result))) {
             if (class_exists(Yaml::class)) {
                 echo Yaml::dump($result, 2, 2, Yaml::DUMP_OBJECT_AS_MAP);

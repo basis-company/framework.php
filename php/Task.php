@@ -47,16 +47,13 @@ class Task
             foreach ($this->params as $k => $v) {
                 $arguments[] = "$k=$v";
             }
-            $this->command = ['php', 'console', $this->job, ...$arguments];
+            $this->command = ['php', 'console', '--silent', $this->job, ...$arguments];
         }
 
         $callback = null;
         if ($this->logging) {
             $callback = function ($type, $buffer) {
                 if (!strlen(trim($buffer))) {
-                    return;
-                }
-                if (Process::OUT === $type && substr($buffer, 0, 10) != '{"message"') {
                     return;
                 }
                 file_put_contents('php://stdout', trim($buffer) . PHP_EOL);
