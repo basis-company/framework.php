@@ -13,6 +13,7 @@ class Task
     public int|Closure $delay = 1;
     public int $limit = PHP_INT_MAX;
     public int $timeout = PHP_INT_MAX;
+    public bool $logging = true;
 
     private ?Process $process = null;
     private array $command = [];
@@ -49,9 +50,23 @@ class Task
             $this->command = ['php', 'console', $this->job, ...$arguments];
         }
 
+        $callback = null;
+        if ($this->logging) {
+            $callback = function ($type, $buffer) {
+                if (!strlen(trim($buffer))) {
+                    return;
+                }
+                if (Process::OUT === $type && substr($buffer, 0, 10) != '{"message"') {
+                    return;
+                }
+                file_put_contents('php://stdout', trim($buffer) . PHP_EOL);
+            };
+        }
+
         $this->process = new Process($this->command, '/var/www/html');
         $this->process->setTimeout($this->timeout);
-        $this->process->start();
+        $this->process->disableOutput();
+        $this->process->start($callback);
 
         $this->limit--;
         $this->startedAt = microtime(true);

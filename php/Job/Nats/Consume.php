@@ -95,6 +95,9 @@ class Consume
             ]);
         } else {
             // system jobs should be replayed as is
+            if (is_object($request->params)) {
+                $request->params = (array) $request->params;
+            }
             $this->dispatcher->send($request->job, $request->params);
         }
     }

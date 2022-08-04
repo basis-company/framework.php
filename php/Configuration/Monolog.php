@@ -7,6 +7,7 @@ use Basis\Http;
 use Basis\Nats\Client;
 use Basis\Telemetry\Tracing\Tracer;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
@@ -29,12 +30,12 @@ class Monolog
             }
 
             $log = new Logger($this->name);
-            $log->pushHandler(new class ($container) extends AbstractProcessingHandler {
+            $log->pushHandler(new class ($container) extends StreamHandler {
                 public function __construct(private Container $container)
                 {
-                    $this->subject = str_replace('-', '.', 'logs-' . gethostname());
+                    parent::__construct('php://stdout');
                 }
-                protected function write(array $record): void
+                protected function streamWrite($stream, array $record): void
                 {
                     $level = strtolower($record['level_name']);
                     unset($record['level_name']);
@@ -52,8 +53,7 @@ class Monolog
 
                     unset($record['formatted']);
                     unset($record['datetime']);
-
-                    $this->container->get(Client::class)->publish($this->subject, json_encode($record));
+                    fwrite($stream, json_encode($record) . PHP_EOL);
                 }
             });
 
