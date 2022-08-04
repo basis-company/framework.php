@@ -28,7 +28,8 @@ RUN apt-get update \
     && echo "ServerName default" > /etc/apache2/conf-enabled/server-name.conf \
     && sed -i 's~DocumentRoot.*$~DocumentRoot /var/www/html/public~' /etc/apache2/sites-enabled/000-default.conf \
     && sed -i 's/AccessLog/#AccessLog/g' /etc/apache2/sites-enabled/000-default.conf \
-    && sed -i 's/ErrorLog/#ErrorLog/g' /etc/apache2/sites-enabled/000-default.conf
+    && sed -i 's/#*ErrorLog.*$/ErrorLog \/dev\/null/g' /etc/apache2/sites-enabled/000-default.conf \
+    && sed -i 's/#*CustomLog.*$/CustomLog \/dev\/null combined/g' /etc/apache2/sites-enabled/000-default.conf
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY skeleton /var/www/html
@@ -42,4 +43,4 @@ COPY --from=version /var/www/html/composer.json /var/www/html/vendor/basis-compa
 
 RUN composer dump-autoload --classmap-authoritative
 
-CMD ./starter
+CMD php console module.starter

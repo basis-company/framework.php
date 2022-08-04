@@ -3,9 +3,9 @@
 namespace Basis\Job\Module;
 
 use Basis\Dispatcher;
-use Basis\Nats\Client;
 use Basis\Task;
 use Job\Background;
+use Symfony\Component\Process\Process;
 
 class Starter
 {
@@ -18,7 +18,23 @@ class Starter
 
     public function run()
     {
+        ini_set('max_execution_time', 0);
+
+        if (!file_exists('var')) {
+            mkdir('var');
+        }
         chmod('var', 0777);
+
+        if (!file_exists('var/telemetry')) {
+            posix_mkfifo('var/telemetry', 0777);
+        }
+        chmod('var/telemetry', 0777);
+
+        if (getenv('BASIS_ENVIRONMENT') !== 'dev') {
+            exec('/var/www/html/composer.phar dump-autoload --classmap-authoritative > /dev/null');
+        } else {
+            exec('/var/www/html/composer.phar dump-autoload > /dev/null');
+        }
 
         $this->register('module.process', [
             'job' => 'module.telemetry',
@@ -54,6 +70,8 @@ class Starter
                 $this->register('nats.consume', $params);
             }
         }
+
+        proc_open('apache2-foreground', [STDIN, STDOUT, STDOUT], $pipes);
 
         $this->loop();
     }
