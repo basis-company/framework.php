@@ -76,6 +76,7 @@ class Task
         }
 
         $this->process->stop();
+        $this->process = null;
     }
 
     public function finalize()
@@ -89,6 +90,9 @@ class Task
 
         if (!$complete) {
             $stat = @file_get_contents("/proc/$pid/stat");
+            if (!$stat) {
+                $complete = true;
+            }
             sscanf($stat, "%d %s %c", $rpid, $cmd, $status);
             if ($status == 'Z' || !$status) {
                 if ($status == 'Z') {
