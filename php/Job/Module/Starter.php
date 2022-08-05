@@ -43,7 +43,8 @@ class Starter
 
         $this->register('module.bootstrap')->limit(1);
 
-        if (class_exists(Background::class)) {
+        $service = $this->dispatcher->getServiceName();
+        if ($this->dispatcher->getClass("$service.background")) {
             $this->register('module.process', [
                 'job' => 'module.background',
                 'iterations' => 1024,
