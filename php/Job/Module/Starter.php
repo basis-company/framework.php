@@ -52,10 +52,11 @@ class Starter
         }
 
         if (getenv('SERVICE_EXECUTOR') !== 'false') {
+            // module execute every 5 minutes
             $this->register('module.process', [
                 'job' => 'module.execute',
-                'iterations' => 1024,
-            ]);
+                'iterations' => 1,
+            ])->delay(5 * 60);
         }
 
         foreach ($this->dispatcher->getHandlers() as $handler) {
