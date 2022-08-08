@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75591bf9af40848aae81c04135fd8eb2",
+    "content-hash": "b4bd693c13c5e17f9328f70b65b3bbf5",
     "packages": [
         {
             "name": "psr/cache",
@@ -132,25 +132,31 @@
     "packages-dev": [
         {
             "name": "basis-company/nats",
-            "version": "0.6.4",
+            "version": "0.7.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/basis-company/nats/0.6.4/basis-company-nats-0.6.4.zip",
-                "reference": "b22d88270876db9622c1ab326112dec9406d655d",
+                "url": "https://nexus.nx.basis.services/repository/composer/basis-company/nats/0.7.2/basis-company-nats-0.7.2.zip",
+                "reference": "9230e672dce919025084f0ba15aa707cbad9ea2a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8"
+                "php": ">=8.1"
             },
             "require-dev": {
+                "ext-sodium": "*",
+                "friendsofphp/php-cs-fixer": "^3.9",
                 "monolog/monolog": "^2.3.5",
+                "phan/phan": "^5.3",
                 "phpunit/phpunit": "^9.5"
+            },
+            "suggest": {
+                "ext-sodium": "Provides Ed25519 for nkey authentication",
+                "paragonie/sodium_compat": "Provides Ed25519 for nkey authentication if sodium is not available"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Basis\\Nats\\": "src/",
-                    "Basis\\Nats\\Tests\\": "tests/"
+                    "Basis\\Nats\\": "src/"
                 }
             },
             "license": [
@@ -178,7 +184,7 @@
                 "streaming",
                 "subscribe"
             ],
-            "time": "2022-05-05T09:31:52+00:00"
+            "time": "2022-08-04T15:32:37+00:00"
         },
         {
             "name": "basis-company/telemetry",
@@ -3784,11 +3790,11 @@
         },
         {
             "name": "tarantool/mapper",
-            "version": "5.0.5",
+            "version": "5.0.9",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.5/tarantool-mapper-5.0.5.zip",
-                "reference": "6cb860c051c8868c7f2181ee0a2b35d226cbc2b3",
+                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.9/tarantool-mapper-5.0.9.zip",
+                "reference": "1f49d6f8ef124c499ba20c7a50ac659d480c4fd0",
                 "shasum": ""
             },
             "require": {
@@ -3832,7 +3838,7 @@
                 "pure",
                 "tarantool"
             ],
-            "time": "2022-05-04T14:31:21+00:00"
+            "time": "2022-08-05T11:07:21+00:00"
         },
         {
             "name": "tarantool/queue",
@@ -4035,5 +4041,5 @@
         "php": "^7.4|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }

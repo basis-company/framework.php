@@ -18,7 +18,7 @@
         "psr/http-message": "^1.0"
     },
     "require-dev": {
-        "basis-company/nats": "^0.6.4",
+        "basis-company/nats": "^0.7.2",
         "basis-company/telemetry": "^0.1.10",
         "monolog/monolog": "^2.3.5",
         "nesbot/carbon": "^2.51",
@@ -35,7 +35,7 @@
         "symfony/process": "^5.3.7",
         "symfony/service-contracts": "^2.4.0",
         "tarantool/client": "^0.9.0",
-        "tarantool/mapper": "^5.0.5",
+        "tarantool/mapper": "^5.0.9",
         "tarantool/queue": "v0.9.0",
         "tarantool/symfony-lock": "^0.2.5"
     },

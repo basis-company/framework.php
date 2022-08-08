@@ -86,18 +86,22 @@ class Consume
 
     private function schedule($request)
     {
+        if (is_object($request->params)) {
+            $request->params = (array) $request->params;
+        }
         if (explode('.', $request->job)[0] == $this->dispatcher->getServiceName()) {
             // domain jobs can be replayed via queue
-            $this->dispatcher->send('queue.put', [
-                'job' => $request->job,
-                'params' => $request->params,
-                'key' => microtime(true),
-            ]);
+            $params = $request->params;
+            if ($request->job != 'queue.put') {
+                $params = [
+                    'job' => $request->job,
+                    'params' => $request->params,
+                ];
+            }
+            $params['key'] = microtime(true);
+            $this->dispatcher->send('queue.put', $params);
         } else {
             // system jobs should be replayed as is
-            if (is_object($request->params)) {
-                $request->params = (array) $request->params;
-            }
             $this->dispatcher->send($request->job, $request->params);
         }
     }
