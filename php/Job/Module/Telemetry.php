@@ -77,8 +77,13 @@ class Telemetry
 
         $buffer = fgets($this->pipe, 1048576);
 
-        if ($buffer === false) {
-            $this->initPipeline();
+        if ($buffer === false || feof($this->pipe)) {
+            fclose($this->pipe);
+            $this->pipe = null;
+        }
+
+        if (trim($buffer) === 'PING') {
+            return [];
         }
 
         if ($buffer) {

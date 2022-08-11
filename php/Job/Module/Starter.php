@@ -99,6 +99,12 @@ class Starter
             foreach ($this->tasks as $task) {
                 $task->start();
             }
+            $telemetry = @fopen('var/telemetry', 'wn');
+            if ($telemetry && flock($telemetry, LOCK_EX)) {
+                fwrite($telemetry, 'PING' . PHP_EOL);
+                flock($telemetry, LOCK_UN);
+                fclose($telemetry);
+            }
             sleep(1);
         }
     }
