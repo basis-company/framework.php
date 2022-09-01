@@ -71,6 +71,7 @@ class Dispatcher
         $response = $this->client->request('POST', 'http://' . $host . $url, [
             'headers' => $headers,
             'body' => $form,
+            'timeout' => 600,
         ]);
 
         return $response->getContent();
