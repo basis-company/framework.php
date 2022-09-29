@@ -51,6 +51,14 @@ class Monolog
                         }
                     }
 
+                    if (array_key_exists('context', $record)) {
+                        foreach ($record['context'] as $key => $value) {
+                            if (is_string($value) && strlen($value) > 120) {
+                                $record['context'][$key] = substr($value, 0, 120) . '...';
+                            }
+                        }
+                    }
+
                     unset($record['formatted']);
                     unset($record['datetime']);
                     fwrite($stream, json_encode($record) . PHP_EOL);
