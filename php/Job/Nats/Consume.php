@@ -19,7 +19,7 @@ class Consume
     public int $debug = 0;
     public int $delay = 0;
     public int $expires = 30;
-    public int $limit = PHP_INT_MAX;
+    public int $limit = 32768;
     public string $subject;
     public bool $housekeeping = true;
 

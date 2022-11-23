@@ -294,11 +294,11 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "2.5.0",
+            "version": "2.8.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/monolog/monolog/2.5.0/monolog-monolog-2.5.0.zip",
-                "reference": "4192345e260f1d51b365536199744b987e160edc",
+                "url": "https://nexus.nx.basis.services/repository/composer/monolog/monolog/2.8.0/monolog-monolog-2.8.0.zip",
+                "reference": "720488632c590286b88b80e62aa3d3d551ad4a50",
                 "shasum": ""
             },
             "require": {
@@ -311,18 +311,22 @@
             "require-dev": {
                 "aws/aws-sdk-php": "^2.4.9 || ^3.0",
                 "doctrine/couchdb": "~1.0@dev",
-                "elasticsearch/elasticsearch": "^7",
+                "elasticsearch/elasticsearch": "^7 || ^8",
+                "ext-json": "*",
                 "graylog2/gelf-php": "^1.4.2",
+                "guzzlehttp/guzzle": "^7.4",
+                "guzzlehttp/psr7": "^2.2",
                 "mongodb/mongodb": "^1.8",
                 "php-amqplib/php-amqplib": "~2.4 || ^3",
-                "php-console/php-console": "^3.1.3",
-                "phpspec/prophecy": "^1.6.1",
+                "phpspec/prophecy": "^1.15",
                 "phpstan/phpstan": "^0.12.91",
-                "phpunit/phpunit": "^8.5",
-                "predis/predis": "^1.1",
+                "phpunit/phpunit": "^8.5.14",
+                "predis/predis": "^1.1 || ^2.0",
                 "rollbar/rollbar": "^1.3 || ^2 || ^3",
-                "ruflin/elastica": ">=0.90@dev",
-                "swiftmailer/swiftmailer": "^5.3|^6.0"
+                "ruflin/elastica": "^7",
+                "swiftmailer/swiftmailer": "^5.3|^6.0",
+                "symfony/mailer": "^5.4 || ^6",
+                "symfony/mime": "^5.4 || ^6"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -337,7 +341,6 @@
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "mongodb/mongodb": "Allow sending log messages to a MongoDB server (via library)",
                 "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
-                "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
@@ -379,7 +382,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-08T15:43:54+00:00"
+            "time": "2022-07-24T11:55:47+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -432,11 +435,11 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.58.0",
+            "version": "2.63.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/nesbot/carbon/2.58.0/nesbot-carbon-2.58.0.zip",
-                "reference": "97a34af22bde8d0ac20ab34b29d7bfe360902055",
+                "url": "https://nexus.nx.basis.services/repository/composer/nesbot/carbon/2.63.0/nesbot-carbon-2.63.0.zip",
+                "reference": "ad35dd71a6a212b98e4b87e97389b6fa85f0e347",
                 "shasum": ""
             },
             "require": {
@@ -451,11 +454,12 @@
                 "doctrine/orm": "^2.7",
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "kylekatarnls/multi-tester": "^2.0",
+                "ondrejmirtes/better-reflection": "*",
                 "phpmd/phpmd": "^2.9",
                 "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12.54 || ^1.0",
-                "phpunit/php-file-iterator": "^2.0.5",
-                "phpunit/phpunit": "^7.5.20 || ^8.5.23",
+                "phpstan/phpstan": "^0.12.99 || ^1.7.14",
+                "phpunit/php-file-iterator": "^2.0.5 || ^3.0.6",
+                "phpunit/phpunit": "^7.5.20 || ^8.5.26 || ^9.5.20",
                 "squizlabs/php_codesniffer": "^3.4"
             },
             "bin": [
@@ -506,23 +510,27 @@
             ],
             "funding": [
                 {
-                    "url": "https://opencollective.com/Carbon",
-                    "type": "open_collective"
+                    "url": "https://github.com/sponsors/kylekatarnls",
+                    "type": "github"
                 },
                 {
-                    "url": "https://tidelift.com/funding/github/packagist/nesbot/carbon",
+                    "url": "https://opencollective.com/Carbon#sponsor",
+                    "type": "opencollective"
+                },
+                {
+                    "url": "https://tidelift.com/subscription/pkg/packagist-nesbot-carbon?utm_source=packagist-nesbot-carbon&utm_medium=referral&utm_campaign=readme",
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-25T19:31:17+00:00"
+            "time": "2022-10-30T18:34:28+00:00"
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.13.2",
+            "version": "v4.15.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/nikic/php-parser/v4.13.2/nikic-php-parser-v4.13.2.zip",
-                "reference": "210577fe3cf7badcc5814d99455df46564f3c077",
+                "url": "https://nexus.nx.basis.services/repository/composer/nikic/php-parser/v4.15.2/nikic-php-parser-v4.15.2.zip",
+                "reference": "f59bbe44bf7d96f24f3e2b4ddc21cd52c1d2adbc",
                 "shasum": ""
             },
             "require": {
@@ -560,15 +568,15 @@
                 "parser",
                 "php"
             ],
-            "time": "2021-11-30T19:35:32+00:00"
+            "time": "2022-11-12T15:38:23+00:00"
         },
         {
             "name": "nyholm/psr7",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/nyholm/psr7/1.5.0/nyholm-psr7-1.5.0.zip",
-                "reference": "1461e07a0f2a975a52082ca3b769ca912b816226",
+                "url": "https://nexus.nx.basis.services/repository/composer/nyholm/psr7/1.5.1/nyholm-psr7-1.5.1.zip",
+                "reference": "f734364e38a876a23be4d906a2a089e1315be18a",
                 "shasum": ""
             },
             "require": {
@@ -627,7 +635,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-02-02T18:37:57+00:00"
+            "time": "2022-06-22T07:13:36+00:00"
         },
         {
             "name": "nyholm/psr7-server",
@@ -912,20 +920,25 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.6.1",
+            "version": "1.6.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/phpdocumentor/type-resolver/1.6.1/phpdocumentor-type-resolver-1.6.1.zip",
-                "reference": "77a32518733312af16a44300404e945338981de3",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpdocumentor/type-resolver/1.6.2/phpdocumentor-type-resolver-1.6.2.zip",
+                "reference": "48f445a408c131e38cab1c235aa6d2bb7a0bb20d",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
+                "php": "^7.4 || ^8.0",
                 "phpdocumentor/reflection-common": "^2.0"
             },
             "require-dev": {
                 "ext-tokenizer": "*",
-                "psalm/phar": "^4.8"
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan-phpunit": "^1.1",
+                "phpunit/phpunit": "^9.5",
+                "rector/rector": "^0.13.9",
+                "vimeo/psalm": "^4.25"
             },
             "type": "library",
             "extra": {
@@ -948,79 +961,22 @@
                 }
             ],
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
-            "time": "2022-03-15T21:29:03+00:00"
-        },
-        {
-            "name": "phpspec/prophecy",
-            "version": "v1.15.0",
-            "dist": {
-                "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/phpspec/prophecy/v1.15.0/phpspec-prophecy-v1.15.0.zip",
-                "reference": "bbcd7380b0ebf3961ee21409db7b38bc31d69a13",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/instantiator": "^1.2",
-                "php": "^7.2 || ~8.0, <8.2",
-                "phpdocumentor/reflection-docblock": "^5.2",
-                "sebastian/comparator": "^3.0 || ^4.0",
-                "sebastian/recursion-context": "^3.0 || ^4.0"
-            },
-            "require-dev": {
-                "phpspec/phpspec": "^6.0 || ^7.0",
-                "phpunit/phpunit": "^8.0 || ^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Prophecy\\": "src/Prophecy"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com",
-                    "homepage": "http://everzet.com"
-                },
-                {
-                    "name": "Marcello Duarte",
-                    "email": "marcello.duarte@gmail.com"
-                }
-            ],
-            "description": "Highly opinionated mocking framework for PHP 5.3+",
-            "homepage": "https://github.com/phpspec/prophecy",
-            "keywords": [
-                "Double",
-                "Dummy",
-                "fake",
-                "mock",
-                "spy",
-                "stub"
-            ],
-            "time": "2021-12-08T12:19:24+00:00"
+            "time": "2022-10-14T12:47:21+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.15",
+            "version": "9.2.19",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/php-code-coverage/9.2.15/phpunit-php-code-coverage-9.2.15.zip",
-                "reference": "2e9da11878c4202f97915c1cb4bb1ca318a63f5f",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/php-code-coverage/9.2.19/phpunit-php-code-coverage-9.2.19.zip",
+                "reference": "c77b56b63e3d2031bd8997fcec43c1925ae46559",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "ext-xmlwriter": "*",
-                "nikic/php-parser": "^4.13.0",
+                "nikic/php-parser": "^4.14",
                 "php": ">=7.3",
                 "phpunit/php-file-iterator": "^3.0.3",
                 "phpunit/php-text-template": "^2.0.2",
@@ -1072,7 +1028,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-07T09:28:20+00:00"
+            "time": "2022-11-18T07:47:47+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1277,11 +1233,11 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.20",
+            "version": "9.5.26",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/phpunit/9.5.20/phpunit-phpunit-9.5.20.zip",
-                "reference": "12bc8879fb65aef2138b26fc633cb1e3620cffba",
+                "url": "https://nexus.nx.basis.services/repository/composer/phpunit/phpunit/9.5.26/phpunit-phpunit-9.5.26.zip",
+                "reference": "851867efcbb6a1b992ec515c71cdcf20d895e9d2",
                 "shasum": ""
             },
             "require": {
@@ -1296,7 +1252,6 @@
                 "phar-io/manifest": "^2.0.3",
                 "phar-io/version": "^3.0.2",
                 "php": ">=7.3",
-                "phpspec/prophecy": "^1.12.1",
                 "phpunit/php-code-coverage": "^9.2.13",
                 "phpunit/php-file-iterator": "^3.0.5",
                 "phpunit/php-invoker": "^3.1.1",
@@ -1304,19 +1259,15 @@
                 "phpunit/php-timer": "^5.0.2",
                 "sebastian/cli-parser": "^1.0.1",
                 "sebastian/code-unit": "^1.0.6",
-                "sebastian/comparator": "^4.0.5",
+                "sebastian/comparator": "^4.0.8",
                 "sebastian/diff": "^4.0.3",
                 "sebastian/environment": "^5.1.3",
-                "sebastian/exporter": "^4.0.3",
+                "sebastian/exporter": "^4.0.5",
                 "sebastian/global-state": "^5.0.1",
                 "sebastian/object-enumerator": "^4.0.3",
                 "sebastian/resource-operations": "^3.0.3",
-                "sebastian/type": "^3.0",
+                "sebastian/type": "^3.2",
                 "sebastian/version": "^3.0.2"
-            },
-            "require-dev": {
-                "ext-pdo": "*",
-                "phpspec/prophecy-phpunit": "^2.0.1"
             },
             "suggest": {
                 "ext-soap": "*",
@@ -1364,9 +1315,13 @@
                 {
                     "url": "https://github.com/sebastianbergmann",
                     "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpunit/phpunit",
+                    "type": "tidelift"
                 }
             ],
-            "time": "2022-04-01T12:37:26+00:00"
+            "time": "2022-10-28T06:00:21+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -1645,11 +1600,11 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "4.0.6",
+            "version": "4.0.8",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/comparator/4.0.6/sebastian-comparator-4.0.6.zip",
-                "reference": "55f4261989e546dc112258c7a75935a81a7ce382",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/comparator/4.0.8/sebastian-comparator-4.0.8.zip",
+                "reference": "fa0f136dd2334583309d32b62544682ee972b51a",
                 "shasum": ""
             },
             "require": {
@@ -1705,7 +1660,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T15:49:45+00:00"
+            "time": "2022-09-14T12:41:17+00:00"
         },
         {
             "name": "sebastian/complexity",
@@ -1865,11 +1820,11 @@
         },
         {
             "name": "sebastian/exporter",
-            "version": "4.0.4",
+            "version": "4.0.5",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/exporter/4.0.4/sebastian-exporter-4.0.4.zip",
-                "reference": "65e8b7db476c5dd267e65eea9cab77584d3cfff9",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/exporter/4.0.5/sebastian-exporter-4.0.5.zip",
+                "reference": "ac230ed27f0f98f597c8a2b6eb7ac563af5e5b9d",
                 "shasum": ""
             },
             "require": {
@@ -1928,7 +1883,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-11-11T14:18:36+00:00"
+            "time": "2022-09-14T06:03:37+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -2223,11 +2178,11 @@
         },
         {
             "name": "sebastian/type",
-            "version": "3.0.0",
+            "version": "3.2.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/type/3.0.0/sebastian-type-3.0.0.zip",
-                "reference": "b233b84bc4465aff7b57cf1c4bc75c86d00d6dad",
+                "url": "https://nexus.nx.basis.services/repository/composer/sebastian/type/3.2.0/sebastian-type-3.2.0.zip",
+                "reference": "fb3fe09c5f0bae6bc27ef3ce933a1e0ed9464b6e",
                 "shasum": ""
             },
             "require": {
@@ -2239,7 +2194,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -2265,7 +2220,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-15T09:54:48+00:00"
+            "time": "2022-09-12T14:47:03+00:00"
         },
         {
             "name": "sebastian/version",
@@ -2361,11 +2316,11 @@
         },
         {
             "name": "symfony/cache",
-            "version": "v5.4.8",
+            "version": "v5.4.15",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/cache/v5.4.8/symfony-cache-v5.4.8.zip",
-                "reference": "4c6747cf7e56c6b8e3094dd24852bd3e364375b1",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/cache/v5.4.15/symfony-cache-v5.4.15.zip",
+                "reference": "60e87188abbacd29ccde44d69c5392a33e888e98",
                 "shasum": ""
             },
             "require": {
@@ -2425,7 +2380,7 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Provides an extended PSR-6, PSR-16 (and tags) implementation",
+            "description": "Provides extended PSR-6, PSR-16 (and tags) implementations",
             "homepage": "https://symfony.com",
             "keywords": [
                 "caching",
@@ -2445,14 +2400,14 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-26T13:19:20+00:00"
+            "time": "2022-10-27T07:55:40+00:00"
         },
         {
             "name": "symfony/cache-contracts",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/cache-contracts/v2.5.1/symfony-cache-contracts-v2.5.1.zip",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/cache-contracts/v2.5.2/symfony-cache-contracts-v2.5.2.zip",
                 "reference": "64be4a7acb83b6f2bf6de9a02cee6dad41277ebc",
                 "shasum": ""
             },
@@ -2519,20 +2474,20 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.0.1",
+            "version": "v3.1.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/deprecation-contracts/v3.0.1/symfony-deprecation-contracts-v3.0.1.zip",
-                "reference": "26954b3d62a6c5fd0ea8a2a00c0353a14978d05c",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/deprecation-contracts/v3.1.1/symfony-deprecation-contracts-v3.1.1.zip",
+                "reference": "07f1b9cc2ffee6aaafcf4b710fbc38ff736bd918",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.2"
+                "php": ">=8.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.0-dev"
+                    "dev-main": "3.1-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -2573,15 +2528,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T09:55:41+00:00"
+            "time": "2022-02-25T11:15:52+00:00"
         },
         {
             "name": "symfony/http-client",
-            "version": "v5.4.8",
+            "version": "v5.4.15",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/http-client/v5.4.8/symfony-http-client-v5.4.8.zip",
-                "reference": "0dabec4e3898d3e00451dd47b5ef839168f9bbf5",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/http-client/v5.4.15/symfony-http-client-v5.4.15.zip",
+                "reference": "8f29b0f06c9ff48c8431e78eb90c8bd6f82cb12b",
                 "shasum": ""
             },
             "require": {
@@ -2651,15 +2606,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-12T16:02:29+00:00"
+            "time": "2022-10-25T16:22:13+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/http-client-contracts/v2.5.1/symfony-http-client-contracts-v2.5.1.zip",
-                "reference": "1a4f708e4e87f335d1b1be6148060739152f0bd5",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/http-client-contracts/v2.5.2/symfony-http-client-contracts-v2.5.2.zip",
+                "reference": "ba6a9f0e8f3edd190520ee3b9a958596b6ca2e70",
                 "shasum": ""
             },
             "require": {
@@ -2720,15 +2675,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-13T20:07:29+00:00"
+            "time": "2022-04-12T15:48:08+00:00"
         },
         {
             "name": "symfony/lock",
-            "version": "v5.4.7",
+            "version": "v5.4.15",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/lock/v5.4.7/symfony-lock-v5.4.7.zip",
-                "reference": "a16279554621453840eb8af14d12cfa24c10b8d3",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/lock/v5.4.15/symfony-lock-v5.4.15.zip",
+                "reference": "109a20faa6119578b46457ef8cffb9389e20e5ca",
                 "shasum": ""
             },
             "require": {
@@ -2790,15 +2745,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-22T15:31:03+00:00"
+            "time": "2022-10-27T07:55:40+00:00"
         },
         {
             "name": "symfony/mime",
-            "version": "v5.4.8",
+            "version": "v5.4.14",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/mime/v5.4.8/symfony-mime-v5.4.8.zip",
-                "reference": "af49bc163ec3272f677bde3bc44c0d766c1fd662",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/mime/v5.4.14/symfony-mime-v5.4.14.zip",
+                "reference": "1c118b253bb3495d81e95a6e3ec6c2766a98a0c4",
                 "shasum": ""
             },
             "require": {
@@ -2812,7 +2767,8 @@
                 "egulias/email-validator": "~3.0.0",
                 "phpdocumentor/reflection-docblock": "<3.2.2",
                 "phpdocumentor/type-resolver": "<1.4.0",
-                "symfony/mailer": "<4.4"
+                "symfony/mailer": "<4.4",
+                "symfony/serializer": "<5.4.14|>=6.0,<6.0.14|>=6.1,<6.1.6"
             },
             "require-dev": {
                 "egulias/email-validator": "^2.1.10|^3.1",
@@ -2820,7 +2776,7 @@
                 "symfony/dependency-injection": "^4.4|^5.0|^6.0",
                 "symfony/property-access": "^4.4|^5.1|^6.0",
                 "symfony/property-info": "^4.4|^5.1|^6.0",
-                "symfony/serializer": "^5.2|^6.0"
+                "symfony/serializer": "^5.4.14|~6.0.14|^6.1.6"
             },
             "type": "library",
             "autoload": {
@@ -2864,88 +2820,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-12T15:48:08+00:00"
-        },
-        {
-            "name": "symfony/polyfill-ctype",
-            "version": "v1.25.0",
-            "dist": {
-                "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-ctype/v1.25.0/symfony-polyfill-ctype-v1.25.0.zip",
-                "reference": "30885182c981ab175d4d034db0f6f469898070ab",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "provide": {
-                "ext-ctype": "*"
-            },
-            "suggest": {
-                "ext-ctype": "For best performance"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.23-dev"
-                },
-                "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill for ctype functions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "ctype",
-                "polyfill",
-                "portable"
-            ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-10-20T20:35:02+00:00"
+            "time": "2022-10-07T08:01:20+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
-            "version": "v1.25.0",
+            "version": "v1.27.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-intl-idn/v1.25.0/symfony-polyfill-intl-idn-v1.25.0.zip",
-                "reference": "749045c69efb97c70d25d7463abba812e91f3a44",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-intl-idn/v1.27.0/symfony-polyfill-intl-idn-v1.27.0.zip",
+                "reference": "639084e360537a19f9ee352433b84ce831f3d2da",
                 "shasum": ""
             },
             "require": {
@@ -2959,7 +2842,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -3015,15 +2898,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-14T14:02:44+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.25.0",
+            "version": "v1.27.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-intl-normalizer/v1.25.0/symfony-polyfill-intl-normalizer-v1.25.0.zip",
-                "reference": "8590a5f561694770bdcd3f9b5c69dde6945028e8",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-intl-normalizer/v1.27.0/symfony-polyfill-intl-normalizer-v1.27.0.zip",
+                "reference": "19bd1e4fcd5b91116f14d8533c57831ed00571b6",
                 "shasum": ""
             },
             "require": {
@@ -3035,7 +2918,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -3090,15 +2973,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-19T12:13:01+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.25.0",
+            "version": "v1.27.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-mbstring/v1.25.0/symfony-polyfill-mbstring-v1.25.0.zip",
-                "reference": "0abb51d2f102e00a4eefcf46ba7fec406d245825",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-mbstring/v1.27.0/symfony-polyfill-mbstring-v1.27.0.zip",
+                "reference": "8ad114f6b39e2c98a8b0e3bd907732c207c2b534",
                 "shasum": ""
             },
             "require": {
@@ -3113,7 +2996,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -3164,15 +3047,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-30T18:21:41+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
-            "version": "v1.25.0",
+            "version": "v1.27.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php72/v1.25.0/symfony-polyfill-php72-v1.25.0.zip",
-                "reference": "9a142215a36a3888e30d0a9eeea9766764e96976",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php72/v1.27.0/symfony-polyfill-php72-v1.27.0.zip",
+                "reference": "869329b1e9894268a8a61dabb69153029b7a8c97",
                 "shasum": ""
             },
             "require": {
@@ -3181,7 +3064,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -3231,15 +3114,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-27T09:17:38+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
-            "version": "v1.25.0",
+            "version": "v1.27.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php73/v1.25.0/symfony-polyfill-php73-v1.25.0.zip",
-                "reference": "cc5db0e22b3cb4111010e48785a97f670b350ca5",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php73/v1.27.0/symfony-polyfill-php73-v1.27.0.zip",
+                "reference": "9e8ecb5f92152187c4799efd3c96b78ccab18ff9",
                 "shasum": ""
             },
             "require": {
@@ -3248,7 +3131,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -3301,15 +3184,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-06-05T21:20:04+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.25.0",
+            "version": "v1.27.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php80/v1.25.0/symfony-polyfill-php80-v1.25.0.zip",
-                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/polyfill-php80/v1.27.0/symfony-polyfill-php80-v1.27.0.zip",
+                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
                 "shasum": ""
             },
             "require": {
@@ -3318,7 +3201,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.23-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -3375,15 +3258,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-04T08:16:47+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "symfony/process",
-            "version": "v5.4.8",
+            "version": "v5.4.11",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/process/v5.4.8/symfony-process-v5.4.8.zip",
-                "reference": "597f3fff8e3e91836bb0bd38f5718b56ddbde2f3",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/process/v5.4.11/symfony-process-v5.4.11.zip",
+                "reference": "6e75fe6874cbc7e4773d049616ab450eff537bf1",
                 "shasum": ""
             },
             "require": {
@@ -3428,15 +3311,15 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-08T05:07:18+00:00"
+            "time": "2022-06-27T16:58:25+00:00"
         },
         {
             "name": "symfony/service-contracts",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/service-contracts/v2.5.1/symfony-service-contracts-v2.5.1.zip",
-                "reference": "24d9dc654b83e91aa59f9d167b131bc3b5bea24c",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/service-contracts/v2.5.2/symfony-service-contracts-v2.5.2.zip",
+                "reference": "4b426aac47d6427cc1a1d0f7e2ac724627f5966c",
                 "shasum": ""
             },
             "require": {
@@ -3502,19 +3385,19 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-13T20:07:29+00:00"
+            "time": "2022-05-30T19:17:29+00:00"
         },
         {
             "name": "symfony/translation",
-            "version": "v6.0.8",
+            "version": "v6.1.6",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/translation/v6.0.8/symfony-translation-v6.0.8.zip",
-                "reference": "3d38cf8f8834148c4457681d539bc204de701501",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/translation/v6.1.6/symfony-translation-v6.1.6.zip",
+                "reference": "e6cd330e5a072518f88d65148f3f165541807494",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.2",
+                "php": ">=8.1",
                 "symfony/polyfill-mbstring": "~1.0",
                 "symfony/translation-contracts": "^2.3|^3.0"
             },
@@ -3539,6 +3422,7 @@
                 "symfony/http-kernel": "^5.4|^6.0",
                 "symfony/intl": "^5.4|^6.0",
                 "symfony/polyfill-intl-icu": "^1.21",
+                "symfony/routing": "^5.4|^6.0",
                 "symfony/service-contracts": "^1.1.2|^2|^3",
                 "symfony/yaml": "^5.4|^6.0"
             },
@@ -3588,19 +3472,19 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-22T08:18:02+00:00"
+            "time": "2022-10-07T08:04:03+00:00"
         },
         {
             "name": "symfony/translation-contracts",
-            "version": "v3.0.1",
+            "version": "v3.1.1",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/translation-contracts/v3.0.1/symfony-translation-contracts-v3.0.1.zip",
-                "reference": "c4183fc3ef0f0510893cbeedc7718fb5cafc9ac9",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/translation-contracts/v3.1.1/symfony-translation-contracts-v3.1.1.zip",
+                "reference": "606be0f48e05116baef052f7f3abdb345c8e02cc",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.2"
+                "php": ">=8.1"
             },
             "suggest": {
                 "symfony/translation-implementation": ""
@@ -3608,7 +3492,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.0-dev"
+                    "dev-main": "3.1-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -3618,7 +3502,10 @@
             "autoload": {
                 "psr-4": {
                     "Symfony\\Contracts\\Translation\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Test/"
+                ]
             },
             "license": [
                 "MIT"
@@ -3657,19 +3544,19 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-02T09:55:41+00:00"
+            "time": "2022-06-27T17:24:16+00:00"
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v6.0.8",
+            "version": "v6.1.3",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/symfony/var-exporter/v6.0.8/symfony-var-exporter-v6.0.8.zip",
-                "reference": "74b272979a490747c6775b0228d06cf246306a99",
+                "url": "https://nexus.nx.basis.services/repository/composer/symfony/var-exporter/v6.1.3/symfony-var-exporter-v6.1.3.zip",
+                "reference": "b49350f45cebbba6e5286485264b912f2bcfc9ef",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.2"
+                "php": ">=8.1"
             },
             "require-dev": {
                 "symfony/var-dumper": "^5.4|^6.0"
@@ -3720,7 +3607,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-26T13:22:23+00:00"
+            "time": "2022-07-04T16:01:56+00:00"
         },
         {
             "name": "tarantool/client",
@@ -3790,11 +3677,11 @@
         },
         {
             "name": "tarantool/mapper",
-            "version": "5.0.9",
+            "version": "5.0.12",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.9/tarantool-mapper-5.0.9.zip",
-                "reference": "1f49d6f8ef124c499ba20c7a50ac659d480c4fd0",
+                "url": "https://nexus.nx.basis.services/repository/composer/tarantool/mapper/5.0.12/tarantool-mapper-5.0.12.zip",
+                "reference": "ff40703e43475a105246570c3dd8a535dd700456",
                 "shasum": ""
             },
             "require": {
@@ -3838,7 +3725,7 @@
                 "pure",
                 "tarantool"
             ],
-            "time": "2022-08-05T11:07:21+00:00"
+            "time": "2022-11-09T09:15:39+00:00"
         },
         {
             "name": "tarantool/queue",
@@ -3985,16 +3872,16 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.10.0",
+            "version": "1.11.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.nx.basis.services/repository/composer/webmozart/assert/1.10.0/webmozart-assert-1.10.0.zip",
-                "reference": "6964c76c7804814a842473e0c8fd15bab0f18e25",
+                "url": "https://nexus.nx.basis.services/repository/composer/webmozart/assert/1.11.0/webmozart-assert-1.11.0.zip",
+                "reference": "11cb2199493b2f8a3b53e7f19068fc6aac760991",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0",
-                "symfony/polyfill-ctype": "^1.8"
+                "ext-ctype": "*",
+                "php": "^7.2 || ^8.0"
             },
             "conflict": {
                 "phpstan/phpstan": "<0.12.20",
@@ -4029,7 +3916,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2021-03-09T10:59:23+00:00"
+            "time": "2022-06-03T18:03:27+00:00"
         }
     ],
     "aliases": [],
@@ -4041,5 +3928,5 @@
         "php": "^7.4|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }

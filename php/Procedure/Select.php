@@ -8,7 +8,7 @@ class Select extends Procedure
 {
     public function getParams(): array
     {
-        return ['space', 'index', 'values'];
+        return ['space', 'index', 'values', 'exceptChildren'];
     }
 
     public function getBody(): string
@@ -43,11 +43,13 @@ class Select extends Procedure
 
         local childIndex = nil
 
-        if parentField ~= nil then
-            for i, candidate in pairs(box.space[space].index) do
-                if #candidate.parts == 1 then
-                    if candidate.parts[1].fieldno == parentField then
-                        childIndex = candidate.name
+        if not exceptChildren then
+            if parentField ~= nil then
+                for i, candidate in pairs(box.space[space].index) do
+                    if #candidate.parts == 1 then
+                        if candidate.parts[1].fieldno == parentField then
+                            childIndex = candidate.name
+                        end
                     end
                 end
             end
