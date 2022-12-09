@@ -2,6 +2,7 @@
 
 namespace Basis;
 
+use Basis\Controller\Rest;
 use Exception;
 use LogicException;
 use Nyholm\Psr7\Factory\Psr17Factory;
@@ -125,7 +126,10 @@ class Http
                 $result = $class . '::' . $method . '<br/>' . $e->getMessage();
             }
         } else {
-            $result = "Page not found: $uri";
+            $result = $container->get(Rest::class)->process($request);
+            if (!$result) {
+                $result = "Page not found: $uri";
+            }
         }
 
         if ($this->logging) {
@@ -183,6 +187,7 @@ class Http
         $response = $this->handle($request);
 
         if (!headers_sent()) {
+            header("HTTP/1.1 " . $response->getStatusCode() . ' ' . $response->getReasonPhrase());
             foreach ($response->getHeaders() as $k => $rows) {
                 foreach ($rows as $row) {
                     header("$k: $row");
