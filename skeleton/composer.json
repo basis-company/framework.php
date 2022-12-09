@@ -8,6 +8,7 @@
         "basis-company/framework": "^5.1.5",
         "basis-company/nats": "^0.9.0",
         "basis-company/telemetry": "^0.1.10",
+        "firebase/php-jwt":"^v6.3.1",
         "monolog/monolog": "^2.3.5",
         "nesbot/carbon": "^2.51",
         "nyholm/psr7": "^1.4.0",
