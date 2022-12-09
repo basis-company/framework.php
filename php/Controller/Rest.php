@@ -57,6 +57,10 @@ class Rest
             'POST' => $request->getParsedBody(),
         };
 
+        if ($params == null) {
+            $params = json_decode($request->getBody(), true);
+        }
+
         $result = $dispatcher->dispatch($job, $params ?: []);
 
         $headers = [
