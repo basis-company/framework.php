@@ -52,6 +52,12 @@ class Rest
         $context->person = $payload->person;
         $context->module = $payload->module;
 
+        if ($request->getHeaderLine('x-real-ip')) {
+            $context->apply([
+                'ip' => $request->getHeaderLine('x-real-ip'),
+            ]);
+        }
+
         $params = match ($request->getMethod()) {
             'GET' => $request->getQueryParams(),
             'POST' => $request->getParsedBody(),
