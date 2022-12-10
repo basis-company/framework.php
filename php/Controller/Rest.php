@@ -25,11 +25,11 @@ class Rest
         }
 
         $cookies = $request->getCookieParams();
-        if (!array_key_exists('authentication', $cookies)) {
+        if (!array_key_exists('access', $cookies)) {
             return new Response(401);
         }
 
-        $token = $cookies['authentication'];
+        $token = $cookies['access'];
         $key = null;
         if (file_exists('jwt_key')) {
             $key = file_get_contents('jwt_key');
@@ -43,7 +43,7 @@ class Rest
         }
 
         $key = new Key(file_get_contents('jwt_key'), 'RS256');
-        $payload = JWT::decode($cookies['authentication'], $key);
+        $payload = JWT::decode($cookies['access'], $key);
 
         $context = $this->get(Context::class);
         $context->access = $payload->access;
