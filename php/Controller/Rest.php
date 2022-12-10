@@ -4,12 +4,13 @@ namespace Basis\Controller;
 
 use Basis\Context;
 use Basis\Dispatcher;
-use DateTimeInterface;
 use Basis\Toolkit;
-use Nyholm\Psr7\Response;
-use Psr\Http\Message\ServerRequestInterface;
+use DateTimeInterface;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Rest
 {
@@ -68,6 +69,10 @@ class Rest
         }
 
         $result = $dispatcher->dispatch($job, $params ?: []);
+
+        if ($result instanceof ResponseInterface) {
+            return $result;
+        }
 
         $headers = [
             'Content-Type' => 'application/json',
