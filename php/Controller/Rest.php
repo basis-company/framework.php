@@ -18,7 +18,7 @@ class Rest
     public function process(ServerRequestInterface $request)
     {
         $dispatcher = $this->get(Dispatcher::class);
-        $job = str_replace('/', '.', substr($request->getUri()->getPath(), 1));
+        $job = strtolower(str_replace('/', '.', substr($request->getUri()->getPath(), 1)));
 
         if (!$dispatcher->getClass($job)) {
             return;
