@@ -32,7 +32,9 @@ class Rest
 
         $token = $cookies['access'];
         $key = null;
-        if (file_exists('jwt_key')) {
+        if (file_exists('resources/jwt/public')) {
+            $key = file_get_contents('resources/jwt/public');
+        } elseif (file_exists('jwt_key')) {
             $key = file_get_contents('jwt_key');
         } else {
             $key = file_get_contents('http://guard/guard/key');
