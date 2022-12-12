@@ -25,12 +25,17 @@ class Rest
             return;
         }
 
-        $cookies = $request->getCookieParams();
-        if (!array_key_exists('access', $cookies)) {
+        $token = null;
+
+        $authorization = $request->getHeaderLine('authorization');
+        if ($authorization && strpos($authorization, 'Bearer ') === 0) {
+            $token = (explode(' ', $authorization)[1]);
+        }
+
+        if (!$token) {
             return new Response(401);
         }
 
-        $token = $cookies['access'];
         $key = null;
         if (file_exists('resources/jwt/public')) {
             $key = file_get_contents('resources/jwt/public');
@@ -45,8 +50,7 @@ class Rest
             return new Response(500);
         }
 
-        $key = new Key(file_get_contents('jwt_key'), 'RS256');
-        $payload = JWT::decode($cookies['access'], $key);
+        $payload = JWT::decode($token, new Key($key, 'RS256'));
 
         $context = $this->get(Context::class);
         $context->access = $payload->access;
