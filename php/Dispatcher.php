@@ -10,6 +10,7 @@ use Basis\Nats\Message\Payload;
 use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
 use Exception;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\CurlHttpClient;
@@ -121,6 +122,11 @@ class Dispatcher
                     throw $e;
                 }
                 $span->end();
+
+                if ($result instanceof ResponseInterface) {
+                    // return result as is
+                    return $result;
+                }
 
                 if (is_array($result) && array_key_exists('expire', $result)) {
                     // force entity convertion to array with app cleanup

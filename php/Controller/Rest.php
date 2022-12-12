@@ -4,12 +4,13 @@ namespace Basis\Controller;
 
 use Basis\Context;
 use Basis\Dispatcher;
-use DateTimeInterface;
 use Basis\Toolkit;
-use Nyholm\Psr7\Response;
-use Psr\Http\Message\ServerRequestInterface;
+use DateTimeInterface;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Rest
 {
@@ -18,20 +19,22 @@ class Rest
     public function process(ServerRequestInterface $request)
     {
         $dispatcher = $this->get(Dispatcher::class);
-        $job = str_replace('/', '.', substr($request->getUri()->getPath(), 1));
+        $job = strtolower(str_replace('/', '.', substr($request->getUri()->getPath(), 1)));
 
         if (!$dispatcher->getClass($job)) {
             return;
         }
 
         $cookies = $request->getCookieParams();
-        if (!array_key_exists('authentication', $cookies)) {
+        if (!array_key_exists('access', $cookies)) {
             return new Response(401);
         }
 
-        $token = $cookies['authentication'];
+        $token = $cookies['access'];
         $key = null;
-        if (file_exists('jwt_key')) {
+        if (file_exists('resources/jwt/public')) {
+            $key = file_get_contents('resources/jwt/public');
+        } elseif (file_exists('jwt_key')) {
             $key = file_get_contents('jwt_key');
         } else {
             $key = file_get_contents('http://guard/guard/key');
@@ -43,7 +46,7 @@ class Rest
         }
 
         $key = new Key(file_get_contents('jwt_key'), 'RS256');
-        $payload = JWT::decode($cookies['authentication'], $key);
+        $payload = JWT::decode($cookies['access'], $key);
 
         $context = $this->get(Context::class);
         $context->access = $payload->access;
@@ -51,6 +54,12 @@ class Rest
         $context->company = $payload->company;
         $context->person = $payload->person;
         $context->module = $payload->module;
+
+        if ($request->getHeaderLine('x-real-ip')) {
+            $context->apply([
+                'ip' => $request->getHeaderLine('x-real-ip'),
+            ]);
+        }
 
         $params = match ($request->getMethod()) {
             'GET' => $request->getQueryParams(),
@@ -62,6 +71,10 @@ class Rest
         }
 
         $result = $dispatcher->dispatch($job, $params ?: []);
+
+        if ($result instanceof ResponseInterface) {
+            return $result;
+        }
 
         $headers = [
             'Content-Type' => 'application/json',
