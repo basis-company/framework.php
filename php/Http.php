@@ -128,7 +128,7 @@ class Http
         } else {
             $result = $container->get(Rest::class)->process($request);
             if (!$result) {
-                $result = "Page not found: $uri";
+                $result = new Response(404, [], "Page not found: $uri");
             }
         }
 
