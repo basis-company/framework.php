@@ -61,7 +61,7 @@ class ExecutorTest extends Test
 
         $this->dispatch('nats.consume', [ 'subject' => $this->app->getName(), 'limit' => 1 ]);
         $note = $this->findOrFail('note', $note->id);
-        $this->assertSame($note->message, '');
+        $this->assertSame($note->message, '1');
 
         $this->actAs(1);
         $this->send('test.actor', ['note' => $note->id]);
