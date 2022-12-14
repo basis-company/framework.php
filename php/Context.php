@@ -7,8 +7,12 @@ use Throwable;
 
 class Context
 {
-    public int $access;
+    public ?int $access = null;
     public ?int $channel = null;
+
+    public ?int $person = null;
+    public ?int $company = null;
+    public ?int $module = null;
 
     /**
      * inter-service communication
@@ -19,10 +23,6 @@ class Context
      * client real ip
      */
     public ?string $ip = null;
-
-    public ?int $company = null;
-    public int $person;
-    public ?int $module = null;
 
     /**
      * parent person
