@@ -8,7 +8,7 @@ use Throwable;
 class Context
 {
     public int $access;
-    public int $channel = 0;
+    public ?int $channel = null;
 
     /**
      * inter-service communication
@@ -20,19 +20,19 @@ class Context
      */
     public ?string $ip = null;
 
-    public int $company = 0;
+    public ?int $company = null;
     public int $person;
-    public int $module = 0;
+    public ?int $module = null;
 
     /**
      * parent person
      */
-    public int $parent = 0;
+    public ?int $parent = null;
 
     /**
      * context event
      */
-    public int $event = 0;
+    public ?int $event = null;
 
     public function execute($context, $callback)
     {
