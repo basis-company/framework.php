@@ -5,6 +5,8 @@ namespace Basis\Controller;
 use Basis\Application;
 use Basis\Context;
 use Basis\Dispatcher;
+use Basis\Telemetry\Tracing\SpanContext;
+use Basis\Telemetry\Tracing\Tracer;
 use Basis\Toolkit;
 use DateTimeInterface;
 use Nyholm\Psr7\Response;
@@ -38,7 +40,6 @@ class Rest
         $payload = $this->get(Application::class)->getTokenPayload($token);
 
         $context = $this->get(Context::class);
-
         $context->access = $payload->access;
         $context->channel = (int) $request->getHeaderLine('x-channel') ?: 0;
         $context->person = $payload->person;
@@ -57,6 +58,19 @@ class Rest
             $context->apply([
                 'ip' => $request->getHeaderLine('x-real-ip'),
             ]);
+        }
+
+        if ($request->getHeaderLine('x-trace-id')) {
+            $traceId = $request->getHeaderLine('x-trace-id');
+            $spanId = $request->getHeaderLine('x-span-id');
+
+            $parent = SpanContext::restore($traceId, $spanId);
+            $span = SpanContext::restore($traceId, SpanContext::generate()->getSpanId());
+
+            $tracer = new Tracer($span);
+            $tracer->getActiveSpan()->setParentSpanContext($parent);
+
+            $this->getContainer()->share(Tracer::class, $tracer);
         }
 
         $params = match ($request->getMethod()) {

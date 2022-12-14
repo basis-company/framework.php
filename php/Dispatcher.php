@@ -5,7 +5,6 @@ namespace Basis;
 use Basis\Feedback\Feedback;
 use Basis\Nats\Client;
 use Basis\Nats\Message\Payload;
-use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -62,8 +61,8 @@ class Dispatcher
         $span = $this->get(Tracer::class)->getActiveSpan()->getSpanContext();
 
         $headers = [
-            'x-tracing-span-id' => $span->getSpanId(),
-            'x-tracing-trace-id' => $span->getTraceId(),
+            'x-span-id' => $span->getSpanId(),
+            'x-trace-id' => $span->getTraceId(),
         ];
 
         if ($this->container->has(ServerRequestInterface::class)) {
