@@ -69,23 +69,18 @@ class Dispatcher
         $span = $this->get(Tracer::class)->getActiveSpan()->getSpanContext();
 
         $headers = [
+            'authorization' => 'Bearer ' . $this->getToken($system),
             'x-span-id' => $span->getSpanId(),
             'x-trace-id' => $span->getTraceId(),
         ];
 
         if ($this->container->has(ServerRequestInterface::class)) {
             $request = $this->container->get(ServerRequestInterface::class);
-            foreach ([ 'authorization', 'x-session', 'x-real-ip', 'x-channel' ] as $header) {
+            foreach (['x-session', 'x-real-ip', 'x-channel'] as $header) {
                 if ($request->hasHeader($header)) {
                     $headers[$header] = $request->getHeaderLine($header);
                 }
             }
-        }
-
-        if ($this->token && !$system) {
-            $headers['authorization'] = 'Bearer ' . $this->token;
-        } elseif (!array_key_exists('authorization', $headers) || $system) {
-            $headers['authorization'] = 'Bearer ' . $this->get(Application::class)->getToken();
         }
 
         $response = $this->client->request($postRequest ? 'POST' : 'GET', 'http://' . $host . $url, [
@@ -100,6 +95,28 @@ class Dispatcher
     public function flush(string $job, array $params = [], string $service = null)
     {
         return $this->get(Cache::class)->delete(func_get_args());
+    }
+
+    public function getToken($system = false): string
+    {
+        if ($system) {
+            return $this->get(Application::class)->getToken();
+        }
+
+        if ($this->token) {
+            return $this->token;
+        }
+
+        if ($this->container->has(ServerRequestInterface::class)) {
+            $request = $this->container->get(ServerRequestInterface::class);
+            if ($request->hasHeader('authorization')) {
+                $authorization = $request->getHeaderLine($header);
+                return explode(' ', $authorization)[1];
+            }
+        }
+
+        // service token is default
+        return $this->getToken(true);
     }
 
     public function system(string $job, array $params = [], string $service = null): object
