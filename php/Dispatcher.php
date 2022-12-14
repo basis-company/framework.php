@@ -26,7 +26,7 @@ class Dispatcher
         $this->container = $container;
     }
 
-    public function httpTransport(string $job, array $params = [], string $service = null)
+    public function httpTransport(string $job, array $params = [], string $service = null, $system = false)
     {
         $job = strtolower($job);
         if (!$service) {
@@ -74,7 +74,7 @@ class Dispatcher
             }
         }
 
-        if (!array_key_exists('authorization', $headers)) {
+        if (!array_key_exists('authorization', $headers) || $system) {
             $headers['authorization'] = 'Bearer ' . $this->get(Application::class)->getToken();
         }
 
@@ -93,9 +93,14 @@ class Dispatcher
         return $this->get(Cache::class)->delete(func_get_args());
     }
 
-    public function dispatch(string $job, array $params = [], string $service = null): object
+    public function system(string $job, array $params = [], string $service = null): object
     {
-        return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service) {
+        return $this->dispatch($job, $params, $service, true);
+    }
+
+    public function dispatch(string $job, array $params = [], string $service = null, $system = false): object
+    {
+        return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service, $system) {
             $job = strtolower($job);
             $converter = $this->get(Converter::class);
 
@@ -149,7 +154,7 @@ class Dispatcher
             $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 16;
 
             while (!$body && $limit-- > 0) {
-                $body = $this->httpTransport($job, $params, $service);
+                $body = $this->httpTransport($job, $params, $service, $system);
                 if (!$body) {
                     $this->get(LoggerInterface::class)->info([
                         'type' => 'retry',
