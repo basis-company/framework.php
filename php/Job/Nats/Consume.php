@@ -60,25 +60,24 @@ class Consume
     public function handle($request)
     {
         try {
-            return $this->context
-                ->execute($request->context, function () use ($request) {
-                    $processing = $this->dispatcher->dispatch('module.process', [
-                        'job' => $request->job,
-                        'params' => $request->params,
-                        'logging' => true,
-                        'loggerSetup' => false,
-                    ]);
+            $this->actAs($request->context->access ?: 1);
 
-                    if (!$processing->success) {
-                        $this->schedule($request);
-                    }
+            $processing = $this->dispatcher->dispatch('module.process', [
+                'job' => $request->job,
+                'params' => $request->params,
+                'logging' => true,
+                'loggerSetup' => false,
+            ]);
 
-                    if ($this->housekeeping) {
-                        $this->dispatcher->dispatch('module.housekeeping');
-                    }
+            if (!$processing->success) {
+                $this->schedule($request);
+            }
 
-                    $this->tracer->reset();
-                });
+            if ($this->housekeeping) {
+                $this->dispatcher->dispatch('module.housekeeping');
+            }
+
+            $this->tracer->reset();
         } catch (Throwable $e) {
             return $this->schedule($request);
         }
