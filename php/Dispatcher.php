@@ -2,8 +2,6 @@
 
 namespace Basis;
 
-use Basis\Cache;
-use Basis\Converter;
 use Basis\Feedback\Feedback;
 use Basis\Nats\Client;
 use Basis\Nats\Message\Payload;
@@ -41,37 +39,46 @@ class Dispatcher
         }
 
         $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
-        $url = "/api/index/" . str_replace('.', '/', $job);
+        $url = '/' . str_replace('.', '/', $job);
 
-        $headers = [];
+        $postRequest = false;
+        $query = [];
+        foreach ($params as $k => $v) {
+            $postRequest = $postRequest || is_object($v) || is_array($v);
+            $query[] = "$k=$v";
+        }
+
+        $body = null;
+        if ($postRequest) {
+            $body = json_encode($params);
+        } else {
+            $url .= '?' . implode('&', $query);
+        }
+
+        $span = $this->get(Tracer::class)->getActiveSpan()->getSpanContext();
+
+        $headers = [
+            'x-tracing-span-id' => $span->getSpanId(),
+            'x-tracing-trace-id' => $span->getTraceId(),
+        ];
+
         if ($this->container->has(ServerRequestInterface::class)) {
             $request = $this->container->get(ServerRequestInterface::class);
-            foreach ([ 'x-session', 'x-real-ip' ] as $header) {
+            foreach ([ 'authorization', 'x-session', 'x-real-ip', 'x-channel' ] as $header) {
                 if ($request->hasHeader($header)) {
                     $headers[$header] = $request->getHeaderLine($header);
                 }
             }
         }
 
-        $context = $this->get(Context::class)->toArray();
-        $span = $this->get(Tracer::class)->getActiveSpan()->getSpanContext();
+        if (!array_key_exists('authorization', $headers)) {
+            $headers['authorization'] = 'Bearer ' . $this->get(Application::class)->getToken();
+        }
 
-        $form = [
-            'rpc' => json_encode([
-                'context' => $context,
-                'job'     => $job,
-                'params'  => $params,
-                'span'    => [
-                    'parentSpanId'  => $span->getSpanId(),
-                    'spanId' => SpanContext::generate()->getSpanId(),
-                    'traceId' => $span->getTraceId(),
-                ],
-            ]),
-        ];
 
-        $response = $this->client->request('POST', 'http://' . $host . $url, [
+        $response = $this->client->request($postRequest ? 'POST' : 'GET', 'http://' . $host . $url, [
             'headers' => $headers,
-            'body' => $form,
+            'body' => $body,
             'timeout' => 600,
         ]);
 
@@ -157,7 +164,7 @@ class Dispatcher
             }
 
             $result = json_decode($body);
-            if (!$result || !$result->success) {
+            if (!$result || property_exists($result, 'success') && !$result->success) {
                 if (!$result) {
                     throw new Exception("Invalid result from $service: $body");
                 }
@@ -170,7 +177,7 @@ class Dispatcher
                 throw $exception;
             }
 
-            return (object) $this->get(Converter::class)->toObject($result->data);
+            return (object) $this->get(Converter::class)->toObject($result);
         });
     }
 
