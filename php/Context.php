@@ -7,18 +7,32 @@ use Throwable;
 
 class Context
 {
-    public $channel;
-    public $ip;
+    public int $access;
+    public int $channel = 0;
 
-    public $access;
-    public $session;
+    /**
+     * inter-service communication
+     */
+    public ?string $service = null;
 
-    public $company;
-    public $person;
-    public $module;
+    /**
+     * client real ip
+     */
+    public ?string $ip = null;
 
-    public $parent;
-    public $event;
+    public int $company = 0;
+    public int $person;
+    public int $module = 0;
+
+    /**
+     * parent person
+     */
+    public int $parent = 0;
+
+    /**
+     * context event
+     */
+    public int $event = 0;
 
     public function execute($context, $callback)
     {
@@ -49,18 +63,15 @@ class Context
     public function apply($data): self
     {
         foreach ($data as $k => $v) {
-            if ($k == 'parent' && $v) {
-                $v = (object) $v;
-            }
             $this->$k = $v;
         }
 
         return $this;
     }
 
-    public function getPerson()
+    public function getPerson(): int
     {
-        return $this->parent && $this->parent->person ? $this->parent->person : $this->person;
+        return $this->parent ?: $this->person;
     }
 
     public function toArray(): array
