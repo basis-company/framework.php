@@ -63,13 +63,13 @@ class ExecutorTest extends Test
         $note = $this->findOrFail('note', $note->id);
         $this->assertSame($note->message, '1');
 
-        $this->actAs(1);
+        $this->actAs(['person' => 1]);
         $this->send('test.actor', ['note' => $note->id]);
 
-        $this->actAs(2);
+        $this->actAs(['person' => 2]);
         $this->assertSame($this->get(Context::class)->getPerson(), 2);
         $this->dispatch('nats.consume', [ 'subject' => $this->app->getName(), 'limit' => 1 ]);
-        $this->assertSame($this->get(Context::class)->getPerson(), 2);
+        $this->assertSame($this->get(Context::class)->getPerson(), 2, 'context rollback failure');
 
         $note = $this->findOrFail('note', $note->id);
         $this->assertSame($note->message, '1');
@@ -81,7 +81,7 @@ class ExecutorTest extends Test
     {
         putenv('BASIS_ENVIRONMENT=use-nats');
         $note = $this->create('note', ['message' => 5]);
-        $this->actAs(1);
+        $this->actAs(['person' => 1]);
         $this->send('test.increment', ['note' => $note->id]);
         $this->assertEquals($note->message, 5);
 
