@@ -2,12 +2,9 @@
 
 namespace Basis;
 
-use Basis\Cache;
-use Basis\Converter;
 use Basis\Feedback\Feedback;
 use Basis\Nats\Client;
 use Basis\Nats\Message\Payload;
-use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
@@ -29,7 +26,7 @@ class Dispatcher
         $this->container = $container;
     }
 
-    public function httpTransport(string $job, array $params = [], string $service = null)
+    public function httpTransport(string $job, array $params = [], string $service = null, $system = false)
     {
         $job = strtolower($job);
         if (!$service) {
@@ -41,37 +38,50 @@ class Dispatcher
         }
 
         $host = $this->dispatch('resolve.address', [ 'name' => $service ])->host;
-        $url = "/api/index/" . str_replace('.', '/', $job);
+        $url = '/' . str_replace('.', '/', $job);
 
-        $headers = [];
+        $postRequest = false;
+        $query = [];
+        foreach ($params as $k => $v) {
+            if (is_object($v) || is_array($v)) {
+                $postRequest = true;
+                break;
+            }
+
+            $query[] = "$k=$v";
+        }
+
+        $body = null;
+        if ($postRequest) {
+            $body = json_encode($params);
+        } else {
+            $url .= '?' . implode('&', $query);
+        }
+
+        $span = $this->get(Tracer::class)->getActiveSpan()->getSpanContext();
+
+        $headers = [
+            'x-span-id' => $span->getSpanId(),
+            'x-trace-id' => $span->getTraceId(),
+        ];
+
         if ($this->container->has(ServerRequestInterface::class)) {
             $request = $this->container->get(ServerRequestInterface::class);
-            foreach ([ 'x-session', 'x-real-ip' ] as $header) {
+            foreach ([ 'authorization', 'x-session', 'x-real-ip', 'x-channel' ] as $header) {
                 if ($request->hasHeader($header)) {
                     $headers[$header] = $request->getHeaderLine($header);
                 }
             }
         }
 
-        $context = $this->get(Context::class)->toArray();
-        $span = $this->get(Tracer::class)->getActiveSpan()->getSpanContext();
+        if (!array_key_exists('authorization', $headers) || $system) {
+            $headers['authorization'] = 'Bearer ' . $this->get(Application::class)->getToken();
+        }
 
-        $form = [
-            'rpc' => json_encode([
-                'context' => $context,
-                'job'     => $job,
-                'params'  => $params,
-                'span'    => [
-                    'parentSpanId'  => $span->getSpanId(),
-                    'spanId' => SpanContext::generate()->getSpanId(),
-                    'traceId' => $span->getTraceId(),
-                ],
-            ]),
-        ];
 
-        $response = $this->client->request('POST', 'http://' . $host . $url, [
+        $response = $this->client->request($postRequest ? 'POST' : 'GET', 'http://' . $host . $url, [
             'headers' => $headers,
-            'body' => $form,
+            'body' => $body,
             'timeout' => 600,
         ]);
 
@@ -83,9 +93,14 @@ class Dispatcher
         return $this->get(Cache::class)->delete(func_get_args());
     }
 
-    public function dispatch(string $job, array $params = [], string $service = null): object
+    public function system(string $job, array $params = [], string $service = null): object
     {
-        return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service) {
+        return $this->dispatch($job, $params, $service, true);
+    }
+
+    public function dispatch(string $job, array $params = [], string $service = null, $system = false): object
+    {
+        return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service, $system) {
             $job = strtolower($job);
             $converter = $this->get(Converter::class);
 
@@ -139,7 +154,7 @@ class Dispatcher
             $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 16;
 
             while (!$body && $limit-- > 0) {
-                $body = $this->httpTransport($job, $params, $service);
+                $body = $this->httpTransport($job, $params, $service, $system);
                 if (!$body) {
                     $this->get(LoggerInterface::class)->info([
                         'type' => 'retry',
@@ -157,7 +172,7 @@ class Dispatcher
             }
 
             $result = json_decode($body);
-            if (!$result || !$result->success) {
+            if (!$result || property_exists($result, 'success') && !$result->success) {
                 if (!$result) {
                     throw new Exception("Invalid result from $service: $body");
                 }
@@ -170,7 +185,7 @@ class Dispatcher
                 throw $exception;
             }
 
-            return (object) $this->get(Converter::class)->toObject($result->data);
+            return (object) $this->get(Converter::class)->toObject($result);
         });
     }
 

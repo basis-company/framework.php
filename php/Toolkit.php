@@ -111,6 +111,11 @@ trait Toolkit
         return $this->get(Dispatcher::class)->dispatch($job, $params, $service);
     }
 
+    public function system(string $job, array $params = [], string $service = null): object
+    {
+        return $this->get(Dispatcher::class)->system($job, $params, $service);
+    }
+
     public function get(string $class): object
     {
         return $this->getContainer()->get($class);
