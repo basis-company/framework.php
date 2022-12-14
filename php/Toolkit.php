@@ -26,6 +26,17 @@ trait Toolkit
         $this->app = $app;
     }
 
+    public function actAs(int $access)
+    {
+        $description = $this->system('guard.describe', [
+            'access' => $access,
+            'validate' => false,
+        ]);
+
+        $this->get(Context::class)->reset($description->access);
+        $this->get(Dispatcher::class)->setToken($description->token);
+    }
+
     protected function create(string $space, array $data = []): Entity
     {
         return $this->getRepository($space)->create($data)->save();
