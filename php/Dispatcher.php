@@ -20,10 +20,18 @@ class Dispatcher
     private Container $container;
     private CurlHttpClient $client;
 
+    private string $token = '';
+
     public function __construct(Container $container)
     {
         $this->client = new CurlHttpClient();
         $this->container = $container;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+        return $this;
     }
 
     public function httpTransport(string $job, array $params = [], string $service = null, $system = false)
@@ -74,10 +82,11 @@ class Dispatcher
             }
         }
 
-        if (!array_key_exists('authorization', $headers) || $system) {
+        if ($this->token && !$system) {
+            $headers['authorization'] = 'Bearer ' . $this->token;
+        } elseif (!array_key_exists('authorization', $headers) || $system) {
             $headers['authorization'] = 'Bearer ' . $this->get(Application::class)->getToken();
         }
-
 
         $response = $this->client->request($postRequest ? 'POST' : 'GET', 'http://' . $host . $url, [
             'headers' => $headers,
