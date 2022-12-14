@@ -110,7 +110,7 @@ class Dispatcher
         if ($this->container->has(ServerRequestInterface::class)) {
             $request = $this->container->get(ServerRequestInterface::class);
             if ($request->hasHeader('authorization')) {
-                $authorization = $request->getHeaderLine($header);
+                $authorization = $request->getHeaderLine('authorization');
                 return explode(' ', $authorization)[1];
             }
         }
