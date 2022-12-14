@@ -2,12 +2,11 @@
 
 namespace Basis\Controller;
 
+use Basis\Application;
 use Basis\Context;
 use Basis\Dispatcher;
 use Basis\Toolkit;
 use DateTimeInterface;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,28 +35,23 @@ class Rest
             return new Response(401);
         }
 
-        $key = null;
-        if (file_exists('resources/jwt/public')) {
-            $key = file_get_contents('resources/jwt/public');
-        } elseif (file_exists('jwt_key')) {
-            $key = file_get_contents('jwt_key');
-        } else {
-            $key = file_get_contents('http://guard/guard/key');
-            file_put_contents('jwt_key', $key);
-        }
-
-        if (!$key) {
-            return new Response(500);
-        }
-
-        $payload = JWT::decode($token, new Key($key, 'RS256'));
+        $payload = $this->get(Application::class)->getTokenPayload($token);
 
         $context = $this->get(Context::class);
+
         $context->access = $payload->access;
-        $context->channel = (int) $request->getHeaderLine('x-channel');
-        $context->company = $payload->company;
+        $context->channel = (int) $request->getHeaderLine('x-channel') ?: 0;
         $context->person = $payload->person;
-        $context->module = $payload->module;
+
+        if (property_exists($payload, 'service')) {
+            $context->service = $payload->service;
+            $context->company = 0;
+            $context->module = 0;
+        } else {
+            $context->service = null;
+            $context->company = $payload->company;
+            $context->module = $payload->module;
+        }
 
         if ($request->getHeaderLine('x-real-ip')) {
             $context->apply([
