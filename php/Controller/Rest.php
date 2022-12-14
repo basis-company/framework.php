@@ -40,18 +40,12 @@ class Rest
         $payload = $this->get(Application::class)->getTokenPayload($token);
 
         $context = $this->get(Context::class);
-        $context->access = $payload->access;
         $context->channel = (int) $request->getHeaderLine('x-channel') ?: 0;
-        $context->person = $payload->person;
 
-        if (property_exists($payload, 'service')) {
-            $context->service = $payload->service;
-            $context->company = 0;
-            $context->module = 0;
-        } else {
-            $context->service = null;
-            $context->company = $payload->company;
-            $context->module = $payload->module;
+        foreach ($payload as $k => $v) {
+            if (property_exists($context, $k)) {
+                $context->$k = $v;
+            }
         }
 
         if ($request->getHeaderLine('x-real-ip')) {
