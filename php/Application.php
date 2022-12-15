@@ -61,7 +61,7 @@ class Application
     public function getToken()
     {
         try {
-            if (file_exists('token.php')) {
+            if (!file_exists('token.php')) {
                 throw new Exception("Initialize", 1);
             }
 
