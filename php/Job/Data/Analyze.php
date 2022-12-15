@@ -7,7 +7,7 @@ class Analyze
     public function run()
     {
         return [
-            'expire' => PHP_INT_MAX,
+            'expire' => time() + 364 * 24 * 60 * 60,
             'present' => is_dir('lua/migrations'),
         ];
     }

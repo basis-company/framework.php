@@ -67,7 +67,7 @@ class Application
 
             $token = include 'token.php';
             $payload = $this->getTokenPayload($token);
-            if ($token->iat < time() + 60) {
+            if ($payload->iat < time() + 60) {
                 throw new Exception("Token is about to expire", 1);
             }
         } catch (Throwable $e) {
