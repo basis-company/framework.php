@@ -90,7 +90,9 @@ class Application
         } else {
             // others
             $key = file_get_contents('http://guard/guard/key');
-            file_put_contents('key', $key);
+            if ($key) {
+                file_put_contents('key', $key);
+            }
         }
 
         if (!$key) {
