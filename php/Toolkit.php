@@ -31,6 +31,7 @@ trait Toolkit
         $description = $this->system('guard.describe', [
             'access' => $access,
             'validate' => false,
+            'service' => $access == 1 ? $this->app->getName() : null,
         ]);
 
         $this->get(Context::class)->reset($description->access);
