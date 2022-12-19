@@ -69,11 +69,11 @@ class Rest
 
         $params = match ($request->getMethod()) {
             'GET' => $request->getQueryParams(),
-            'POST' => $request->getParsedBody(),
+            'POST' => json_decode($request->getBody(), true),
         };
 
         if ($params == null) {
-            $params = json_decode($request->getBody(), true);
+            $params = $request->getParsedBody();
         }
 
         $result = $dispatcher->dispatch($job, $params ?: []);
