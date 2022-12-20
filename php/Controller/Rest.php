@@ -96,6 +96,10 @@ class Rest
                 ->format(DateTimeInterface::RFC7231);
         }
 
+        $this->dispatch('module.changes', [
+            'producer' => $job,
+        ]);
+
         return new Response(200, $headers, json_encode($result));
     }
 }
