@@ -9,6 +9,7 @@ use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
 use Basis\Toolkit;
 use DateTimeInterface;
+use Throwable;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,7 +38,11 @@ class Rest
             return new Response(401);
         }
 
-        $payload = $this->get(Application::class)->getTokenPayload($token);
+        try {
+            $payload = $this->get(Application::class)->getTokenPayload($token);
+        } catch (Throwable $e) {
+            return new Response(401, [], 'Expired token');
+        }
 
         $context = $this->get(Context::class);
         $context->channel = (int) $request->getHeaderLine('x-channel') ?: 0;
@@ -69,7 +74,7 @@ class Rest
 
         $params = match ($request->getMethod()) {
             'GET' => $request->getQueryParams(),
-            'POST' => json_decode($request->getBody(), true),
+            'POST' => get_object_vars(json_decode($request->getBody())),
         };
 
         if ($params == null) {
