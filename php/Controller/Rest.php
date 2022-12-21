@@ -100,6 +100,16 @@ class Rest
             'producer' => $job,
         ]);
 
-        return new Response(200, $headers, json_encode($result));
+        $body = json_encode($result);
+
+        $gzip = strpos($request->getHeaderLine('Accept-Encoding'), 'gzip') !== false;
+        if ($gzip) {
+            $body = gzencode($body);
+            $headers['Content-Encoding'] = 'gzip';
+        }
+
+        $headers['Content-Length'] = strlen($body);
+
+        return new Response(200, $headers, $body);
     }
 }
