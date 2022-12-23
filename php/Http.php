@@ -124,6 +124,7 @@ class Http
                 $result = $container->call($class, $method, $arguments);
             } catch (Throwable $e) {
                 $result = $class . '::' . $method . '<br/>' . $e->getMessage();
+                $result = new Response(500, [], $result);
             }
         } else {
             $result = $container->get(Rest::class)->process($request);
