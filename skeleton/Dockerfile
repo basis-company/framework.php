@@ -11,6 +11,12 @@ FROM php:8.1-apache
 WORKDIR /var/www/html
 
 RUN apt-get update \
+    && apt-get install -y zlib1g-dev git libzip-dev libc-client-dev libkrb5-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev unzip libgd3 libpng16-16 libwebp6 \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install zip
+
+RUN apt-get update \
     && apt-get install procps zip -y \
     && pecl install \
         ast \
