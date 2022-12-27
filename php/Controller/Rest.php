@@ -4,6 +4,7 @@ namespace Basis\Controller;
 
 use Basis\Application;
 use Basis\Context;
+use Basis\Converter;
 use Basis\Dispatcher;
 use Basis\Telemetry\Tracing\SpanContext;
 use Basis\Telemetry\Tracing\Tracer;
@@ -82,6 +83,10 @@ class Rest
         }
 
         $result = $dispatcher->dispatch($job, $params ?: []);
+        $array = get_object_vars($result);
+        if ($this->get(Converter::class)->isTuple($array) && count($array)) {
+            $result = get_object_vars($result);
+        }
 
         if ($result instanceof ResponseInterface) {
             return $result;
