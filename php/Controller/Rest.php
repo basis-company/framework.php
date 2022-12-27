@@ -91,7 +91,7 @@ class Rest
             'Content-Type' => 'application/json',
         ];
 
-        if (property_exists($result, 'expire')) {
+        if (is_object($result) && property_exists($result, 'expire')) {
             $headers['Expires'] = $this->getDate($result->expire)
                 ->format(DateTimeInterface::RFC7231);
         }
