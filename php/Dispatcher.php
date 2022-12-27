@@ -198,7 +198,7 @@ class Dispatcher
                 throw new Exception("Host $host ($service) is unreachable");
             }
 
-            $result = json_decode($body);
+            $result = (object) json_decode($body);
             if (!$result || property_exists($result, 'success') && !$result->success) {
                 if (!$result) {
                     throw new Exception("Invalid result from $service: $body");
