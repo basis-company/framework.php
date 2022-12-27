@@ -119,12 +119,12 @@ class Dispatcher
         return $this->getToken(true);
     }
 
-    public function system(string $job, array $params = [], string $service = null): object
+    public function system(string $job, array $params = [], string $service = null): array|object
     {
         return $this->dispatch($job, $params, $service, true);
     }
 
-    public function dispatch(string $job, array $params = [], string $service = null, $system = false): object
+    public function dispatch(string $job, array $params = [], string $service = null, $system = false): array|object
     {
         return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service, $system) {
             $job = strtolower($job);
@@ -173,7 +173,9 @@ class Dispatcher
                     // force entity convertion to array with app cleanup
                     $result = $converter->toArray($result, true);
                 }
-                return (object) $converter->toObject($result);
+
+                $result = $converter->toObject($result);
+                return $converter->isTuple($result) ? $result : (object) $result;
             }
 
             $body = null;

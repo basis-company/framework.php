@@ -23,7 +23,7 @@ class Cache
 
         $result = $callback();
 
-        if (property_exists($result, 'expire')) {
+        if (is_object($result) && property_exists($result, 'expire')) {
             $this->set($key, $result, $result->expire);
         }
 
