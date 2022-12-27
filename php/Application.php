@@ -61,18 +61,20 @@ class Application
     public function getToken()
     {
         try {
-            if (!file_exists('token.php')) {
+            if (!file_exists('/tmp/token.php')) {
                 throw new Exception("Initialize", 1);
             }
 
-            $token = include 'token.php';
+            $token = include '/tmp/token.php';
             $payload = $this->getTokenPayload($token);
             if ($payload->iat < time() + 60) {
                 throw new Exception("Token is about to expire", 1);
             }
         } catch (Throwable $e) {
             $token = $this->findOrFail('guard.token', ['service' => $this->getName()])->token;
-            file_put_contents('token.php', '<?php return "' . $token . '";');
+            file_put_contents('/tmp/token.php', '<?php return "' . $token . '";');
+            // console and apache shared token
+            chmod('/tmp/token.php', 0777);
         }
 
         return $token;
