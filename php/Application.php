@@ -73,6 +73,8 @@ class Application
         } catch (Throwable $e) {
             $token = $this->findOrFail('guard.token', ['service' => $this->getName()])->token;
             file_put_contents('token.php', '<?php return "' . $token . '";');
+            // console and apache shared token
+            chmod('token.php', 0777);
         }
 
         return $token;
