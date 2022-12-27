@@ -11,7 +11,7 @@ use Exception;
 
 class Dispatcher extends Basis
 {
-    public function dispatch(string $job, $params = [], $service = null, $system = false): array|object
+    public function dispatch(string $job, $params = [], $service = null, $system = false): object
     {
         return $this->get(Cache::class)->wrap(func_get_args(), function () use ($job, $params, $service) {
             $test = $this->get(Test::class);
