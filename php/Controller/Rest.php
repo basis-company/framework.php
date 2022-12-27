@@ -82,14 +82,20 @@ class Rest
             $params = $request->getParsedBody();
         }
 
-        $result = $dispatcher->dispatch($job, $params ?: []);
-        $array = get_object_vars($result);
-        if ($this->get(Converter::class)->isTuple($array) && count($array)) {
-            $result = get_object_vars($result);
+        ob_start();
+        try {
+            $result = $dispatcher->dispatch($job, $params ?: []);
+        } catch (Throwable $e) {
+            return new Response(500, [], ob_get_clean() . $e->getMessage());
         }
 
         if ($result instanceof ResponseInterface) {
             return $result;
+        }
+
+        $array = get_object_vars($result);
+        if ($this->get(Converter::class)->isTuple($array) && count($array)) {
+            $result = get_object_vars($result);
         }
 
         $headers = [
@@ -105,7 +111,8 @@ class Rest
             'producer' => $job,
         ]);
 
-        $body = json_encode($result);
+        echo json_encode($result);
+        $body = ob_get_clean();
 
         $gzip = strpos($request->getHeaderLine('Accept-Encoding'), 'gzip') !== false;
         if ($gzip) {
