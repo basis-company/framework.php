@@ -5,7 +5,7 @@
         }
     },
     "require": {
-        "basis-company/framework": "^7.2.19",
+        "basis-company/framework": "^7.2.18",
         "basis-company/nats": "^0.9.0",
         "basis-company/telemetry": "^0.1.10",
         "firebase/php-jwt":"^v6.3.1",
