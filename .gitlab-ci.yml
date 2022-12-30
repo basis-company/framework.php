@@ -33,59 +33,20 @@ build-image:
     - docker build -f skeleton/Dockerfile --cache-from $image_branch -t $image_pipeline .
     - docker push $image_pipeline
 
-test-phpsyntax:
+test-php:
   stage: test
   image: $image_pipeline
   allow_failure: false
   interruptible: true
   script:
-    - cd /var/www/html/php
-    - find . -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
-    - if [ "$?" -ne "0" ];then exit 1; fi
-
-test-phpcs:
-  stage: test
-  image: $image_pipeline
-  allow_failure: false
-  interruptible: true
-  script:
-    - curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-    - chmod +x phpcs.phar
+    - cd /var/www/html
+    - composer require phpunit/phpunit vimeo/psalm squizlabs/php_codesniffer
     - curl -o phpcs.xml https://basiswfm.cetelem.ru/linter/php
-    - ./phpcs.phar php --standard=phpcs.xml
+    - vendor/bin/phpcs php --standard=phpcs.xml
+    - vendor/bin/psalm --init
+    - vendor/bin/psalm
 
 test-phpunit:
-  stage: test
-  image: php:8.1-cli
-
-  variables:
-    TARANTOOL_CONNECTION: tcp://test-phpunit-db:3302
-    TARANTOOL_PORT: 3302
-    DATA_CONNECTION: tcp://admin:password@test-phpunit-data:3301
-    NATS_HOST: nats
-
-  services:
-    - name: nats
-      command: ['--js']
-    - name: tarantool/tarantool:2.6.2
-      alias: test-phpunit-db
-    - name: cr.yandex/crpf255p88b3bourvm4f/data
-      alias: test-phpunit-data
-    - name: yandex/clickhouse-server
-      alias: test-ch
-
-  only:
-    - test
-    - master
-
-  script:
-    - apt-get update && apt-get install zip git -y
-    - curl -sS https://getcomposer.org/installer | php && chmod +x composer.phar
-    - ./composer.phar require phpunit/phpunit
-    - export
-    - vendor/bin/phpunit --coverage-clover=coverage.xml
-
-test-coverage:
   stage: test
   image: php:8.1-cli
   allow_failure: true
