@@ -62,7 +62,7 @@ class Application
     {
         $cached = $this->get(Cache::class)->wrap('service-token', function () {
             $token = $this->findOrFail('guard.token', ['service' => $this->getName()])->token;
-            $expire = $this->getTokenPayload($token)->iat - 60;
+            $expire = $this->getTokenPayload($token)->exp - 60;
             return (object) compact('expire', 'token');
         });
 
