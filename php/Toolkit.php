@@ -30,7 +30,7 @@ trait Toolkit
     {
         $description = $this->system('guard.describe', [
             'access' => $access,
-            'validate' => false,
+            'validate' => 0,
             'service' => $access == 1 ? $this->app->getName() : null,
         ]);
 
