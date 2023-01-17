@@ -3,17 +3,15 @@
 namespace Basis\Job\Nats;
 
 use Basis\Configuration\Monolog;
-use Basis\Container;
-use Basis\Context;
 use Basis\Dispatcher;
-use Basis\Lock;
+use Basis\Job;
 use Basis\Nats\Client;
 use Basis\Telemetry\Tracing\Tracer;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class Consume
+class Consume extends Job
 {
     public int $batch = 1;
     public int $debug = 0;
@@ -23,28 +21,16 @@ class Consume
     public string $subject;
     public bool $housekeeping = true;
 
-    public readonly LoggerInterface $logger;
-
-    public function __construct(
-        public readonly Container $container,
-        public readonly Monolog $monolog,
-        public readonly Client $client,
-        public readonly Context $context,
-        public readonly Dispatcher $dispatcher,
-        public readonly Tracer $tracer,
-    ) {
-    }
-
     public function run()
     {
-        $this->monolog->setName('nats.consume');
+        $this->get(Monolog::class)->setName('nats.consume');
 
         $logger = null;
         if ($this->debug) {
-            $logger = $this->container->get(LoggerInterface::class);
+            $logger = $this->get(LoggerInterface::class);
         }
 
-        $this->client
+        $this->get(Client::class)
             ->setLogger($logger)
             ->setName($this->subject)
             ->getApi()
@@ -60,29 +46,29 @@ class Consume
     public function handle($request)
     {
         try {
-            if ($request->context->access) {
-                $this->actAs($request->context->access);
+            if (!$request->context->access) {
+                throw new Exception("No access defined");
+            }
+            $this->actAs($request->context->access);
+
+            $processing = $this->dispatch('module.process', [
+                'job' => $request->job,
+                'params' => $request->params,
+                'logging' => true,
+                'loggerSetup' => false,
+            ]);
+
+            if (!$processing->success) {
+                $this->schedule($request);
             }
 
-            return $this->context->execute($request->context, function () use ($request) {
-                $processing = $this->dispatcher->dispatch('module.process', [
-                    'job' => $request->job,
-                    'params' => $request->params,
-                    'logging' => true,
-                    'loggerSetup' => false,
-                ]);
+            if ($this->housekeeping) {
+                $this->dispatch('module.housekeeping');
+            }
 
-                if (!$processing->success) {
-                    $this->schedule($request);
-                }
-
-                if ($this->housekeeping) {
-                    $this->dispatcher->dispatch('module.housekeeping');
-                }
-
-                $this->tracer->reset();
-            });
+            $this->get(Tracer::class)->reset();
         } catch (Throwable $e) {
+            $this->get(LoggerInterface::class)->error($e->getMessage());
             return $this->schedule($request);
         }
     }
@@ -92,7 +78,7 @@ class Consume
         if (is_object($request->params)) {
             $request->params = (array) $request->params;
         }
-        if (explode('.', $request->job)[0] == $this->dispatcher->getServiceName()) {
+        if (explode('.', $request->job)[0] == $this->get(Dispatcher::class)->getServiceName()) {
             // domain jobs can be replayed via queue
             $params = $request->params;
             if ($request->job != 'queue.put') {
@@ -102,10 +88,10 @@ class Consume
                 ];
             }
             $params['key'] = microtime(true);
-            $this->dispatcher->send('queue.put', $params);
+            $this->send('queue.put', $params);
         } else {
             // system jobs should be replayed as is
-            $this->dispatcher->send($request->job, $request->params);
+            $this->send($request->job, $request->params);
         }
     }
 }
