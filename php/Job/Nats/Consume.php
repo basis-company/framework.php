@@ -47,6 +47,8 @@ class Consume extends Job
     {
         try {
             if (!$request->context->access) {
+                $this->get(LoggerInterface::class)
+                    ->info('invalid context', get_object_vars($request->context));
                 throw new Exception("No access defined");
             }
             $this->actAs($request->context->access);
