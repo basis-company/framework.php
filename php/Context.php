@@ -63,6 +63,9 @@ class Context
     public function apply($data): self
     {
         foreach ($data as $k => $v) {
+            if ($k == 'parent' && is_object($v)) {
+                $v = $v->access;
+            }
             $this->$k = $v;
         }
 
