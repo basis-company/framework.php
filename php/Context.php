@@ -64,7 +64,7 @@ class Context
     {
         foreach ($data as $k => $v) {
             if ($k == 'parent' && is_object($v)) {
-                $v = $v->access;
+                $v = $v->person;
             }
             $this->$k = $v;
         }
