@@ -47,7 +47,11 @@ class Consume extends Job
     {
         try {
             if (!$request->context->access) {
-                $this->error('invalid context', get_object_vars($request->context));
+                if ($this->app->getName() == 'queue') {
+                    // empty context
+                    $this->actAs(1);
+                }
+                $this->error('invalid request context', get_object_vars($request));
                 throw new Exception("No access defined");
             }
             $this->actAs($request->context->access);
