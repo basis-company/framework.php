@@ -24,6 +24,8 @@ class Register extends Job
             'name' => gethostname(),
         ]);
 
+        $this->actAs(1);
+
         $this->{$this->method}('web.register', [
             'service' => $this->app->getName(),
             'hash' => $assets->hash,
