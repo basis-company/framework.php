@@ -51,7 +51,7 @@ class Dispatcher
         $postRequest = false;
         $query = [];
         foreach ($params as $k => $v) {
-            if (is_object($v) || is_array($v)) {
+            if ($v || is_object($v) || is_array($v)) {
                 $postRequest = true;
                 break;
             }
