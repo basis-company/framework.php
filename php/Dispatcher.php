@@ -89,7 +89,13 @@ class Dispatcher
             'timeout' => 600,
         ]);
 
-        return $response->getContent();
+        $content = $response->getContent(false);
+
+        if ($response->getStatusCode() >= 300) {
+            throw new Exception($content);
+        }
+
+        return $content;
     }
 
     public function flush(string $job, array $params = [], string $service = null)

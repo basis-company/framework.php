@@ -86,6 +86,7 @@ class Rest
         try {
             $result = $dispatcher->dispatch($job, $params ?: []);
         } catch (Throwable $e) {
+            $this->error($e);
             return new Response(500, [], ob_get_clean() . $e->getMessage());
         }
 
