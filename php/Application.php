@@ -61,8 +61,17 @@ class Application
     public function getToken()
     {
         $cached = $this->get(Cache::class)->wrap('service-token', function () {
-            $token = $this->findOrFail('guard.token', ['service' => $this->getName()])->token;
-            $expire = $this->getTokenPayload($token)->exp - 60;
+            $token = $expire = null;
+            while (!$expire) {
+                $token = $this->findOrFail('guard.token', ['service' => $this->getName()])->token;
+                try {
+                    $expire = $this->getTokenPayload($token)->exp - 60;
+                } catch (Exception $e) {
+                    // 1 second delay
+                    $this->exception($e);
+                    sleep(1);
+                }
+            }
             return (object) compact('expire', 'token');
         });
 
