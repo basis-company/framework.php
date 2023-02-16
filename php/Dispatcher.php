@@ -187,7 +187,14 @@ class Dispatcher
             $limit = getenv('BASIS_DISPATCHER_RETRY_COUNT') ?: 16;
 
             while (!$body && $limit-- > 0) {
-                $body = $this->httpTransport($job, $params, $service, $system);
+                try {
+                    $body = $this->httpTransport($job, $params, $service, $system);
+                } catch (Exception $e) {
+                    if ($e->getMessage() != 'Expired token') {
+                        throw $e;
+                    }
+                    $this->exception($e);
+                }
                 if (!$body) {
                     $this->get(LoggerInterface::class)->info([
                         'type' => 'retry',
