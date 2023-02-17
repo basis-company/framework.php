@@ -7,7 +7,7 @@
     "require": {
         "basis-company/framework": "^7.2.18",
         "basis-company/nats": "^0.9.0",
-        "basis-company/telemetry": "^0.1.10",
+        "basis-company/telemetry": "^0.1.12",
         "firebase/php-jwt":"^v6.3.1",
         "monolog/monolog": "^2.3.5",
         "nesbot/carbon": "^2.51",
