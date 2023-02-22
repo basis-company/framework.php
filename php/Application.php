@@ -65,7 +65,7 @@ class Application
             while (!$expire) {
                 $token = $this->findOrFail('guard.token', ['service' => $this->getName()])->token;
                 try {
-                    $expire = $this->getTokenPayload($token)->exp - 60;
+                    $expire = time() + $this->getTokenPayload($token)->exp - 60;
                 } catch (Exception $e) {
                     // 1 second delay
                     $this->exception($e);
