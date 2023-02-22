@@ -193,11 +193,10 @@ class Dispatcher
                     if ($e->getMessage() != 'Expired token') {
                         throw $e;
                     }
-                    $this->exception($e);
+                    $this->get(LoggerInterface::class)->error($e->getMessage());
                 }
                 if (!$body) {
-                    $this->get(LoggerInterface::class)->info([
-                        'type' => 'retry',
+                    $this->get(LoggerInterface::class)->info('retry', [
                         'service' => $service,
                         'job' => $job,
                         'sleep' => 1,
@@ -342,7 +341,7 @@ class Dispatcher
             $this->get(Client::class)
                 ->publish($subject, $payload);
         } catch (Throwable $e) {
-            $this->get(LoggerInterface::class)->info($e->getMessage(), [
+            $this->get(LoggerInterface::class)->error($e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
