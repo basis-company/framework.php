@@ -193,12 +193,18 @@ class Dispatcher
                     if ($e->getMessage() != 'Expired token') {
                         throw $e;
                     }
-                    $this->get(LoggerInterface::class)->error($e->getMessage());
+                    $this->get(LoggerInterface::class)->error($e->getMessage(), [
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
                 }
                 if (!$body) {
                     $this->get(LoggerInterface::class)->info('retry', [
                         'service' => $service,
                         'job' => $job,
+                        'params' => $params,
+                        'system' => $system,
                         'sleep' => 1,
                     ]);
                     $this->dispatch('module.sleep', [ 'seconds' => 1 ]);
