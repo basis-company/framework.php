@@ -125,7 +125,7 @@ class Dispatcher
                     return $token;
                 }
             }
-        } catch () {
+        } catch (Exception $e) {
         }
 
         // service token is default
