@@ -65,7 +65,7 @@ try {
 
     $application->get(Telemetry::class)->setName('console');
 
-    $result = $application->dispatch($job, $params);
+    $result = $application->system($job, $params);
     if ($result && !$silent) {
         if (!is_object($result) || count(get_object_vars($result))) {
             if (class_exists(Yaml::class)) {
