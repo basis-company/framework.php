@@ -38,6 +38,10 @@ test-php:
   image: $image_pipeline
   allow_failure: false
   interruptible: true
+
+  except:
+    - tags
+
   script:
     - cd /var/www/html
     - composer require phpunit/phpunit vimeo/psalm squizlabs/php_codesniffer
@@ -69,9 +73,8 @@ test-phpunit:
     - name: yandex/clickhouse-server
       alias: test-ch
 
-  only:
-    - test
-    - master
+  except:
+    - tags
 
   script:
     - apt-get update && apt-get install zip git -y
