@@ -84,6 +84,8 @@ test-phpunit:
 
 release-branch:
   stage: release
+  except:
+    - tags
   services:
     - name: docker:18.09.7-dind
       command: ["--registry-mirror", "https://registry-proxy.nx.basis.services"]
@@ -105,24 +107,12 @@ release-tag:
     - export
     - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
     - docker pull $image_pipeline
+    - docker tag $image_pipeline $image_branch
     - docker tag $image_pipeline $image_latest
-    - docker tag $image_pipeline $image_master
     - docker tag $image_pipeline $image_tag
+    - docker push $image_branch
     - docker push $image_latest
-    - docker push $image_master
     - docker push $image_tag
-
-release-latest:
-  stage: release
-  only:
-    - tags
-  services:
-    - name: docker:18.09.7-dind
-      command: ["--registry-mirror", "https://registry-proxy.nx.basis.services"]
-  script:
-    - export
-    - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
-    - docker pull $image_pipeline
     - docker tag $image_pipeline $image_quay_tag
     - docker tag $image_pipeline $image_quay_latest
     - docker login -u="$quay_login" -p="$quay_password" quay.io
