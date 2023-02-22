@@ -22,8 +22,6 @@ stages:
 build-image:
   stage: build
   retry: 2
-  only:
-    - tags
   services:
     - name: docker:18.09.7-dind
       command: ["--registry-mirror", "https://registry-proxy.nx.basis.services"]
@@ -33,23 +31,6 @@ build-image:
     - >
       echo "<?php return ['tag'=>'$CI_COMMIT_TAG','sha'=>'$CI_COMMIT_SHA','short_sha'=>'$CI_COMMIT_SHORT_SHA','ref_name'=>'$CI_COMMIT_REF_NAME'];" > version.php
     - docker build -f skeleton/Dockerfile --cache-from $image_latest -t $image_pipeline .
-    - docker push $image_pipeline
-
-build-image:
-  stage: build
-  retry: 2
-  except:
-    - tags
-  services:
-    - name: docker:18.09.7-dind
-      command: ["--registry-mirror", "https://registry-proxy.nx.basis.services"]
-  script:
-    - export
-    - cat $registrykey | docker login --username json_key --password-stdin cr.yandex
-    - docker pull $image_branch || true
-    - >
-      echo "<?php return ['tag'=>'$CI_COMMIT_TAG','sha'=>'$CI_COMMIT_SHA','short_sha'=>'$CI_COMMIT_SHORT_SHA','ref_name'=>'$CI_COMMIT_REF_NAME'];" > version.php
-    - docker build -f skeleton/Dockerfile --cache-from $image_branch -t $image_pipeline .
     - docker push $image_pipeline
 
 test-php:
