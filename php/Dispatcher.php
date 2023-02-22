@@ -105,20 +105,27 @@ class Dispatcher
 
     public function getToken($system = false): string
     {
-        if ($system) {
-            return $this->get(Application::class)->getToken();
-        }
-
-        if ($this->token) {
-            return $this->token;
-        }
-
-        if ($this->container->has(ServerRequestInterface::class)) {
-            $request = $this->container->get(ServerRequestInterface::class);
-            if ($request->hasHeader('authorization')) {
-                $authorization = $request->getHeaderLine('authorization');
-                return explode(' ', $authorization)[1];
+        try {
+            if ($system) {
+                return $this->get(Application::class)->getToken();
             }
+
+            if ($this->token) {
+                $this->get(Application::class)->getTokenPayload($this->token);
+                return $this->token;
+            }
+
+            if ($this->container->has(ServerRequestInterface::class)) {
+                $request = $this->container->get(ServerRequestInterface::class);
+                if ($request->hasHeader('authorization')) {
+                    $authorization = $request->getHeaderLine('authorization');
+                    $token = explode(' ', $authorization)[1];
+                    // validate token
+                    $this->get(Application::class)->getTokenPayload($token);
+                    return $token;
+                }
+            }
+        } catch () {
         }
 
         // service token is default
