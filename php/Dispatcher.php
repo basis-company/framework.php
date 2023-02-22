@@ -62,7 +62,7 @@ class Dispatcher
         $body = null;
         if ($postRequest) {
             $body = json_encode($params);
-        } else {
+        } elseif (count($query)) {
             $url .= '?' . implode('&', $query);
         }
 
