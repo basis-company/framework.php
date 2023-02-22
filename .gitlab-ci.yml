@@ -41,7 +41,7 @@ test-php:
   script:
     - cd /var/www/html
     - composer require phpunit/phpunit vimeo/psalm squizlabs/php_codesniffer
-    - curl -o phpcs.xml https://basiswfm.cetelem.ru/linter/php
+    - curl -o phpcs.xml https://linter.basis.services/php
     - vendor/bin/phpcs php --standard=phpcs.xml
     - vendor/bin/psalm --init
     - vendor/bin/psalm
